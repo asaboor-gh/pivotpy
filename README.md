@@ -13,7 +13,7 @@
 
 # New: Ipywidgets-based GUI in Progress
 See GIF here:
-![GIF](docs\images\widget.gif)
+![GIF](widget.gif)
 
 ```
 #collapse_output
