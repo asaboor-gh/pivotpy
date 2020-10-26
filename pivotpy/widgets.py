@@ -75,6 +75,10 @@ light_style = """<style>
                    border: 1px solid whitesmoke !important;
                    box-shadow: 1px 1px 1px 1px gray !important;
                 }
+                .widget-html, .widget-html-content {
+                    margin: 0 !important;
+                    padding: 2px !important;
+                }
             </style>"""
 
 dark_style = """<style>
@@ -241,6 +245,7 @@ def get_input_gui(rgb=True,sys_info=None,html_style=None,height=400):
     - **Returns**
         - Tuple(GUI_gridbox,json_in_HTML). Access second one by item.value.
     """
+    from time import sleep
     if not html_style:
         html_style = ''
     if not sys_info:
@@ -252,16 +257,27 @@ def get_input_gui(rgb=True,sys_info=None,html_style=None,height=400):
     ioni_w  = ipw.Text(layout=layout)
     label_w = ipw.Text(layout=layout)
     rgb_w   = ipw.Dropdown(options={'Red':0,'Green':1,'Blue':2},value=0,layout=layout)
-    click_w= ipw.Button(description='Read Input',layout=layout)
+    rgbl_w  = Label('Color: ')
+    click_w= ipw.Button(layout=layout,icon='fa-hand-o-up')
     click_w.style.button_color='skyblue'
+
     inpro_w = ipw.HTML(layout=Layout(height='20px'))
+    if not rgb:
+        layout = Layout(width='32px')
+        add_w = ipw.Button(description='',layout=layout,icon='fa-plus-circle')
+        del_w = ipw.Button(description='',layout=layout,icon='fa-minus-circle')
+        add_w.style.button_color='#5AD5D1'
+        del_w.style.button_color='#5AD5D1'
+        read_box = [Label(u"Line \u00B1: "),add_w,del_w,Label(),Label(),click_w]
+    else:
+        read_box = [click_w]
 
     in_w = Box([ipw.HTML(html_style),VBox([
     ipw.HTML("<h3>Projections</h3>"),
-    HBox([Label('Color: '),rgb_w,Label('Label: '),label_w]).add_class('borderless').add_class('marginless'),
+    HBox([rgbl_w,rgb_w,Label('Label: '),label_w]).add_class('borderless').add_class('marginless'),
     HBox([Label('Ions : '),ions_w,Label('::>>:: '),ioni_w]).add_class('borderless').add_class('marginless'),
     HBox([Label('Orbs : '),orbs_w,Label('::>>:: '),orbi_w]).add_class('borderless').add_class('marginless'),
-    HBox([click_w]).add_class('borderless').add_class('marginless')
+    HBox(read_box).add_class('borderless').add_class('marginless')
     ])
     ],layout=Layout(height="{}px".format(height))).add_class('borderless').add_class('marginless')
 
@@ -270,6 +286,7 @@ def get_input_gui(rgb=True,sys_info=None,html_style=None,height=400):
 
     inds = sys_info.ElemIndex
     ions_w.options = {"{}-{}: {}".format(inds[i],inds[i+1]-1,item):"{}-{}".format(inds[i],inds[i+1]-1) for i,item                             in enumerate(sys_info.ElemName)}
+
     ipw.dlink((ions_w,'value'), (ioni_w,'value'))
     ipw.dlink((rgb_w,'label'), (label_w,'value'))
 
@@ -295,25 +312,78 @@ def get_input_gui(rgb=True,sys_info=None,html_style=None,height=400):
     if rgb:
         elements,orbs,labels = [[],[],[]],[[],[],[]],['r','g','b']
     else:
-        rgb_w.options = {"Line {}".format(i):i for i in range(9)}
-        elements,orbs, labels = [[],],[[],],[[],] # For DOS
+        rgb_w.options = {"Line 0":0}
+        rgb_w.value = 0
+        rgbl_w.value = 'Line : '
+        elements,orbs, labels = [[],],[[],],[' + ',] # For DOS
+    # Set initial value for label as it is not linked.
+    label_w.value = labels[0]
 
     def read_lines(click_w):
+
+        # Read Now
         index=rgb_w.value
-        click_w.description = "Got {}".format(rgb_w.label)
         r_p = read_pro(ions_w,orbi_w,label_w)
+        # update
         try:
-            elements[index] = r_p[0] #For Bands
+            elements[index] = r_p[0]
             orbs[index]     = r_p[1]
             labels[index]   = r_p[2]
         except:
-            elements.append(r_p[0]) # For DOS
+            elements.append(r_p[0]) # In case new line added.
             orbs.append(r_p[1])
             labels.append(r_p[2])
-        _input_ = dict(elements=elements,orbs=orbs,labels=labels)
-        inpro_w.value = json.dumps(_input_)
+
+        max_ind = len(rgb_w.options) # in case a line is deleted.
+        _input_ = dict(elements=elements[:max_ind],orbs=orbs[:max_ind],labels=labels[:max_ind])
+        inpro_w.value = json.dumps(_input_,indent=2)
+
+        # Button feedback.
+        click_w.description = "Got {}".format(rgb_w.label)
+        click_w.style.button_color = 'yellow'
+        click_w.icon = 'check'
+        sleep(1)
+        click_w.description = "Read Input"
         click_w.style.button_color = 'skyblue'
+        click_w.icon = 'fa-hand-o-up'
 
     click_w.on_click(read_lines)
+
+    # Observe output of a line right in box.
+    def see_input(change):
+        #if change:
+        x = rgb_w.value
+        try: #Avoid None and prior update
+            ioni_w.value = ','.join([str(i) for i in elements[x]])
+            orbi_w.value = ','.join([str(i) for i in orbs[x]])
+            label_w.value = labels[x]
+            click_w.description = "{}".format(rgb_w.label) # Triggers when line +/- as well.
+            click_w.style.button_color = 'cyan'
+            click_w.icon = 'fa-refresh'
+        except: pass
+
+    rgb_w.observe(see_input,'value')
+
+    # Add and delete lines
+    if not rgb:
+        def add_line(add_w):
+            l_opts = len(rgb_w.options)+1
+            opts = {'Line {}'.format(i):i for i in range(l_opts)}
+            rgb_w.options = opts
+            rgb_w.value = l_opts - 1
+
+        add_w.on_click(add_line)
+
+        def del_line(del_w):
+            l_opts = len(rgb_w.options)-1
+            if l_opts > 0: # Do not delete last line. just update,otherwise issues.
+                opts = {'Line {}'.format(i):i for i in range(l_opts)}
+                rgb_w.options = opts
+                rgb_w.value = l_opts - 1
+
+        del_w.on_click(del_line)
+    # Finally Link Line number to input button
+    ipw.dlink((rgb_w,'label'),(click_w,'description')) # Link line to input buuton.
+    click_w.description='Read Input' # After link is important
 
     return in_w, inpro_w
