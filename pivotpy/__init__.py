@@ -7,11 +7,13 @@ from .i_plots import __all__ as ip_all
 from .g_utils import __all__ as gu_all
 from .vr_parser import __all__ as vp_all
 from .sio import __all__ as si_all
+from .widgets import __all__ as wg_all
 __all__.extend(vp_all)
 __all__.extend(gu_all)
 __all__.extend(sp_all)
 __all__.extend(ip_all)
 __all__.extend(si_all)
+__all__.extend(wg_all)
 
 
 
@@ -21,6 +23,7 @@ from .i_plots import *
 from .g_utils import *
 from .vr_parser import *
 from .sio import *
+from .widgets import *
 from matplotlib.pyplot import show,savefig
 
 mpl_imported=['show','savefig']
