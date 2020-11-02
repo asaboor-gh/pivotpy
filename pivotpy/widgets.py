@@ -136,10 +136,11 @@ dark_style = """<style>
                     border-radius: 0px !important;
                 }
                 .widget-tab {
-                   background-color:#eaf0f0 !important;
-                   border: 1px solid whitesmoke !important;
+                   background-color:black !important;
+                   border: 1px solid black !important;
                    box-shadow: 1px 1px 1px 1px gray !important;
                 }
+
             </style>"""
 
 # Cell
@@ -263,7 +264,7 @@ def get_input_gui(rgb=True,sys_info=None,html_style=None,height=400):
     label_w = ipw.Text(layout=layout)
     rgb_w   = ipw.Dropdown(options={'Red':0,'Green':1,'Blue':2},value=0,layout=layout)
     rgbl_w  = Label('Color: ')
-    click_w= ipw.Button(layout=layout,icon='fa-hand-o-up')
+    click_w= ipw.Button(layout=Layout(width='max-content'),icon='fa-hand-o-up')
     click_w.style.button_color='skyblue'
     # Uniform label widths
     l_width = Layout(width='20%')
@@ -280,14 +281,17 @@ def get_input_gui(rgb=True,sys_info=None,html_style=None,height=400):
     else:
         read_box = [click_w]
 
-    in_w = Box([ipw.HTML(html_style),VBox([
-    ipw.HTML("<h3>Projections</h3>"),
-    HBox([rgbl_w,rgb_w,Label('Label: ',layout=l_width),label_w]).add_class('borderless').add_class('marginless'),
-    HBox([Label('Ions: ',layout=l_width),ions_w,Label('::>>:: ',layout=l_width),ioni_w]).add_class('borderless').add_class('marginless'),
-    HBox([Label('Orbs: ',layout=l_width),orbs_w,Label('::>>:: ',layout=l_width),orbi_w]).add_class('borderless').add_class('marginless'),
-    HBox(read_box).add_class('borderless').add_class('marginless')
-    ])
-    ],layout=Layout(height="{}px".format(height))).add_class('borderless').add_class('marginless')
+    in_w = VBox([ipw.HTML(html_style),
+                ipw.HTML("<h3>Projections</h3>"),
+                HBox([rgbl_w,rgb_w,Label('Label: ',layout=l_width),label_w
+                    ]).add_class('borderless').add_class('marginless'),
+                HBox([Label('Ions: ',layout=l_width),ions_w,Label('::>>:: ',layout=l_width),ioni_w
+                    ]).add_class('borderless').add_class('marginless'),
+                HBox([Label('Orbs: ',layout=l_width),orbs_w,Label('::>>:: ',layout=l_width),orbi_w
+                    ]).add_class('borderless').add_class('marginless'),
+                HBox(read_box).add_class('borderless').add_class('marginless')
+                ],layout=Layout(height="{}px".format(height))
+                ).add_class('marginless')
 
     orbs_w.options= {str(i)+': '+item:str(i) for i,item in enumerate(sys_info.fields)}
     ipw.dlink((orbs_w,'value'), (orbi_w,'value'))
@@ -403,11 +407,22 @@ def get_input_gui(rgb=True,sys_info=None,html_style=None,height=400):
 def show_app(html_style=None):
     gui1,out_w1 = get_files_gui(html_style=html_style)
     load_btn = ipw.Button(description='Load Data')
-    rd_btn = ipw.Dropdown(options=['Bands','DOS'],value='Bands')
+    graph_btn = ipw.Button(description='Load Graph',layout=Layout(width='max-content'))
+    rd_btn = ipw.Dropdown(options=['Bands','DOS'],value='Bands',layout= Layout(width='80px'))
+
+    tabel_w = ipw.HTML(json.dumps({'V':'','a':'','b':'','c':'','Fermi': None,
+                                   'VBM':'','CBM':'','so_max':'','so_min':''}),indent=1)
+    view_tab_w = ipw.HTML()
+    def update_table(change):
+        data_dict = json.loads(tabel_w.value)
+        htm_string = tabulate_data(data_dict)
+        view_tab_w.value = htm_string
+    tabel_w.observe(update_table,'value')
+
     if rd_btn.value == 'DOS':
-        gui2,out_w2 = get_input_gui(rgb=False)
+        gui2,out_w2 = get_input_gui(rgb=False,height=None)
     else:
-        gui2,out_w2 = get_input_gui()
+        gui2,out_w2 = get_input_gui(height=None)
     def on_load(btn):
         load_btn.description='Loading ...'
         try:
@@ -422,10 +437,11 @@ def show_app(html_style=None):
             vfile = os.path.join(os.path.split(out_w1.value)[0],'vasprun.pickle')
             pp.dump_dict(evr.sys_info,outfile=ifile)
             pp.dump_dict(evr,outfile=vfile)
+
         if rd_btn.value=='DOS':
-            tmp_ui,__ = get_input_gui(rgb=False,sys_info=sys_info)
+            tmp_ui,__ = get_input_gui(rgb=False,sys_info=sys_info,height=None)
         else:
-            tmp_ui,__ = get_input_gui(rgb=True,sys_info=sys_info)
+            tmp_ui,__ = get_input_gui(rgb=True,sys_info=sys_info,height=None)
 
         gui2.children = tmp_ui.children
         __.value = out_w2.value # keep values
@@ -436,12 +452,61 @@ def show_app(html_style=None):
     fig = go.FigureWidget()
     fig.update_layout(autosize=True)
 
-    style_w = ipw.Dropdown(options=["plotly", "plotly_white", "plotly_dark", "ggplot2", "seaborn", "simple_white", "none"],value='none')
+    style_w = ipw.Dropdown(options=["plotly", "plotly_white", "plotly_dark", "ggplot2", "seaborn", "simple_white", "none"])
+
     def update_style(change):
         fig.update_layout(template=style_w.value)
     style_w.observe(update_style,'value')
 
-    graph_btn = ipw.Button(description='Load Graph',layout=Layout(width='max-content'))
+    # RGB extra input
+    l_out = Layout(width='20%')
+    b_out = Layout(width='30%')
+    kticks_w = ipw.Text(value='',layout=b_out)
+    ktickv_w = ipw.Text(value='',layout=b_out)
+    kjoin_w  = ipw.Text(value='',layout=b_out)
+    elim_w   = ipw.Text(value='',layout=b_out)
+    sel_en_w = ipw.Dropdown(options=['Fermi','VBM','CBM','so_max','so_min','None'],value='None',layout=b_out)
+    fermi_w  = ipw.Text(value='',layout=b_out)
+
+
+    points_box = HBox([Label('E Type:',layout=l_out),sel_en_w,Label('E-Fermi:',layout=l_out),fermi_w,graph_btn
+                    ]).add_class('marginless')
+
+    in_box = VBox([gui2]).add_class('marginless').add_class('borderless')
+    top_right = HBox([graph_btn,Label('Style: '),style_w
+                ]).add_class('marginless')
+    fig_box = Box([fig],layout=Layout(width='100%')).add_class('marginless')
+    right_box = VBox([
+                top_right,fig_box
+                ]).add_class('marginless').add_class('borderless')
+    def update_box(change):
+        if rd_btn.value == 'Bands':
+            childs = [gui2,VBox([
+                    HBox([Label('Ticks At: ',layout=l_out),kticks_w,Label('Labels: ',layout=l_out),ktickv_w
+                        ]).add_class('borderless').add_class('marginless'),
+                    HBox([Label('Join At: ',layout=l_out),kjoin_w,Label('E Range: ',layout=l_out),elim_w
+                        ]).add_class('marginless').add_class('borderless')
+                    ]).add_class('marginless')]
+            right_box.children = [top_right,fig_box,points_box,view_tab_w]
+        else:
+            childs = [gui2,HBox([Label('E Range:',layout=l_out),elim_w,Label('E-Fermi:',layout=l_out),fermi_w
+                                    ]).add_class('marginless')]
+            right_box.children = [top_right,fig_box,view_tab_w]
+            sel_en_w.value = 'None' # no scatter collection in DOS.
+
+        in_box.children = childs
+    _start = update_box(0) # initialize box
+    rd_btn.observe(update_box,'value')
+
+    upper_box = VBox([
+                HBox([Label('File:',layout=Layout(width='50px')),out_w1
+                    ]).add_class('borderless').add_class('marginless'),
+                HBox([Label('View:',layout=Layout(width='50px')),rd_btn,load_btn
+                    ]).add_class('borderless').add_class('marginless')
+                ]).add_class('marginless').add_class('borderless')
+    left_box = VBox([upper_box,in_box],layout=Layout(width='40%')).add_class('marginless').add_class('borderless')
+    # Garph
+
     def update_graph(btn):
         if out_w2.value:
             fig.data = []
@@ -456,15 +521,30 @@ def show_app(html_style=None):
                 evr = pp.export_vasprun(out_w1.value)
                 graph_btn.description = 'loading export...'
             graph_btn.description = 'Load Graph'
+            # Args of Graph function
+            argdict = json.loads(out_w2.value)
+            argdict.update({'E_Fermi':(float(fermi_w.value) if fermi_w.value else None)})
+            argdict.update({'elim':([float(v) for v in elim_w.value.split(',')] if elim_w.value else None)})
             if rd_btn.value == 'Bands':
-                fig_data = pp.plotly_rgb_lines(path_evr=evr,**json.loads(out_w2.value))
+                argdict.update({'joinPathAt':([int(v) for v in kjoin_w.value.split(',')]
+                                            if kjoin_w.value else None)})
+                argdict.update({'xt_indices':([int(v) for v in kticks_w.value.split(',')]
+                                            if kticks_w.value else [0,-1])})
+                argdict.update({'xt_labels':([v for v in ktickv_w.value.split(',')]
+                                            if ktickv_w.value else ['A','B'])})
+                fig_data = pp.plotly_rgb_lines(path_evr=evr,**argdict)
             else:
-                fig_data = pp.plotly_dos_lines(path_evr=evr,**json.loads(out_w2.value))
+                fig_data = pp.plotly_dos_lines(path_evr=evr,**argdict)
             with fig.batch_animate():
                 for d in fig_data.data:
                     fig.add_trace(d)
                 fig.layout = fig_data.layout
                 fig.update_layout(template=style_w.value) # Also here
+            read_data(tabel_w,evr.poscar)
+            click_data(sel_en_w,fermi_w,tabel_w,fig)
     graph_btn.on_click(update_graph)
-    fig_box = Box([fig],layout=Layout(width='100%')).add_class('borderless')
-    return ipw.Tab([gui1,HBox([VBox([out_w1,load_btn,gui2]),VBox([graph_btn,rd_btn,style_w,fig_box])])]).add_class('marginless')
+
+    style_w.value='plotly' # to trigger callback and resize graph
+    return ipw.Tab([gui1,HBox([left_box,right_box
+                    ]).add_class('marginless').add_class('borderless')
+                    ]).add_class('marginless').add_class('borderless')
