@@ -468,7 +468,7 @@ def click_data(sel_en_w,fermi_w,tabel_w,fig):
                 if key in sel_en_w.value and key != 'None':
                     data_dict[key] = val # Assign value back
                 if 'Fermi' in sel_en_w.value:
-                    fermi_w.value = str(val - e_fermi) # change
+                    fermi_w.value = str(val) # change fermi
             tabel_w.value = json.dumps(data_dict,indent=1)
             #data_send(None) #send data to Table
     for i in range(len(fig.data)):
