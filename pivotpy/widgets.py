@@ -639,7 +639,8 @@ def show_app():
                 evr = pp.export_vasprun(out_w1.value)
                 graph_btn.description = 'loading export...'
             graph_btn.description = 'Load Graph'
-            fermi_w.value = str(evr.sys_info.E_Fermi) # Read Fermi value
+            if not fermi_w.value: #Read Only if not in box.
+                fermi_w.value = str(evr.sys_info.E_Fermi) # E_Fermi
             # Args of Graph function
             argdict = json.loads(out_w2.value)
             argdict.update({'E_Fermi':(float(fermi_w.value) if fermi_w.value else None)})
