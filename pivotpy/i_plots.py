@@ -338,8 +338,8 @@ def plotly_rgb_lines(path_evr    = None,
             for pt in joinPathAt:
                 fig.add_trace(go.Scatter(x=[K[pt],K[pt]],y=ylim,mode='lines',line=dict(color='rgb(0,0,0)',width=2),showlegend=False))
                 fig.add_trace(go.Scatter(x=[K[pt],K[pt]],y=ylim,mode='lines',line=dict(color='rgb(222,222,222)',width=1.2),showlegend=False))
-        fig.update_xaxes(showgrid=True, zeroline=False,showline=True, linewidth=0.1, linecolor='white', mirror=True)
-        fig.update_yaxes(showgrid=False, zeroline=True,showline=True, linewidth=0.1, linecolor='white', mirror=True)
+        fig.update_xaxes(showgrid=True, zeroline=False,showline=True, linewidth=0.1, linecolor='rgba(222,222,222,0.1)', mirror=True)
+        fig.update_yaxes(showgrid=False, zeroline=True,showline=True, linewidth=0.1, linecolor='rgba(222,222,222,0.1)', mirror=True)
         return fig
 
 # Cell
@@ -461,8 +461,8 @@ def plotly_dos_lines(path_evr     = None,
             for p,l,c in zip(pdos,labels,colors):
                 fig.add_trace(go.Scatter(y=en,x=p,line_color='rgb({},{},{})'.format(*[int(255*i) for i in c]),\
                                 name=l,**args_dic))
-        fig.update_xaxes(showgrid=True, zeroline=True,showline=True, linewidth=0.1, linecolor='white', mirror=True)
-        fig.update_yaxes(showgrid=True, zeroline=True,showline=True, linewidth=0.1, linecolor='white', mirror=True)
+        fig.update_xaxes(showgrid=True, zeroline=True,showline=True, linewidth=0.1, linecolor='rgba(222,222,222,0.1)', mirror=True)
+        fig.update_yaxes(showgrid=True, zeroline=True,showline=True, linewidth=0.1, linecolor='rgba(222,222,222,0.1)', mirror=True)
         return fig
 
 # Cell

@@ -133,9 +133,12 @@ def get_summary(xml_data=None):
             dos_fields = [field for field in dos_fields if 'energy' not in field]
     except:
         dos_fields = []
+    for i in xml_data.iter('i'): #efermi for condition required.
+        if(i.attrib=={'name': 'efermi'}):
+            efermi=float(i.text)
     #Writing information to a dictionary
-    info_dic={'SYSTEM':incar['SYSTEM'],'NION':n_ions,'TypeION':type_ions,'ElemName':elem_name,\
-             'ElemIndex':elem_index,'ISPIN':ISPIN,'fields':dos_fields,'incar':incar}
+    info_dic={'SYSTEM':incar['SYSTEM'],'NION':n_ions,'TypeION':type_ions,'ElemName':elem_name,'ElemIndex':elem_index,\
+        'E_Fermi': efermi,'ISPIN':ISPIN,'fields':dos_fields,'incar':incar}
     return Dic2Dot(info_dic)
 
 # Cell
@@ -567,7 +570,7 @@ def load_export(path= './vasprun.xml',
     os.chdir(this_loc)
 
     # Work now!
-    sys_info = vp.Dic2Dot({'SYSTEM': SYSTEM,'NION': NION,'TypeION': TypeION,'ElemName': ElemName, 'fields':fields, 'incar': incar,
+    sys_info = vp.Dic2Dot({'SYSTEM': SYSTEM,'NION': NION,'TypeION': TypeION,'ElemName': ElemName, 'E_Fermi': E_Fermi,'fields':fields, 'incar': incar,
                'ElemIndex': ElemIndex,'ISPIN': ISPIN})
     dim_info = vp.Dic2Dot({'⇅':'Each of SpinUp/SpinDown Arrays','kpoints': '(NKPTS,3)','kpath': '(NKPTS,1)','bands': '⇅(NKPTS,NBANDS)',
 'dos': '⇅(grid_size,3)','pro_dos': '⇅(NION,grid_size,en+pro_fields)','pro_bands': '⇅(NION,NKPTS,NBANDS,pro_fields)'})
