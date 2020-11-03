@@ -16,17 +16,12 @@ See GIF here:
 ![GIF](widget.gif)
 
 ```
-#collapse_output
 import pivotpy as pp
 print(', '.join(pp.__all__))
 ```
-<details class="description">
-    <summary>Output details ...</summary>
-    
+
     Dic2Dot, read_asxml, exclude_kpts, get_ispin, get_summary, get_kpts, get_tdos, get_evals, get_bands_pro_set, get_dos_pro_set, get_structure, export_vasprun, load_export, make_dot_dict, dump_dict, get_file_size, interpolate_data, ps_to_py, ps_to_std, select_dirs, select_files, get_child_items, invert_color, printr, printg, printb, printy, printm, printc, EncodeFromNumpy, DecodeToNumpy, link_to_class, plot_bands, modify_axes, quick_bplot, add_text, add_legend, add_colorbar, create_rgb_lines, quick_rgb_lines, quick_color_lines, init_figure, select_pdos, collect_dos, quick_dos_lines, plt_to_html, get_rgb_data, rgb_to_plotly, plotly_to_html, plotly_rgb_lines, plotly_dos_lines, iplotfromtxt, save_mp_API, load_mp_data, get_crystal, get_poscar, trace_kpath, get_kmesh, intersect_3p_p_3v, centroid, order, in_vol_sector, out_bz_plane, to_xy, rad_angle, arctan_full, get_bz, plot_bz, show, savefig
     
-
-</details>
 
 ```
 import os 
