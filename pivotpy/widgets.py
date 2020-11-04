@@ -607,7 +607,7 @@ def matplotlib_code(rd_btn,out_w1,dict_html):
 # Cell
 def generate_summary(paths_list=None):
     # Make Data Frame
-    import pandas as pd
+    import pandas as pd, numpy as np
     result_paths = []
     if paths_list:
         for item in paths_list:
@@ -624,18 +624,19 @@ def generate_summary(paths_list=None):
         except: pass
     out_dict = {} # placeholder
     if result_dicts:
-        out_dict.update({k:[v] for k,v in result_dicts[0].items()})
+        out_dict.update({k:[v] if v else np.nan for k,v in result_dicts[0].items()})
         for i,d in enumerate(result_dicts):
             if i != 0:
                 for k,v in d.items():
+                    v = np.nan if not v else v
                     try: out_dict[k].append(v)
                     except:
-                        out_dict.update({k:['' for l in range(i)]}) #if not key before, add to all previous
+                        out_dict.update({k:[np.nan for l in range(i)]}) #if not key before, add to all previous
                         out_dict[k].append(v) # Then append for current value
             # If next dictionary does not have key
             for k in out_dict.keys():
                 if k not in d.keys():
-                    out_dict[k].append('')
+                    out_dict[k].append(np.nan)
     try: out_dict.pop('Fermi',None) # Remove Fermi as not necessary
     except: pass
 
