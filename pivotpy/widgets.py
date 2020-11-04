@@ -636,6 +636,8 @@ def generate_summary(paths_list=None):
             for k in out_dict.keys():
                 if k not in d.keys():
                     out_dict[k].append('')
+    try: out_dict.pop('Fermi',None) # Remove Fermi as not necessary
+    except: pass
 
     df = pd.DataFrame(out_dict)
     return df
@@ -643,6 +645,9 @@ def generate_summary(paths_list=None):
 
 # Cell
 def show_app():
+    """
+    Displays a GUI for visulaizing and manipulating output of vasp calculations.
+    """
     l_btn = Layout(width='max-content') # For button
     out_tab = ipw.Output()
     out_tab.add_class('output')
@@ -905,12 +910,12 @@ def show_app():
 
     style_w.value='plotly' # to trigger callback and resize graph
     intro_html = ipw.HTML("<h2>Pivotpy</h2><p>Filter files here and switch tab to Graphs. You can create cache ahead of time to load quickly while working. If anything does not seem to work, see the error in STD(out/err) tab.</p><marquee style='color:red'>Pivotpy GUI based on ipywidgets!</marquee>")
-    header_box = HBox([intro_html,Label('Theme:',layout=Layout(width='80px')),theme_w]).add_class('marginless').add_class('borderless')
+    header_box = HBox([intro_html,Label('Theme:',layout=Layout(width='80px')),theme_w
+                    ]).add_class('marginless').add_class('borderless')
     intro_box = VBox([header_box,gui1]).add_class('marginless').add_class('borderless').add_class('marginless')
     tab =  ipw.Tab([intro_box,HBox([theme_html,left_box,right_box
                     ]).add_class('marginless').add_class('borderless'),
-                    VBox([
-                    HBox([
+                    VBox([HBox([
                         ipw.HTML('<h2>Errors/Generted Code is Captured Here</h2>',layout=Layout(width='85%')),
                         Label('Theme:',layout=Layout(width='50px')),
                         theme_w
