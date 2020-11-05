@@ -531,7 +531,7 @@ def tabulate_data(data_dict):
       font-family: "Times New Roman", "Times", "serif" !important;}
       th, td {text-align: center !important;
       border: 1px solid gray !important;
-      padding: 1px 15px 1px 15px !important;}
+      padding: 0px 15px 0px 15px !important;}
       tr {width: 100% !important;}
       tr:nth-child(odd) {font-weight:bold !important;}
       </style>"""
@@ -574,8 +574,11 @@ def color_toggle(tog_w,fig,rd_btn):
 def clrear_cache(out_w1,cache_w,tabel_w):
     pwd = os.path.split(out_w1.value)[0]
     if 'Table' in cache_w.value:
-        tabel_w.value = json.dumps({'sys':'','V':'','a':'','b':'','c':'','Fermi': None,
-                             'VBM':'','CBM':'','so_max':'','so_min':''})
+        j_s = json.loads(tabel_w.value)
+        # Avoid deleting V,a,b,Fermi
+        for k in ['VBM','CBM','so_max','so_min']:
+            j_s[k] = ''
+        tabel_w.value = json.dumps(j_s)
     if 'PWD' in cache_w.value:
         try:
             os.remove(os.path.join(pwd,'sys_info.pickle'))
@@ -926,7 +929,8 @@ def show_app():
                         ]).add_class('marginless').add_class('borderless'),
                     out_tab
                     ]).add_class('marginless').add_class('borderless')
-                    ],layout=Layout(height='580px')).add_class('marginless').add_class('borderless')
+                    ],layout=Layout(min_height='80vh',max_height='100vh',min_width='750px',max_width='100vw')
+                        ).add_class('marginless').add_class('borderless')
     tab.set_title(0,'Home')
     tab.set_title(1,'Graphs')
     tab.set_title(2,'STD(out/err)')
