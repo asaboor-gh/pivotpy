@@ -824,10 +824,10 @@ def show_app():
     in_box = VBox([gui2]).add_class('marginless').add_class('borderless')
     top_right = HBox([graph_btn,Label('Style:'),style_w,Label('Theme:'),theme_w
                     ]).add_class('marginless')
-    fig_box = Box([fig],layout=Layout(height='380px')).add_class('marginless')
+    fig_box = Box([fig],layout=Layout(min_height='380px')).add_class('marginless')
     right_box = VBox([
                 top_right,fig_box
-                ],layout=Layout(width='60%')).add_class('marginless').add_class('borderless')
+                ],layout=Layout(min_width='60%')).add_class('marginless').add_class('borderless')
 
     def update_theme(change):
         if 'Dark' in theme_w.value:
@@ -867,7 +867,7 @@ def show_app():
                 HBox([Label('View:',layout=Layout(width='50px')),rd_btn,load_btn
                     ]).add_class('borderless').add_class('marginless')
                 ]).add_class('marginless').add_class('borderless')
-    left_box = VBox([upper_box,in_box,edit_box,fig_otions, cache_box,summary_box],layout=Layout(width='40%')).add_class('marginless').add_class('borderless')
+    left_box = VBox([upper_box,in_box,edit_box,fig_otions, cache_box,summary_box],layout=Layout(max_width='40%')).add_class('marginless').add_class('borderless')
 
     # Garph
     @out_tab.capture(clear_output=True,wait=True)
@@ -929,7 +929,7 @@ def show_app():
                         ]).add_class('marginless').add_class('borderless'),
                     out_tab
                     ]).add_class('marginless').add_class('borderless')
-                    ],layout=Layout(min_height='80vh',max_height='100vh',min_width='750px',max_width='100vw')
+                    ],layout=Layout(min_height='80vh',max_height='100vh',min_width='650px',max_width='100vw')
                         ).add_class('marginless').add_class('borderless')
     tab.set_title(0,'Home')
     tab.set_title(1,'Graphs')
