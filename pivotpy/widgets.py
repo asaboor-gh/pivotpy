@@ -929,7 +929,7 @@ def show_app():
                         ]).add_class('marginless').add_class('borderless'),
                     out_tab
                     ]).add_class('marginless').add_class('borderless')
-                    ],layout=Layout(min_height='80vh',max_height='100vh',min_width='650px',max_width='100vw')
+                    ],layout=Layout(min_height='80vh',max_height='100vh',min_width='700px',max_width='100vw')
                         ).add_class('marginless').add_class('borderless')
     tab.set_title(0,'Home')
     tab.set_title(1,'Graphs')
