@@ -652,6 +652,11 @@ def show_app():
     """
     Displays a GUI for visulaizing and manipulating output of vasp calculations.
     """
+    tab =  ipw.Tab(layout=Layout(min_height='80vh',max_height='100vh',min_width='700px',max_width='100vw')
+                    ).add_class('marginless').add_class('borderless') # Main Tab
+    for i,item in enumerate(['Home','Graphs','STD(out/err)']):
+        tab.set_title(i,item)
+
     l_btn = Layout(width='max-content') # For button
     out_tab = ipw.Output()
     out_tab.add_class('output')
@@ -690,6 +695,7 @@ def show_app():
         gui2,out_w2 = get_input_gui(height=None)
     @out_tab.capture(clear_output=True,wait=True)
     def on_load(btn):
+        tab.selected_index = 2
         load_btn.description='Loading ...'
         try:
             path = os.path.split(out_w1.value)[0]
@@ -711,7 +717,7 @@ def show_app():
             pp.dump_dict(evr.sys_info,outfile=ifile)
             pp.dump_dict(evr,outfile=vfile)
             print('Done')
-
+        tab.selected_index = 1
         if rd_btn.value=='DOS':
             tmp_ui,__ = get_input_gui(rgb=False,sys_info=sys_info,height=None)
         else:
@@ -775,6 +781,7 @@ def show_app():
     mpl_btn = ipw.Button(description='Grenerate Matplotib Code',layout=l_btn)
     @out_tab.capture(clear_output=True,wait=True)
     def mpl_code(btn):
+        tab.selected_index = 2
         from IPython.display import Markdown, display
         display(ipw.HTML("<h3>Copy code below and run</h3>"))
         mpl_btn.description = 'Generating...'
@@ -792,6 +799,7 @@ def show_app():
     summary_btn = ipw.Button(description='Project Summary',layout=l_btn)
     @out_tab.capture(clear_output=True,wait=True)
     def df_out(btn):
+        tab.selected_index = 2
         summary_btn.description = 'See STD(out/err) Tab'
         from IPython.display import display,Markdown
         paths = [v for k,v in out_w1.options.items()]
@@ -872,6 +880,7 @@ def show_app():
     # Garph
     @out_tab.capture(clear_output=True,wait=True)
     def update_graph(btn):
+        tab.selected_index = 2
         if out_w2.value:
             fig.data = []
             try:
@@ -904,7 +913,7 @@ def show_app():
                 fig_data = pp.plotly_rgb_lines(path_evr=evr,**argdict)
             else:
                 fig_data = pp.plotly_dos_lines(path_evr=evr,**argdict)
-
+            tab.selected_index = 1
             with fig.batch_animate():
                 for d in fig_data.data:
                     fig.add_trace(d)
@@ -913,25 +922,36 @@ def show_app():
             dict_html.value = json.dumps(argdict)  # Save for later generation.
             _rrdd_ = read_data(tabel_w,evr.poscar,evr.sys_info)
             click_data(sel_en_w,fermi_w,tabel_w,fig)
+
+        # end of function
     graph_btn.on_click(update_graph)
+
+    # Open fig in large window
+    expand_w = ipw.Button(icon = "fa-expand",layout=l_btn)
+    top_right.children = [*top_right.children,expand_w]
+    @out_tab.capture(clear_output=True,wait=True)
+    def expand_fig(btn):
+        from IPython.display import display
+        tab.selected_index = 2
+        display(fig)
+    expand_w.on_click(expand_fig)
 
     style_w.value='plotly' # to trigger callback and resize graph
     intro_html = ipw.HTML("<h2>Pivotpy</h2><p>Filter files here and switch tab to Graphs. You can create cache ahead of time to load quickly while working. If anything does not seem to work, see the error in STD(out/err) tab.</p><marquee style='color:red'>Pivotpy GUI based on ipywidgets!</marquee>")
     header_box = HBox([intro_html,Label('Theme:',layout=Layout(width='80px')),theme_w
                     ]).add_class('marginless').add_class('borderless')
     intro_box = VBox([header_box,gui1,summary_btn]).add_class('marginless').add_class('borderless').add_class('marginless')
-    tab =  ipw.Tab([intro_box,HBox([theme_html,left_box,right_box
-                    ]).add_class('marginless').add_class('borderless'),
+    tab.children = [intro_box,
+                    HBox([theme_html,
+                          left_box,
+                          right_box
+                        ]).add_class('marginless').add_class('borderless'),
                     VBox([HBox([
                         ipw.HTML('<h2>Errors/Generted Code is Captured Here</h2>',layout=Layout(width='85%')),
                         Label('Theme:',layout=Layout(width='50px')),
                         theme_w
                         ]).add_class('marginless').add_class('borderless'),
-                    out_tab
-                    ]).add_class('marginless').add_class('borderless')
-                    ],layout=Layout(min_height='80vh',max_height='100vh',min_width='700px',max_width='100vw')
-                        ).add_class('marginless').add_class('borderless')
-    tab.set_title(0,'Home')
-    tab.set_title(1,'Graphs')
-    tab.set_title(2,'STD(out/err)')
+                        out_tab
+                        ]).add_class('marginless').add_class('borderless')
+                    ]
     return tab
