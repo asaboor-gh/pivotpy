@@ -622,7 +622,8 @@ def generate_summary(paths_list=None):
                 result_paths.append(os.path.join(os.path.split(item)[0],'result.json'))
     result_dicts = []
     for path in result_paths:
-        _p_ = os.path.split(path)[0].split(common_prefix)[1]
+        try: _p_ = os.path.split(path)[0].split(common_prefix)[1]
+        except: _p_ = '' #In current directory
         try:
             f = open(path,'r')
             l_d = json.load(f)
