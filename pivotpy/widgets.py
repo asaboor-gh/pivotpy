@@ -933,6 +933,7 @@ def show_app():
     def expand_fig(btn):
         from IPython.display import display
         tab.selected_index = 2
+        sel_en_w.value = 'None'
         display(fig)
     expand_w.on_click(expand_fig)
 
