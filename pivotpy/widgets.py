@@ -610,9 +610,11 @@ def matplotlib_code(rd_btn,out_w1,dict_html):
 # Cell
 def generate_summary(paths_list=None):
     # Make Data Frame
-    import pandas as pd, numpy as np
+    import pandas as pd, numpy as np, os
     result_paths = []
+    common_prefix = '' #placeholder
     if paths_list:
+        common_prefix = os.path.commonprefix(paths_list)
         for item in paths_list:
             if item and os.path.isdir(item):
                 result_paths.append(os.path.join(item,'result.json'))
@@ -620,9 +622,12 @@ def generate_summary(paths_list=None):
                 result_paths.append(os.path.join(os.path.split(item)[0],'result.json'))
     result_dicts = []
     for path in result_paths:
+        _p_ = os.path.split(path)[0].split(common_prefix)[1]
         try:
             f = open(path,'r')
-            result_dicts.append(json.load(f))
+            l_d = json.load(f)
+            l_d.update({'rel_path':_p_})
+            result_dicts.append(l_d)
             f.close()
         except: pass
     out_dict = {} # placeholder
@@ -644,15 +649,17 @@ def generate_summary(paths_list=None):
     except: pass
 
     df = pd.DataFrame(out_dict)
-    return df
+    if common_prefix:
+        return df.style.set_caption("Root Path: {}".format(common_prefix)) # return with header
+    return df #return simple
 
 
 # Cell
-def show_app():
+def show_app(height=600):
     """
-    Displays a GUI for visulaizing and manipulating output of vasp calculations.
+    Displays a GUI for visulaizing and manipulating output of vasp calculations. It only has one argument `height` which sets `min-height` of the app.
     """
-    tab =  ipw.Tab(layout=Layout(min_height='80vh',max_height='100vh',min_width='700px',max_width='100vw')
+    tab =  ipw.Tab(layout=Layout(min_height='{}px'.format(height),max_height='100vh',min_width='700px',max_width='100vw')
                     ).add_class('marginless').add_class('borderless') # Main Tab
     for i,item in enumerate(['Home','Graphs','STD(out/err)']):
         tab.set_title(i,item)
@@ -678,7 +685,7 @@ def show_app():
     fermi_w  = ipw.Text(value='',layout=b_out)
     theme_w = ipw.Dropdown(options=['Default','Light','Dark'],value='Light',layout=l_btn)
     theme_html = ipw.HTML(light_style) # To change theme.
-    dict_html = ipw.HTML(json.dumps({})) # To store Fig dictionary
+    dict_html = ipw.HTML(json.dumps({})) # To store Fig args dictionary
 
     view_tab_w = ipw.HTML()
     @out_tab.capture(clear_output=True,wait=True)
@@ -805,8 +812,8 @@ def show_app():
         paths = [v for k,v in out_w1.options.items()]
         df = generate_summary(paths_list=paths)
         display(df)
-        print('Code for above DataFrame and subsequent plotting')
-        print('________________________________________________')
+        print('Generate above dataframe by code below:')
+        print('_______________________________________')
         _code = "import pivotpy as pp\npaths = ['{}']\ndf = pp.generate_summary(paths_list=paths)\ndf".format(
                 "',\n         '".join([str(p).replace('\\','/') for p in paths]))
         _code += "\n#ax = pp.init_figure()\n#df.plot(ax=ax,x='sys',y=['V','a'])"
@@ -926,6 +933,17 @@ def show_app():
         # end of function
     graph_btn.on_click(update_graph)
 
+    # Display few good things in output.
+    @out_tab.capture(clear_output=True,wait=True)
+    def show_args(change):
+        if out_w1.value:
+            print("path = '{}'".format(out_w1.value))
+            _str_out = "args_dict = dict("
+            for k,v in json.loads(dict_html.value).items():
+                _str_out += "\n            {} = {},".format(k,v)
+            print(_str_out,"\n            )")
+
+    dict_html.observe(show_args,'value') # change takes place after graph update
     # Open fig in large window
     expand_w = ipw.Button(icon = "fa-expand",layout=l_btn)
     top_right.children = [*top_right.children,expand_w]
@@ -941,7 +959,8 @@ def show_app():
     intro_html = ipw.HTML("<h2>Pivotpy</h2><p>Filter files here and switch tab to Graphs. You can create cache ahead of time to load quickly while working. If anything does not seem to work, see the error in STD(out/err) tab.</p><marquee style='color:red'>Pivotpy GUI based on ipywidgets!</marquee>")
     header_box = HBox([intro_html,Label('Theme:',layout=Layout(width='80px')),theme_w
                     ]).add_class('marginless').add_class('borderless')
-    intro_box = VBox([header_box,gui1,summary_btn]).add_class('marginless').add_class('borderless').add_class('marginless')
+    summary_gui = HBox([Label(),summary_btn]).add_class('borderless')
+    intro_box = VBox([header_box,gui1,summary_gui]).add_class('marginless').add_class('borderless').add_class('marginless')
     tab.children = [intro_box,
                     HBox([theme_html,
                           left_box,
