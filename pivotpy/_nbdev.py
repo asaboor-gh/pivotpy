@@ -82,7 +82,8 @@ index = {"get_rgb_data": "InteractivePlots.ipynb",
          "get_structure": "XmlElementTree.ipynb",
          "export_vasprun": "XmlElementTree.ipynb",
          "load_export": "XmlElementTree.ipynb",
-         "dump_dict": "XmlElementTree.ipynb"}
+         "dump_dict": "XmlElementTree.ipynb",
+         "load_from_dump": "XmlElementTree.ipynb"}
 
 modules = ["i_plots.py",
            "s_plots.py",

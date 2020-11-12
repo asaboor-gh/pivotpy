@@ -708,9 +708,7 @@ def show_app(height=600):
         try:
             path = os.path.split(out_w1.value)[0]
             file = os.path.join(path,'sys_info.pickle')
-            with open(file,'rb') as f:
-                sys_info = pickle.load(f)
-            f.close()
+            sys_info = pp.load_from_dump(file)
             r_f = os.path.join(path,'result.json')
             with open(r_f,'r') as f:
                  tabel_w.value = '\n'.join(f.readlines())
@@ -895,9 +893,7 @@ def show_app(height=600):
                 print('Trying to Load Cache for Graph ...')
                 file = os.path.join(os.path.split(out_w1.value)[0],'vasprun.pickle')
                 graph_btn.description = file
-                with open(file,'rb') as f:
-                    evr = pickle.load(f)
-                f.close()
+                evr = pp.load_from_dump(file)
                 graph_btn.description = 'loading pickle...'
             except:
                 print('No cache found. Loading from file {} ...'.format(out_w1.value))
