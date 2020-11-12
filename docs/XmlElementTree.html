@@ -29,6 +29,15 @@ nb_path: "XmlElementTree.ipynb"
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Almost every object in this module returns a <a href="/pivotpy/XmlElementTree.html#Dict2Data"><code>Dict2Data</code></a> object with attributes accessible via dot notation. This object can by transformed to a dictionary by <code>to_dict()</code> method on the object.</li>
+</ul>
+
+</div>
+</div>
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -40,7 +49,7 @@ nb_path: "XmlElementTree.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Dict2Data" class="doc_header"><code>class</code> <code>Dict2Data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L9" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Dict2Data</code>(<strong><code>d</code></strong>) :: <code>dict</code></p>
+<h2 id="Dict2Data" class="doc_header"><code>class</code> <code>Dict2Data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L8" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Dict2Data</code>(<strong><code>d</code></strong>) :: <code>dict</code></p>
 </blockquote>
 <ul>
 <li>Returns a Data object with dictionary keys as attributes of Data accessible by dot notation.</li>
@@ -83,41 +92,6 @@ x.B.to_dict()
 </div>
     {% endraw %}
 
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="Dic2Dot" class="doc_header"><code>class</code> <code>Dic2Dot</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L70" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Dic2Dot</code>() :: <code>dict</code></p>
-</blockquote>
-<ul>
-<li>Returns dot notation accessible if a dictionary is input.</li>
-<li>It is used to pack all functions in a dictionary.</li>
-</ul>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Parser-Functions">Parser Functions<a class="anchor-link" href="#Parser-Functions"> </a></h2>
@@ -135,7 +109,7 @@ x.B.to_dict()
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="read_asxml" class="doc_header"><code>read_asxml</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L81" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>read_asxml</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>suppress_warning</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="read_asxml" class="doc_header"><code>read_asxml</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L69" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>read_asxml</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>suppress_warning</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <ul>
 <li><p>Reads a big vasprun.xml file into memory once and then apply commands.
@@ -181,7 +155,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="exclude_kpts" class="doc_header"><code>exclude_kpts</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L131" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>exclude_kpts</code>(<strong><code>xml_data</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="exclude_kpts" class="doc_header"><code>exclude_kpts</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L119" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>exclude_kpts</code>(<strong><code>xml_data</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns number of kpoints to exclude used from IBZKPT.</li>
@@ -223,7 +197,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_ispin" class="doc_header"><code>get_ispin</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L152" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_ispin</code>(<strong><code>xml_data</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_ispin" class="doc_header"><code>get_ispin</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L140" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_ispin</code>(<strong><code>xml_data</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns value of ISPIN.</li>
@@ -265,7 +239,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_summary" class="doc_header"><code>get_summary</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L169" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_summary</code>(<strong><code>xml_data</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_summary" class="doc_header"><code>get_summary</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L157" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_summary</code>(<strong><code>xml_data</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns overview of system parameters.</li>
@@ -274,7 +248,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 </ul>
 </li>
 <li><strong>Returns</strong><ul>
-<li>dict     : Dictionary that contains system information.</li>
+<li>Data     : pivotpy.Dict2Data with attibutes accessible via dot notation.</li>
 </ul>
 </li>
 </ul>
@@ -305,7 +279,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pivotpy.vr_parser</span> <span class="k">as</span> <span class="nn">vp</span>
 <span class="n">xml_data</span><span class="o">=</span><span class="n">vp</span><span class="o">.</span><span class="n">read_asxml</span><span class="p">(</span><span class="n">path</span><span class="o">=</span> <span class="s1">&#39;../vasprun.xml&#39;</span><span class="p">)</span>
-<span class="n">vp</span><span class="o">.</span><span class="n">get_summary</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="n">xml_data</span><span class="p">)</span>
+<span class="n">get_summary</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="n">xml_data</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -330,25 +304,30 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>{&#39;SYSTEM&#39;: &#39;AlAs&#39;,
- &#39;NION&#39;: 2,
- &#39;TypeION&#39;: 2,
- &#39;ElemName&#39;: [&#39;Al&#39;, &#39;As&#39;],
- &#39;ElemIndex&#39;: [0, 1, 2],
- &#39;ISPIN&#39;: 1,
- &#39;fields&#39;: [&#39;s&#39;, &#39;py&#39;, &#39;pz&#39;, &#39;px&#39;, &#39;dxy&#39;, &#39;dyz&#39;, &#39;dz2&#39;, &#39;dxz&#39;, &#39;x2-y2&#39;],
- &#39;incar&#39;: {&#39;SYSTEM&#39;: &#39;AlAs&#39;,
-  &#39;PREC&#39;: &#39;high&#39;,
-  &#39;ALGO&#39;: &#39;N&#39;,
-  &#39;NELMIN&#39;: &#39;7&#39;,
-  &#39;EDIFF&#39;: &#39;0.00000100&#39;,
-  &#39;ISMEAR&#39;: &#39;0&#39;,
-  &#39;SIGMA&#39;: &#39;0.10000000&#39;,
-  &#39;LORBIT&#39;: &#39;11&#39;,
-  &#39;KPOINT_BSE&#39;: &#39;-1     0     0     0&#39;,
-  &#39;LHFCALC&#39;: &#39;T&#39;,
-  &#39;HFSCREEN&#39;: &#39;0.20100000&#39;,
-  &#39;PRECFOCK&#39;: &#39;fast&#39;}}</pre>
+<pre>Data(
+    SYSTEM = AlAs
+    NION = 2
+    TypeION = 2
+    ElemName = [&#39;Al&#39;, &#39;As&#39;]
+    ElemIndex = [0, 1, 2]
+    E_Fermi = 3.72526782
+    ISPIN = 1
+    fields = [&#39;s&#39;, &#39;py&#39;, &#39;pz&#39;, &#39;px&#39;, &#39;dxy&#39;, &#39;dyz&#39;, &#39;dz2&#39;, &#39;dxz&#39;, &#39;x2-y2&#39;]
+    incar = Data(
+        SYSTEM = AlAs
+        PREC = high
+        ALGO = N
+        NELMIN = 7
+        EDIFF = 0.00000100
+        ISMEAR = 0
+        SIGMA = 0.10000000
+        LORBIT = 11
+        KPOINT_BSE = -1     0     0     0
+        LHFCALC = T
+        HFSCREEN = 0.20100000
+        PRECFOCK = fast
+    )
+)</pre>
 </div>
 
 </div>
@@ -370,7 +349,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_kpts" class="doc_header"><code>get_kpts</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L207" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_kpts</code>(<strong><code>xml_data</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>0</code></em>, <strong><code>joinPathAt</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_kpts" class="doc_header"><code>get_kpts</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L195" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_kpts</code>(<strong><code>xml_data</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>0</code></em>, <strong><code>joinPathAt</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns kpoints and calculated kpath.</li>
@@ -381,7 +360,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 </ul>
 </li>
 <li><strong>Returns</strong><ul>
-<li>dict     : Dictionary that contains kpoints ans kpath.</li>
+<li>Data     : pivotpy.Dict2Data with attibutes <code>kpath</code> and <code>kpoints</code></li>
 </ul>
 </li>
 </ul>
@@ -410,7 +389,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">vp</span><span class="o">.</span><span class="n">get_kpts</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="n">xml_data</span><span class="p">,</span><span class="n">skipk</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">get_kpts</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="n">xml_data</span><span class="p">,</span><span class="n">skipk</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -425,7 +404,11 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>dict_keys([&#39;NKPTS&#39;, &#39;kpoints&#39;, &#39;kpath&#39;])</pre>
+<pre>Data(
+    NKPTS = 126
+    kpoints = &lt;ndarray:shape=(126, 3)&gt;
+    kpath = &lt;list:len=126&gt;
+)</pre>
 </div>
 
 </div>
@@ -447,7 +430,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_tdos" class="doc_header"><code>get_tdos</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L241" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_tdos</code>(<strong><code>xml_data</code></strong>=<em><code>None</code></em>, <strong><code>spin_set</code></strong>=<em><code>1</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_tdos" class="doc_header"><code>get_tdos</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L229" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_tdos</code>(<strong><code>xml_data</code></strong>=<em><code>None</code></em>, <strong><code>spin_set</code></strong>=<em><code>1</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns total dos for a spin_set (default 1) and energy limit. If spin-polarized calculations, gives SpinUp and SpinDown keys as well.</li>
@@ -458,7 +441,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 </ul>
 </li>
 <li><strong>Returns</strong><ul>
-<li>dict     : Dictionary that contains E_Fermi, ISPIN,tdos.</li>
+<li>Data     : pivotpy.Dict2Data with attibutes E_Fermi, ISPIN,tdos.</li>
 </ul>
 </li>
 </ul>
@@ -487,7 +470,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">vp</span><span class="o">.</span><span class="n">get_tdos</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="n">xml_data</span><span class="p">,</span><span class="n">spin_set</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[])</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">get_tdos</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="n">xml_data</span><span class="p">,</span><span class="n">spin_set</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[])</span>
 </pre></div>
 
     </div>
@@ -502,7 +485,11 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>dict_keys([&#39;E_Fermi&#39;, &#39;ISPIN&#39;, &#39;tdos&#39;])</pre>
+<pre>Data(
+    E_Fermi = 3.72526782
+    ISPIN = 1
+    tdos = &lt;ndarray:shape=(301, 3)&gt;
+)</pre>
 </div>
 
 </div>
@@ -524,7 +511,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_evals" class="doc_header"><code>get_evals</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L294" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_evals</code>(<strong><code>xml_data</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_evals" class="doc_header"><code>get_evals</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L282" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_evals</code>(<strong><code>xml_data</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns eigenvalues as numpy array. If spin-polarized calculations, gives SpinUp and SpinDown keys as well.</li>
@@ -535,7 +522,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 </ul>
 </li>
 <li><strong>Returns</strong><ul>
-<li>dict     : Dictionary that contains evals and related parameters.</li>
+<li>Data     : pivotpy.Dict2Data with attibutes evals and related parameters.</li>
 </ul>
 </li>
 </ul>
@@ -564,8 +551,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">vp</span><span class="o">.</span><span class="n">get_evals</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="n">xml_data</span><span class="p">,</span><span class="n">skipk</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-<span class="n">vp</span><span class="o">.</span><span class="n">get_evals</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="n">xml_data</span><span class="p">,</span><span class="n">skipk</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span><span class="o">.</span><span class="n">bands_range</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">get_evals</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="n">xml_data</span><span class="p">,</span><span class="n">skipk</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -577,18 +563,16 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 <div class="output_area">
 
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>dict_keys([&#39;E_Fermi&#39;, &#39;ISPIN&#39;, &#39;NBANDS&#39;, &#39;bands_range&#39;, &#39;evals&#39;])
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>range(1, 8)</pre>
+<pre>Data(
+    E_Fermi = 3.72526782
+    ISPIN = 1
+    NBANDS = 7
+    bands_range = range(1, 8)
+    evals = &lt;ndarray:shape=(126, 7)&gt;
+)</pre>
 </div>
 
 </div>
@@ -610,7 +594,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_bands_pro_set" class="doc_header"><code>get_bands_pro_set</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L347" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_bands_pro_set</code>(<strong><code>xml_data</code></strong>=<em><code>None</code></em>, <strong><code>spin_set</code></strong>=<em><code>1</code></em>, <strong><code>skipk</code></strong>=<em><code>0</code></em>, <strong><code>bands_range</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_bands_pro_set" class="doc_header"><code>get_bands_pro_set</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L335" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_bands_pro_set</code>(<strong><code>xml_data</code></strong>=<em><code>None</code></em>, <strong><code>spin_set</code></strong>=<em><code>1</code></em>, <strong><code>skipk</code></strong>=<em><code>0</code></em>, <strong><code>bands_range</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns bands projection of a spin_set(default 1) as numpy array. If spin-polarized calculations, gives SpinUp and SpinDown keys as well.</li>
@@ -622,7 +606,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 </ul>
 </li>
 <li><strong>Returns</strong><ul>
-<li>dict     : Dictionary that contains bands projections and related parameters.</li>
+<li>Data     : pivotpy.Dict2Data with attibutes of bands projections and related parameters.</li>
 </ul>
 </li>
 </ul>
@@ -651,7 +635,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">vp</span><span class="o">.</span><span class="n">get_bands_pro_set</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="n">xml_data</span><span class="p">,</span><span class="n">skipk</span><span class="o">=</span><span class="mi">135</span><span class="p">,</span><span class="n">spin_set</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">bands_range</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">get_bands_pro_set</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="n">xml_data</span><span class="p">,</span><span class="n">skipk</span><span class="o">=</span><span class="mi">135</span><span class="p">,</span><span class="n">spin_set</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">bands_range</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 </pre></div>
 
     </div>
@@ -666,13 +650,10 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>{&#39;labels&#39;: [&#39;s&#39;, &#39;py&#39;, &#39;pz&#39;, &#39;px&#39;, &#39;dxy&#39;, &#39;dyz&#39;, &#39;dz2&#39;, &#39;dxz&#39;, &#39;x2-y2&#39;],
- &#39;pros&#39;: array([[[[0.09  , 0.    , 0.    , 0.    , 0.    , 0.    , 0.    ,
-           0.    , 0.    ]]],
- 
- 
-        [[[0.4527, 0.    , 0.    , 0.    , 0.    , 0.    , 0.    ,
-           0.    , 0.    ]]]])}</pre>
+<pre>Data(
+    labels = [&#39;s&#39;, &#39;py&#39;, &#39;pz&#39;, &#39;px&#39;, &#39;dxy&#39;, &#39;dyz&#39;, &#39;dz2&#39;, &#39;dxz&#39;, &#39;x2-y2&#39;]
+    pros = &lt;ndarray:shape=(2, 1, 1, 9)&gt;
+)</pre>
 </div>
 
 </div>
@@ -694,7 +675,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_dos_pro_set" class="doc_header"><code>get_dos_pro_set</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L400" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_dos_pro_set</code>(<strong><code>xml_data</code></strong>=<em><code>None</code></em>, <strong><code>spin_set</code></strong>=<em><code>1</code></em>, <strong><code>dos_range</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_dos_pro_set" class="doc_header"><code>get_dos_pro_set</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L388" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_dos_pro_set</code>(<strong><code>xml_data</code></strong>=<em><code>None</code></em>, <strong><code>spin_set</code></strong>=<em><code>1</code></em>, <strong><code>dos_range</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns dos projection of a spin_set(default 1) as numpy array. If spin-polarized calculations, gives SpinUp and SpinDown keys as well.</li>
@@ -705,7 +686,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 </ul>
 </li>
 <li><strong>Returns</strong><ul>
-<li>dict        : Dictionary that contains dos projections and related parameters.</li>
+<li>Data     : pivotpy.Dict2Data with attibutes of dos projections and related parameters.</li>
 </ul>
 </li>
 </ul>
@@ -738,7 +719,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_structure" class="doc_header"><code>get_structure</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L443" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_structure</code>(<strong><code>xml_data</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_structure" class="doc_header"><code>get_structure</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L431" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_structure</code>(<strong><code>xml_data</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns structure's volume,basis,positions and rec-basis.</li>
@@ -747,7 +728,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 </ul>
 </li>
 <li><strong>Returns</strong><ul>
-<li>dict     : Dictionary that contains volume,basis,positions and rec_basis.</li>
+<li>Data     : pivotpy.Dict2Data with attibutes volume,basis,positions and rec_basis.</li>
 </ul>
 </li>
 </ul>
@@ -776,7 +757,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">vp</span><span class="o">.</span><span class="n">get_structure</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="n">xml_data</span><span class="p">)</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">get_structure</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="n">xml_data</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -791,7 +772,12 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>dict_keys([&#39;volume&#39;, &#39;basis&#39;, &#39;rec_basis&#39;, &#39;positions&#39;])</pre>
+<pre>Data(
+    volume = 45.73530449
+    basis = &lt;ndarray:shape=(3, 3)&gt;
+    rec_basis = &lt;ndarray:shape=(3, 3)&gt;
+    positions = &lt;ndarray:shape=(2, 3)&gt;
+)</pre>
 </div>
 
 </div>
@@ -820,7 +806,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="export_vasprun" class="doc_header"><code>export_vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L471" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_vasprun</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>joinPathAt</code></strong>=<em><code>[]</code></em>, <strong><code>shift_kpath</code></strong>=<em><code>0</code></em>)</p>
+<h4 id="export_vasprun" class="doc_header"><code>export_vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L459" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_vasprun</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>joinPathAt</code></strong>=<em><code>[]</code></em>, <strong><code>shift_kpath</code></strong>=<em><code>0</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns a full dictionary of all objects from <code>vasprun.xml</code> file.</li>
@@ -833,17 +819,16 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 </ul>
 </li>
 <li><strong>Returns</strong><ul>
-<li>dict : Dictionary accessible via dot notation containing objects:<ul>
+<li>Data : Data accessible via dot notation containing nested Data objects:<ul>
 <li>sys_info  : System Information</li>
 <li>dim_info  : Contains information about dimensions of returned objects.</li>
 <li>kpoints   : numpy array of kpoints with excluded IBZKPT points</li>
 <li>kpath     : 1D numpy array directly accessible for plot.</li>
-<li>bands     : Dictionary containing bands.</li>
-<li>tdos      : Dictionary containing total dos.</li>
-<li>pro_bands : Dictionary containing bands projections.</li>
-<li>pro_dos   : Dictionary containing dos projections.</li>
-<li>poscar    : containing basis,positions, rec_basis and volume.</li>
-<li>xml       : xml root object which is iterable over nodes using xml.iter('node').</li>
+<li>bands     : Data containing bands.</li>
+<li>tdos      : Data containing total dos.</li>
+<li>pro_bands : Data containing bands projections.</li>
+<li>pro_dos   : Data containing dos projections.</li>
+<li>poscar    : Data containing basis,positions, rec_basis and volume.</li>
 </ul>
 </li>
 </ul>
@@ -874,8 +859,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pivotpy</span> <span class="k">as</span> <span class="nn">pp</span>
-<span class="n">pp</span><span class="o">.</span><span class="n">export_vasprun</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;../vasprun.xml&#39;</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">export_vasprun</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;../vasprun.xml&#39;</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -887,10 +871,83 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 <div class="output_area">
 
+<div class="output_subarea output_stream output_stdout output_text">
+<pre><span class="ansi-green-intense-fg"> 
+      successful!
+</span>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>dict_keys([&#39;sys_info&#39;, &#39;dim_info&#39;, &#39;kpoints&#39;, &#39;kpath&#39;, &#39;bands&#39;, &#39;tdos&#39;, &#39;pro_bands&#39;, &#39;pro_dos&#39;, &#39;poscar&#39;, &#39;xml&#39;])</pre>
+<pre>Data(
+    sys_info = Data(
+        SYSTEM = AlAs
+        NION = 2
+        TypeION = 2
+        ElemName = [&#39;Al&#39;, &#39;As&#39;]
+        ElemIndex = [0, 1, 2]
+        E_Fermi = 3.72526782
+        ISPIN = 1
+        fields = [&#39;s&#39;, &#39;py&#39;, &#39;pz&#39;, &#39;px&#39;, &#39;dxy&#39;, &#39;dyz&#39;, &#39;dz2&#39;, &#39;dxz&#39;, &#39;x2-y2&#39;]
+        incar = Data(
+            SYSTEM = AlAs
+            PREC = high
+            ALGO = N
+            NELMIN = 7
+            EDIFF = 0.00000100
+            ISMEAR = 0
+            SIGMA = 0.10000000
+            LORBIT = 11
+            KPOINT_BSE = -1     0     0     0
+            LHFCALC = T
+            HFSCREEN = 0.20100000
+            PRECFOCK = fast
+        )
+    )
+    dim_info = Data(
+        ⇅ = Each of SpinUp/SpinDown Arrays
+        kpoints = (NKPTS,3)
+        kpath = (NKPTS,1)
+        bands = ⇅(NKPTS,NBANDS)
+        dos = ⇅(grid_size,3)
+        pro_dos = ⇅(NION,grid_size,en+pro_fields)
+        pro_bands = ⇅(NION,NKPTS,NBANDS,pro_fields)
+    )
+    kpoints = &lt;ndarray:shape=(126, 3)&gt;
+    kpath = &lt;list:len=126&gt;
+    bands = Data(
+        E_Fermi = 3.72526782
+        ISPIN = 1
+        NBANDS = &lt;class &#39;numpy.int64&#39;&gt;
+        bands_range = &lt;class &#39;range&#39;&gt;
+        evals = &lt;ndarray:shape=(126, 3)&gt;
+    )
+    tdos = Data(
+        E_Fermi = 3.72526782
+        ISPIN = 1
+        grid_range = &lt;class &#39;range&#39;&gt;
+        tdos = &lt;ndarray:shape=(7, 3)&gt;
+    )
+    pro_bands = Data(
+        labels = [&#39;s&#39;, &#39;py&#39;, &#39;pz&#39;, &#39;px&#39;, &#39;dxy&#39;, &#39;dyz&#39;, &#39;dz2&#39;, &#39;dxz&#39;, &#39;x2-y2&#39;]
+        pros = &lt;ndarray:shape=(2, 126, 3, 9)&gt;
+    )
+    pro_dos = Data(
+        labels = [&#39;energy&#39;, &#39;s&#39;, &#39;py&#39;, &#39;pz&#39;, &#39;px&#39;, &#39;dxy&#39;, &#39;dyz&#39;, &#39;dz2&#39;, &#39;dxz&#39;, &#39;x2-y2&#39;]
+        pros = &lt;ndarray:shape=(2, 7, 10)&gt;
+    )
+    poscar = Data(
+        volume = 45.73530449
+        basis = &lt;ndarray:shape=(3, 3)&gt;
+        rec_basis = &lt;ndarray:shape=(3, 3)&gt;
+        positions = &lt;ndarray:shape=(2, 3)&gt;
+    )
+)</pre>
 </div>
 
 </div>
@@ -929,7 +986,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="load_export" class="doc_header"><code>load_export</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L544" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_export</code>(<strong><code>path</code></strong>=<em><code>'./vasprun.xml'</code></em>, <strong><code>joinPathAt</code></strong>=<em><code>[]</code></em>, <strong><code>shift_kpath</code></strong>=<em><code>0</code></em>, <strong><code>path_to_ps</code></strong>=<em><code>'pwsh'</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>max_filled</code></strong>=<em><code>10</code></em>, <strong><code>max_empty</code></strong>=<em><code>10</code></em>, <strong><code>keep_files</code></strong>=<em><code>True</code></em>)</p>
+<h4 id="load_export" class="doc_header"><code>load_export</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L531" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_export</code>(<strong><code>path</code></strong>=<em><code>'./vasprun.xml'</code></em>, <strong><code>joinPathAt</code></strong>=<em><code>[]</code></em>, <strong><code>shift_kpath</code></strong>=<em><code>0</code></em>, <strong><code>path_to_ps</code></strong>=<em><code>'pwsh'</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>max_filled</code></strong>=<em><code>10</code></em>, <strong><code>max_empty</code></strong>=<em><code>10</code></em>, <strong><code>keep_files</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns a full dictionary of all objects from <code>vasprun.xml</code> file exported using powershell.</li>
@@ -945,16 +1002,16 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 </ul>
 </li>
 <li><strong>Returns</strong><ul>
-<li>dict : Dictionary accessible via dot notation containing objects:<ul>
+<li>Data : Data accessible via dot notation containing nested Data objects:<ul>
 <li>sys_info  : System Information</li>
 <li>dim_info  : Contains information about dimensions of returned objects.</li>
 <li>kpoints   : numpy array of kpoints with excluded IBZKPT points</li>
 <li>kpath     : 1D numpy array directly accessible for plot.</li>
-<li>bands     : Dictionary containing bands.</li>
-<li>tdos      : Dictionary containing total dos.</li>
-<li>pro_bands : Dictionary containing bands projections.</li>
-<li>pro_dos   : Dictionary containing dos projections.</li>
-<li>poscar    : containing basis,positions, rec_basis and volume.</li>
+<li>bands     : Data containing bands.</li>
+<li>tdos      : Data containing total dos.</li>
+<li>pro_bands : Data containing bands projections.</li>
+<li>pro_dos   : Data containing dos projections.</li>
+<li>poscar    : Data containing basis,positions, rec_basis and volume.</li>
 </ul>
 </li>
 </ul>
@@ -974,145 +1031,6 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="make_dot_dict" class="doc_header"><code>make_dot_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L693" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>make_dot_dict</code>(<strong><code>json_loaded</code></strong>)</p>
-</blockquote>
-<ul>
-<li>Returns a pivotpy.Dic2Dot object recursively and makes keys accessible via dot notation. Works only upto 4 nesting levels because it is basically created for vasprun data transfer back and forth in <code>pivotpy-dash</code> app.</li>
-<li><strong>Parameters</strong><ul>
-<li>json_load : Output of json.load/json.loads or any python dictionary.</li>
-</ul>
-</li>
-</ul>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">pivotpy</span> <span class="k">as</span> <span class="nn">pp</span>
-<span class="n">vr</span><span class="o">=</span><span class="n">pp</span><span class="o">.</span><span class="n">export_vasprun</span><span class="p">(</span><span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;E:/Research/graphene_example/ISPIN_2/bands/vasprun.xml&quot;</span> <span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
-<span class="n">vr</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;xml&#39;</span><span class="p">,</span><span class="kc">None</span><span class="p">)</span> <span class="c1">#Can&#39;t be serilized to json. </span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ORIGINAL TYPE : </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">vr</span><span class="o">.</span><span class="n">poscar</span><span class="p">)))</span>
-<span class="n">s</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">vr</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">pp</span><span class="o">.</span><span class="n">EncodeFromNumpy</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;JSON DUMPED TYPE : </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">s</span><span class="p">)))</span>
-<span class="n">s2</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">pp</span><span class="o">.</span><span class="n">DecodeToNumpy</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;JSON LOADED TYPE : </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">s2</span><span class="p">)))</span>
-<span class="n">s3</span><span class="o">=</span> <span class="n">make_dot_dict</span><span class="p">(</span><span class="n">s2</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;BACK TO ORIGINAL TYPE : </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">s3</span><span class="p">)))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>ORIGINAL TYPE : &lt;class &#39;pivotpy.vr_parser.Dic2Dot&#39;&gt;
-
-JSON DUMPED TYPE : &lt;class &#39;str&#39;&gt;
-
-JSON LOADED TYPE : &lt;class &#39;dict&#39;&gt;
-
-BACK TO ORIGINAL TYPE : &lt;class &#39;pivotpy.vr_parser.Dic2Dot&#39;&gt;
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>In order to make sure that data transfer between different formats does not result in loss of any information, we can check few things in start and end.</p>
-
-</div>
-</div>
-</div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">vr</span><span class="o">.</span><span class="n">sys_info</span> <span class="o">==</span> <span class="n">s3</span><span class="o">.</span><span class="n">sys_info</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">vr</span><span class="o">.</span><span class="n">dim_info</span> <span class="o">==</span> <span class="n">s3</span><span class="o">.</span><span class="n">dim_info</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">vr</span><span class="o">.</span><span class="n">kpath</span> <span class="o">==</span> <span class="n">s3</span><span class="o">.</span><span class="n">kpath</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">vr</span><span class="o">.</span><span class="n">bands</span><span class="o">.</span><span class="n">evals</span><span class="o">.</span><span class="n">SpinUp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">s3</span><span class="o">.</span><span class="n">bands</span><span class="o">.</span><span class="n">evals</span><span class="o">.</span><span class="n">SpinUp</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">vr</span><span class="o">.</span><span class="n">tdos</span><span class="o">.</span><span class="n">tdos</span><span class="o">.</span><span class="n">SpinUp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">s3</span><span class="o">.</span><span class="n">tdos</span><span class="o">.</span><span class="n">tdos</span><span class="o">.</span><span class="n">SpinUp</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">vr</span><span class="o">.</span><span class="n">pro_dos</span><span class="o">.</span><span class="n">pros</span><span class="o">.</span><span class="n">SpinUp</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">s3</span><span class="o">.</span><span class="n">pro_dos</span><span class="o">.</span><span class="n">pros</span><span class="o">.</span><span class="n">SpinUp</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">vr</span><span class="o">.</span><span class="n">pro_bands</span><span class="o">.</span><span class="n">pros</span><span class="o">.</span><span class="n">SpinUp</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">s3</span><span class="o">.</span><span class="n">pro_bands</span><span class="o">.</span><span class="n">pros</span><span class="o">.</span><span class="n">SpinUp</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">vr</span><span class="o">.</span><span class="n">poscar</span><span class="o">.</span><span class="n">basis</span> <span class="o">==</span> <span class="n">s3</span><span class="o">.</span><span class="n">poscar</span><span class="o">.</span><span class="n">basis</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>True
-True
-True
-[ True  True  True  True]
-[ True  True  True]
-[ True  True  True  True  True  True  True  True  True  True]
-[ True  True  True  True  True  True  True  True  True]
-[[ True  True  True]
- [ True  True  True]
- [ True  True  True]]
-</pre>
-</div>
-</div>
-
-</div>
-</div>
 
 </div>
     {% endraw %}
@@ -1136,12 +1054,12 @@ True
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="dump_dict" class="doc_header"><code>dump_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L719" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>dump_dict</code>(<strong><code>dict_obj</code></strong>=<em><code>None</code></em>, <strong><code>dump_to</code></strong>=<em><code>'pickle'</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="dump_dict" class="doc_header"><code>dump_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L680" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>dump_dict</code>(<strong><code>dict_obj</code></strong>=<em><code>None</code></em>, <strong><code>dump_to</code></strong>=<em><code>'pickle'</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
-<li>Dump an <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> or <a href="/pivotpy/XmlElementTree.html#load_export"><code>load_export</code></a> object to json or pickle string/file.</li>
+<li>Dump an <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> or <a href="/pivotpy/XmlElementTree.html#load_export"><code>load_export</code></a>'s <code>Data</code> object or any dictionary to json or pickle string/file. It convert <a href="/pivotpy/XmlElementTree.html#Dict2Data"><code>Dict2Data</code></a> to dictionary before serializing to json, so json.loads() of converted Data would be a simple dictionary, pass that to <a href="/pivotpy/XmlElementTree.html#Dict2Data"><code>Dict2Data</code></a> to again make accessible via dot notation. pickle keeps it same.</li>
 <li><strong>Parameters</strong><ul>
-<li>dict_obj : Any dictionary containg numpy arrays, including <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> or <a href="/pivotpy/XmlElementTree.html#load_export"><code>load_export</code></a> output.</li>
+<li>dict_obj : Any dictionary/Dict2Data object containg numpy arrays, including <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> or <a href="/pivotpy/XmlElementTree.html#load_export"><code>load_export</code></a> output.</li>
 <li>dump_to  : Defualt is <code>pickle</code> or <code>json</code>.</li>
 <li>outfile  : Defualt is None and return string. File name does not require extension.</li>
 </ul>
@@ -1172,8 +1090,7 @@ True
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">dump_dict</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Saboor&quot;</span><span class="p">}))</span>
-<span class="n">dump_dict</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Saboor&quot;</span><span class="p">},</span><span class="s1">&#39;json&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dump_dict</span><span class="p">(</span><span class="n">Dict2Data</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Saboor&quot;</span><span class="p">}),</span><span class="n">dump_to</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -1185,18 +1102,43 @@ True
 
 <div class="output_area">
 
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>b&#39;\x80\x03}q\x00X\x04\x00\x00\x00nameq\x01X\x06\x00\x00\x00Saboorq\x02s.&#39;
-</pre>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;{&#34;name&#34;: &#34;Saboor&#34;}&#39;</pre>
+</div>
+
+</div>
+
 </div>
 </div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dump_dict</span><span class="p">(</span><span class="n">Dict2Data</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Saboor&quot;</span><span class="p">}))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
 
 <div class="output_area">
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&#39;{&#34;name&#34;: &#34;Saboor&#34;}&#39;</pre>
+<pre>b&#39;\x80\x03c__main__\nDict2Data\nq\x00)\x81q\x01.&#39;</pre>
 </div>
 
 </div>

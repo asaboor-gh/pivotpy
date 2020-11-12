@@ -237,17 +237,17 @@ def plotly_rgb_lines(path_evr    = None,
         vr=vp.export_vasprun(path=path_evr,skipk=skipk,elim=elim,joinPathAt=joinPathAt)
     if(path_evr!=None):
         from os import path as pt
-        if(type(path_evr)==vp.Dic2Dot):
+        if(type(path_evr)==vp.Dict2Data):
             vr=path_evr
         elif(pt.isfile(path_evr)):
             vr=vp.export_vasprun(path=path_evr,skipk=skipk,elim=elim,joinPathAt=joinPathAt)
         else:
             return print("path_evr = `{}` does not exist".format(path_evr))
     # Apply a robust final check.
-    vr_keys=['kpath','bands']
-    for key in vr_keys:
-        if(key not in vr.keys()):
-            return print("Object: \n{} \nis like a lower tree of export_vasprun(). Expects top tree.".format(vr))
+    try:
+        vr.bands;vr.kpath
+    except:
+        return print("Object: \n{} \nis like a lower tree of export_vasprun(). Expects top tree.".format(vr))
     else:
         ## Main working here.
         if(vr.pro_bands==None):

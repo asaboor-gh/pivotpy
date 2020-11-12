@@ -251,7 +251,7 @@ def get_files_gui(auto_fill = 'vasprun.xml',html_style=None,height=320):
                 print("Falling back to PWD: {}".format(os.getcwd()))
             path = os.getcwd()
             pw.value = path
-        gci = pp.Dic2Dot({'children':[],'parent':path})
+        gci = pp.Dict2Data({'children':[],'parent':path})
 
         if 'Files' in item_w.value:
             file_type = dict(filesOnly=True)
@@ -322,7 +322,7 @@ def get_input_gui(rgb=True,sys_info=None,html_style=None,height=400):
     if not html_style:
         html_style = ''
     if not sys_info:
-        sys_info = pp.Dic2Dot({'fields':['s'],'ElemIndex':[0,1],'ElemName':['A']})
+        sys_info = pp.Dict2Data({'fields':['s'],'ElemIndex':[0,1],'ElemName':['A']})
     layout = Layout(width='30%')
     orbs_w  = ipw.Dropdown(options={'s':0},value=0,layout=layout)
     orbi_w  = ipw.Text(layout=layout)
