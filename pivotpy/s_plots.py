@@ -918,7 +918,7 @@ def collect_dos(path_evr      = None,
             return print("path_evr = `{}` does not exist".format(path_evr))
     # Apply a robust final check.
     try:
-        vr.bands;vr.kpath
+        vr.tdos;vr.pro_dos
     except:
         return print("Object: \n{} \nis like a lower tree of export_vasprun(). Expects top tree.".format(vr))
     else:
