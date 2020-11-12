@@ -688,9 +688,8 @@ def dump_dict(dict_data = None, dump_to = 'pickle',outfile = None):
     """
     if dump_to not in ['pickle','json']:
         return print("`dump_to` expects 'pickle' or 'json', got '{}'".format(dump_to))
-    dict_obj = dict_data # Reaname here to avoid conflicts
-    try: dict_obj = dict_obj.to_dict() # Change Data object to dictionary
-    except: pass
+    try: dict_obj = dict_data.to_dict() # Change Data object to dictionary
+    except: dict_obj = dict_data
     if dump_to == 'pickle':
         import pickle
         if outfile == None:
@@ -719,22 +718,24 @@ def load_from_dump(file_or_str,keep_as_dict=False):
         - keep_as_dict: Defualt is False and return `Data` object. If True, returns dictionary.
     """
     out = {}
-    import os,pickle,json
-
-    if not isinstance(file_or_str,bytes) and os.path.isfile(file_or_str):
-        if '.pickle' in file_or_str:
-            with open(file_or_str,'rb') as f:
-                out = pickle.load(f)
-            f.close()
-        elif '.json' in file_or_str:
-            with open(file_or_str,'r') as f:
-                out = json.load(f)
-            f.close()
-    else:
-        if isinstance(file_or_str,bytes):
+    import os,pickle,json,pivotpy as pp
+    if not isinstance(file_or_str,bytes):
+        try: #must try, else fails due to path length issue
+            if os.path.isfile(file_or_str):
+                if '.pickle' in file_or_str:
+                    with open(file_or_str,'rb') as f:
+                        out = pickle.load(f)
+                    f.close()
+                elif '.json' in file_or_str:
+                    with open(file_or_str,'r') as f:
+                        out = json.load(f,cls=pp.DecodeToNumpy)
+                    f.close()
+            else: out = json.loads(file_or_str,cls=pp.DecodeToNumpy)
+            # json.loads required in else and except both as long str > 260 causes issue in start of try block
+        except: out = json.loads(file_or_str,cls=pp.DecodeToNumpy)
+    elif isinstance(file_or_str,bytes):
             out = pickle.loads(file_or_str)
-        elif isinstance(file_or_str,str):
-            out = json.loads(file_or_str)
+
     if type(out) is dict and keep_as_dict == False:
         return Dict2Data(out)
     return out
