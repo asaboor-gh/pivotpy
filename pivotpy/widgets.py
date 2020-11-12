@@ -715,7 +715,15 @@ def show_app(height=600):
             f.close()
             print('Cache Loaded')
         except:
-            evr = pp.export_vasprun(out_w1.value)
+            files = [os.path.join(os.path.split(out_w1.value)[0],f)
+                                for f in ['Bands.txt','Projection.txt','SysInfo.py']]
+            logic = [os.path.isfile(f) for f in files]
+            if False in logic:
+                print('Loading from Python ...')
+                evr = pp.export_vasprun(out_w1.value)
+            else:
+                print('Loading from Powershell ...')
+                evr = pp.load_export(out_w1.value)
             sys_info = evr.sys_info
             print('Caching From: {}'.format(out_w1.value))
             ifile = os.path.join(os.path.split(out_w1.value)[0],'sys_info.pickle')
@@ -890,15 +898,23 @@ def show_app(height=600):
         if out_w2.value:
             fig.data = []
             try:
+                graph_btn.description = 'loading pickle...'
                 print('Trying to Load Cache for Graph ...')
                 file = os.path.join(os.path.split(out_w1.value)[0],'vasprun.pickle')
                 graph_btn.description = file
                 evr = pp.load_from_dump(file)
-                graph_btn.description = 'loading pickle...'
             except:
-                print('No cache found. Loading from file {} ...'.format(out_w1.value))
-                evr = pp.export_vasprun(out_w1.value)
                 graph_btn.description = 'loading export...'
+                print('No cache found. Loading from file {} ...'.format(out_w1.value))
+                files = [os.path.join(os.path.split(out_w1.value)[0],f)
+                                for f in ['Bands.txt','Projection.txt','SysInfo.py']]
+                logic = [os.path.isfile(f) for f in files]
+                if False in logic:
+                    print('Loading from Python ...')
+                    evr = pp.export_vasprun(out_w1.value)
+                else:
+                    print('Loading from Powershell ...')
+                    evr = pp.load_export(out_w1.value)
             print('Done')
             graph_btn.description = 'Load Graph'
             if not fermi_w.value: #Read Only if not in box.
@@ -953,7 +969,7 @@ def show_app(height=600):
     expand_w.on_click(expand_fig)
 
     style_w.value='plotly' # to trigger callback and resize graph
-    intro_html = ipw.HTML("<h2>Pivotpy</h2><p>Filter files here and switch tab to Graphs. You can create cache ahead of time to load quickly while working. If anything does not seem to work, see the error in STD(out/err) tab.</p><marquee style='color:red'>Pivotpy GUI based on ipywidgets!</marquee>")
+    intro_html = ipw.HTML("<h2>Pivotpy</h2><p>Filter files here and switch tab to Graphs. You can create cache ahead of time to load quickly while working. If anything does not seem to work, see the error in STD(out/err) tab. For large files, do `Export-VR(or Vasprun)` in Powershell to access fast.</p><marquee style='color:red'>Pivotpy GUI based on ipywidgets!</marquee>")
     header_box = HBox([intro_html,Label('Theme:',layout=Layout(width='80px')),theme_w
                     ]).add_class('marginless').add_class('borderless')
     summary_gui = HBox([Label(),summary_btn]).add_class('borderless')
