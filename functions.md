@@ -1,15 +1,40 @@
-# Pivotpy Functions Reference
-
-<h2 id="Dic2Dot" class="doc_header"><code>class</code> <code>Dic2Dot</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L8" class="source_link" style="float:right">[source]</a></h2>
-
-> <code>Dic2Dot</code>() :: `dict`
-
-- Returns dot notation accessible if a dictionary is input.
-- It is used to pack all functions in a dictionary.
+## Functions Reference
+```python
+from nbdev import show_doc
+import pivotpy as pp
+all_ = pp.__all__
+```
 
 
+```python
+_ = [show_doc(eval('pp.{}'.format(f))) for f in all_ if f not in ['savefig','show']]
+```
 
-<h4 id="read_asxml" class="doc_header"><code>read_asxml</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L19" class="source_link" style="float:right">[source]</a></h4>
+
+<h2 id="Dict2Data" class="doc_header"><code>class</code> <code>Dict2Data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L8" class="source_link" style="float:right">[source]</a></h2>
+
+> <code>Dict2Data</code>(**`d`**) :: `dict`
+
+- Returns a Data object with dictionary keys as attributes of Data accessible by dot notation.
+- **Parmeters**
+    - dict : Python dictionary (nested as well) containing any python data types.
+- **Attributes**
+    - to_dict() : Converts a Data object to dictionary if it could be made a dictionary, otherwise throws relevant error.
+- **Example**
+    > x = Dict2Data({'A':1,'B':{'C':2}})
+    > x
+    > Data(
+    >     A = 1
+    >     B = Data(
+    >         C = 2
+    >         )
+    >     )
+    > x.B.to_dict()
+    > {'C': 2}
+
+
+
+<h4 id="read_asxml" class="doc_header"><code>read_asxml</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L69" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>read_asxml</code>(**`path`**=*`None`*, **`suppress_warning`**=*`False`*)
 
@@ -24,7 +49,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="exclude_kpts" class="doc_header"><code>exclude_kpts</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L69" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="exclude_kpts" class="doc_header"><code>exclude_kpts</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L119" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>exclude_kpts</code>(**`xml_data`**=*`None`*)
 
@@ -36,7 +61,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="get_ispin" class="doc_header"><code>get_ispin</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L90" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_ispin" class="doc_header"><code>get_ispin</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L140" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_ispin</code>(**`xml_data`**=*`None`*)
 
@@ -48,7 +73,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="get_summary" class="doc_header"><code>get_summary</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L107" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_summary" class="doc_header"><code>get_summary</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L157" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_summary</code>(**`xml_data`**=*`None`*)
 
@@ -56,11 +81,11 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 - **Parameters**
     - xml_data : From `read_asxml` function
 - **Returns**
-    - dict     : Dictionary that contains system information.
+    - Data     : pivotpy.Dict2Data with attibutes accessible via dot notation.
 
 
 
-<h4 id="get_kpts" class="doc_header"><code>get_kpts</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L142" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_kpts" class="doc_header"><code>get_kpts</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L195" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_kpts</code>(**`xml_data`**=*`None`*, **`skipk`**=*`0`*, **`joinPathAt`**=*`[]`*)
 
@@ -70,11 +95,11 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
     - skipk      : Number of initil kpoints to skip
     - joinPathAt : List of indices of kpoints where path is broken
 - **Returns**
-    - dict     : Dictionary that contains kpoints ans kpath.
+    - Data     : pivotpy.Dict2Data with attibutes `kpath` and `kpoints`
 
 
 
-<h4 id="get_tdos" class="doc_header"><code>get_tdos</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L176" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_tdos" class="doc_header"><code>get_tdos</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L229" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_tdos</code>(**`xml_data`**=*`None`*, **`spin_set`**=*`1`*, **`elim`**=*`[]`*)
 
@@ -84,11 +109,11 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
     - spin_set : int, default is 1.and
     - elim     : List [min,max] of energy, default empty.
 - **Returns**
-    - dict     : Dictionary that contains E_Fermi, ISPIN,tdos.
+    - Data     : pivotpy.Dict2Data with attibutes E_Fermi, ISPIN,tdos.
 
 
 
-<h4 id="get_evals" class="doc_header"><code>get_evals</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L229" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_evals" class="doc_header"><code>get_evals</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L282" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_evals</code>(**`xml_data`**=*`None`*, **`skipk`**=*`None`*, **`elim`**=*`[]`*)
 
@@ -98,11 +123,11 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
     - skipk    : Number of initil kpoints to skip.
     - elim     : List [min,max] of energy, default empty.
 - **Returns**
-    - dict     : Dictionary that contains evals and related parameters.
+    - Data     : pivotpy.Dict2Data with attibutes evals and related parameters.
 
 
 
-<h4 id="get_bands_pro_set" class="doc_header"><code>get_bands_pro_set</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L282" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_bands_pro_set" class="doc_header"><code>get_bands_pro_set</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L335" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_bands_pro_set</code>(**`xml_data`**=*`None`*, **`spin_set`**=*`1`*, **`skipk`**=*`0`*, **`bands_range`**=*`None`*)
 
@@ -113,11 +138,11 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
     - spin_set    : Spin set to get, default is 1.
     - bands_range : If elim used in `get_evals`,that will return bands_range to use here..
 - **Returns**
-    - dict     : Dictionary that contains bands projections and related parameters.
+    - Data     : pivotpy.Dict2Data with attibutes of bands projections and related parameters.
 
 
 
-<h4 id="get_dos_pro_set" class="doc_header"><code>get_dos_pro_set</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L335" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_dos_pro_set" class="doc_header"><code>get_dos_pro_set</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L388" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_dos_pro_set</code>(**`xml_data`**=*`None`*, **`spin_set`**=*`1`*, **`dos_range`**=*`None`*)
 
@@ -127,11 +152,11 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
     - spin_set    : Spin set to get, default 1.
     - dos_range   : If elim used in `get_tdos`,that will return dos_range to use here..
 - **Returns**
-    - dict        : Dictionary that contains dos projections and related parameters.
+    - Data     : pivotpy.Dict2Data with attibutes of dos projections and related parameters.
 
 
 
-<h4 id="get_structure" class="doc_header"><code>get_structure</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L378" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_structure" class="doc_header"><code>get_structure</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L431" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_structure</code>(**`xml_data`**=*`None`*)
 
@@ -139,11 +164,11 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 - **Parameters**
     - xml_data : From `read_asxml` function
 - **Returns**
-    - dict     : Dictionary that contains volume,basis,positions and rec_basis.
+    - Data     : pivotpy.Dict2Data with attibutes volume,basis,positions and rec_basis.
 
 
 
-<h4 id="export_vasprun" class="doc_header"><code>export_vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L406" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="export_vasprun" class="doc_header"><code>export_vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L459" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>export_vasprun</code>(**`path`**=*`None`*, **`skipk`**=*`None`*, **`elim`**=*`[]`*, **`joinPathAt`**=*`[]`*, **`shift_kpath`**=*`0`*)
 
@@ -155,21 +180,20 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
     - joinPathAt : List of indices of kpoints where path is broken.
     - shift_kpath: Default 0. Can be used to merge multiple calculations on single axes side by side.
 - **Returns**
-    - dict : Dictionary accessible via dot notation containing objects:
+    - Data : Data accessible via dot notation containing nested Data objects:
         - sys_info  : System Information
         - dim_info  : Contains information about dimensions of returned objects.
         - kpoints   : numpy array of kpoints with excluded IBZKPT points
         - kpath     : 1D numpy array directly accessible for plot.
-        - bands     : Dictionary containing bands.
-        - tdos      : Dictionary containing total dos.
-        - pro_bands : Dictionary containing bands projections.
-        - pro_dos   : Dictionary containing dos projections.
-        - poscar    : containing basis,positions, rec_basis and volume.
-        - xml       : xml root object which is iterable over nodes using xml.iter('node').
+        - bands     : Data containing bands.
+        - tdos      : Data containing total dos.
+        - pro_bands : Data containing bands projections.
+        - pro_dos   : Data containing dos projections.
+        - poscar    : Data containing basis,positions, rec_basis and volume.
 
 
 
-<h4 id="load_export" class="doc_header"><code>load_export</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L481" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="load_export" class="doc_header"><code>load_export</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L531" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>load_export</code>(**`path`**=*`'./vasprun.xml'`*, **`joinPathAt`**=*`[]`*, **`shift_kpath`**=*`0`*, **`path_to_ps`**=*`'pwsh'`*, **`skipk`**=*`None`*, **`max_filled`**=*`10`*, **`max_empty`**=*`10`*, **`keep_files`**=*`True`*)
 
@@ -184,36 +208,26 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
     - max_filled : Number of filled bands below and including VBM. Default is 10.
     - max_empty  : Number of empty bands above VBM. Default is 10.
 - **Returns**
-    - dict : Dictionary accessible via dot notation containing objects:
+    - Data : Data accessible via dot notation containing nested Data objects:
         - sys_info  : System Information
         - dim_info  : Contains information about dimensions of returned objects.
         - kpoints   : numpy array of kpoints with excluded IBZKPT points
         - kpath     : 1D numpy array directly accessible for plot.
-        - bands     : Dictionary containing bands.
-        - tdos      : Dictionary containing total dos.
-        - pro_bands : Dictionary containing bands projections.
-        - pro_dos   : Dictionary containing dos projections.
-        - poscar    : containing basis,positions, rec_basis and volume.
+        - bands     : Data containing bands.
+        - tdos      : Data containing total dos.
+        - pro_bands : Data containing bands projections.
+        - pro_dos   : Data containing dos projections.
+        - poscar    : Data containing basis,positions, rec_basis and volume.
 
 
 
-<h4 id="make_dot_dict" class="doc_header"><code>make_dot_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L631" class="source_link" style="float:right">[source]</a></h4>
-
-> <code>make_dot_dict</code>(**`json_loaded`**)
-
-- Returns a pivotpy.Dic2Dot object recursively and makes keys accessible via dot notation. Works only upto 4 nesting levels because it is basically created for vasprun data transfer back and forth in `pivotpy-dash` app.
-- **Parameters**
-    - json_load : Output of json.load/json.loads or any python dictionary.
-
-
-
-<h4 id="dump_dict" class="doc_header"><code>dump_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L657" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="dump_dict" class="doc_header"><code>dump_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L680" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>dump_dict</code>(**`dict_obj`**=*`None`*, **`dump_to`**=*`'pickle'`*, **`outfile`**=*`None`*)
 
-- Dump an `export_vasprun` or `load_export` object to json or pickle string/file.
+- Dump an `export_vasprun` or `load_export`'s `Data` object or any dictionary to json or pickle string/file. It convert `Dict2Data` to dictionary before serializing to json, so json.loads() of converted Data would be a simple dictionary, pass that to `Dict2Data` to again make accessible via dot notation. pickle keeps it same.
 - **Parameters**
-    - dict_obj : Any dictionary containg numpy arrays, including `export_vasprun` or `load_export` output.
+    - dict_obj : Any dictionary/Dict2Data object containg numpy arrays, including `export_vasprun` or `load_export` output.
     - dump_to  : Defualt is `pickle` or `json`.
     - outfile  : Defualt is None and return string. File name does not require extension.
 
@@ -271,7 +285,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 <h4 id="select_dirs" class="doc_header"><code>select_dirs</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L102" class="source_link" style="float:right">[source]</a></h4>
 
-> <code>select_dirs</code>(**`path`**=*`'C:\\Users\\mass_\\Desktop'`*, **`include`**=*`[]`*, **`exclude`**=*`[]`*)
+> <code>select_dirs</code>(**`path`**=*`'C:\\Users\\mass_\\Desktop\\Current'`*, **`include`**=*`[]`*, **`exclude`**=*`[]`*)
 
 - Returns selected directories recursively from a parent directory.
 - **Parameters**
@@ -285,7 +299,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 <h4 id="select_files" class="doc_header"><code>select_files</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L130" class="source_link" style="float:right">[source]</a></h4>
 
-> <code>select_files</code>(**`path`**=*`'C:\\Users\\mass_\\Desktop'`*, **`include`**=*`[]`*, **`exclude`**=*`[]`*)
+> <code>select_files</code>(**`path`**=*`'C:\\Users\\mass_\\Desktop\\Current'`*, **`include`**=*`[]`*, **`exclude`**=*`[]`*)
 
 - Returns selected files from a given directory.
 - **Parameters**
@@ -299,7 +313,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 <h4 id="get_child_items" class="doc_header"><code>get_child_items</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L154" class="source_link" style="float:right">[source]</a></h4>
 
-> <code>get_child_items</code>(**`path`**=*`'C:\\Users\\mass_\\Desktop'`*, **`depth`**=*`None`*, **`recursive`**=*`True`*, **`include`**=*`[]`*, **`exclude`**=*`[]`*, **`filesOnly`**=*`False`*, **`dirsOnly`**=*`False`*)
+> <code>get_child_items</code>(**`path`**=*`'C:\\Users\\mass_\\Desktop\\Current'`*, **`depth`**=*`None`*, **`recursive`**=*`True`*, **`include`**=*`[]`*, **`exclude`**=*`[]`*, **`filesOnly`**=*`False`*, **`dirsOnly`**=*`False`*)
 
 - Returns selected directories/files recursively from a parent directory.
 - **Parameters**
@@ -706,7 +720,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="get_rgb_data" class="doc_header"><code>get_rgb_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L6" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_rgb_data" class="doc_header"><code>get_rgb_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L7" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_rgb_data</code>(**`kpath`**=*`None`*, **`evals_set`**=*`None`*, **`pros_set`**=*`None`*, **`elements`**=*`[[0], [], []]`*, **`orbs`**=*`[[0], [], []]`*, **`interpolate`**=*`False`*, **`n`**=*`5`*, **`k`**=*`3`*, **`scale_color`**=*`False`*)
 
@@ -729,9 +743,26 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="rgb_to_plotly" class="doc_header"><code>rgb_to_plotly</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L73" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="flip_even_patches" class="doc_header"><code>flip_even_patches</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L74" class="source_link" style="float:right">[source]</a></h4>
 
-> <code>rgb_to_plotly</code>(**`rgb_data`**=*`None`*, **`mode`**=*`'markers'`*, **`max_width`**=*`5`*, **`showlegend`**=*`False`*, **`name`**=*`''`*, **`labels`**=*`['s', 'p', 'd']`*)
+> <code>flip_even_patches</code>(**`array_1d`**, **`patch_length`**)
+
+- When you reshape bands data to 1D array, you may need to draw lines which do not link ends of plot, for that, it is required to flip patches, so that next band start from where 1st end and so one.
+- **Parameters**
+    - array_1d     : Numpy 1d array or list.
+    - patch_length : length of xaxis patches, e.g NKPTS.
+- **Returns**
+    - 1D list
+- ** Example**
+    > k=[1,2,3,1,2,3]
+    > flip_even_patches(k,3)
+    > [1,2,3,3,2,1]
+
+
+
+<h4 id="rgb_to_plotly" class="doc_header"><code>rgb_to_plotly</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L98" class="source_link" style="float:right">[source]</a></h4>
+
+> <code>rgb_to_plotly</code>(**`rgb_data`**=*`None`*, **`mode`**=*`'markers'`*, **`max_width`**=*`5`*, **`showlegend`**=*`False`*, **`name`**=*`''`*, **`labels`**=*`['s', 'p', 'd']`*, **`symbol`**=*`0`*)
 
 - Returns data object of plotly's figure using `get_rgb_data`. Returned data could be fed to a plolty's figure.
 - ** Parameters**
@@ -744,10 +775,11 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
     - name       : Name to be shown on hover text or legend.
     - labels     : Optional, show red green blue colors corresponding orbitals.
     - showlegend : Optional, only suitbale if spin up/down or 'bands' mode is ON.
+    - symbol     : Plotly's marker symbol. 0 for circle, 5/6 for Up/Down.
 
 
 
-<h4 id="plotly_to_html" class="doc_header"><code>plotly_to_html</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L134" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="plotly_to_html" class="doc_header"><code>plotly_to_html</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L163" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>plotly_to_html</code>(**`fig`**, **`filename`**=*`'new_plot.html'`*)
 
@@ -758,7 +790,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="plotly_rgb_lines" class="doc_header"><code>plotly_rgb_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L163" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="plotly_rgb_lines" class="doc_header"><code>plotly_rgb_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L192" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>plotly_rgb_lines</code>(**`path_evr`**=*`None`*, **`elements`**=*`[[], [], []]`*, **`orbs`**=*`[[], [], []]`*, **`labels`**=*`['', '', '']`*, **`mode`**=*`'markers'`*, **`elim`**=*`[]`*, **`E_Fermi`**=*`None`*, **`skipk`**=*`None`*, **`joinPathAt`**=*`[]`*, **`max_width`**=*`6`*, **`title`**=*`None`*, **`xt_indices`**=*`[0, -1]`*, **`xt_labels`**=*`['Γ', 'M']`*, **`figsize`**=*`None`*, **`interpolate`**=*`False`*, **`n`**=*`5`*, **`k`**=*`3`*)
 
@@ -776,7 +808,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="plotly_dos_lines" class="doc_header"><code>plotly_dos_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L317" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="plotly_dos_lines" class="doc_header"><code>plotly_dos_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L346" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>plotly_dos_lines</code>(**`path_evr`**=*`None`*, **`elim`**=*`[]`*, **`elements`**=*`[[0]]`*, **`orbs`**=*`[[0]]`*, **`labels`**=*`['s']`*, **`color_map`**=*`'gist_rainbow'`*, **`tdos_color`**=*`(0.5, 0.95, 0)`*, **`linewidth`**=*`2`*, **`fill_area`**=*`True`*, **`vertical`**=*`False`*, **`E_Fermi`**=*`None`*, **`figsize`**=*`None`*, **`spin`**=*`'both'`*, **`interpolate`**=*`False`*, **`n`**=*`5`*, **`k`**=*`3`*, **`title`**=*`None`*)
 
@@ -801,7 +833,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="iplotfromtxt" class="doc_header"><code>iplotfromtxt</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L440" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="iplotfromtxt" class="doc_header"><code>iplotfromtxt</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L469" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>iplotfromtxt</code>(**`path_to_dir`**=*`'.'`*, **`ions`**=*`[0]`*, **`orbs`**=*`[[0], [], []]`*, **`labels`**=*`['s', '', '']`*, **`elim`**=*`[-5, 5]`*, **`tick_indices`**=*`[0, -1]`*, **`tick_labels`**=*`['Γ', 'M']`*, **`force_load`**=*`False`*)
 
@@ -1023,139 +1055,159 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="show" class="doc_header"><code>show</code><a href="matplotlib/pyplot.py#L251" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="widget-toggle-button {
+                    color: black !important;
+                    min-width: max-content !important;
+                    background-color: #c3d4d4;
+                    border-radius: 5px !important;
+                }
+            </style>" class="doc_header"><code>widget-toggle-button {
+                    color: black !important;
+                    min-width: max-content !important;
+                    background-color: #c3d4d4;
+                    border-radius: 5px !important;
+                }
+            </style></code><a href="" class="source_link" style="float:right">[source]</a></h4>
 
-> <code>show</code>(**\*`args`**, **\*\*`kw`**)
+str(object='') -> str
+str(bytes_or_buffer[, encoding[, errors]]) -> str
 
-Display a figure.
-
-When running in ipython with its pylab mode, display all
-figures and return to the ipython prompt.
-
-In non-interactive mode, display all figures and block until
-the figures have been closed; in interactive mode it has no
-effect unless figures were created prior to a change from
-non-interactive to interactive mode (not recommended).  In
-that case it displays the figures but does not block.
-
-A single experimental keyword argument, *block*, may be
-set to True or False to override the blocking behavior
-described above.
+Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.__str__() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to 'strict'.
 
 
 
-<h4 id="savefig" class="doc_header"><code>savefig</code><a href="matplotlib/pyplot.py#L719" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="widget-toggle-button {
+                    color: 	whitesmoke !important;
+                    min-width: max-content !important;
+                    background-color: #3f5959;
+                    border-radius: 5px !important;
+                }
 
-> <code>savefig</code>(**\*`args`**, **\*\*`kwargs`**)
+            </style>" class="doc_header"><code>widget-toggle-button {
+                    color: 	whitesmoke !important;
+                    min-width: max-content !important;
+                    background-color: #3f5959;
+                    border-radius: 5px !important;
+                }
 
-Save the current figure.
+            </style></code><a href="" class="source_link" style="float:right">[source]</a></h4>
 
-Call signature::
+str(object='') -> str
+str(bytes_or_buffer[, encoding[, errors]]) -> str
 
-  savefig(fname, dpi=None, facecolor='w', edgecolor='w',
-          orientation='portrait', papertype=None, format=None,
-          transparent=False, bbox_inches=None, pad_inches=0.1,
-          frameon=None, metadata=None)
+Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.__str__() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to 'strict'.
 
-The output formats available depend on the backend being used.
 
-Parameters
-----------
 
-fname : str or PathLike or file-like object
-    A path, or a Python file-like object, or
-    possibly some backend-dependent object such as
-    `matplotlib.backends.backend_pdf.PdfPages`.
+<h4 id="get_files_gui" class="doc_header"><code>get_files_gui</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L214" class="source_link" style="float:right">[source]</a></h4>
 
-    If *format* is not set, then the output format is inferred from
-    the extension of *fname*, if any, and from :rc:`savefig.format`
-    otherwise.  If *format* is set, it determines the output format.
+> <code>get_files_gui</code>(**`auto_fill`**=*`'vasprun.xml'`*, **`html_style`**=*`None`*, **`height`**=*`320`*)
 
-    Hence, if *fname* is not a path or has no extension, remember to
-    specify *format* to ensure that the correct backend is used.
+- Creates a GUI interface for files/folders filtering.
+- **Parmeters**
+    - auto_fill  : Default is `vasprun.xml`, any file/folder.
+    - html_style : None,`dark_style` or `light_style`.
+    - height     : Height of Grid box.
+- **Returns**
+    - Tuple(GUI_gridbox,Files_Dropdown). Access second one by item itself.
 
-Other Parameters
-----------------
 
-dpi : [ *None* | scalar > 0 | 'figure' ]
-    The resolution in dots per inch.  If *None*, defaults to
-    :rc:`savefig.dpi`.  If 'figure', uses the figure's dpi value.
 
-quality : [ *None* | 1 <= scalar <= 100 ]
-    The image quality, on a scale from 1 (worst) to 95 (best).
-    Applicable only if *format* is jpg or jpeg, ignored otherwise.
-    If *None*, defaults to :rc:`savefig.jpeg_quality` (95 by default).
-    Values above 95 should be avoided; 100 completely disables the
-    JPEG quantization stage.
+<h4 id="get_input_gui" class="doc_header"><code>get_input_gui</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L311" class="source_link" style="float:right">[source]</a></h4>
 
-optimize : bool
-    If *True*, indicates that the JPEG encoder should make an extra
-    pass over the image in order to select optimal encoder settings.
-    Applicable only if *format* is jpg or jpeg, ignored otherwise.
-    Is *False* by default.
+> <code>get_input_gui</code>(**`rgb`**=*`True`*, **`sys_info`**=*`None`*, **`html_style`**=*`None`*, **`height`**=*`400`*)
 
-progressive : bool
-    If *True*, indicates that this image should be stored as a
-    progressive JPEG file. Applicable only if *format* is jpg or
-    jpeg, ignored otherwise. Is *False* by default.
+- Creates a GUI interface for input/selection of orbitals/ions projection.
+- **Parmeters**
+    - rgb        : Default is `True` and generates input for `plotly(quick)_rgb_lines`, if `False` creates input for `quick(plotly)_dos(color)_lines`
+    - html_style : None,`dark_style` or `light_style`.
+    - height     : Height of Grid box.
+- **Returns**
+    - Tuple(GUI_gridbox,json_in_HTML). Access second one by item.value.
 
-facecolor : color spec or None, optional
-    The facecolor of the figure; if *None*, defaults to
-    :rc:`savefig.facecolor`.
 
-edgecolor : color spec or None, optional
-    The edgecolor of the figure; if *None*, defaults to
-    :rc:`savefig.edgecolor`
 
-orientation : {'landscape', 'portrait'}
-    Currently only supported by the postscript backend.
+<h4 id="read_data" class="doc_header"><code>read_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L475" class="source_link" style="float:right">[source]</a></h4>
 
-papertype : str
-    One of 'letter', 'legal', 'executive', 'ledger', 'a0' through
-    'a10', 'b0' through 'b10'. Only supported for postscript
-    output.
+> <code>read_data</code>(**`tabel_w`**, **`poscar`**=*`None`*, **`sys_info`**=*`None`*)
 
-format : str
-    The file format, e.g. 'png', 'pdf', 'svg', ... The behavior when
-    this is unset is documented under *fname*.
 
-transparent : bool
-    If *True*, the axes patches will all be transparent; the
-    figure patch will also be transparent unless facecolor
-    and/or edgecolor are specified via kwargs.
-    This is useful, for example, for displaying
-    a plot on top of a colored background on a web page.  The
-    transparency of these patches will be restored to their
-    original values upon exit of this function.
 
-bbox_inches : str or `~matplotlib.transforms.Bbox`, optional
-    Bbox in inches. Only the given portion of the figure is
-    saved. If 'tight', try to figure out the tight bbox of
-    the figure. If None, use savefig.bbox
 
-pad_inches : scalar, optional
-    Amount of padding around the figure when bbox_inches is
-    'tight'. If None, use savefig.pad_inches
 
-bbox_extra_artists : list of `~matplotlib.artist.Artist`, optional
-    A list of extra artists that will be considered when the
-    tight bbox is calculated.
+<h4 id="click_data" class="doc_header"><code>click_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L488" class="source_link" style="float:right">[source]</a></h4>
 
-metadata : dict, optional
-    Key/value pairs to store in the image metadata. The supported keys
-    and defaults depend on the image format and backend:
+> <code>click_data</code>(**`sel_en_w`**, **`fermi_w`**, **`tabel_w`**, **`fig`**)
 
-    - 'png' with Agg backend: See the parameter ``metadata`` of
-      `~.FigureCanvasAgg.print_png`.
-    - 'pdf' with pdf backend: See the parameter ``metadata`` of
-      `~.backend_pdf.PdfPages`.
-    - 'eps' and 'ps' with PS backend: Only 'Creator' is supported.
 
-pil_kwargs : dict, optional
-    Additional keyword arguments that are passed to `PIL.Image.save`
-    when saving the figure.  Only applicable for formats that are saved
-    using Pillow, i.e. JPEG, TIFF, and (if the keyword is set to a
-    non-None value) PNG.
+
+
+
+<h4 id="tabulate_data" class="doc_header"><code>tabulate_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L505" class="source_link" style="float:right">[source]</a></h4>
+
+> <code>tabulate_data</code>(**`data_dict`**)
+
+
+
+
+
+<h4 id="save_data" class="doc_header"><code>save_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L543" class="source_link" style="float:right">[source]</a></h4>
+
+> <code>save_data</code>(**`out_w1`**, **`data_dict`**)
+
+
+
+
+
+<h4 id="color_toggle" class="doc_header"><code>color_toggle</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L549" class="source_link" style="float:right">[source]</a></h4>
+
+> <code>color_toggle</code>(**`tog_w`**, **`fig`**, **`rd_btn`**)
+
+
+
+
+
+<h4 id="clrear_cache" class="doc_header"><code>clrear_cache</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L574" class="source_link" style="float:right">[source]</a></h4>
+
+> <code>clrear_cache</code>(**`out_w1`**, **`cache_w`**, **`tabel_w`**)
+
+
+
+
+
+<h4 id="matplotlib_code" class="doc_header"><code>matplotlib_code</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L596" class="source_link" style="float:right">[source]</a></h4>
+
+> <code>matplotlib_code</code>(**`rd_btn`**, **`out_w1`**, **`dict_html`**)
+
+
+
+
+
+<h4 id="generate_summary" class="doc_header"><code>generate_summary</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L611" class="source_link" style="float:right">[source]</a></h4>
+
+> <code>generate_summary</code>(**`paths_list`**=*`None`*)
+
+
+
+
+
+<h4 id="show_app" class="doc_header"><code>show_app</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L659" class="source_link" style="float:right">[source]</a></h4>
+
+> <code>show_app</code>(**`height`**=*`600`*)
+
+Displays a GUI for visulaizing and manipulating output of vasp calculations. It only has one argument `height` which sets `min-height` of the app.
 
 
 
