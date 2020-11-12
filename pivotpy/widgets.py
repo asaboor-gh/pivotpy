@@ -721,15 +721,15 @@ def show_app(height=600):
             if False in logic:
                 print('Loading from Python ...')
                 evr = pp.export_vasprun(out_w1.value)
+                print('Caching From: {}'.format(out_w1.value)) #Cache result
+                ifile = os.path.join(os.path.split(out_w1.value)[0],'sys_info.pickle')
+                vfile = os.path.join(os.path.split(out_w1.value)[0],'vasprun.pickle')
+                pp.dump_dict(evr.sys_info,outfile=ifile)
+                pp.dump_dict(evr,outfile=vfile)
             else:
                 print('Loading from Powershell ...')
                 evr = pp.load_export(out_w1.value)
             sys_info = evr.sys_info
-            print('Caching From: {}'.format(out_w1.value))
-            ifile = os.path.join(os.path.split(out_w1.value)[0],'sys_info.pickle')
-            vfile = os.path.join(os.path.split(out_w1.value)[0],'vasprun.pickle')
-            pp.dump_dict(evr.sys_info,outfile=ifile)
-            pp.dump_dict(evr,outfile=vfile)
             print('Done')
         tab.selected_index = 1
         if rd_btn.value=='DOS':
