@@ -611,9 +611,9 @@ def load_export(path= './vasprun.xml',
     ElemName          = vars.ElemName
     poscar            = {
                         'volume':vars.volume,
-                        'basis' :vars.basis,
-                        'rec_basis':vars.rec_basis,
-                        'positions':vars.positions
+                        'basis' : np.array(vars.basis),
+                        'rec_basis': np.array(vars.rec_basis),
+                        'positions': np.array(vars.positions)
                         }
     fields            = vars.fields
     incar             = vars.INCAR
