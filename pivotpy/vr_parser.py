@@ -269,8 +269,8 @@ def get_tdos(xml_data=None,spin_set=1,elim=[]):
             lo_ind=np.min(np.where(tdos[:,0]-efermi>=np.min(elim)))
             tdos=tdos[lo_ind:up_ind,:]
         if(ISPIN==2 and spin_set==1):
-            up_ind=np.max(np.where(tdos.SpinUp[:,0]-efermi<=np.max(elim)))+1
-            lo_ind=np.min(np.where(tdos.SpinUp[:,0]-efermi>=np.min(elim)))
+            up_ind=np.max(np.where(tdos['SpinUp'][:,0]-efermi<=np.max(elim)))+1
+            lo_ind=np.min(np.where(tdos['SpinUp'][:,0]-efermi>=np.min(elim)))
             tdos = {'SpinUp':tdos_1[lo_ind:up_ind,:],'SpinDown':tdos_2[lo_ind:up_ind,:]}
         if(spin_set!=1):
             up_ind=np.max(np.where(tdos[:,0]-efermi<=np.max(elim)))+1
@@ -433,7 +433,7 @@ def get_structure(xml_data=None):
     """
     - Returns structure's volume,basis,positions and rec-basis.
     - **Parameters**
-        - xml_data : From `read_asxml` function
+        - xml_data : From `read_asxml` function.
     - **Returns**
         - Data     : pivotpy.Dict2Data with attibutes volume,basis,positions and rec_basis.
     """

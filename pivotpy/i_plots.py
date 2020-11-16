@@ -392,7 +392,7 @@ def plotly_dos_lines(path_evr     = None,
         cl_dos=sp.collect_dos(path_evr=path_evr,elim=elim, elements=elements, orbs=orbs,\
                               labels=labels, E_Fermi=E_Fermi, spin='both', interpolate=interpolate, n=n, k=k)
         try:
-            en,tdos,pdos,labels,vr=cl_dos
+            en,tdos,pdos,labels,vr = cl_dos
         except TypeError:
             import pivotpy.g_utils as gu
             return gu.printg("Try with large energy range.")

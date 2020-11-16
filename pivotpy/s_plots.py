@@ -432,7 +432,7 @@ def quick_rgb_lines(path_evr    = None,
         - xt_labels  : High Symmetry kpoints labels.
         - elements   : List [[0],[],[]] by default and plots s orbital of first ion..
         - orbs       : List [[r],[g],[b]] of indices of orbitals, could be empty, but shape should be same.
-        - labels  : List [str,str,str] of projection labels. empty string should exist to maintain shape.
+        - labels     : List [str,str,str] of projection labels. empty string should exist to maintain shape. Auto adds `↑`,`↓` for ISPIN=2.
         - max_width  : Width to scale whole projections. if `uni_width=True, width=max_width/2`.
         - figsize    : Tuple (width,height) in inches. Default (3.4.2.6) is article column's width.
         - txt        : Text on figure, if None, SYSTEM's name is printed.
@@ -568,6 +568,10 @@ def quick_rgb_lines(path_evr    = None,
         sp.add_text(ax=ax,xs=x,ys=y,txts=txt,colors=ctxt)
         sp.modify_axes(ax=ax,xticks=xticks,xt_labels=xt_labels,xlim=xlim,ylim=ylim)
         if colorbar:
+            _tls_ = ['' for l in labels] # To avoid side effects, new labels array.
+            for i,label in enumerate(labels):
+                if label and ISPIN==2:
+                    _tls_[i] = (label+'$^↑$' if spin=='up' else label+'$^↓$' if spin=='down' else label+'$^{↑↓}$')
             w, h = plt.gcf().get_size_inches()
             w_f = 0.15/w # width of colorbar relative to fontsize=8
             pos = ax.get_position()
@@ -575,7 +579,7 @@ def quick_rgb_lines(path_evr    = None,
             ax.set_position([pos.x0,pos.y0,pos.width-2.8*w_f,pos.height])
             new_pos = [pos.x0+pos.width-w_f,pos.y0,w_f,pos.height]
             axb = plt.gcf().add_axes(new_pos)
-            sp.add_colorbar(ax=axb,vertical=True,ticklabels=labels)
+            sp.add_colorbar(ax=axb,vertical=True,ticklabels=_tls_)
         return ax
 
 # Cell
@@ -623,7 +627,7 @@ def quick_color_lines(path_evr  = None,
         - xt_labels  : High Symmetry kpoints labels.
         - elements   : List [[0],], by defualt and plot first ion's projections.
         - orbs       : List [[0],] lists of indices of orbitals, could be empty.
-        - labels     : List [str,] of orbitals labels. len(labels)==len(orbs) must hold.
+        - labels     : List [str,] of orbitals labels. len(labels)==len(orbs) must hold.  Auto adds `↑`,`↓` for ISPIN=2.
         - color_map  : Matplotlib's standard color maps. Default is 'gist_ranibow'.
         - showlegend : True by defualt.
         - max_width  : Width to scale whole projections. if `uni_width=True, width=max_width/2`.
@@ -757,6 +761,8 @@ def quick_color_lines(path_evr  = None,
 
         x,y=[*xytxt]
         for ax,label,color in zip(axes,labels,colors):
+            if label and ISPIN==2:
+                label = (label+'$^↑$' if spin=='up' else label+'$^↓$' if spin=='down' else label+'$^{↑↓}$')
             if(showlegend==True):
                 sp.add_legend(ax=ax,colors=[(color)],labels=[label],widths=max_width/2,**legend_kwargs)
             elif(showlegend==False):
@@ -890,7 +896,7 @@ def collect_dos(path_evr      = None,
         - E_Fermi    : If not given, automatically picked from `export_vasprun`.
         - elements   : List [[0],], by defualt and plot first ion's projections.
         - orbs       : List [[0],] lists of indices of orbitals, could be empty.
-        - labels     : List [str,] of orbitals labels. len(labels)==len(orbs) must hold.
+        - labels     : List [str,] of orbitals labels. len(labels)==len(orbs) must hold.  Auto adds `↑`,`↓` for ISPIN=2.
         - spin       : Plot spin-polarized for spin {'up','down','both'}. Default is both.
         - interpolate: Default is False, if True, bands are interpolated.
         - n          : int, number of points, default is 5.
@@ -954,35 +960,35 @@ def collect_dos(path_evr      = None,
         e,ts,ps,ls=None,None,[],[] # to collect all total/projected dos.
         for elem,orb,label in zip(elements,orbs,labels):
             args_dict=dict(ions=elem,orbs=orb,interpolate=interpolate,n=n,k=k,E_Fermi=E_Fermi)
-            if(ISPIN==1):
+            if ISPIN==1:
                 tdos=vr.tdos.tdos
                 pdos_set=vr.pro_dos.pros
                 e,t,p=sp.select_pdos(tdos=tdos,pdos_set=pdos_set, **args_dict)
                 ps.append(p)
-                ls.append(r"${}$".format(label))
+                ls.append(label)
                 ts = t
-            if(ISPIN==2):
+            if ISPIN==2:
                 tdos1=vr.tdos.tdos.SpinUp
                 tdos2=vr.tdos.tdos.SpinDown
                 pdos_set1=vr.pro_dos.pros.SpinUp
                 pdos_set2=vr.pro_dos.pros.SpinDown
-                if(spin=='up'):
+                if spin=='up':
                     e,t1,p1=sp.select_pdos(tdos=tdos1,pdos_set=pdos_set1, **args_dict)
                     ps.append(p1)
-                    ls.append(r"${}^↑$".format(label))
+                    ls.append((label+'$^↑$' if label else ''))
                     ts = t1
-                if(spin=='down'):
+                if spin=='down':
                     e,t2,p2=sp.select_pdos(tdos=tdos2,pdos_set=pdos_set2, **args_dict)
                     ps.append(p2)
-                    ls.append(r"${}^↓$".format(label))
+                    ls.append((label+'$^↓$' if label else ''))
                     ts = t2
-                if(spin=='both'):
+                if spin=='both':
                     e,t1,p1=sp.select_pdos(tdos=tdos1,pdos_set=pdos_set1, **args_dict)
                     ps.append(p1)
-                    ls.append(r"${}^↑$".format(label))
+                    ls.append((label+'$^↑$' if label else ''))
                     e,t2,p2=sp.select_pdos(tdos=tdos2,pdos_set=pdos_set2, **args_dict)
                     ps.append(-p2)
-                    ls.append(r"${}^↓$".format(label))
+                    ls.append((label+'$^↓$' if label else ''))
                     ts=[t1,-t2]
         return e,ts,ps,ls,vr
 
@@ -1028,7 +1034,7 @@ def quick_dos_lines(path_evr      = None,
             - E_Fermi    : If not given, automatically picked from `export_vasprun`.
             - elements   : List [[0],], by defualt and plot first ion's projections.
             - orbs       : List [[0],] lists of indices of orbitals, could be empty.
-            - labels     : List [str,] of orbitals labels. len(labels)==len(orbs) must hold.
+            - labels     : List [str,] of orbitals labels. len(labels)==len(orbs) must hold.  Auto adds `↑`,`↓` for ISPIN=2.
             - color_map  : Matplotlib's standard color maps. Default is 'gist_ranibow'.
             - fill_area  : Default is True and plots filled area for dos. If False, plots lines only.
             - vertical   : False, If True, plots along y-axis.
@@ -1052,6 +1058,7 @@ def quick_dos_lines(path_evr      = None,
         import pivotpy.g_utils as gu
         import matplotlib as mpl
         import matplotlib.pyplot as plt
+
         en,tdos,pdos,vr=None,None,None,None # Placeholders for defining. must be here.
         cl_dos=collect_dos(path_evr=path_evr,
                             elim=elim,
