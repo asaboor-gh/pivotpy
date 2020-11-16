@@ -459,7 +459,7 @@ def get_structure(xml_data=None):
 # Cell
 def export_vasprun(path=None,skipk=None,elim=[],joinPathAt=[],shift_kpath=0):
     """
-    - Returns a full dictionary of all objects from `vasprun.xml` file.
+    - Returns a full dictionary of all objects from `vasprun.xml` file. It first try to load the data exported by powershell's `Export-VR(Vasprun)`, which is very fast for large files. It is recommended to export large files in powershell first.
     - **Parameters**
         - path       : Path to `vasprun.xml` file. Default is `'./vasprun.xml'`.
         - skipk      : Default is None. Automatically detects kpoints to skip.
@@ -478,8 +478,19 @@ def export_vasprun(path=None,skipk=None,elim=[],joinPathAt=[],shift_kpath=0):
             - pro_dos   : Data containing dos projections.
             - poscar    : Data containing basis,positions, rec_basis and volume.
     """
-    import numpy as np
+    import numpy as np, os
     import pivotpy.vr_parser as vp
+
+    # Try to get files if exported data in PowerShell.
+    req_files = ['Bands.txt','tDOS.txt','pDOS.txt','Projection.txt','SysInfo.py']
+    if path and os.path.isfile(path):
+        req_files = [os.path.join(os.path.dirname(os.path.abspath(path)),f) for f in req_files]
+    logic = [os.path.isfile(f) for f in req_files]
+    if not False in logic:
+        print('Loading from PowerShell Exported Data...')
+        return vp.load_export(path=(path if path else './vasprun.xml'))
+
+    # Proceed if not files from PWSH
     if(path==None):
         xml_data=vp.read_asxml(path='./vasprun.xml')
     else:
@@ -567,7 +578,7 @@ def load_export(path= './vasprun.xml',
     import pivotpy as pp
     import pivotpy.vr_parser as vp
     this_loc = os.getcwd()
-    split_path= os.path.split(path)
+    split_path= os.path.split(os.path.abspath(path)) # abspath is important to split.
     file_name = split_path[1]
     that_loc = split_path[0]
     # Go there.

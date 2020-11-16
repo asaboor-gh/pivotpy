@@ -809,7 +809,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 <h4 id="export_vasprun" class="doc_header"><code>export_vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L460" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_vasprun</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>joinPathAt</code></strong>=<em><code>[]</code></em>, <strong><code>shift_kpath</code></strong>=<em><code>0</code></em>)</p>
 </blockquote>
 <ul>
-<li>Returns a full dictionary of all objects from <code>vasprun.xml</code> file.</li>
+<li>Returns a full dictionary of all objects from <code>vasprun.xml</code> file. It first try to load the data exported by powershell's <code>Export-VR(Vasprun)</code>, which is very fast for large files. It is recommended to export large files in powershell first.</li>
 <li><strong>Parameters</strong><ul>
 <li>path       : Path to <code>vasprun.xml</code> file. Default is <code>'./vasprun.xml'</code>.</li>
 <li>skipk      : Default is None. Automatically detects kpoints to skip.</li>
@@ -859,7 +859,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">export_vasprun</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;../vasprun.xml&#39;</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">export_vasprun</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;E:/Research/graphene_example/ISPIN_1/bands/vasprun.xml&#39;</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -872,9 +872,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre><span class="ansi-green-intense-fg"> 
-      successful!
-</span>
+<pre>Loading from PowerShell Exported Data...
 </pre>
 </div>
 </div>
@@ -886,28 +884,25 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 <div class="output_text output_subarea output_execute_result">
 <pre>Data(
     sys_info = Data(
-        SYSTEM = AlAs
+        SYSTEM = C2
         NION = 2
-        TypeION = 2
-        ElemName = [&#39;Al&#39;, &#39;As&#39;]
-        ElemIndex = [0, 1, 2]
-        E_Fermi = 3.72526782
-        ISPIN = 1
+        TypeION = 1
+        ElemName = [&#39;C&#39;]
+        E_Fermi = -3.3501
         fields = [&#39;s&#39;, &#39;py&#39;, &#39;pz&#39;, &#39;px&#39;, &#39;dxy&#39;, &#39;dyz&#39;, &#39;dz2&#39;, &#39;dxz&#39;, &#39;x2-y2&#39;]
         incar = Data(
-            SYSTEM = AlAs
+            SYSTEM = C2
             PREC = high
             ALGO = N
+            LSORBIT = T
             NELMIN = 7
-            EDIFF = 0.00000100
             ISMEAR = 0
             SIGMA = 0.10000000
             LORBIT = 11
-            KPOINT_BSE = -1     0     0     0
-            LHFCALC = T
-            HFSCREEN = 0.20100000
-            PRECFOCK = fast
+            GGA = PS
         )
+        ElemIndex = [0, 2]
+        ISPIN = 1
     )
     dim_info = Data(
         ⇅ = Each of SpinUp/SpinDown Arrays
@@ -918,34 +913,32 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
         pro_dos = ⇅(NION,grid_size,en+pro_fields)
         pro_bands = ⇅(NION,NKPTS,NBANDS,pro_fields)
     )
-    kpoints = &lt;ndarray:shape=(126, 3)&gt;
-    kpath = &lt;list:len=126&gt;
+    kpoints = &lt;ndarray:shape=(90, 3)&gt;
+    kpath = &lt;list:len=90&gt;
     bands = Data(
-        E_Fermi = 3.72526782
+        E_Fermi = -3.3501
         ISPIN = 1
-        NBANDS = &lt;class &#39;numpy.int64&#39;&gt;
-        bands_range = &lt;class &#39;range&#39;&gt;
-        evals = &lt;ndarray:shape=(126, 3)&gt;
+        NBANDS = 21
+        evals = &lt;ndarray:shape=(90, 21)&gt;
     )
     tdos = Data(
-        E_Fermi = 3.72526782
+        E_Fermi = -3.3501
         ISPIN = 1
-        grid_range = &lt;class &#39;range&#39;&gt;
-        tdos = &lt;ndarray:shape=(7, 3)&gt;
+        tdos = &lt;ndarray:shape=(301, 3)&gt;
     )
     pro_bands = Data(
-        labels = [&#39;s&#39;, &#39;py&#39;, &#39;pz&#39;, &#39;px&#39;, &#39;dxy&#39;, &#39;dyz&#39;, &#39;dz2&#39;, &#39;dxz&#39;, &#39;x2-y2&#39;]
-        pros = &lt;ndarray:shape=(2, 126, 3, 9)&gt;
+        labels = [&#39;py&#39;, &#39;pz&#39;, &#39;px&#39;, &#39;dxy&#39;, &#39;dyz&#39;, &#39;dz2&#39;, &#39;dxz&#39;, &#39;x2-y2&#39;]
+        pros = &lt;ndarray:shape=(2, 90, 21, 9)&gt;
     )
     pro_dos = Data(
-        labels = [&#39;energy&#39;, &#39;s&#39;, &#39;py&#39;, &#39;pz&#39;, &#39;px&#39;, &#39;dxy&#39;, &#39;dyz&#39;, &#39;dz2&#39;, &#39;dxz&#39;, &#39;x2-y2&#39;]
-        pros = &lt;ndarray:shape=(2, 7, 10)&gt;
+        labels = [&#39;s&#39;, &#39;py&#39;, &#39;pz&#39;, &#39;px&#39;, &#39;dxy&#39;, &#39;dyz&#39;, &#39;dz2&#39;, &#39;dxz&#39;, &#39;x2-y2&#39;]
+        pros = &lt;ndarray:shape=(2, 301, 10)&gt;
     )
     poscar = Data(
-        volume = 45.73530449
-        basis = &lt;ndarray:shape=(3, 3)&gt;
-        rec_basis = &lt;ndarray:shape=(3, 3)&gt;
-        positions = &lt;ndarray:shape=(2, 3)&gt;
+        volume = 105.49324928
+        basis = [[2.468031, 0.0, 0.0], [-1.234015, 2.137377, 0.0], [0.0, 0.0, 19.998293]]
+        rec_basis = [[0.4051813, 0.2339315, 0.0], [0.0, 0.46786318, 0.0], [0.0, 0.0, 0.05000427]]
+        positions = [[0.333333, 0.666667, 0.0], [0.666667, 0.333333, 0.0]]
     )
 )</pre>
 </div>
@@ -986,7 +979,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="load_export" class="doc_header"><code>load_export</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L532" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_export</code>(<strong><code>path</code></strong>=<em><code>'./vasprun.xml'</code></em>, <strong><code>joinPathAt</code></strong>=<em><code>[]</code></em>, <strong><code>shift_kpath</code></strong>=<em><code>0</code></em>, <strong><code>path_to_ps</code></strong>=<em><code>'pwsh'</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>max_filled</code></strong>=<em><code>10</code></em>, <strong><code>max_empty</code></strong>=<em><code>10</code></em>, <strong><code>keep_files</code></strong>=<em><code>True</code></em>)</p>
+<h4 id="load_export" class="doc_header"><code>load_export</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L543" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_export</code>(<strong><code>path</code></strong>=<em><code>'./vasprun.xml'</code></em>, <strong><code>joinPathAt</code></strong>=<em><code>[]</code></em>, <strong><code>shift_kpath</code></strong>=<em><code>0</code></em>, <strong><code>path_to_ps</code></strong>=<em><code>'pwsh'</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>max_filled</code></strong>=<em><code>10</code></em>, <strong><code>max_empty</code></strong>=<em><code>10</code></em>, <strong><code>keep_files</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns a full dictionary of all objects from <code>vasprun.xml</code> file exported using powershell.</li>
@@ -1054,7 +1047,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="dump_dict" class="doc_header"><code>dump_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L681" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>dump_dict</code>(<strong><code>dict_data</code></strong>=<em><code>None</code></em>, <strong><code>dump_to</code></strong>=<em><code>'pickle'</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="dump_dict" class="doc_header"><code>dump_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L692" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>dump_dict</code>(<strong><code>dict_data</code></strong>=<em><code>None</code></em>, <strong><code>dump_to</code></strong>=<em><code>'pickle'</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Dump an <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> or <a href="/pivotpy/XmlElementTree.html#load_export"><code>load_export</code></a>'s <code>Data</code> object or any dictionary to json or pickle string/file. It convert <a href="/pivotpy/XmlElementTree.html#Dict2Data"><code>Dict2Data</code></a> to dictionary before serializing to json/pickle, so json/pickle.loads() of converted Data would be a simple dictionary, pass that to <a href="/pivotpy/XmlElementTree.html#Dict2Data"><code>Dict2Data</code></a> to again make accessible via dot notation.</li>
@@ -1094,7 +1087,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="load_from_dump" class="doc_header"><code>load_from_dump</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L713" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_from_dump</code>(<strong><code>file_or_str</code></strong>, <strong><code>keep_as_dict</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="load_from_dump" class="doc_header"><code>load_from_dump</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L724" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_from_dump</code>(<strong><code>file_or_str</code></strong>, <strong><code>keep_as_dict</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <ul>
 <li>Loads a json/pickle dumped file or string by auto detecting it.</li>
