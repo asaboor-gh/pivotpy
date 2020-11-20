@@ -1047,7 +1047,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="dump_dict" class="doc_header"><code>dump_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L697" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>dump_dict</code>(<strong><code>dict_data</code></strong>=<em><code>None</code></em>, <strong><code>dump_to</code></strong>=<em><code>'pickle'</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="dump_dict" class="doc_header"><code>dump_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L700" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>dump_dict</code>(<strong><code>dict_data</code></strong>=<em><code>None</code></em>, <strong><code>dump_to</code></strong>=<em><code>'pickle'</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Dump an <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> or <a href="/pivotpy/XmlElementTree.html#load_export"><code>load_export</code></a>'s <code>Data</code> object or any dictionary to json or pickle string/file. It convert <a href="/pivotpy/XmlElementTree.html#Dict2Data"><code>Dict2Data</code></a> to dictionary before serializing to json/pickle, so json/pickle.loads() of converted Data would be a simple dictionary, pass that to <a href="/pivotpy/XmlElementTree.html#Dict2Data"><code>Dict2Data</code></a> to again make accessible via dot notation.</li>
@@ -1087,7 +1087,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="load_from_dump" class="doc_header"><code>load_from_dump</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L729" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_from_dump</code>(<strong><code>file_or_str</code></strong>, <strong><code>keep_as_dict</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="load_from_dump" class="doc_header"><code>load_from_dump</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L732" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_from_dump</code>(<strong><code>file_or_str</code></strong>, <strong><code>keep_as_dict</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <ul>
 <li>Loads a json/pickle dumped file or string by auto detecting it.</li>

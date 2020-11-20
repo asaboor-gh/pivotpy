@@ -600,8 +600,11 @@ def load_export(path= './vasprun.xml',
 
     # Enable reloading SysInfo.py file.
 
-    import SysInfo
-    _vars = il.reload(SysInfo)
+    #import SysInfo
+    #_vars = il.reload(SysInfo)
+    # Single Load instead
+    from importlib.machinery import SourceFileLoader
+    _vars = SourceFileLoader("SysInfo", "./SysInfo.py").load_module()
 
     SYSTEM            = _vars.SYSTEM
     NKPTS             = _vars.NKPTS

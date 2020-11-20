@@ -647,6 +647,7 @@ def quick_color_lines(path_evr  = None,
     import numpy as np
     import pivotpy.vr_parser as vp
     import pivotpy.s_plots as sp
+    import pivotpy as pp
     import matplotlib as mpl
     import matplotlib.pyplot as plt
     from matplotlib import rc
@@ -709,13 +710,10 @@ def quick_color_lines(path_evr  = None,
         if(len(elements)!=len(labels)):
             raise ValueError("elements and labels expect same length even if their entries are empty.")
             return
-        # Fix elements and colors length
+        # Fix elements and colors length. ISPIN 2 case is done in loop itself
         if color_map in plt.colormaps():
             from matplotlib.pyplot import cm
-            if vr.sys_info.ISPIN == 2:
-                colors  = eval("cm.{}(np.linspace(0,1,2*len(orbs)))".format(color_map))
-            else:
-                colors  = eval("cm.{}(np.linspace(0,1,len(orbs)))".format(color_map))
+            colors  = eval("cm.{}(np.linspace(0,1,len(orbs)))".format(color_map))
         else:
             return print("`color_map` expects one of the follwoing:\n{}".format(plt.colormaps()))
 
@@ -738,13 +736,11 @@ def quick_color_lines(path_evr  = None,
         # After All Fixing
         ISPIN=vr.sys_info.ISPIN
         for ax,elem,orb,color,label in zip(axes,elements,orbs,colors,labels):
-            args_dict=dict(ions=elem,color=(color),uni_color=True,orbs=[orb,[],[]],interpolate=interpolate,\
-                           n=n,k=k,max_width=max_width)
+            args_dict=dict(ions=elem,uni_color=True,color=(color),orbs=[orb,[],[]],interpolate=interpolate,n=n,k=k,max_width=max_width)
             if(ISPIN==1):
                 En=vr.bands.evals-E_Fermi
                 Pros=vr.pro_bands.pros
                 sp.create_rgb_lines(ax=ax,kpath=K, evals_set=En, pros_set=Pros,**args_dict)
-                print("elem = {},orb = {},label = {}, {}".format(elem,orb,label,ax))
             if(ISPIN==2):
                 En1=vr.bands.evals.SpinUp-E_Fermi
                 En2=vr.bands.evals.SpinDown-E_Fermi
@@ -757,7 +753,6 @@ def quick_color_lines(path_evr  = None,
                 if(spin=='both'):
                     sp.create_rgb_lines(ax=ax,kpath=K, evals_set=En1, pros_set=Pros1,**args_dict)
                     sp.create_rgb_lines(ax=ax,kpath=K, evals_set=En2, pros_set=Pros2,**args_dict)
-                print("elem = {},orb = {},label = {}, {}".format(elem,orb,label,ax))
 
         x,y=[*xytxt]
         for ax,label,color in zip(axes,labels,colors):
@@ -767,7 +762,7 @@ def quick_color_lines(path_evr  = None,
                 sp.add_legend(ax=ax,colors=[(color)],labels=[label],widths=max_width/2,**legend_kwargs)
             elif(showlegend==False):
                 sp.add_text(ax=ax,xs=x,ys=y,txts=label,colors=ctxt)
-        sp.modify_axes(ax=ax,xticks=xticks,xt_labels=xt_labels,xlim=xlim,ylim=ylim)
+        _ = [sp.modify_axes(ax=ax,xticks=xticks,xt_labels=xt_labels,xlim=xlim,ylim=ylim) for ax in axes]
         plt.gcf().text(0.01, 0.5, 'Energy (eV)', va='center', rotation='vertical')
         plt.subplots_adjust(**subplots_adjust_kwargs)
         return axes
@@ -1035,7 +1030,7 @@ def quick_dos_lines(path_evr      = None,
             - elements   : List [[0],], by defualt and plot first ion's projections.
             - orbs       : List [[0],] lists of indices of orbitals, could be empty.
             - labels     : List [str,] of orbitals labels. len(labels)==len(orbs) must hold.  Auto adds `↑`,`↓` for ISPIN=2.
-            - color_map  : Matplotlib's standard color maps. Default is 'gist_ranibow'.
+            - color_map  : Matplotlib's standard color maps. Default is 'gist_ranibow'. Use 'RGB' if want to compare with `quick_rgb_lines` with 3 projection inputs (len(orbs)==3).
             - fill_area  : Default is True and plots filled area for dos. If False, plots lines only.
             - vertical   : False, If True, plots along y-axis.
             - showlegend : True by defualt.
@@ -1054,7 +1049,7 @@ def quick_dos_lines(path_evr      = None,
         if(include_dos not in ('both','pdos','tdos')):
             return print("`include_dos` expects one of ['both','pdos','tdos'], got {}.".format(include_dos))
         import pivotpy.s_plots as sp
-        import numpy as np
+        import numpy as np, pivotpy as pp
         import pivotpy.g_utils as gu
         import matplotlib as mpl
         import matplotlib.pyplot as plt
@@ -1082,6 +1077,10 @@ def quick_dos_lines(path_evr      = None,
                 colors  = eval("cm.{}(np.linspace(0,1,2*len(orbs)))".format(color_map))
             else:
                 colors  = eval("cm.{}(np.linspace(0,1,len(orbs)))".format(color_map))
+        elif 'RGB' in color_map and len(orbs) == 3:
+            colors = np.array([[0.9,0,0],[0,0.85,0],[0,0,0.9]])
+            if vr.sys_info.ISPIN == 2 and 'both' in spin:
+                colors = np.reshape([[c,list(pp.invert_color(c))] for c in colors],(-1,3))
         else:
             return print("`color_map` expects one of the follwoing:\n{}".format(plt.colormaps()))
 

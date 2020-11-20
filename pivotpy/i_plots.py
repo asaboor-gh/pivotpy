@@ -370,7 +370,7 @@ def plotly_dos_lines(path_evr     = None,
             - elements   : List [[0,],] of ions indices, by defualt plot first ion's projections.
             - orbs       : List [[0,],] lists of indices of orbitals, could be empty.
             - labels     : List [str,] of orbitals labels. len(labels)==len(orbs) must hold.
-            - color_map  : Matplotlib's standard color maps. Default is 'gist_ranibow'.
+            - color_map  : Matplotlib's standard color maps. Default is 'gist_ranibow'. Use 'RGB' if want to compare with `plotly_rgb_lines` with 3 projection inputs (len(orbs)==3).
             - fill_area  : Default is True and plots filled area for dos. If False, plots lines only.
             - vertical   : False, If True, plots along y-axis.
             - figsize    : Tuple in pixels (width,height).
@@ -410,6 +410,10 @@ def plotly_dos_lines(path_evr     = None,
                 colors  = eval("cm.{}(np.linspace(0,1,2*len(orbs)))".format(color_map))
             else:
                 colors  = eval("cm.{}(np.linspace(0,1,len(orbs)))".format(color_map))
+        elif 'RGB' in color_map and len(orbs) == 3:
+            colors = np.array([[0.9,0,0],[0,0.85,0],[0,0,0.9]])
+            if vr.sys_info.ISPIN == 2 and 'both' in spin:
+                colors = np.reshape([[c,list(pp.invert_color(c))] for c in colors],(-1,3))
         else:
             return print("`color_map` expects one of the follwoing:\n{}".format(plt.colormaps()))
         # Total DOS colors
