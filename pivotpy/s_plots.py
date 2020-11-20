@@ -190,7 +190,7 @@ def add_text(ax=None,xs=0.05,ys=0.9,txts='[List]',colors='r'):
     return None
 
 # Cell
-def add_legend(ax=None,colors=[(1,0,0),(0,1,0),(0,0,1)],labels=['s','p','d'],styles='solid',\
+def add_legend(ax=None,colors=[],labels=[],styles='solid',\
                 widths=0.7,anchor=(0,1), ncol=3,loc='lower left',fontsize='small',frameon=False,**legend_kwargs):
     """
     - Adds custom legeneds on a given axes,returns None.
