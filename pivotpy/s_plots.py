@@ -1111,6 +1111,8 @@ def quick_dos_lines(path_evr      = None,
                     for p,l,c in zip(pdos,labels,colors):
                         ax.fill_between(en,p,color=(mpl.colors.to_rgba(c,0.4)),linewidth=0)
                         ax.plot(en,p, color=(c),linewidth=linewidth,label=l)
+            if elim:
+                ax.set_xlim([min(elim),max(elim)])
         if(vertical==True):
             if(fill_area==False):
                 if(include_dos!='pdos'):
@@ -1133,6 +1135,8 @@ def quick_dos_lines(path_evr      = None,
                     for p,l,c in zip(pdos,labels,colors):
                         ax.fill_betweenx(en,p,color=(mpl.colors.to_rgba(c,0.4)),linewidth=0)
                         ax.plot(p,en, color=(c),linewidth=linewidth,label=l)
+            if elim:
+                ax.set_ylim([min(elim),max(elim)])
         if(showlegend==True):
             sp.add_legend(ax=ax,labels=[],colors=colors,widths=linewidth,**legend_kwargs)
         return ax
