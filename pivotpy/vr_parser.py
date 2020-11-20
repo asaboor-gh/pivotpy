@@ -110,6 +110,7 @@ def read_asxml(path=None,suppress_warning=False):
             elif 'GB' in fsize and value > 1:
                 printy(print_str)
                 value = value*1024 # To show in MBs for later Use.
+
         tree = ET.parse(path)
         xml_data = tree.getroot()
         if suppress_warning == False and value > 100:
@@ -487,7 +488,9 @@ def export_vasprun(path=None,skipk=None,elim=[],joinPathAt=[],shift_kpath=0):
         req_files = [os.path.join(os.path.dirname(os.path.abspath(path)),f) for f in req_files]
     logic = [os.path.isfile(f) for f in req_files]
     if not False in logic:
+        from IPython.display import clear_output
         print('Loading from PowerShell Exported Data...')
+        clear_output(wait=True)
         return vp.load_export(path=(path if path else './vasprun.xml'))
 
     # Proceed if not files from PWSH
@@ -596,27 +599,29 @@ def load_export(path= './vasprun.xml',
             pp.ps_to_std(path_to_ps=path_to_ps,ps_command='Import-Module Vasp2Visual; Export-VR -InputFile {} -MaxFilled {} -MaxEmpty {}'.format(path,max_filled,max_empty))
 
     # Enable reloading SysInfo.py file.
+
     import SysInfo
-    vars=il.reload(SysInfo)
-    SYSTEM            = vars.SYSTEM
-    NKPTS             = vars.NKPTS
-    NBANDS            = vars.NBANDS
-    NFILLED           = vars.NFILLED
-    TypeION           = vars.TypeION
-    NION              = vars.NION
-    nField_Projection = vars.nField_Projection
-    E_Fermi           = vars.E_Fermi
-    ISPIN             = vars.ISPIN
-    ElemIndex         = vars.ElemIndex
-    ElemName          = vars.ElemName
+    _vars = il.reload(SysInfo)
+
+    SYSTEM            = _vars.SYSTEM
+    NKPTS             = _vars.NKPTS
+    NBANDS            = _vars.NBANDS
+    NFILLED           = _vars.NFILLED
+    TypeION           = _vars.TypeION
+    NION              = _vars.NION
+    nField_Projection = _vars.nField_Projection
+    E_Fermi           = _vars.E_Fermi
+    ISPIN             = _vars.ISPIN
+    ElemIndex         = _vars.ElemIndex
+    ElemName          = _vars.ElemName
     poscar            = {
-                        'volume':vars.volume,
-                        'basis' : np.array(vars.basis),
-                        'rec_basis': np.array(vars.rec_basis),
-                        'positions': np.array(vars.positions)
+                        'volume':_vars.volume,
+                        'basis' : np.array(_vars.basis),
+                        'rec_basis': np.array(_vars.rec_basis),
+                        'positions': np.array(_vars.positions)
                         }
-    fields            = vars.fields
-    incar             = vars.INCAR
+    fields            = _vars.fields
+    incar             = _vars.INCAR
     # Load Data
     bands= np.loadtxt('Bands.txt').reshape((-1,NBANDS+4)) #Must be read in 2D even if one row only.
     pro_bands= np.loadtxt('Projection.txt').reshape((-1,NBANDS*nField_Projection))
