@@ -321,7 +321,7 @@ def get_input_gui(rgb=True,sys_info=None,html_style=None,height=400):
     from time import sleep
     if not html_style:
         html_style = ''
-    if not sys_info:
+    if sys_info ==None:
         sys_info = pp.Dict2Data({'fields':['s'],'ElemIndex':[0,1],'ElemName':['A']})
     layout = Layout(width='30%')
     orbs_w  = ipw.Dropdown(options={'s':0},value=0,layout=layout)
@@ -729,13 +729,12 @@ def show_app(height=600):
             else:
                 print('Loading from Powershell ...')
                 evr = pp.load_export(out_w1.value)
-            sys_info = evr.sys_info
             print('Done')
         tab.selected_index = 1
         if rd_btn.value=='DOS':
-            tmp_ui,__ = get_input_gui(rgb=False,sys_info=sys_info,height=None)
+            tmp_ui,__ = get_input_gui(rgb=False,sys_info=evr.sys_info,height=None)
         else:
-            tmp_ui,__ = get_input_gui(rgb=True,sys_info=sys_info,height=None)
+            tmp_ui,__ = get_input_gui(rgb=True,sys_info=evr.sys_info,height=None)
 
         gui2.children = tmp_ui.children
         __.value = out_w2.value # keep values
