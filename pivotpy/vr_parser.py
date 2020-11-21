@@ -80,6 +80,8 @@ def read_asxml(path=None,suppress_warning=False):
     """
     if(path==None):
         path='./vasprun.xml'
+    if "\\" in path: # Fix windows path
+        path = path.replace("\\","/")
     import xml.etree.ElementTree as ET
     import os
     if not os.path.isfile(path):
