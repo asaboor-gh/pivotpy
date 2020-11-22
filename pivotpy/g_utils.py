@@ -305,7 +305,6 @@ def nav_links(current_index=0,
     style = """<style>
                 a{text-decoration: none;color:lightkblue;font-weight:bold;}
                 a:focus,a:active.a:hover{color:hotpink;}
-                a:visited{opacity:0.5;color:green;}
                 </style>\n"""
     md_str = style
     for i,(link,item) in enumerate(zip(links,items)):
