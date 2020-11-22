@@ -6,18 +6,17 @@
 
 
 <style>
-                a{text-decoration: none;color:lightkblue;font-weight:bold;}
-                a:focus,a:active.a:hover{color:hotpink;}
+                a{text-decoration: none !important;color:lightkblue;font-weight:bold;}
+                a:focus,a:active,a:hover{color:hotpink !important;}
                 </style>
-> &nbsp;**Navigation:** [`▶`Index●&nbsp;](https://massgh.github.io/pivotpy/)
-[`▶`XmlElementTree&nbsp;](https://massgh.github.io/pivotpy/XmlElementTree)
-[`▶`StaticPlots&nbsp;](https://massgh.github.io/pivotpy/StaticPlots)
-[`▶`InteractivePlots&nbsp;](https://massgh.github.io/pivotpy/InteractivePlots)
-[`▶`Utilities&nbsp;](https://massgh.github.io/pivotpy/Utilities)
-[`▶`StructureIO&nbsp;](https://massgh.github.io/pivotpy/StructureIO)
-[`▶`Widgets&nbsp;](https://massgh.github.io/pivotpy/Widgets)
+> [&nbsp;`▶` Index●&nbsp;](https://massgh.github.io/pivotpy/)  
+[&nbsp;`▶` XmlElementTree&nbsp;](https://massgh.github.io/pivotpy/XmlElementTree)  
+[&nbsp;`▶` StaticPlots&nbsp;](https://massgh.github.io/pivotpy/StaticPlots)  
+[&nbsp;`▶` InteractivePlots&nbsp;](https://massgh.github.io/pivotpy/InteractivePlots)  
+[&nbsp;`▶` Utilities&nbsp;](https://massgh.github.io/pivotpy/Utilities)  
+[&nbsp;`▶` StructureIO&nbsp;](https://massgh.github.io/pivotpy/StructureIO)  
+[&nbsp;`▶` Widgets&nbsp;](https://massgh.github.io/pivotpy/Widgets)  
 
------
 
 
 
@@ -356,17 +355,16 @@ x
 
 
 <style>
-                a{text-decoration: none;color:lightkblue;font-weight:bold;}
-                a:focus,a:active.a:hover{color:hotpink;}
+                a{text-decoration: none !important;color:lightkblue;font-weight:bold;}
+                a:focus,a:active,a:hover{color:hotpink !important;}
                 </style>
-> &nbsp;**Navigation:** [`▶`Index●&nbsp;](https://massgh.github.io/pivotpy/)
-[`▶`XmlElementTree&nbsp;](https://massgh.github.io/pivotpy/XmlElementTree)
-[`▶`StaticPlots&nbsp;](https://massgh.github.io/pivotpy/StaticPlots)
-[`▶`InteractivePlots&nbsp;](https://massgh.github.io/pivotpy/InteractivePlots)
-[`▶`Utilities&nbsp;](https://massgh.github.io/pivotpy/Utilities)
-[`▶`StructureIO&nbsp;](https://massgh.github.io/pivotpy/StructureIO)
-[`▶`Widgets&nbsp;](https://massgh.github.io/pivotpy/Widgets)
+> [&nbsp;`▶` Index●&nbsp;](https://massgh.github.io/pivotpy/)  
+[&nbsp;`▶` XmlElementTree&nbsp;](https://massgh.github.io/pivotpy/XmlElementTree)  
+[&nbsp;`▶` StaticPlots&nbsp;](https://massgh.github.io/pivotpy/StaticPlots)  
+[&nbsp;`▶` InteractivePlots&nbsp;](https://massgh.github.io/pivotpy/InteractivePlots)  
+[&nbsp;`▶` Utilities&nbsp;](https://massgh.github.io/pivotpy/Utilities)  
+[&nbsp;`▶` StructureIO&nbsp;](https://massgh.github.io/pivotpy/StructureIO)  
+[&nbsp;`▶` Widgets&nbsp;](https://massgh.github.io/pivotpy/Widgets)  
 
------
 
 

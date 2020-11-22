@@ -300,18 +300,19 @@ def nav_links(current_index=0,
                        "StructureIO",
                        "Widgets"
                        ],
-            horizontal = False):
-    from IPython.display import Markdown,HTML
+            horizontal = False,
+            out_string = False):
+    from IPython.display import Markdown
     links   = [doc_url+item if not 'Index' in item else doc_url for item in items]
-    style = """<style>
-                a{text-decoration: none !important;color:lightkblue;font-weight:bold;}
-                a:focus,a:active,a:hover{color:hotpink !important;}
-                </style>\n"""
-    md_str = style + "> "
+    style = """<style>a{text-decoration: none !important;color:lightkblue;font-weight:bold;}
+                a:focus,a:active,a:hover{color:hotpink !important;}</style>\n"""
+    md_str = style
     for i,(link,item) in enumerate(zip(links,items)):
         if current_index == i: item = "{}●".format(item)
         if not horizontal:
-            md_str += "[&nbsp;`▶` {}&nbsp;]({})  \n".format(item,link)
+            md_str += "> [&nbsp;`▶` {}&nbsp;]({})  \n".format(item,link)
         else:
-            md_str += "[&nbsp;`▶` {}&nbsp;]({})\n".format(item,link)
+            md_str += "> [&nbsp;`▶` {}&nbsp;]({})\n".format(item,link)
+    if out_string:
+        return md_str
     return Markdown(md_str)
