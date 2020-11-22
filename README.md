@@ -217,15 +217,11 @@ Markdown("[See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ
 
 
 
-- See from Plotly's Chart Studio
-
-<iframe width="900" height="800" frameborder="0" scrolling="no" src="//plotly.com/~massgh/36.embed"></iframe>
-
 ## Plotting Two Calculations Side by Side 
 - Here we will use `shift_kpath` to demonstrate plot of two calculations on same axes side by side
 
 ```
-#collapse_input
+#nbdev_collapse_input
 import matplotlib.pyplot as plt
 import pivotpy as pp 
 plt.style.use('bmh')
@@ -242,9 +238,8 @@ pp.quick_bplot(path_evr=vr2,ax=axs,txt='Graphene(Left: ISPIN=1, Right: ISPIN=2)'
 pp.modify_axes(ax=axs,xlim=[0,last_k],ylim=[-10,10],**ti_cks)
 ```
 
-
-![svg](docs/images/output_16_0.svg)
-
+    Loading from PowerShell Exported Data...
+    
 
 ## Interpolation 
 
@@ -281,5 +276,68 @@ pp.ps_to_std(ps_command='(Get-Process)[0..4]')
     8     1.88       4.60       0.09   18180   1 AppVShNotify
     19     4.77       4.37       0.00    4992   0 armsvc
     
+
+## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
+- You can create a IPython cell magic to run powershell commands directly in IPython Shell/Notebook (Powershell core installation required).
+- Cell magic can be assigned to a variable `foo` by `%%ps --out foo`
+- Line magic can be assigned to a variable by `foo = %ps powershell_command`
+
+Put below code in ipython profile's startup file (create one) "~/.ipython/profile_default/startup/powershell_magic.py"
+```python
+from IPython.core.magic import register_line_cell_magic
+from IPython import get_ipython
+@register_line_cell_magic
+def ps(line, cell=None):
+    if cell:
+        return get_ipython().run_cell_magic('powershell',line,cell)
+    else:
+        get_ipython().run_cell_magic('powershell','--out posh_output',line)
+        return posh_output.splitlines()
+``` 
+Additionally you need to add following lines in "~/.ipython/profile_default/ipython_config.py" file to make above magic work.
+```python
+from traitlets.config.application import get_config
+c = get_config()
+c.ScriptMagics.script_magics = ['powershell']
+c.ScriptMagics.script_paths = {
+    'powershell' : 'powershell.exe -noprofile -command -',
+    'pwsh': 'pwsh.exe -noprofile -command -'
+}
+```
+
+```
+%%ps 
+Get-ChildItem '../graphene_example'
+```
+
+    
+    
+        Directory: E:\Research\graphene_example
+    
+    
+    Mode                 LastWriteTime         Length Name                                                                 
+    ----                 -------------         ------ ----                                                                 
+    da----        10/31/2020   1:30 PM                ISPIN_1                                                              
+    da----          5/9/2020   1:05 PM                ISPIN_2                                                              
+    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                               
+    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                          
+    
+    
+    
+
+```
+x = %ps (Get-ChildItem '../graphene_example').FullName
+x
+```
+
+
+
+
+    ['E:\\Research\\graphene_example\\ISPIN_1',
+     'E:\\Research\\graphene_example\\ISPIN_2',
+     'E:\\Research\\graphene_example\\OUTCAR',
+     'E:\\Research\\graphene_example\\vasprun.xml']
+
+
 
 [Functions Reference](functions.md)
