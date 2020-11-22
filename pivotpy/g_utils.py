@@ -306,8 +306,8 @@ def nav_links(current_index=0,
                 a{text-decoration: none;color:lightkblue;font-weight:bold;}
                 a:focus,a:active.a:hover{color:hotpink;}
                 </style>\n"""
-    md_str = style + "**Navigation:** "
+    md_str = style + ">>>> **Navigation:** "
     for i,(link,item) in enumerate(zip(links,items)):
         if current_index == i: item = "{}●".format(item)
         md_str += "[`▶`{}&nbsp;&nbsp;]({})\n".format(item,link)
-    return Markdown(md_str)
+    return Markdown(md_str+"\n-----")
