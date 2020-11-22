@@ -303,12 +303,12 @@ def nav_links(current_index=0,
     from IPython.display import Markdown,HTML
     links   = [doc_url+item if not 'Index' in item else doc_url for item in items]
     style = """<style>
-                .mydiv {background:#eaf0f0; padding:4px;display:inline-block;border:1px solid #93b2b2;}
+                .mydiv {background:#eaf0f0; padding:2px;display:inline-block;border:1px solid #93b2b2;}
                 a{text-decoration: none;}
                 a:focus,a:active.a:hover{color:hotpink;}
-                a:visited{opacity:0.5;}
+                a:visited{opacity:0.5;color:green;}
                 </style>\n"""
-    md_str = style + "<b>Navigate: </b>"
+    md_str = style
     for i,(link,item) in enumerate(zip(links,items)):
         if current_index == i: item = "●{}".format(item)
         md_str += "<div class='mydiv'><b><a href='{}'>  {}  </a></b></div>".format(link,item)
