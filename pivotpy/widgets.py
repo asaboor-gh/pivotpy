@@ -707,12 +707,12 @@ def show_app(height=600):
         load_btn.description='Loading ...'
         try:
             path = os.path.split(out_w1.value)[0]
-            file = os.path.join(path,'sys_info.pickle')
-            sys_info = pp.load_from_dump(file)
             r_f = os.path.join(path,'result.json')
             with open(r_f,'r') as f:
                  tabel_w.value = '\n'.join(f.readlines())
             f.close()
+            file = os.path.join(path,'sys_info.pickle')
+            sys_info = pp.load_from_dump(file)
             print('Cache Loaded')
         except:
             files = [os.path.join(os.path.split(out_w1.value)[0],f)
@@ -727,7 +727,7 @@ def show_app(height=600):
                 pp.dump_dict(evr.sys_info,outfile=ifile)
                 pp.dump_dict(evr,outfile=vfile)
             else:
-                print('Loading from Powershell ...')
+                print('Loading from Powershell (No Cache Required)...')
                 evr = pp.load_export(out_w1.value)
             print('Done')
         tab.selected_index = 1
