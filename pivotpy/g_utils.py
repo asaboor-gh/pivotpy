@@ -2,7 +2,7 @@
 
 __all__ = ['get_file_size', 'interpolate_data', 'ps_to_py', 'ps_to_std', 'select_dirs', 'select_files',
            'get_child_items', 'invert_color', 'printr', 'printg', 'printb', 'printy', 'printm', 'printc',
-           'EncodeFromNumpy', 'DecodeToNumpy', 'link_to_class']
+           'EncodeFromNumpy', 'DecodeToNumpy', 'link_to_class', 'nav_links']
 
 # Cell
 def get_file_size(path):
@@ -288,3 +288,27 @@ def link_to_class(cls):
         setattr(cls, func.__name__, wrapper)
         return func
     return decorator
+
+# Cell
+def nav_links(current_index=0,
+            doc_url = r"https://massgh.github.io/pivotpy/",
+            items   = ["Index",
+                       "XmlElementTree",
+                       "StaticPlots",
+                       "InteractivePlots",
+                       "Utilities",
+                       "StructureIO",
+                       "Widgets"
+                       ]):
+    from IPython.display import Markdown,HTML
+    links   = [doc_url+item if not 'Index' in item else doc_url for item in items]
+    style = """<style>
+                a{text-decoration: none;}
+                a:focus,a:active.a:hover{color:hotpink;}
+                a:visited{opacity:0.5;}
+                </style>"""
+    md_str = style + "<b>Navigate: </b>"
+    for i,(link,item) in enumerate(zip(links,items)):
+        if current_index == i: item = "●{}".format(item)
+        md_str += "<b><a href='{}'> {} </a></b>\n".format(link,item)
+    return HTML(md_str)

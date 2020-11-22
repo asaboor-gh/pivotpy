@@ -2,6 +2,24 @@
 > A Python Processing Tool for Vasp Input/Output. A CLI is available in Powershell, see <a href='https://github.com/massgh/Vasp2Visual'>Vasp2Visual</a>.
 
 
+
+
+
+<style>
+                a{text-decoration: none;}
+                a:focus,a:active.a:hover{color:hotpink;}
+                a:visited{opacity:0.5;}
+                </style><b>Navigate: </b><b><a href='https://massgh.github.io/pivotpy/'> ●Index </a></b>
+<b><a href='https://massgh.github.io/pivotpy/XmlElementTree'> XmlElementTree </a></b>
+<b><a href='https://massgh.github.io/pivotpy/StaticPlots'> StaticPlots </a></b>
+<b><a href='https://massgh.github.io/pivotpy/InteractivePlots'> InteractivePlots </a></b>
+<b><a href='https://massgh.github.io/pivotpy/Utilities'> Utilities </a></b>
+<b><a href='https://massgh.github.io/pivotpy/StructureIO'> StructureIO </a></b>
+<b><a href='https://massgh.github.io/pivotpy/Widgets'> Widgets </a></b>
+
+
+
+
 ## Install
 `pip install pivotpy`
 
@@ -10,15 +28,6 @@
 - See [Full Documentation](https://massgh.github.io/pivotpy/).
 - For CLI, use [Vasp2Visual](https://github.com/massgh/Vasp2Visual).
 - Run in Azure [![Run in Azure](https://notebooks.azure.com/launch.png)](https://testazurenotebooks-massaz.notebooks.azure.com/j/notebooks/index.ipynb)
-
-{% include note.html content='In case links of [documentation pages](https://massgh.github.io/pivotpy/) do not work, navigate through here. You can aslo troubleshoot page&#8217;s view by removing `.html` at end of address in browser&#8217;s addressbar.' %}
-- [Index](https://massgh.github.io/pivotpy/)
-- [XmlElementTree](https://massgh.github.io/pivotpy/XmlElementTree)
-- [StaticPlots](https://massgh.github.io/pivotpy/StaticPlots)
-- [InteractivePlots](https://massgh.github.io/pivotpy/InteractivePlots)
-- [Utilities](https://massgh.github.io/pivotpy/Utilities)
-- [StructureIO](https://massgh.github.io/pivotpy/StructureIO)
-- [Widgets](https://massgh.github.io/pivotpy/Widgets)
 
 # New: Ipywidgets-based GUI
 See GIF here:
@@ -341,3 +350,21 @@ x
 
 
 [Functions Reference](functions.md)
+
+
+
+
+<style>
+                a{text-decoration: none;}
+                a:focus,a:active.a:hover{color:hotpink;}
+                a:visited{opacity:0.5;}
+                </style><b>Navigate: </b><b><a href='https://massgh.github.io/pivotpy/'> ●Index </a></b>
+<b><a href='https://massgh.github.io/pivotpy/XmlElementTree'> XmlElementTree </a></b>
+<b><a href='https://massgh.github.io/pivotpy/StaticPlots'> StaticPlots </a></b>
+<b><a href='https://massgh.github.io/pivotpy/InteractivePlots'> InteractivePlots </a></b>
+<b><a href='https://massgh.github.io/pivotpy/Utilities'> Utilities </a></b>
+<b><a href='https://massgh.github.io/pivotpy/StructureIO'> StructureIO </a></b>
+<b><a href='https://massgh.github.io/pivotpy/Widgets'> Widgets </a></b>
+
+
+
