@@ -729,13 +729,14 @@ def show_app(height=600):
             else:
                 print('Loading from Powershell (No Cache Required)...')
                 evr = pp.load_export(out_w1.value)
+            sys_info = evr.sys_info # required here.
+            _rrdd_ = read_data(tabel_w,evr.poscar,sys_info) # Update Table data on load
             print('Done')
         tab.selected_index = 1
         if rd_btn.value=='DOS':
-            tmp_ui,__ = get_input_gui(rgb=False,sys_info=evr.sys_info,height=None)
+            tmp_ui,__ = get_input_gui(rgb=False,sys_info=sys_info,height=None)
         else:
-            tmp_ui,__ = get_input_gui(rgb=True,sys_info=evr.sys_info,height=None)
-
+            tmp_ui,__ = get_input_gui(rgb=True,sys_info=sys_info,height=None)
         gui2.children = tmp_ui.children
         __.value = out_w2.value # keep values
         ipw.dlink((__,'value'),(out_w2,'value'))
@@ -916,6 +917,7 @@ def show_app(height=600):
                     evr = pp.load_export(out_w1.value)
             print('Done')
             graph_btn.description = 'Load Graph'
+            _rrdd_ = read_data(tabel_w,evr.poscar,evr.sys_info) # Update Table data
             if not fermi_w.value: #Read Only if not in box.
                 fermi_w.value = str(evr.sys_info.E_Fermi) # E_Fermi
             # Args of Graph function
@@ -939,7 +941,6 @@ def show_app(height=600):
                 fig.layout = fig_data.layout
                 fig.update_layout(template=style_w.value) # Also here
             dict_html.value = json.dumps(argdict)  # Save for later generation.
-            _rrdd_ = read_data(tabel_w,evr.poscar,evr.sys_info)
             click_data(sel_en_w,fermi_w,tabel_w,fig)
 
         # end of function
