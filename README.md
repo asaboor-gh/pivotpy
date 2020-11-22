@@ -5,13 +5,19 @@
 
 
 
-<div><style>
-                .mydiv {background:#eaf0f0; padding:2px;display:inline-block;border:1px solid #93b2b2;}
-                a{text-decoration: none;}
+<style>
+                a{text-decoration: none;color:lightkblue;font-weight:bold;}
                 a:focus,a:active.a:hover{color:hotpink;}
-                a:visited{opacity:0.5;color:green;}
                 </style>
-<div class='mydiv'><b><a href='https://massgh.github.io/pivotpy/'>  ●Index  </a></b></div><div class='mydiv'><b><a href='https://massgh.github.io/pivotpy/XmlElementTree'>  XmlElementTree  </a></b></div><div class='mydiv'><b><a href='https://massgh.github.io/pivotpy/StaticPlots'>  StaticPlots  </a></b></div><div class='mydiv'><b><a href='https://massgh.github.io/pivotpy/InteractivePlots'>  InteractivePlots  </a></b></div><div class='mydiv'><b><a href='https://massgh.github.io/pivotpy/Utilities'>  Utilities  </a></b></div><div class='mydiv'><b><a href='https://massgh.github.io/pivotpy/StructureIO'>  StructureIO  </a></b></div><div class='mydiv'><b><a href='https://massgh.github.io/pivotpy/Widgets'>  Widgets  </a></b></div></div>
+> &nbsp;**Navigation:** [`▶`Index●&nbsp;](https://massgh.github.io/pivotpy/)
+[`▶`XmlElementTree&nbsp;](https://massgh.github.io/pivotpy/XmlElementTree)
+[`▶`StaticPlots&nbsp;](https://massgh.github.io/pivotpy/StaticPlots)
+[`▶`InteractivePlots&nbsp;](https://massgh.github.io/pivotpy/InteractivePlots)
+[`▶`Utilities&nbsp;](https://massgh.github.io/pivotpy/Utilities)
+[`▶`StructureIO&nbsp;](https://massgh.github.io/pivotpy/StructureIO)
+[`▶`Widgets&nbsp;](https://massgh.github.io/pivotpy/Widgets)
+
+-----
 
 
 
@@ -349,12 +355,18 @@ x
 
 
 
-<div><style>
-                .mydiv {background:#eaf0f0; padding:2px;display:inline-block;border:1px solid #93b2b2;}
-                a{text-decoration: none;}
+<style>
+                a{text-decoration: none;color:lightkblue;font-weight:bold;}
                 a:focus,a:active.a:hover{color:hotpink;}
-                a:visited{opacity:0.5;color:green;}
                 </style>
-<div class='mydiv'><b><a href='https://massgh.github.io/pivotpy/'>  ●Index  </a></b></div><div class='mydiv'><b><a href='https://massgh.github.io/pivotpy/XmlElementTree'>  XmlElementTree  </a></b></div><div class='mydiv'><b><a href='https://massgh.github.io/pivotpy/StaticPlots'>  StaticPlots  </a></b></div><div class='mydiv'><b><a href='https://massgh.github.io/pivotpy/InteractivePlots'>  InteractivePlots  </a></b></div><div class='mydiv'><b><a href='https://massgh.github.io/pivotpy/Utilities'>  Utilities  </a></b></div><div class='mydiv'><b><a href='https://massgh.github.io/pivotpy/StructureIO'>  StructureIO  </a></b></div><div class='mydiv'><b><a href='https://massgh.github.io/pivotpy/Widgets'>  Widgets  </a></b></div></div>
+> &nbsp;**Navigation:** [`▶`Index●&nbsp;](https://massgh.github.io/pivotpy/)
+[`▶`XmlElementTree&nbsp;](https://massgh.github.io/pivotpy/XmlElementTree)
+[`▶`StaticPlots&nbsp;](https://massgh.github.io/pivotpy/StaticPlots)
+[`▶`InteractivePlots&nbsp;](https://massgh.github.io/pivotpy/InteractivePlots)
+[`▶`Utilities&nbsp;](https://massgh.github.io/pivotpy/Utilities)
+[`▶`StructureIO&nbsp;](https://massgh.github.io/pivotpy/StructureIO)
+[`▶`Widgets&nbsp;](https://massgh.github.io/pivotpy/Widgets)
+
+-----
 
 
