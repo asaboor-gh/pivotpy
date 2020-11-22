@@ -259,8 +259,8 @@ pp.show()
 
 ```
 args_dict['labels'] = ['s','p_z','p_x+p_y']
-fig = pp.plotly_rgb_lines(vr1,**args_dict)
-pp.plotly_to_html(fig)
+fig1 = pp.plotly_rgb_lines(vr1,**args_dict)
+pp.plotly_to_html(fig1)
 ```
 
 
@@ -285,8 +285,8 @@ pp.plotly_to_html(fig)
 ```
 import pivotpy as pp 
 from IPython.display import HTML,display
-fig = pp.plot_bz([[1,0,0],[0,1,0],[0,0,1]])
-pp.plotly_to_html(fig)
+fig2 = pp.plot_bz([[1,0,0],[0,1,0],[0,0,1]])
+pp.plotly_to_html(fig2)
 ```
 
 
