@@ -310,6 +310,4 @@ def nav_links(current_index=0,
     for i,(link,item) in enumerate(zip(links,items)):
         if current_index == i: item = "●{}".format(item)
         md_str += "[{}]({})\n".format(item,link)
-        #md_str += "<div class='mydiv'><b><a href='{}'>  {}  </a></b></div>".format(link,item)
-    #return Markdown(f"<div>{md_str}</div>")
     return Markdown(md_str)
