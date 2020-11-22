@@ -11,7 +11,15 @@
 - For CLI, use [Vasp2Visual](https://github.com/massgh/Vasp2Visual).
 - Run in Azure [![Run in Azure](https://notebooks.azure.com/launch.png)](https://testazurenotebooks-massaz.notebooks.azure.com/j/notebooks/index.ipynb)
 
-# New: Ipywidgets-based GUI in Progress
+{% include note.html content='In case links of [documentation pages](https://massgh.github.io/pivotpy/) do not work, navigate through here. You can aslo troubleshoot page&#8217;s view by removing `.html` at end of address in browser&#8217;s addressbar.' %}- [Index](https://massgh.github.io/pivotpy/)
+- [XmlElementTree](https://massgh.github.io/pivotpy/XmlElementTree)
+- [StaticPlots](https://massgh.github.io/pivotpy/StaticPlots)
+- [InteractivePlots](https://massgh.github.io/pivotpy/InteractivePlots)
+- [Utilities](https://massgh.github.io/pivotpy/Utilities)
+- [StructureIO](https://massgh.github.io/pivotpy/StructureIO)
+- [Widgets](https://massgh.github.io/pivotpy/Widgets)
+
+# New: Ipywidgets-based GUI
 See GIF here:
 ![GIF](widget.gif) 
 
@@ -27,64 +35,6 @@ paths = ['e:/Research/graphene_example/ISPIN_1/bands/DOS/vasprun.xml',
          'e:/Research/graphene_example/ISPIN_2/dos/vasprun.xml',
          'e:/Research/graphene_example/vasprun.xml']
 df = pp.generate_summary(paths_list=paths)
-df
-```
-
-
-
-
-<style  type="text/css" >
-</style><table id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2" ><caption>Root Path: e:/Research/graphene_example/</caption><thead>    <tr>        <th class="blank level0" ></th>        <th class="col_heading level0 col0" >sys</th>        <th class="col_heading level0 col1" >V</th>        <th class="col_heading level0 col2" >a</th>        <th class="col_heading level0 col3" >b</th>        <th class="col_heading level0 col4" >c</th>        <th class="col_heading level0 col5" >VBM</th>        <th class="col_heading level0 col6" >CBM</th>        <th class="col_heading level0 col7" >so_max</th>        <th class="col_heading level0 col8" >so_min</th>        <th class="col_heading level0 col9" >E_gap</th>        <th class="col_heading level0 col10" >Δ_SO</th>        <th class="col_heading level0 col11" >rel_path</th>    </tr></thead><tbody>
-                <tr>
-                        <th id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2level0_row0" class="row_heading level0 row0" >0</th>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row0_col0" class="data row0 col0" >C2</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row0_col1" class="data row0 col1" >105.493250</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row0_col2" class="data row0 col2" >2.468030</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row0_col3" class="data row0 col3" >2.468030</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row0_col4" class="data row0 col4" >19.998290</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row0_col5" class="data row0 col5" >-3.946800</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row0_col6" class="data row0 col6" >-0.812500</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row0_col7" class="data row0 col7" >-3.949100</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row0_col8" class="data row0 col8" >4.781000</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row0_col9" class="data row0 col9" >3.134300</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row0_col10" class="data row0 col10" >-8.730100</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row0_col11" class="data row0 col11" >ISPIN_1/bands/DOS</td>
-            </tr>
-            <tr>
-                        <th id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2level0_row1" class="row_heading level0 row1" >1</th>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row1_col0" class="data row1 col0" >C2</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row1_col1" class="data row1 col1" >105.493250</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row1_col2" class="data row1 col2" >2.468030</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row1_col3" class="data row1 col3" >2.468030</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row1_col4" class="data row1 col4" >19.998290</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row1_col5" class="data row1 col5" >-2.773300</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row1_col6" class="data row1 col6" >-1.168200</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row1_col7" class="data row1 col7" >nan</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row1_col8" class="data row1 col8" >nan</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row1_col9" class="data row1 col9" >1.605100</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row1_col10" class="data row1 col10" >nan</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row1_col11" class="data row1 col11" >ISPIN_1/bands</td>
-            </tr>
-            <tr>
-                        <th id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2level0_row2" class="row_heading level0 row2" >2</th>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row2_col0" class="data row2 col0" >C2</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row2_col1" class="data row2 col1" >105.493250</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row2_col2" class="data row2 col2" >2.468030</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row2_col3" class="data row2 col3" >2.468030</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row2_col4" class="data row2 col4" >19.998290</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row2_col5" class="data row2 col5" >4.516100</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row2_col6" class="data row2 col6" >4.559100</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row2_col7" class="data row2 col7" >-9.840500</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row2_col8" class="data row2 col8" >-12.235500</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row2_col9" class="data row2 col9" >0.043000</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row2_col10" class="data row2 col10" >2.395000</td>
-                        <td id="T_51c56cee_208f_11eb_91e2_44032c5fd2c2row2_col11" class="data row2 col11" >ISPIN_2/bands</td>
-            </tr>
-    </tbody></table>
-
-
-
-```
 print(df.caption)
 df.data
 ```
@@ -180,36 +130,27 @@ df.data
 
 
 ```
-print(df.data.to_latex())
+print(df.data[:2].to_latex())
 ```
 
     \begin{tabular}{llrrrrrrrrrrl}
     \toprule
-    {} & sys &          V &        a &        b &         c &     VBM &     CBM &  so\_max &   so\_min &   E\_gap &    Δ\_SO &           rel\_path \\
+    {} & sys &          V &        a &        b &         c &     VBM &     CBM &  so\_max &  so\_min &   E\_gap &    Δ\_SO &           rel\_path \\
     \midrule
-    0 &  C2 &  105.49325 &  2.46803 &  2.46803 &  19.99829 & -3.9468 & -0.8125 & -3.9491 &   4.7810 &  3.1343 & -8.7301 &  ISPIN\_1/bands/DOS \\
-    1 &  C2 &  105.49325 &  2.46803 &  2.46803 &  19.99829 & -2.7733 & -1.1682 &     NaN &      NaN &  1.6051 &     NaN &      ISPIN\_1/bands \\
-    2 &  C2 &  105.49325 &  2.46803 &  2.46803 &  19.99829 &  4.5161 &  4.5591 & -9.8405 & -12.2355 &  0.0430 &  2.3950 &      ISPIN\_2/bands \\
+    0 &  C2 &  105.49325 &  2.46803 &  2.46803 &  19.99829 & -3.9468 & -0.8125 & -3.9491 &   4.781 &  3.1343 & -8.7301 &  ISPIN\_1/bands/DOS \\
+    1 &  C2 &  105.49325 &  2.46803 &  2.46803 &  19.99829 & -2.7733 & -1.1682 &     NaN &     NaN &  1.6051 &     NaN &      ISPIN\_1/bands \\
     \bottomrule
     \end{tabular}
     
     
 
 ```
-ax = pp.init_figure()
-df = df.data # Access to Data if there is caption in Dataframe
-df.sort_values('VBM').plot(ax=ax,x = 'VBM',y=['CBM','E_gap'])
+ax = pp.init_figure(figsize=(3,1.5))
+_ = df.data.sort_values('VBM').plot(ax=ax,x = 'VBM',y=['CBM','E_gap'])
 ```
 
 
-
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x283f03cbc88>
-
-
-
-
-![svg](docs/images/output_7_1.svg)
+![svg](docs/images/output_7_0.svg)
 
 
 ```
