@@ -160,33 +160,50 @@ def rgb_to_plotly(rgb_data=None,mode='markers',max_width=5,showlegend=False,name
         return data
 
 # Cell
-def plotly_to_html(fig,filename='new_plot.html'):
+def plotly_to_html(fig,filename=None,out_string=False):
     """
-    - Writes plotly's figure as HTML file which is accessible when online. If you need to have offline working file, just use `fig.write_html('file.html')` which will be larger in size.
+    - Writes plotly's figure as HTML file or display in IPython which is accessible when online. It is different than plotly's `fig.to_html` as it is minimal in memory. If you need to have offline working file, just use `fig.write_html('file.html')` which will be larger in size.
     - **Parameters**
         - fig      : A plotly's figure object.
-        - filename : name of file to save fig.
+        - filename : Name of file to save fig. Defualt is None and show plot in Colab/Online or return hrml string.
+        - out_string: If True, returns HTML string, if False displays graph if possible.
     """
 
     fig_json = fig.to_json()
     # a simple HTML template
-    template = """<html>
-    <head>
+    if filename:
+        template = """<html>
+        <head>
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    </head>
-    <body>
-        <div id='graph'></div>
-        <script>
-            var fig_data = {}
-            Plotly.react('graph', fig_data.data, fig_data.layout);
-        </script>
-    </body>
+        </head>
+        <body>
+            <div id='graph'></div>
+            <script>
+                var fig_data = {}
+                Plotly.react('graph', fig_data.data, fig_data.layout);
+            </script>
+        </body>
 
-    </html>"""
+        </html>"""
 
-    # write the JSON to the HTML template
-    with open(filename, 'w') as f:
-        f.write(template.format(fig_json))
+        # write the JSON to the HTML template
+        with open(filename, 'w') as f:
+            f.write(template.format(fig_json))
+        f.close()
+    else:
+        template = """<div>
+        <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+            <div id='myDiv'><!-- Plotly chart DIV --></div>
+            <script>
+                var data = {}
+                Plotly.newPlot('myDiv', data.data,data.layout);
+            </script>
+        </div>""".format(fig_json)
+        if out_string is True:
+            return template
+        else:
+            from IPython.display import HTML
+            return HTML(template)
 
 # Cell
 def plotly_rgb_lines(path_evr    = None,
