@@ -217,6 +217,10 @@ Markdown("[See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ
 
 
 
+- See from Plotly's Chart Studio
+
+<iframe width="900" height="800" frameborder="0" scrolling="no" src="//plotly.com/~massgh/36.embed"></iframe>
+
 ## Plotting Two Calculations Side by Side 
 - Here we will use `shift_kpath` to demonstrate plot of two calculations on same axes side by side
 
