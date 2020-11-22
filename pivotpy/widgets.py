@@ -674,7 +674,7 @@ def show_app(height=600):
     rd_btn = ipw.Dropdown(options=['Bands','DOS'],value='Bands',layout= Layout(width='80px'))
 
     tabel_w = ipw.HTML(json.dumps({'sys':'','V':'','a':'','b':'','c':'','Fermi': None,
-                             'VBM':'','CBM':'','so_max':'','so_min':''}),indent=1)
+                             'VBM':'','CBM':'','so_max':'','so_min':''}))
     l_out = Layout(width='20%')
     b_out = Layout(width='30%')
     # RGB extra input
@@ -696,11 +696,28 @@ def show_app(height=600):
         view_tab_w.value = htm_string
         save_data(out_w1,data_dict) # save data as well.
     tabel_w.observe(update_table,'value')
+    # Also update when folder chnages for fast view
 
     if rd_btn.value == 'DOS':
         gui2,out_w2 = get_input_gui(rgb=False,height=None)
     else:
         gui2,out_w2 = get_input_gui(height=None)
+    # Load any previous computed result just by going into folder.
+    @out_tab.capture(clear_output=True,wait=True)
+    def load_previous(change):
+        try:
+            path = os.path.split(out_w1.value)[0]
+            r_f = os.path.join(path,'result.json')
+            with open(r_f,'r') as f:
+                 tabel_w.value = '\n'.join(f.readlines())
+            f.close()
+            print('Previous Analysis loaded in Table for {}'.format(out_w1.value))
+        except:
+            print('Previous Analysis does not exist for {}'.format(out_w1.value))
+            tabel_w.value = json.dumps({'sys':'','V':'','a':'','b':'','c':'','Fermi': None,
+                             'VBM':'','CBM':'','so_max':'','so_min':''})
+    out_w1.observe(load_previous,'value')
+    # Load Data on button click only
     @out_tab.capture(clear_output=True,wait=True)
     def on_load(btn):
         tab.selected_index = 2
