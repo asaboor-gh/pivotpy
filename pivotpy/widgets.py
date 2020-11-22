@@ -474,15 +474,15 @@ def get_input_gui(rgb=True,sys_info=None,html_style=None,height=400):
 # Reading data
 def read_data(tabel_w,poscar=None,sys_info=None):
     data_dict = json.loads(tabel_w.value)
-    if sys_info:
+    if sys_info != None:
         data_dict["sys"] = sys_info.SYSTEM
-    if poscar:
+    if poscar != None:
         data_dict["V"] = np.round(poscar.volume,5)
         a,b,c = np.round(np.linalg.norm(poscar.basis,axis=1),5)
         data_dict["a"] = a
         data_dict["b"] = b
         data_dict["c"] = c
-        tabel_w.value = json.dumps(data_dict,indent=1)
+    tabel_w.value = json.dumps(data_dict)
     return data_dict # for reading in save_data
 #mouse event handler
 def click_data(sel_en_w,fermi_w,tabel_w,fig):
