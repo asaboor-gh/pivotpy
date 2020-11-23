@@ -833,22 +833,6 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="iplotfromtxt" class="doc_header"><code>iplotfromtxt</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L469" class="source_link" style="float:right">[source]</a></h4>
-
-> <code>iplotfromtxt</code>(**`path_to_dir`**=*`'.'`*, **`ions`**=*`[0]`*, **`orbs`**=*`[[0], [], []]`*, **`labels`**=*`['s', '', '']`*, **`elim`**=*`[-5, 5]`*, **`tick_indices`**=*`[0, -1]`*, **`tick_labels`**=*`['Γ', 'M']`*, **`force_load`**=*`False`*)
-
-- Returns plotly's figure object, Not applicable for spin-polarized calculations. It is just to keep as it was starting code. Remember where you did start!
-- **Parameters**
-    - path_to_dir: Path/to/directory where `Export-VaspRun`'s output from powershell is present.
-    - ions       : List of indices of ions. If not given, picks all ions.
-    - orbs       : List of size 3 of list of orbital indices, if not gievn, s,p,d plotted.
-    - labels  : List of labels for projection.
-    - elim       : Energy limit.
-    - force_load : If True, it will run powershell to generate text files only if files are not already present.
-    - **kwargs   : tick_indices, tick_labels, elim etc.
-
-
-
 <h4 id="save_mp_API" class="doc_header"><code>save_mp_API</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L8" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>save_mp_API</code>(**`api_key`**)
