@@ -168,7 +168,8 @@ def plotly_to_html(fig,filename=None,out_string=False):
         - filename : Name of file to save fig. Defualt is None and show plot in Colab/Online or return hrml string.
         - out_string: If True, returns HTML string, if False displays graph if possible.
     """
-    fig_json = fig.to_json()
+    _figure_ = fig # To avoid issue of same namespace
+    fig_json = _figure_.to_json()
     # a simple HTML template
     if filename:
         template = """<html>
