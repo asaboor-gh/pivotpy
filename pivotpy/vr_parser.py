@@ -46,6 +46,24 @@ class Dict2Data(dict):
             else:
                 result.update({k:v})
         return result
+    def to_json(self,outfile=None,indent=1):
+        """
+        - Dumps a `Dict2Data` object (root or nested level) to json.
+        _ **Parameters**
+            - outfile : Default is None and returns string. If given, writes to file.
+            - indent  : Json indent. Default is 1.
+        """
+        from .vr_parser import dump_dict
+        return dump_dict(self,dump_to='json',outfile=outfile,indent=indent)
+
+    def to_pickle(self,outfile=None):
+        """
+        - Dumps a `Dict2Data` object (root or nested level) to pickle.
+        _ **Parameters**
+            - outfile : Default is None and returns string. If given, writes to file.
+        """
+        from .vr_parser import dump_dict
+        return dump_dict(self,dump_to='pickle',outfile=outfile)
 
     def __repr__(self):
         items= []
@@ -697,13 +715,14 @@ def load_export(path= './vasprun.xml',
     return Dict2Data(full_dic)
 
 # Cell
-def dump_dict(dict_data = None, dump_to = 'pickle',outfile = None):
+def dump_dict(dict_data = None, dump_to = 'pickle',outfile = None,indent=1):
     """
     - Dump an `export_vasprun` or `load_export`'s `Data` object or any dictionary to json or pickle string/file. It convert `Dict2Data` to dictionary before serializing to json/pickle, so json/pickle.loads() of converted Data would be a simple dictionary, pass that to `Dict2Data` to again make accessible via dot notation.
     - **Parameters**
         - dict_data : Any dictionary/Dict2Data object containg numpy arrays, including `export_vasprun` or `load_export` output.
         - dump_to  : Defualt is `pickle` or `json`.
         - outfile  : Defualt is None and return string. File name does not require extension.
+        - indent   : Defualt is 1. Only works for json.
     """
     if dump_to not in ['pickle','json']:
         return print("`dump_to` expects 'pickle' or 'json', got '{}'".format(dump_to))
@@ -721,10 +740,10 @@ def dump_dict(dict_data = None, dump_to = 'pickle',outfile = None):
         import json
         from .g_utils import EncodeFromNumpy
         if outfile == None:
-            return json.dumps(dict_obj,cls=EncodeFromNumpy)
+            return json.dumps(dict_obj,cls=EncodeFromNumpy,indent=indent)
         outfile = outfile.split('.')[0] + '.json'
         f = open(outfile,'w')
-        json.dump(dict_obj,f,cls=EncodeFromNumpy)
+        json.dump(dict_obj,f,cls=EncodeFromNumpy,indent=indent)
         f.close()
     return None
 

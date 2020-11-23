@@ -168,8 +168,9 @@ def plotly_to_html(fig,filename=None,out_string=False):
         - filename : Name of file to save fig. Defualt is None and show plot in Colab/Online or return hrml string.
         - out_string: If True, returns HTML string, if False displays graph if possible.
     """
-    _figure_ = fig # To avoid issue of same namespace
-    fig_json = _figure_.to_json()
+    import uuid # Unique div-id required,otherwise jupyterlab renders at one place only and overwite it.
+    div_id = "graph-{}".format(uuid.uuid1())
+    fig_json = fig.to_json()
     # a simple HTML template
     if filename:
         template = """<html>
@@ -177,10 +178,10 @@ def plotly_to_html(fig,filename=None,out_string=False):
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
         </head>
         <body>
-            <div id='graph'></div>
+            <div id='{}'></div>
             <script>
                 var fig_data = {}
-                Plotly.react('graph', fig_data.data, fig_data.layout);
+                Plotly.react('{}', fig_data.data, fig_data.layout);
             </script>
         </body>
 
@@ -188,17 +189,17 @@ def plotly_to_html(fig,filename=None,out_string=False):
 
         # write the JSON to the HTML template
         with open(filename, 'w') as f:
-            f.write(template.format(fig_json))
+            f.write(template.format(div_id,fig_json,div_id))
         f.close()
     else:
         template = """<div>
         <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
-            <div id='myDiv'><!-- Plotly chart DIV --></div>
+            <div id='{}'><!-- Plotly chart DIV --></div>
             <script>
                 var data = {}
-                Plotly.newPlot('myDiv', data.data,data.layout);
+                Plotly.newPlot('{}', data.data,data.layout);
             </script>
-        </div>""".format(fig_json)
+        </div>""".format(div_id,fig_json,div_id)
         if out_string is True:
             return template
         else:
