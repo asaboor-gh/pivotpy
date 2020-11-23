@@ -54,11 +54,15 @@ Markdown(df.data.to_markdown())
 
 
 
-|    | sys   |       V |       a |       b |       c |     VBM |     CBM |   so_max |   so_min |   E_gap |     Δ_SO | rel_path          |
-|---:|:------|--------:|--------:|--------:|--------:|--------:|--------:|---------:|---------:|--------:|---------:|:------------------|
-|  0 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 | -3.9468 | -0.8125 |  -3.9491 |   4.781  |  3.1343 |  -8.7301 | ISPIN_1/bands/DOS |
-|  1 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 | -2.7733 | -1.1682 | nan      | nan      |  1.6051 | nan      | ISPIN_1/bands     |
-|  2 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 |  4.5161 |  4.5591 |  -9.8405 | -12.2355 |  0.043  |   2.395  | ISPIN_2/bands     |
+|    | sys   |       V |         a |         b |        c |      VBM |      CBM |   so_max |   so_min | rel_path             |   E_gap |
+|---:|:------|--------:|----------:|----------:|---------:|---------:|---------:|---------:|---------:|:---------------------|--------:|
+|  0 | C2    | 105.493 |   2.46803 |   2.46803 |  19.9983 | nan      | nan      |      nan |      nan | ISPIN_1/bands/DOS    | nan     |
+|  1 | C2    | 105.493 |   2.46803 |   2.46803 |  19.9983 |  -2.7733 |  -2.7733 |      nan |      nan | ISPIN_1/bands        | nan     |
+|  2 | C2    | 105.493 |   2.46803 |   2.46803 |  19.9983 | -12.7211 |  -5.2581 |      nan |      nan | ISPIN_1/dos          |   7.463 |
+|  3 | C2    | 105.493 |   2.46803 |   2.46803 |  19.9983 | -12.7211 |  -5.2581 |      nan |      nan | ISPIN_2/bands        |   7.463 |
+|  4 | C2    | 105.493 |   2.46803 |   2.46803 |  19.9983 | nan      | nan      |      nan |      nan | ISPIN_2/dos/sigm0_01 | nan     |
+|  5 | nan   | nan     | nan       | nan       | nan      | nan      | nan      |      nan |      nan | ISPIN_2/dos          | nan     |
+|  6 | C2    | 105.493 |   2.46803 |   2.46803 |  19.9983 |  -3.7816 |  -1.7516 |      nan |      nan | nan                  |   2.03  |
 
 
 
@@ -66,12 +70,12 @@ Markdown(df.data.to_markdown())
 print(df.data[:2].to_latex())
 ```
 
-    \begin{tabular}{llrrrrrrrrrrl}
+    \begin{tabular}{llrrrrrrrrlr}
     \toprule
-    {} & sys &          V &        a &        b &         c &     VBM &     CBM &  so\_max &  so\_min &   E\_gap &    Δ\_SO &           rel\_path \\
+    {} & sys &          V &        a &        b &         c &     VBM &     CBM &  so\_max &  so\_min &           rel\_path &  E\_gap \\
     \midrule
-    0 &  C2 &  105.49325 &  2.46803 &  2.46803 &  19.99829 & -3.9468 & -0.8125 & -3.9491 &   4.781 &  3.1343 & -8.7301 &  ISPIN\_1/bands/DOS \\
-    1 &  C2 &  105.49325 &  2.46803 &  2.46803 &  19.99829 & -2.7733 & -1.1682 &     NaN &     NaN &  1.6051 &     NaN &      ISPIN\_1/bands \\
+    0 &  C2 &  105.49325 &  2.46803 &  2.46803 &  19.99829 &     NaN &     NaN &     NaN &     NaN &  ISPIN\_1/bands/DOS &    NaN \\
+    1 &  C2 &  105.49325 &  2.46803 &  2.46803 &  19.99829 & -2.7733 & -2.7733 &     NaN &     NaN &      ISPIN\_1/bands &    NaN \\
     \bottomrule
     \end{tabular}
     
@@ -103,9 +107,7 @@ vr
             NION = 2
             TypeION = 1
             ElemName = ['C']
-            ElemIndex = [0, 2]
-            E_Fermi = -3.35005822
-            ISPIN = 1
+            E_Fermi = -3.3501
             fields = ['s', 'py', 'pz', 'px', 'dxy', 'dyz', 'dz2', 'dxz', 'x2-y2']
             incar = Data(
                 SYSTEM = C2
@@ -116,9 +118,10 @@ vr
                 ISMEAR = 0
                 SIGMA = 0.10000000
                 LORBIT = 11
-                KPOINT_BSE = -1     0     0     0
                 GGA = PS
             )
+            ElemIndex = [0, 2]
+            ISPIN = 1
         )
         dim_info = Data(
             ⇅ = Each of SpinUp/SpinDown Arrays
@@ -132,25 +135,23 @@ vr
         kpoints = <ndarray:shape=(90, 3)>
         kpath = <list:len=90>
         bands = Data(
-            E_Fermi = -3.35005822
+            E_Fermi = -3.3501
             ISPIN = 1
-            NBANDS = 10
-            bands_range = range(4, 14)
-            evals = <ndarray:shape=(90, 10)>
+            NBANDS = 21
+            evals = <ndarray:shape=(90, 21)>
         )
         tdos = Data(
-            E_Fermi = -3.35005822
+            E_Fermi = -3.3501
             ISPIN = 1
-            grid_range = range(124, 203)
-            tdos = <ndarray:shape=(79, 3)>
+            tdos = <ndarray:shape=(301, 3)>
         )
         pro_bands = Data(
-            labels = ['s', 'py', 'pz', 'px', 'dxy', 'dyz', 'dz2', 'dxz', 'x2-y2']
-            pros = <ndarray:shape=(2, 90, 10, 9)>
+            labels = ['py', 'pz', 'px', 'dxy', 'dyz', 'dz2', 'dxz', 'x2-y2']
+            pros = <ndarray:shape=(2, 90, 21, 9)>
         )
         pro_dos = Data(
-            labels = ['energy', 's', 'py', 'pz', 'px', 'dxy', 'dyz', 'dz2', 'dxz', 'x2-y2']
-            pros = <ndarray:shape=(2, 79, 10)>
+            labels = ['s', 'py', 'pz', 'px', 'dxy', 'dyz', 'dz2', 'dxz', 'x2-y2']
+            pros = <ndarray:shape=(2, 301, 10)>
         )
         poscar = Data(
             volume = 105.49324928
@@ -217,6 +218,12 @@ from IPython.display import Markdown
 Markdown("[See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ.html)")
 ```
 
+    E:\Research\pivotpy\pivotpy\sio.py:408: RuntimeWarning:
+    
+    divide by zero encountered in double_scalars
+    
+    
+
 
 
 
@@ -245,8 +252,9 @@ pp.quick_bplot(path_evr=vr2,ax=axs,txt='Graphene(Left: ISPIN=1, Right: ISPIN=2)'
 pp.modify_axes(ax=axs,xlim=[0,last_k],ylim=[-10,10],**ti_cks)
 ```
 
-    Loading from PowerShell Exported Data...
-    
+
+![svg](docs/images/output_16_0.svg)
+
 
 ## Interpolation 
 
@@ -277,11 +285,11 @@ pp.ps_to_std(ps_command='(Get-Process)[0..4]')
 
     NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
     ------    -----      -----     ------      --  -- -----------
-    53    39.77      18.03     901.41   13988   1 AltC
-    38    40.05      33.10      45.00     792   1 ApplicationFrameHost
-    8     1.64       4.39       0.00    7532   0 AppVShNotify
-    8     1.88       4.60       0.09   18180   1 AppVShNotify
-    19     4.77       4.37       0.00    4992   0 armsvc
+    50    38.14      61.34     185.53   17860   1 AltC
+    24    13.38      51.61       2.80   17324   1 ApplicationFrameHost
+    8     1.59       5.84       0.00    5884   0 armsvc
+    39    33.12      46.57      10.81   15428   1 BingWallpaperApp
+    22    42.45      88.01       5.38    2916   1 Code
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -314,26 +322,29 @@ c.ScriptMagics.script_paths = {
 
 ```
 %%ps 
-Get-ChildItem '../graphene_example'
+Get-ChildItem 'E:\Research\graphene_example\'
 ```
 
-    
-    
-        Directory: E:\Research\graphene_example
-    
-    
-    Mode                 LastWriteTime         Length Name                                                                 
-    ----                 -------------         ------ ----                                                                 
-    da----        10/31/2020   1:30 PM                ISPIN_1                                                              
-    da----          5/9/2020   1:05 PM                ISPIN_2                                                              
-    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                               
-    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                          
-    
-    
-    
+    
+    
+        Directory: E:\Research\graphene_example
+    
+    
+    Mode                 LastWriteTime         Length Name                                                                 
+    ----                 -------------         ------ ----                                                                 
+    da----        10/31/2020   1:30 PM                ISPIN_1                                                              
+    da----          5/9/2020   1:05 PM                ISPIN_2                                                              
+    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                               
+    -a----        11/22/2020   7:02 PM            162 result.json                                                          
+    -a----        11/22/2020   6:08 PM            693 sys_info.pickle                                                      
+    -a----        11/22/2020   6:08 PM          91850 vasprun.pickle                                                       
+    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                          
+    
+    
+
 
 ```
-x = %ps (Get-ChildItem '../graphene_example').FullName
+x = %ps (Get-ChildItem 'E:\Research\graphene_example\').FullName
 x
 ```
 
@@ -343,6 +354,9 @@ x
     ['E:\\Research\\graphene_example\\ISPIN_1',
      'E:\\Research\\graphene_example\\ISPIN_2',
      'E:\\Research\\graphene_example\\OUTCAR',
+     'E:\\Research\\graphene_example\\result.json',
+     'E:\\Research\\graphene_example\\sys_info.pickle',
+     'E:\\Research\\graphene_example\\vasprun.pickle',
      'E:\\Research\\graphene_example\\vasprun.xml']
 
 
@@ -352,17 +366,15 @@ x
 
 
 
-<style>
-                a{text-decoration: none !important;color:lightkblue;font-weight:bold;}
-                a:focus,a:active,a:hover{color:hotpink !important;}
-                </style>
+<style>a{text-decoration: none !important;color:lightkblue;font-weight:bold;}
+                a:focus,a:active,a:hover{color:hotpink !important;}</style>
 > [&nbsp;`▶` Index●&nbsp;](https://massgh.github.io/pivotpy/)  
-[&nbsp;`▶` XmlElementTree&nbsp;](https://massgh.github.io/pivotpy/XmlElementTree)  
-[&nbsp;`▶` StaticPlots&nbsp;](https://massgh.github.io/pivotpy/StaticPlots)  
-[&nbsp;`▶` InteractivePlots&nbsp;](https://massgh.github.io/pivotpy/InteractivePlots)  
-[&nbsp;`▶` Utilities&nbsp;](https://massgh.github.io/pivotpy/Utilities)  
-[&nbsp;`▶` StructureIO&nbsp;](https://massgh.github.io/pivotpy/StructureIO)  
-[&nbsp;`▶` Widgets&nbsp;](https://massgh.github.io/pivotpy/Widgets)  
+> [&nbsp;`▶` XmlElementTree&nbsp;](https://massgh.github.io/pivotpy/XmlElementTree)  
+> [&nbsp;`▶` StaticPlots&nbsp;](https://massgh.github.io/pivotpy/StaticPlots)  
+> [&nbsp;`▶` InteractivePlots&nbsp;](https://massgh.github.io/pivotpy/InteractivePlots)  
+> [&nbsp;`▶` Utilities&nbsp;](https://massgh.github.io/pivotpy/Utilities)  
+> [&nbsp;`▶` StructureIO&nbsp;](https://massgh.github.io/pivotpy/StructureIO)  
+> [&nbsp;`▶` Widgets&nbsp;](https://massgh.github.io/pivotpy/Widgets)  
 
 
 
