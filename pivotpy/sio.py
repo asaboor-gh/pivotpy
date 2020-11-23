@@ -147,7 +147,7 @@ def get_poscar(formula ,api_key=None,mp_id=None,max_sites = None):
         cx = abc[2]*np.cos(abc_ang[1]*to_rad)
         cy = (abc[1]*abc[2]*np.cos(abc_ang[0]*to_rad)-bx*cx)/by
         c = "{0:>22.16f} {1:>22.16f} {2:>22.16f}".format(cx/abc[0],cy/abc[0],cz/abc[0]) # lattic vector b.
-        unit = cr.unit
+        unit = cr.unit.to_dict()
         elems = [elem for elem in unit.keys()]
         elems = '\t'.join(elems)
         nums  = [str(int(unit[elem])) for elem in unit.keys()]
@@ -350,7 +350,7 @@ def get_kmesh(n_xyz=[5,5,5],weight = None,gamma=True,ibzkpt= None,poscar=None,ou
         camera = dict(
             center=dict(x=0.1, y=0.1, z=0.1))
         fig.update_layout(scene_camera=camera,plot_bgcolor='rgb(255,255,255)')
-        fig.show()
+        return fig
     else:
         from collections import namedtuple
         mesh = namedtuple('Mesh',['nkpts','kpoints','weight'])
