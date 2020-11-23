@@ -160,7 +160,7 @@ def rgb_to_plotly(rgb_data=None,mode='markers',max_width=5,showlegend=False,name
         return data
 
 # Cell
-def plotly_to_html(fig,filename=None,out_string=False):
+def plotly_to_html(fig,filename=None,out_string=False,modebar=True):
     """
     - Writes plotly's figure as HTML file or display in IPython which is accessible when online. It is different than plotly's `fig.to_html` as it is minimal in memory. If you need to have offline working file, just use `fig.write_html('file.html')` which will be larger in size.
     - **Parameters**
@@ -192,14 +192,19 @@ def plotly_to_html(fig,filename=None,out_string=False):
             f.write(template.format(div_id,fig_json,div_id))
         f.close()
     else:
+        if modebar==True: #Only for docs issue
+            config = "{displayModeBar: true,editable: true,scrollZoom: true}"
+        else:
+            config = "{displayModeBar: false,editable: true,scrollZoom: true}"
         template = """<div>
         <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
             <div id='{}'><!-- Plotly chart DIV --></div>
             <script>
-                var data = {}
-                Plotly.newPlot('{}', data.data,data.layout);
+                var data = {};
+                var config = {};
+                Plotly.newPlot('{}', data.data,data.layout,config);
             </script>
-        </div>""".format(div_id,fig_json,div_id)
+        </div>""".format(div_id,fig_json,config,div_id)
         if out_string is True:
             return template
         else:
