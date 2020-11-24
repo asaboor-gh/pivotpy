@@ -763,7 +763,6 @@ def quick_color_lines(path_evr  = None,
             elif(showlegend==False):
                 sp.add_text(ax=ax,xs=x,ys=y,txts=label,colors=ctxt)
         _ = [sp.modify_axes(ax=ax,xticks=xticks,xt_labels=xt_labels,xlim=xlim,ylim=ylim) for ax in axes]
-        plt.gcf().text(0.01, 0.5, 'Energy (eV)', va='center', rotation='vertical')
         plt.subplots_adjust(**subplots_adjust_kwargs)
         return axes
 
