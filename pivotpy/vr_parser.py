@@ -51,7 +51,7 @@ class Dict2Data(dict):
     def to_json(self,outfile=None,indent=1):
         """
         - Dumps a `Dict2Data` object (root or nested level) to json.
-        _ **Parameters**
+        - **Parameters**
             - outfile : Default is None and returns string. If given, writes to file.
             - indent  : Json indent. Default is 1.
         """
@@ -61,7 +61,7 @@ class Dict2Data(dict):
     def to_pickle(self,outfile=None):
         """
         - Dumps a `Dict2Data` object (root or nested level) to pickle.
-        _ **Parameters**
+        - **Parameters**
             - outfile : Default is None and returns string. If given, writes to file.
         """
         from .vr_parser import dump_dict
