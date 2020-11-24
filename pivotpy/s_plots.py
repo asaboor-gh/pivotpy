@@ -1161,9 +1161,9 @@ def plt_to_html(plt_fig=None,transparent=True,dash_html=None):
         try:
             shell = get_ipython().__class__.__name__
             if shell == 'ZMQInteractiveShell':
-                from IPython.display import Markdown
+                from IPython.display import HTML # HTML
                 _ = plt.clf() # Clear other display
-                return Markdown('<svg' + plot_bytes.getvalue().decode('utf-8').split('<svg')[1])
+                return HTML('<svg' + plot_bytes.getvalue().decode('utf-8').split('<svg')[1])
         except:
             return plt.show()
     elif dash_html==False:
