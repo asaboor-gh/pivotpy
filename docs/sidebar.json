@@ -4,6 +4,7 @@
     "Interactive Plots": "InteractivePlots.html",
     "Static Plots": "StaticPlots.html",
     "Structure IO": "StructureIO.html",
+    "Pivotpy": "test.html",
     "Utilities": "Utilities.html",
     "Widgets": "Widgets.html",
     "Xml Parser": "XmlElementTree.html"

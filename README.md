@@ -25,7 +25,6 @@
 - [Read Function References](https://github.com/massgh/pivotpy/tree/master/functions.md)
 - See [Full Documentation](https://massgh.github.io/pivotpy/).
 - For CLI, use [Vasp2Visual](https://github.com/massgh/Vasp2Visual).
-- Run in Azure [![Run in Azure](https://notebooks.azure.com/launch.png)](https://testazurenotebooks-massaz.notebooks.azure.com/j/notebooks/index.ipynb)
 
 # New: Ipywidgets-based GUI
 See GIF here:
