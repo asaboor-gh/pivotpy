@@ -184,7 +184,6 @@ def plotly_to_html(fig,filename=None,out_string=False,modebar=True):
                 Plotly.react('{}', fig_data.data, fig_data.layout);
             </script>
         </body>
-
         </html>"""
 
         # write the JSON to the HTML template
