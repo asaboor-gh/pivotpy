@@ -2,6 +2,9 @@
 > A Python Processing Tool for Vasp Input/Output. A CLI is available in Powershell, see <a href='https://github.com/massgh/Vasp2Visual'>Vasp2Visual</a>.
 
 
+[![Run in Azure](https://notebooks.azure.com/launch.png)](https://testazurenotebooks-massaz.notebooks.azure.com/j/notebooks/test.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/massgh/pivotpy/blob/master/test.ipynb)
+
 
 
 
@@ -86,7 +89,7 @@ _ = df.data.sort_values('VBM').plot(ax=ax,x = 'VBM',y=['CBM','E_gap'])
 ```
 
 
-![svg](docs/images/output_7_0.svg)
+![svg](docs/images/output_8_0.svg)
 
 
 ```
@@ -184,7 +187,7 @@ pp.show()
 ```
 
 
-![svg](docs/images/output_10_0.svg)
+![svg](docs/images/output_11_0.svg)
 
 
 ## Interactive plots using plotly
@@ -252,7 +255,7 @@ pp.modify_axes(ax=axs,xlim=[0,last_k],ylim=[-10,10],**ti_cks)
 ```
 
 
-![svg](docs/images/output_16_0.svg)
+![svg](docs/images/output_17_0.svg)
 
 
 ## Interpolation 
@@ -272,7 +275,7 @@ pp.add_text(ax=plt.gca(),txts='Graphene')
 ```
 
 
-![svg](docs/images/output_18_0.svg)
+![svg](docs/images/output_19_0.svg)
 
 
 ## Running powershell commands from python.
