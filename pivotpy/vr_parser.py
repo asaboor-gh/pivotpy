@@ -6,6 +6,7 @@ __all__ = ['Dict2Data', 'read_asxml', 'exclude_kpts', 'get_ispin', 'get_summary'
 
 # Cell
 import numpy
+from nbdev import show_doc
 class Dict2Data(dict):
     """
     - Returns a Data object with dictionary keys as attributes of Data accessible by dot notation.
@@ -84,7 +85,6 @@ class Dict2Data(dict):
         return "Data(\n{}\n)".format('\n'.join(items))
     def __getstate__(self):
         pass  #This is for pickling
-
 
 # Cell
 def read_asxml(path=None,suppress_warning=False):

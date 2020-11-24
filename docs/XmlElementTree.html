@@ -81,7 +81,7 @@ nb_path: "XmlElementTree.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Dict2Data" class="doc_header"><code>class</code> <code>Dict2Data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L9" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Dict2Data</code>(<strong><code>d</code></strong>) :: <code>dict</code></p>
+<h2 id="Dict2Data" class="doc_header"><code>class</code> <code>Dict2Data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L10" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Dict2Data</code>(<strong><code>d</code></strong>) :: <code>dict</code></p>
 </blockquote>
 <ul>
 <li>Returns a Data object with dictionary keys as attributes of Data accessible by dot notation.</li>
@@ -122,6 +122,70 @@ x.B.to_dict()
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="Dict2Data.to_dict" class="doc_header"><code>Dict2Data.to_dict</code><a href="__main__.py#L35" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_dict</code>()</p>
+</blockquote>
+<ul>
+<li>Converts a <a href="/pivotpy/XmlElementTree.html#Dict2Data"><code>Dict2Data</code></a> object (root or nested level) to a dictionary.</li>
+</ul>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="Dict2Data.to_json" class="doc_header"><code>Dict2Data.to_json</code><a href="__main__.py#L46" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_json</code>(<strong><code>outfile</code></strong>=<em><code>None</code></em>, <strong><code>indent</code></strong>=<em><code>1</code></em>)</p>
+</blockquote>
+<ul>
+<li>Dumps a <a href="/pivotpy/XmlElementTree.html#Dict2Data"><code>Dict2Data</code></a> object (root or nested level) to json.</li>
+<li><strong>Parameters</strong><ul>
+<li>outfile : Default is None and returns string. If given, writes to file.</li>
+<li>indent  : Json indent. Default is 1.</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="Dict2Data.to_pickle" class="doc_header"><code>Dict2Data.to_pickle</code><a href="__main__.py#L56" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_pickle</code>(<strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
+</blockquote>
+<ul>
+<li>Dumps a <a href="/pivotpy/XmlElementTree.html#Dict2Data"><code>Dict2Data</code></a> object (root or nested level) to pickle.</li>
+<li><strong>Parameters</strong><ul>
+<li>outfile : Default is None and returns string. If given, writes to file.</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+</div>
+
+</div>
+</div>
 
 </div>
     {% endraw %}
