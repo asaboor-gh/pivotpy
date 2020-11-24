@@ -11,8 +11,10 @@ class Dict2Data(dict):
     - Returns a Data object with dictionary keys as attributes of Data accessible by dot notation.
     - **Parmeters**
         - dict : Python dictionary (nested as well) containing any python data types.
-    - **Attributes**
-        - to_dict() : Converts a Data object to dictionary if it could be made a dictionary, otherwise throws relevant error.
+    - **Methods**
+        - to_dict()  : Converts a Data object to dictionary if it could be made a dictionary, otherwise throws relevant error.
+        - to_json()  : Converts to json str or save to file if `outfil` given. Accepts `indent` as parameter.
+        - to_pickle(): Converts to bytes str or save to file if `outfile` given.
     - **Example**
         > x = Dict2Data({'A':1,'B':{'C':2}})
         > x
