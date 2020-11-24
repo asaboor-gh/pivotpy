@@ -1160,7 +1160,7 @@ def plt_to_html(plt_fig=None,transparent=True,dash_html=None):
     if dash_html == None:
         try:
             shell = get_ipython().__class__.__name__
-            if shell == 'ZMQInteractiveShell':
+            if shell == 'ZMQInteractiveShell' or shell=='Shell': #Shell for Colab. Don't know why Google ...
                 from IPython.display import HTML # HTML
                 _ = plt.clf() # Clear other display
                 return HTML('<svg' + plot_bytes.getvalue().decode('utf-8').split('<svg')[1])
