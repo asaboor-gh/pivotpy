@@ -1141,39 +1141,37 @@ def quick_dos_lines(path_evr      = None,
         return ax
 
 # Cell
-def plt_to_html(plt_fig=None,dpi=300,dash_html=None):
+def plt_to_html(plt_fig=None,transparent=True,dash_html=None):
     """
-    - Returns base64 encoded Image to display in notebook or HTML <img/> or plotly's dash_html_components.Img object.
+    - Returns base64 encoded Image to display in notebook or HTML <svg> or plotly's dash_html_components.Img object.
     - **Parameters**
-        - plt_fig  : Matplotlib's figure instance, auto picks as well.
-        - dpi      : PNG images's DPI, default is 300.
-        - dash_html: Default is None which results in an image display in jupyter notebook.
+        - plt_fig    : Matplotlib's figure instance, auto picks as well.
+        - transparent: True of False for fig background.
+        - dash_html  : Default is None which results in an image display in jupyter notebook.
             - If True, returns html.Img object for plotly's dash.
-            - If False, returns html <img/> object to embed in HTML DOM.
+            - If False, returns <svg> object to embed in HTML DOM.
     """
     from io import BytesIO
     import matplotlib.pyplot as plt
-    import base64
     if plt_fig==None:
         plt_fig = plt.gcf()
-    size = plt_fig.get_size_inches()*plt_fig.dpi
     plot_bytes = BytesIO()
-    plt.savefig(plot_bytes,format='png',dpi=dpi,transparent=True)
-    img = base64.b64encode(plot_bytes.getvalue())
+    plt.savefig(plot_bytes,format='svg',transparent=transparent)
     if dash_html == None:
         try:
             shell = get_ipython().__class__.__name__
             if shell == 'ZMQInteractiveShell':
-                from IPython.display import Image
-                plt.clf() # Clear other display
-                return Image(plot_bytes.getvalue(),width=size[0],height=size[1])
+                from IPython.display import Markdown
+                _ = plt.clf() # Clear other display
+                return Markdown('<svg' + plot_bytes.getvalue().decode('utf-8').split('<svg')[1])
         except:
             return plt.show()
-    plt.clf() # Clear image here to avoid output string
-    if dash_html==False:
-        return "<img src='data:image/png;base64,{}' width='{}' height='{}'/>".format(
-                img.decode('utf-8'),*size)
+    elif dash_html==False:
+        _ = plt.clf() # Clear image
+        return '<svg' + plot_bytes.getvalue().decode('utf-8').split('<svg')[1]
     else:
+        import base64
+        _ = plt.clf() # Clear image
         import dash_html_components as html
-        return html.Img(src="data:image/png;base64,{}".format(img.decode('utf-8')),
-                style={"width":"{}px".format(size[0]),"height":"{}px".format(size[1])})
+        img = base64.b64encode(plot_bytes.getvalue())
+        return html.Img(src="data:image/svg+xml;base64,{}".format(img.decode('utf-8')))
