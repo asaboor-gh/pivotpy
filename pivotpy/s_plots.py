@@ -442,9 +442,10 @@ def quick_rgb_lines(path_evr    = None,
         - k          : int, order of interpolation 0,1,2,3. Defualt 3. `n > k` should be hold.
         - scale_color: Boolean. Default True, colors are scaled to 1 at each point.
         - colorbar   : Default is True. Displays a vertical RGB colorbar.
-        - color_matrix: 9x9 numpy array or list to transform from RGB to another space,sum of each row element should be <= 1. For simply changing the color intensity use np.diag([r,g,b]) with r,g,b interval in [0,1]. Try `pivotpy.color_matrix` as suggested color matrix and modify!
+        - color_matrix: Only works if `scale_color==True`. 3x3 numpy array or list to transform from RGB to another space,sum of each row element should be <= 1. For simply changing the color intensity use np.diag([r,g,b]) with r,g,b interval in [0,1]. Try `pivotpy.color(gray)_matrix` as suggested color matrix and modify!
     - **Returns**
         - ax : matplotlib axes object with plotted projected bands.
+        - Registers as colormap `RGB_m` to use in DOS to plot in same colors.
     """
     import pivotpy.vr_parser as vp
     import pivotpy.s_plots as sp
@@ -491,11 +492,11 @@ def quick_rgb_lines(path_evr    = None,
                     # avoid divide by zero. Contributions are 4 digits only.
                     cl_max = [1 if c==0.0 else c for c in cl_max]
                     cl=np.array([np.array(c)/c_max for c,c_max in zip(_cl,cl_max)])
+                    # Apply color_matrix only in scaled case.
+                    if None not in np.unique(color_matrix) and np.size(color_matrix)==9:
+                        cl = np.dot(color_matrix,cl.T).T #Order is important
                 else:
                     cl=np.array(_cl)/np.max(np.unique(_cl))
-
-                if None not in np.unique(color_matrix) and np.size(color_matrix)==9:
-                    cl = np.dot(color_matrix,cl.T).T #Order is important
 
                 clrs=cl # Finally assign to colors.
                 colorbar_scales[:] = np.max(clrs,axis=0) #assign color weights
@@ -569,6 +570,17 @@ def quick_rgb_lines(path_evr    = None,
             txt=vr.sys_info.SYSTEM
         sp.add_text(ax=ax,xs=x,ys=y,txts=txt,colors=ctxt)
         sp.modify_axes(ax=ax,xticks=xticks,xt_labels=xt_labels,xlim=xlim,ylim=ylim)
+        # Colorbar and Colormap
+        _colors_ = np.multiply([[1,0,1],[1,0,0],[1,1,0],[0,1,0],[0,1,1],
+                                    [0,0,1],[1,0,1]],colorbar_scales)
+        if None not in np.unique(color_matrix) and np.size(color_matrix)==9:
+            if scale_color==True:  # Only apply color_matrix on scaled colors
+                _colors_ = np.dot(color_matrix,_colors_.T).T
+            # register a colormap to use in DOS of same color
+            from matplotlib.colors import LinearSegmentedColormap as LSC
+            RGB_m = LSC.from_list('RGB_m',_colors_[1:-1])
+            plt.register_cmap('RGB_m',RGB_m) #Register cmap.
+
         if colorbar:
             _tls_ = ['' for l in labels] # To avoid side effects, new labels array.
             for i,label in enumerate(labels):
@@ -581,11 +593,9 @@ def quick_rgb_lines(path_evr    = None,
             ax.set_position([pos.x0,pos.y0,pos.width-2.8*w_f,pos.height])
             new_pos = [pos.x0+pos.width-w_f,pos.y0,w_f,pos.height]
             axb = plt.gcf().add_axes(new_pos)
-            _colors_ = np.multiply([[1,0,1],[1,0,0],[1,1,0],[0,1,0],[0,1,1],
-                                    [0,0,1],[1,0,1]],colorbar_scales)
-            if None not in np.unique(color_matrix) and np.size(color_matrix)==9:
-                _colors_ = np.dot(color_matrix,_colors_.T).T
             sp.add_colorbar(ax=axb,vertical=True,ticklabels=_tls_,colors = _colors_)
+
+            # Finally
         return ax
 
 # Cell

@@ -35,7 +35,6 @@ import matplotlib.pyplot as plt, numpy as np
 RGB = LSC.from_list('RGB',[(0.9,0,0),(0.9,0.9,0),(0,0.9,0),(0,0.9,0.9),(0,0,0.9)])
 plt.register_cmap('RGB',RGB)
 
-colors = np.array([[1,0,0],[1,1,0],[0,1,0],[0,1,1],[0,0,1]])
+# color_marices for quick_rgb_lines
 color_matrix = np.array([[0.5  , 0  , 0.5],[0.5  , 0.5, 0. ],[0.  , 0.5  , 0.5 ]])
-FCC = LSC.from_list('FCC',np.dot(color_matrix,colors.T).T)
-plt.register_cmap('FCC',FCC)
+gray_matrix = np.array([[0.3  , 0.59  , 0.11],[0.3  , 0.59  , 0.11],[0.3  , 0.59  , 0.11]])
