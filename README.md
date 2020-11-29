@@ -169,7 +169,7 @@ vr
 
 ```
 #collapse_input
-import pivotpy as pp 
+import pivotpy as pp, numpy as np 
 import matplotlib.pyplot as plt 
 vr1=pp.export_vasprun('E:/Research/graphene_example/ISPIN_2/bands/vasprun.xml')
 vr2=pp.export_vasprun('E:/Research/graphene_example/ISPIN_2/dos/vasprun.xml')
@@ -181,7 +181,7 @@ ti_cks=dict(xt_indices=[0,30,60,-1],xt_labels=['Γ','M','K','Γ'])
 args_dict=dict(elements=elements,orbs=orbs,labels=labels,elim=[-20,15])
 pp.quick_bplot(path_evr=vr1,ax=axs[0],**ti_cks,elim=[-20,15])
 lg_k={'ncol': 3}
-pp.quick_dos_lines(path_evr=vr2,ax=axs[1],vertical=True,spin='both',include_dos='pdos',**args_dict,legend_kwargs=lg_k)
+pp.quick_dos_lines(path_evr=vr2,ax=axs[1],vertical=True,spin='both',include_dos='pdos',**args_dict,legend_kwargs=lg_k,color_map='RGB')
 pp.quick_rgb_lines(path_evr=vr1,ax=axs[2],**args_dict,**ti_cks,colorbar=True)
 pp.show() 
 ```

@@ -452,6 +452,7 @@ def quick_rgb_lines(path_evr    = None,
     import matplotlib as mpl
     import matplotlib.pyplot as plt
     from matplotlib import rc
+    import numpy as np
     mpl.rcParams['axes.linewidth'] = 0.4 #set the value globally
     mpl.rcParams['font.serif'] = "STIXGeneral"
     mpl.rcParams['font.family'] = "serif"
@@ -485,7 +486,6 @@ def quick_rgb_lines(path_evr    = None,
         colorbar_scales = [1,1,1] # default for colorbar
         def _re_collect(ax,arr,clr1,clr2,clr3,max_width=5, uni_width=uni_width):
                 _cl=[[c1[0],c2[1],c3[2]] for c1,c2,c3 in zip(clr1,clr2,clr3)]
-                import numpy as np
                 if(scale_color==True):
                     cl_max=np.max(_cl,axis=1)
                     # avoid divide by zero. Contributions are 4 digits only.
