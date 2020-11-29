@@ -28,3 +28,9 @@ from matplotlib.pyplot import show,savefig
 
 mpl_imported=['show','savefig']
 __all__.extend(mpl_imported)
+
+# Register 'RGB' colormap in current session
+from matplotlib.colors import LinearSegmentedColormap as LSC
+import matplotlib.pyplot as plt 
+RGB = LSC.from_list('RGB',[(0.9,0,0),(0.9,0.9,0),(0,0.9,0),(0,0.9,0.9),(0,0,0.9)],256)
+plt.register_cmap('RGB',RGB)

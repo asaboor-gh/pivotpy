@@ -229,18 +229,18 @@ def add_legend(ax=None,colors=[],labels=[],styles='solid',\
     return None
 
 # Cell
-def add_colorbar(ax=None,colors=[],n=20,ticks=[20,60,100],\
-            ticklabels=['s','p','d'],linewidth=None,vertical=False,fontsize=8):
+def add_colorbar(ax=None,colors=[],N=256,scales = [1,1,1],ticks=[1/6,1/2,5/6],\
+            ticklabels=['r','g','b'],vertical=False,fontsize=8):
     """
-    - Plots colorbar on a given axes. This axes should be only for colorbar. Returns None.
+    - Plots colorbar on a given axes. This axes should be only for colorbar. Returns None but registers a color map `_hsv_` in matplotlib.
     - **Parameters**
         - ax         : Matplotlib axes object.
         - colors     : List of colors in colorbar, if not given, RGB colorbar is added.
-        - vertical   : Boolean, default is Fasle.
-        - n          : int, number of points between colors. Default 20.
-        - ticks      : List of tick points to show on colorbar.
+        - N          : int, number of color points Default 256.
+        - scales     : List of 3 numbers in interval [0,1] to scale colors.
+        - ticks      : List of tick values to show on colorbar in interval [0,1].
         - ticklabels : List of labels for ticks.
-        - linewidth  : To tweek in order to make smooth gradient.
+        - vertical   : Boolean, default is Fasle.
         - fontsize   : Default 8. Adjustable according to plot space.
     """
     if(ax==None):
@@ -249,49 +249,43 @@ def add_colorbar(ax=None,colors=[],n=20,ticks=[20,60,100],\
         import matplotlib as mpl
         from matplotlib import rc
         import matplotlib.pyplot as plt
+        from matplotlib.colors import LinearSegmentedColormap as LSC
         import numpy as np
         mpl.rcParams['font.serif'] = "STIXGeneral"
         mpl.rcParams['font.family'] = "serif"
         mpl.rcParams['mathtext.fontset'] = "stix"
-        # Colors mixing
-        def colorMixer(c1,c2,mix=0):
-            c1=np.array(mpl.colors.to_rgb(c1))
-            c2=np.array(mpl.colors.to_rgb(c2))
-            return mpl.colors.to_rgb((1-mix)*c1 + mix*c2)
-        if(colors==[]):
-            colors=[(1,0,1),(1,0,0),(1,1,0),(0,1,0),(0,1,1),(0,0,1),(1,0,1)]
-        if(linewidth!=None):
-            lwd=linewidth
-        else:
-            lwd=2*3*len(colors)/n
+
+        if colors==[]:
+            colors=np.array([[1,0,1],[1,0,0],[1,1,0],[0,1,0],[0,1,1],[0,0,1],[1,0,1]])
+        if len(scales)==3:
+            colors = np.multiply(colors,scales)
+        _hsv_ = LSC.from_list('RGB',colors=colors,N=N)
+        plt.register_cmap('_hsv_',_hsv_)
+        c_vals = np.linspace(0,1,N)
+        c_vals = np.vstack((c_vals,c_vals))
+
+        ticks_param = dict(direction='out',length=2,width=0.3,top=False,right=False,
+                            grid_color=(1,1,1,0), grid_alpha=0)
         if(vertical==False):
-            for i in range(len(colors)-1):
-                for x in range(i*n,(i+1)*n+1):
-                    ax.axvline(x, color=colorMixer(colors[i],colors[i+1],(x-i*n)/n), linewidth=lwd)
-            ax.set_xlim([0,n*(len(colors)-1)])
-            ax.set_ylim([-1,1])
+            ax.imshow(c_vals,aspect='auto',cmap=_hsv_,origin='lower')
             ax.set_yticks([])
-            ax.set_xticks(ticks)
+            ax.set_xticks([np.floor(N*t) for t in ticks])
             ax.set_xticklabels(ticklabels,rotation=0)
-            ax.tick_params(direction='out',length=2,width=0.3,top=False,left=False,right=False,\
-                grid_color=(1,1,1,0), grid_alpha=0)
+            ticks_param.update({'left':False})
+            ax.tick_params(**ticks_param)
         if(vertical==True):
-            for i in range(len(colors)-1):
-                for y in range(i*n,(i+1)*n+1):
-                    ax.axhline(y, color=colorMixer(colors[i],colors[i+1],(y-i*n)/n), linewidth=lwd)
-            ax.set_ylim([0,n*(len(colors)-1)])
-            ax.set_xlim([-1,1])
+            c_vals = c_vals.transpose()
+            ax.imshow(c_vals,aspect='auto',cmap=_hsv_,origin='lower')
             ax.set_xticks([])
-            ax.set_yticks(ticks)
+            ax.set_yticks([np.floor(N*t) for t in ticks])
             ax.set_yticklabels(ticklabels,rotation=90)
-            ax.tick_params(direction='out',length=2,width=0.3,top=False,bottom=False,right=False,\
-                grid_color=(1,1,1,0), grid_alpha=0)
+            ticks_param.update({'bottom':False})
+            ax.tick_params(**ticks_param)
         for tick in ax.xaxis.get_major_ticks():
             tick.label.set_fontsize(fontsize)
         for child in ax.get_children():
             if isinstance(child, mpl.spines.Spine):
-                child.set_color('w')
-    return
+                child.set_color((1,1,1,0.4))
 
 # Cell
 def create_rgb_lines(ax         = None,
@@ -418,6 +412,7 @@ def quick_rgb_lines(path_evr    = None,
                     k           = 3,
                     scale_color = True,
                     colorbar    = True,
+                    color_matrix= None,
     ):
     """
     - Returns axes object and plot on which all matplotlib allowed actions could be performed. In this function,orbs,labels,elements all have list of length 3. Inside list, sublists or strings could be any length but should be there even if empty.
@@ -447,6 +442,7 @@ def quick_rgb_lines(path_evr    = None,
         - k          : int, order of interpolation 0,1,2,3. Defualt 3. `n > k` should be hold.
         - scale_color: Boolean. Default True, colors are scaled to 1 at each point.
         - colorbar   : Default is True. Displays a vertical RGB colorbar.
+        - color_matrix: 9x9 numpy array or list to transform from RGB to another space,sum of each row element should be <= 1. For simply changing the color intensity use np.diag([r,g,b]) with r,g,b interval in [0,1]. Try [[0.5  , 0  , 0.5],[0.5  , 0.5, 0. ],[0.  , 0.5  , 0.5 ]] as a suggested color matrix!
     - **Returns**
         - ax : matplotlib axes object with plotted projected bands.
     """
@@ -486,6 +482,7 @@ def quick_rgb_lines(path_evr    = None,
             raise ValueError(
                 "spin can take `up`,`down` or `both` values only.")
             return
+        colorbar_scales = [1,1,1] # default for colorbar
         def _re_collect(ax,arr,clr1,clr2,clr3,max_width=5, uni_width=uni_width):
                 _cl=[[c1[0],c2[1],c3[2]] for c1,c2,c3 in zip(clr1,clr2,clr3)]
                 import numpy as np
@@ -496,7 +493,12 @@ def quick_rgb_lines(path_evr    = None,
                     cl=np.array([np.array(c)/c_max for c,c_max in zip(_cl,cl_max)])
                 else:
                     cl=np.array(_cl)/np.max(np.unique(_cl))
-                clrs=[tuple(((*c,1))) for c in cl]
+
+                if None not in np.unique(color_matrix) and np.size(color_matrix)==9:
+                    cl = np.dot(color_matrix,cl.T).T #Order is important
+
+                clrs=cl # Finally assign to colors.
+                colorbar_scales[:] = np.max(clrs,axis=0) #assign color weights
                 if(uni_width==True):
                     lws=(max_width/2)
                 else:
@@ -579,7 +581,11 @@ def quick_rgb_lines(path_evr    = None,
             ax.set_position([pos.x0,pos.y0,pos.width-2.8*w_f,pos.height])
             new_pos = [pos.x0+pos.width-w_f,pos.y0,w_f,pos.height]
             axb = plt.gcf().add_axes(new_pos)
-            sp.add_colorbar(ax=axb,vertical=True,ticklabels=_tls_)
+            _colors_ = np.multiply([[1,0,1],[1,0,0],[1,1,0],[0,1,0],[0,1,1],
+                                    [0,0,1],[1,0,1]],colorbar_scales)
+            if None not in np.unique(color_matrix) and np.size(color_matrix)==9:
+                _colors_ = np.dot(color_matrix,_colors_.T).T
+            sp.add_colorbar(ax=axb,vertical=True,ticklabels=_tls_,colors = _colors_)
         return ax
 
 # Cell
@@ -713,7 +719,9 @@ def quick_color_lines(path_evr  = None,
         # Fix elements and colors length. ISPIN 2 case is done in loop itself
         if color_map in plt.colormaps():
             from matplotlib.pyplot import cm
-            colors  = eval("cm.{}(np.linspace(0,1,len(orbs)))".format(color_map))
+            c_map = cm.get_cmap(color_map)
+            c_vals = np.linspace(0,1,len(orbs))
+            colors  = c_map(c_vals)
         else:
             return print("`color_map` expects one of the follwoing:\n{}".format(plt.colormaps()))
 
@@ -1073,13 +1081,16 @@ def quick_dos_lines(path_evr      = None,
         if color_map in plt.colormaps():
             from matplotlib.pyplot import cm
             if len(tdos) == 2:
-                colors  = eval("cm.{}(np.linspace(0,1,2*len(orbs)))".format(color_map))
+                c_map   = cm.get_cmap(color_map)
+                c_vals  = np.linspace(0,1,2*len(orbs))
+                colors  = c_map(c_vals)
             else:
-                colors  = eval("cm.{}(np.linspace(0,1,len(orbs)))".format(color_map))
-        elif 'RGB' in color_map and len(orbs) == 3:
-            colors = np.array([[0.9,0,0],[0,0.85,0],[0,0,0.9]])
-            if vr.sys_info.ISPIN == 2 and 'both' in spin:
-                colors = np.reshape([[c,list(pp.invert_color(c))] for c in colors],(-1,3))
+                c_map   = cm.get_cmap(color_map)
+                c_vals  = np.linspace(0,1,len(orbs))
+                colors  = c_map(c_vals)
+            # Fix for RGB comparison
+            if len(tdos) == 2 and 'both' in spin and len(orbs)==3:
+                colors[[-1,-2]]= colors[[-2,-1]] #Flip last two colors only
         else:
             return print("`color_map` expects one of the follwoing:\n{}".format(plt.colormaps()))
 

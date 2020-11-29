@@ -429,13 +429,16 @@ def plotly_dos_lines(path_evr     = None,
         if color_map in plt.colormaps():
             from matplotlib.pyplot import cm
             if len(tdos) == 2:
-                colors  = eval("cm.{}(np.linspace(0,1,2*len(orbs)))".format(color_map))
+                c_map   = cm.get_cmap(color_map)
+                c_vals  = np.linspace(0,1,2*len(orbs))
+                colors  = c_map(c_vals)
             else:
-                colors  = eval("cm.{}(np.linspace(0,1,len(orbs)))".format(color_map))
-        elif 'RGB' in color_map and len(orbs) == 3:
-            colors = np.array([[0.9,0,0],[0,0.85,0],[0,0,0.9]])
-            if vr.sys_info.ISPIN == 2 and 'both' in spin:
-                colors = np.reshape([[c,list(pp.invert_color(c))] for c in colors],(-1,3))
+                c_map   = cm.get_cmap(color_map)
+                c_vals  = np.linspace(0,1,len(orbs))
+                colors  = c_map(c_vals)
+            # Fix for RGB comparison
+            if len(tdos) == 2 and 'both' in spin and len(orbs)==3:
+                colors[[-1,-2]]= colors[[-2,-1]] #Flip last two colors only
         else:
             return print("`color_map` expects one of the follwoing:\n{}".format(plt.colormaps()))
         # Total DOS colors
