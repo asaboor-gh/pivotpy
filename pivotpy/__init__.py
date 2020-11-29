@@ -31,6 +31,11 @@ __all__.extend(mpl_imported)
 
 # Register 'RGB' colormap in current session
 from matplotlib.colors import LinearSegmentedColormap as LSC
-import matplotlib.pyplot as plt 
-RGB = LSC.from_list('RGB',[(0.9,0,0),(0.9,0.9,0),(0,0.9,0),(0,0.9,0.9),(0,0,0.9)],256)
+import matplotlib.pyplot as plt, numpy as np
+RGB = LSC.from_list('RGB',[(0.9,0,0),(0.9,0.9,0),(0,0.9,0),(0,0.9,0.9),(0,0,0.9)])
 plt.register_cmap('RGB',RGB)
+
+colors = np.array([[1,0,0],[1,1,0],[0,1,0],[0,1,1],[0,0,1]])
+color_matrix = np.array([[0.5  , 0  , 0.5],[0.5  , 0.5, 0. ],[0.  , 0.5  , 0.5 ]])
+FCC = LSC.from_list('FCC',np.dot(color_matrix,colors.T).T)
+plt.register_cmap('FCC',FCC)

@@ -442,7 +442,7 @@ def quick_rgb_lines(path_evr    = None,
         - k          : int, order of interpolation 0,1,2,3. Defualt 3. `n > k` should be hold.
         - scale_color: Boolean. Default True, colors are scaled to 1 at each point.
         - colorbar   : Default is True. Displays a vertical RGB colorbar.
-        - color_matrix: 9x9 numpy array or list to transform from RGB to another space,sum of each row element should be <= 1. For simply changing the color intensity use np.diag([r,g,b]) with r,g,b interval in [0,1]. Try [[0.5  , 0  , 0.5],[0.5  , 0.5, 0. ],[0.  , 0.5  , 0.5 ]] as a suggested color matrix!
+        - color_matrix: 9x9 numpy array or list to transform from RGB to another space,sum of each row element should be <= 1. For simply changing the color intensity use np.diag([r,g,b]) with r,g,b interval in [0,1]. Try `pivotpy.color_matrix` as suggested color matrix and modify!
     - **Returns**
         - ax : matplotlib axes object with plotted projected bands.
     """
