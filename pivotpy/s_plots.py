@@ -229,19 +229,19 @@ def add_legend(ax=None,colors=[],labels=[],styles='solid',\
     return None
 
 # Cell
-def add_colorbar(ax=None,colors=[],N=256,scales = [1,1,1],ticks=[1/6,1/2,5/6],\
+def add_colorbar(ax=None,colors=[],N=256,ticks=[1/6,1/2,5/6],\
             ticklabels=['r','g','b'],vertical=False,fontsize=8):
     """
-    - Plots colorbar on a given axes. This axes should be only for colorbar. Returns None but registers a color map `_hsv_` in matplotlib.
+    - Plots colorbar on a given axes. This axes should be only for colorbar. Given list or numpy array is tried and if fails,return RGB colobar. If colormap name is given and fails, returns matplotlib's default colormap. Returns None.
     - **Parameters**
         - ax         : Matplotlib axes object.
-        - colors     : List of colors in colorbar, if not given, RGB colorbar is added.
+        - colors     : List of colors in colorbar or colormap's name, if not given, RGB colorbar is added.
         - N          : int, number of color points Default 256.
-        - scales     : List of 3 numbers in interval [0,1] to scale colors.
         - ticks      : List of tick values to show on colorbar in interval [0,1].
         - ticklabels : List of labels for ticks.
         - vertical   : Boolean, default is Fasle.
         - fontsize   : Default 8. Adjustable according to plot space.
+    - **Note**: Use `colors = 'RGB_m'` to map colors (after) plotted in `quick_rgb_lines`.
     """
     if(ax==None):
         raise ValueError("Matplotlib axes (ax) is not given.")
@@ -255,12 +255,16 @@ def add_colorbar(ax=None,colors=[],N=256,scales = [1,1,1],ticks=[1/6,1/2,5/6],\
         mpl.rcParams['font.family'] = "serif"
         mpl.rcParams['mathtext.fontset'] = "stix"
 
-        if colors==[]:
-            colors=np.array([[1,0,1],[1,0,0],[1,1,0],[0,1,0],[0,1,1],[0,0,1],[1,0,1]])
-        if len(scales)==3:
-            colors = np.multiply(colors,scales)
-        _hsv_ = LSC.from_list('RGB',colors=colors,N=N)
-        plt.register_cmap('_hsv_',_hsv_)
+        if isinstance(colors,(list,np.ndarray)):
+            try: _hsv_ = LSC.from_list('_hsv_',colors=colors,N=N)
+            except:
+                colors=np.array([[1,0,1],[1,0,0],[1,1,0],[0,1,0],[0,1,1],[0,0,1],[1,0,1]])
+                _hsv_ = LSC.from_list('_hsv_',colors=colors,N=N)
+        elif isinstance(colors,str):
+            _hsv_ = colors #colormap name
+        else:
+            _hsv_ = None # default fallback
+
         c_vals = np.linspace(0,1,N)
         c_vals = np.vstack((c_vals,c_vals))
 
