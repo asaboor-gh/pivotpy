@@ -229,19 +229,19 @@ def add_legend(ax=None,colors=[],labels=[],styles='solid',\
     return None
 
 # Cell
-def add_colorbar(ax=None,colors=[],N=256,ticks=[1/6,1/2,5/6],\
+def add_colorbar(ax=None,cmap_or_clist=None,N=256,ticks=[1/6,1/2,5/6],\
             ticklabels=['r','g','b'],vertical=False,fontsize=8):
     """
-    - Plots colorbar on a given axes. This axes should be only for colorbar. Given list or numpy array is tried and if fails,return RGB colobar. If colormap name is given and fails, returns matplotlib's default colormap. Returns None.
+    - Plots colorbar on a given axes. This axes should be only for colorbar. Returns None or throws ValueError for given colors.
     - **Parameters**
         - ax         : Matplotlib axes object.
-        - colors     : List of colors in colorbar or colormap's name, if not given, RGB colorbar is added.
+        - cmap_or_clist: List/array of colors in or colormap's name. If None(default), first tries to get latest `quick_rgb_lines` colormap and if no success, then `RGB_f` colorbar is added. If nothing works, matplotlib's default colormap is plotted.
         - N          : int, number of color points Default 256.
         - ticks      : List of tick values to show on colorbar in interval [0,1].
         - ticklabels : List of labels for ticks.
         - vertical   : Boolean, default is Fasle.
         - fontsize   : Default 8. Adjustable according to plot space.
-    - **Note**: Use `colors = 'RGB_m'` to map colors (after) plotted in `quick_rgb_lines`.
+    - **Note**: Use `'RGB_f'` to map colors (after) plotted in `quick_rgb_lines` and use `'RGB_m'` to plot DOS in same colors.
     """
     if(ax==None):
         raise ValueError("Matplotlib axes (ax) is not given.")
@@ -254,14 +254,20 @@ def add_colorbar(ax=None,colors=[],N=256,ticks=[1/6,1/2,5/6],\
         mpl.rcParams['font.serif'] = "STIXGeneral"
         mpl.rcParams['font.family'] = "serif"
         mpl.rcParams['mathtext.fontset'] = "stix"
-
-        if isinstance(colors,(list,np.ndarray)):
-            try: _hsv_ = LSC.from_list('_hsv_',colors=colors,N=N)
+        if cmap_or_clist is None:
+            try:
+                _hsv_ = plt.cm.get_cmap('RGB_f')
             except:
                 colors=np.array([[1,0,1],[1,0,0],[1,1,0],[0,1,0],[0,1,1],[0,0,1],[1,0,1]])
-                _hsv_ = LSC.from_list('_hsv_',colors=colors,N=N)
-        elif isinstance(colors,str):
-            _hsv_ = colors #colormap name
+                _hsv_ = LSC.from_list('_hsv_',colors,N=N)
+        elif isinstance(cmap_or_clist,(list,np.ndarray)):
+            try:
+                _hsv_ = LSC.from_list('_hsv_',cmap_or_clist,N=N)
+            except Exception as e:
+                print(e,"\nFalling back to default color map!")
+                _hsv_ = None # fallback
+        elif isinstance(cmap_or_clist,str):
+            _hsv_ = cmap_or_clist #colormap name
         else:
             _hsv_ = None # default fallback
 
@@ -449,7 +455,7 @@ def quick_rgb_lines(path_evr    = None,
         - color_matrix: Only works if `scale_color==True`. 3x3 numpy array or list to transform from RGB to another space,sum of each row element should be <= 1. For simply changing the color intensity use np.diag([r,g,b]) with r,g,b interval in [0,1]. Try `pivotpy.color(gray)_matrix` as suggested color matrix and modify!
     - **Returns**
         - ax : matplotlib axes object with plotted projected bands.
-        - Registers as colormap `RGB_m` to use in DOS to plot in same colors.
+        - Registers as colormap `RGB_m` to use in DOS to plot in same colors and `RGB_f` to display bands colorbar on another axes.
     """
     import pivotpy.vr_parser as vp
     import pivotpy.s_plots as sp
@@ -580,26 +586,26 @@ def quick_rgb_lines(path_evr    = None,
         if None not in np.unique(color_matrix) and np.size(color_matrix)==9:
             if scale_color==True:  # Only apply color_matrix on scaled colors
                 _colors_ = np.dot(color_matrix,_colors_.T).T
-            # register a colormap to use in DOS of same color
-            from matplotlib.colors import LinearSegmentedColormap as LSC
-            RGB_m = LSC.from_list('RGB_m',_colors_[1:-1])
-            plt.register_cmap('RGB_m',RGB_m) #Register cmap.
+        # register a colormap to use in DOS of same color
+        from matplotlib.colors import LinearSegmentedColormap as LSC
+        plt.register_cmap('RGB_f',LSC.from_list('RGB_f',_colors_)) #Register cmap for Bands
+        plt.register_cmap('RGB_m',LSC.from_list('RGB_m',_colors_[1:-1])) #Register cmap for DOS
 
         if colorbar:
             _tls_ = ['' for l in labels] # To avoid side effects, new labels array.
             for i,label in enumerate(labels):
                 if label and ISPIN==2:
                     _tls_[i] = (label+'$^↑$' if spin=='up' else label+'$^↓$' if spin=='down' else label+'$^{↑↓}$')
-            w, h = plt.gcf().get_size_inches()
+            w, h = ax.get_figure().get_size_inches()
             w_f = 0.15/w # width of colorbar relative to fontsize=8
             pos = ax.get_position()
             # Make colobar space available from given axis itself
             ax.set_position([pos.x0,pos.y0,pos.width-2.8*w_f,pos.height])
             new_pos = [pos.x0+pos.width-w_f,pos.y0,w_f,pos.height]
-            axb = plt.gcf().add_axes(new_pos)
-            sp.add_colorbar(ax=axb,vertical=True,ticklabels=_tls_,colors = _colors_)
+            axb = ax.get_figure().add_axes(new_pos)
+            add_colorbar(ax=axb,vertical=True,ticklabels=_tls_,cmap_or_clist = _colors_)
 
-            # Finally
+        # Finally
         return ax
 
 # Cell
