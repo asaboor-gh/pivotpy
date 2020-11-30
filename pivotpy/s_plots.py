@@ -806,7 +806,7 @@ def init_figure(figsize   = (3.4,2.6),
                 **subplots_adjust_kwargs
                 ):
     """
-    - Returns all axes of initialized figure, based on plt.subplots().
+    - Returns all axes of initialized figure, based on plt.subplots(). If you want to access parent figure, use ax.get_figure() or current figure as plt.gcf().
     - **Parameters**
         - figsize   : Tuple (width, height). Default is (3.4,2.6).
         - nrows     : Default 1.
