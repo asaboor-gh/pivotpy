@@ -113,6 +113,9 @@ light_style = """<style>
                     background-color: #c3d4d4;
                     border-radius: 5px !important;
                 }
+                tr:hover{
+                    background-color: #abe4ff !important;
+                }
             </style>"""
 
 dark_style = """<style>
@@ -206,6 +209,9 @@ dark_style = """<style>
                     min-width: max-content !important;
                     background-color: #3f5959;
                     border-radius: 5px !important;
+                }
+                tr:hover{
+                    background-color: #196285 !important;
                 }
 
             </style>"""
@@ -531,7 +537,7 @@ def tabulate_data(data_dict):
       font-family: "Times New Roman", "Times", "serif" !important;}
       th, td {text-align: center !important;
       border: 1px solid gray !important;
-      padding: 0px 15px 0px 15px !important;}
+      padding: 0px 8px 0px 8px !important;}
       tr {width: 100% !important;}
       tr:nth-child(odd) {font-weight:bold !important;}
       </style>"""
