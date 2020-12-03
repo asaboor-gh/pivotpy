@@ -105,6 +105,7 @@ light_style = """<style>
                     margin: 0 !important;
                     padding: 2px !important;
                 }
+                table { color:black !important;}
                 tr:nth-child(odd) {background-color: #eaf0f0 !important;}
                 tr:nth-child(even) {background-color: white !important;}
                 .widget-button,.widget-toggle-button {
@@ -202,6 +203,7 @@ dark_style = """<style>
                 font-family: "Times","serif" !important;
                 text-align: center !important;
                 }
+                table { color:white !important;}
                 tr:nth-child(odd) {background-color: #282c34 !important;}
                 tr:nth-child(even) {background-color: black !important;}
                 .widget-button,.widget-toggle-button {
