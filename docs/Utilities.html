@@ -992,6 +992,67 @@ RETRIEVED DATA : {}
 </div>
     {% endraw %}
 
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="Plots" class="doc_header"><code>class</code> <code>Plots</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L278" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Plots</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>joinPathAt</code></strong>=<em><code>[]</code></em>, <strong><code>shift_kpath</code></strong>=<em><code>0</code></em>)</p>
+</blockquote>
+<ul>
+<li>All plotting functions that depend on <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> are joined under this class and renamed.</li>
+<li><strong>Parameters</strong><ul>
+<li>path       : str: path/to/vasprun.xml. Auto picks in CWD.</li>
+<li>skipk      : int: Skip initial kpoints</li>
+<li>elim       : list: Energy range e.g. [-5,5]</li>
+<li>joinPathAt : list: Join broken path at given indices. Could be obtained from <code>SEG-INDS</code> if used <code>trace_kpath</code>.</li>
+<li>shift_kpath: float: Shift in kpath values for side by side plotting.</li>
+</ul>
+</li>
+<li><strong>Attributes</strong><ul>
+<li>data : Return of <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> which is auto-picked in plotting methods under this class.</li>
+</ul>
+</li>
+<li><strong>Methods</strong><ul>
+<li>sbands    : Shortcut for <a href="/pivotpy/StaticPlots.html#quick_bplot"><code>quick_bplot</code></a>.</li>
+<li>sdos      : Shortcut for <a href="/pivotpy/StaticPlots.html#quick_dos_lines"><code>quick_dos_lines</code></a>.</li>
+<li>srgb      : Shortcut for <a href="/pivotpy/StaticPlots.html#quick_rgb_lines"><code>quick_rgb_lines</code></a>.</li>
+<li>scolor    : Shortcut for <a href="/pivotpy/StaticPlots.html#quick_color_lines"><code>quick_color_lines</code></a>.</li>
+<li>idos      : Shortcut for <a href="/pivotpy/InteractivePlots.html#plotly_dos_lines"><code>plotly_dos_lines</code></a>.</li>
+<li>irgb      : Shortcut for <a href="/pivotpy/InteractivePlots.html#plotly_rgb_lines"><code>plotly_rgb_lines</code></a>.</li>
+<li>get_kwargs: Accepts any of ['sbands','sdos','srgb','scolor','idos','irgb'] as argument and returns argument dictionary for given method that can be unpacked in plotting function argument.</li>
+</ul>
+</li>
+<li><strong>Example</strong><blockquote><p>plots = Plots(path='./vasprun.xml')
+args_ = plots.get_kwargs('sbands')</p>
+<h1 id="Modify-args_-dictionary-as-you-want">Modify args_ dictionary as you want<a class="anchor-link" href="#Modify-args_-dictionary-as-you-want"> </a></h1><p>plots.sbands(**args_)</p>
+</blockquote>
+</li>
+</ul>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Add-a-function-as-method-to-a-class-without-defining-inside-class-itself">Add a function as method to a class without defining inside class itself<a class="anchor-link" href="#Add-a-function-as-method-to-a-class-without-defining-inside-class-itself"> </a></h2><ul>
@@ -1017,7 +1078,7 @@ RETRIEVED DATA : {}
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="link_to_class" class="doc_header"><code>link_to_class</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L277" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>link_to_class</code>()</p>
+<h4 id="link_to_class" class="doc_header"><code>link_to_class</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L357" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>link_to_class</code>()</p>
 </blockquote>
 <ul>
 <li>Binds wrapper of a function to class as attribute that does exactly the same as function. Also function returned from wrapper can be used normally as well.</li>
@@ -1106,7 +1167,7 @@ I am independent function!
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="nav_links" class="doc_header"><code>nav_links</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L293" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>nav_links</code>(<strong><code>current_index</code></strong>=<em><code>0</code></em>, <strong><code>doc_url</code></strong>=<em><code>'https://massgh.github.io/pivotpy/'</code></em>, <strong><code>items</code></strong>=<em><code>['Index', 'XmlElementTree', 'StaticPlots', 'InteractivePlots', 'Utilities', 'StructureIO', 'Widgets']</code></em>, <strong><code>horizontal</code></strong>=<em><code>False</code></em>, <strong><code>out_string</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="nav_links" class="doc_header"><code>nav_links</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L373" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>nav_links</code>(<strong><code>current_index</code></strong>=<em><code>0</code></em>, <strong><code>doc_url</code></strong>=<em><code>'https://massgh.github.io/pivotpy/'</code></em>, <strong><code>items</code></strong>=<em><code>['Index', 'XmlElementTree', 'StaticPlots', 'InteractivePlots', 'Utilities', 'StructureIO', 'Widgets']</code></em>, <strong><code>horizontal</code></strong>=<em><code>False</code></em>, <strong><code>out_string</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 
 </div>

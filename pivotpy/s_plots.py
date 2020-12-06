@@ -829,7 +829,7 @@ def init_figure(figsize   = (3.4,2.6),
     # print SVG in ipython
     try:
 	    shell = get_ipython().__class__.__name__
-	    if shell == 'ZMQInteractiveShell':
+	    if shell == 'ZMQInteractiveShell' or shell == 'Shell':
 		    from IPython.display import set_matplotlib_formats
 		    set_matplotlib_formats('svg')
     except: pass

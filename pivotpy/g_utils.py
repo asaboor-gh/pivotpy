@@ -2,7 +2,7 @@
 
 __all__ = ['get_file_size', 'interpolate_data', 'ps_to_py', 'ps_to_std', 'select_dirs', 'select_files',
            'get_child_items', 'invert_color', 'printr', 'printg', 'printb', 'printy', 'printm', 'printc',
-           'EncodeFromNumpy', 'DecodeToNumpy', 'link_to_class', 'nav_links']
+           'EncodeFromNumpy', 'DecodeToNumpy', 'Plots', 'link_to_class', 'nav_links']
 
 # Cell
 def get_file_size(path):
@@ -272,6 +272,86 @@ class DecodeToNumpy(json.JSONDecoder):
             value = obj['_value_']
             return range(value[0],value[-1])
         return obj
+
+# Cell
+import inspect,pivotpy as pp
+class Plots:
+    """
+    - All plotting functions that depend on `export_vasprun` are joined under this class and renamed.
+    - **Parameters**
+        - path       : str: path/to/vasprun.xml. Auto picks in CWD.
+        - skipk      : int: Skip initial kpoints
+        - elim       : list: Energy range e.g. [-5,5]
+        - joinPathAt : list: Join broken path at given indices. Could be obtained from `SEG-INDS` if used `trace_kpath`.
+        - shift_kpath: float: Shift in kpath values for side by side plotting.
+    - **Attributes**
+        - data : Return of `export_vasprun` which is auto-picked in plotting methods under this class.
+    - **Methods**
+        - sbands    : Shortcut for `quick_bplot`.
+        - sdos      : Shortcut for `quick_dos_lines`.
+        - srgb      : Shortcut for `quick_rgb_lines`.
+        - scolor    : Shortcut for `quick_color_lines`.
+        - idos      : Shortcut for `plotly_dos_lines`.
+        - irgb      : Shortcut for `plotly_rgb_lines`.
+        - get_kwargs: Accepts any of ['sbands','sdos','srgb','scolor','idos','irgb'] as argument and returns argument dictionary for given method that can be unpacked in plotting function argument.
+    - **Example**
+        > plots = Plots(path='./vasprun.xml')
+        > args_ = plots.get_kwargs('sbands')
+        > # Modify args_ dictionary as you want
+        > plots.sbands(**args_)
+    """
+    def __init__(self,path=None, skipk=None, elim=[], joinPathAt=[], shift_kpath=0):
+        try:
+	        shell = get_ipython().__class__.__name__
+	        if shell == 'ZMQInteractiveShell' or shell =='Shell':
+		        from IPython.display import set_matplotlib_formats
+		        set_matplotlib_formats('svg')
+        except: pass
+        self.data = pp.export_vasprun(path=path, skipk=skipk, elim=elim, joinPathAt=joinPathAt, shift_kpath=shift_kpath)
+        # DOCS
+        Plots.sbands.__doc__ = '\n'.join([l for l in pp.quick_bplot.__doc__.split('\n') if 'path_ev' not in l])
+        Plots.sdos.__doc__ = '\n'.join([l for l in pp.quick_dos_lines.__doc__.split('\n') if 'path_ev' not in l])
+        Plots.srgb.__doc__ = '\n'.join([l for l in pp.quick_rgb_lines.__doc__.split('\n') if 'path_ev' not in l])
+        Plots.scolor.__doc__ = '\n'.join([l for l in pp.quick_color_lines.__doc__.split('\n') if 'path_ev' not in l])
+        Plots.idos.__doc__ = '\n'.join([l for l in pp.plotly_dos_lines.__doc__.split('\n') if 'path_ev' not in l])
+        Plots.irgb.__doc__ = '\n'.join([l for l in pp.plotly_rgb_lines.__doc__.split('\n') if 'path_ev' not in l])
+    def get_kwargs(self,plot_type='srgb'):
+        """
+        - Returns keyword arguments dictionary for given `plot_type` that can be unpacked in function of same plot.
+        """
+        valid_types = ['sbands','sdos','srgb','scolor','idos','irgb']
+        if plot_type not in valid_types:
+            return print("'plot_type' expects one of {}, but {!r} found.".format(valid_types,plot_type))
+        if 'sbands' in plot_type:
+            _args = inspect.getcallargs(pp.quick_bplot)
+            return {k:v for k,v in _args.items() if 'path_evr' not in k}
+        elif 'sdos' in plot_type:
+            _args = inspect.getcallargs(pp.quick_dos_lines)
+            return {k:v for k,v in _args.items() if 'path_evr' not in k}
+        elif 'scolor' in plot_type:
+            _args = inspect.getcallargs(pp.quick_color_lines)
+            return {k:v for k,v in _args.items() if 'path_evr' not in k}
+        elif 'idos' in plot_type:
+            _args = inspect.getcallargs(pp.plotly_dos_lines)
+            return {k:v for k,v in _args.items() if 'path_evr' not in k}
+        elif 'irgb' in plot_type:
+            _args = inspect.getcallargs(pp.plotly_rgb_lines)
+            return {k:v for k,v in _args.items() if 'path_evr' not in k}
+        else:
+            _args = inspect.getcallargs(pp.quick_rgb_lines)
+            return {k:v for k,v in _args.items() if 'path_evr' not in k}
+    def sbands(self,**kwargs):
+        return pp.quick_bplot(self.data,**kwargs)
+    def sdos(self,**kwargs):
+        return pp.quick_dos_lines(self.data,**kwargs)
+    def srgb(self,**kwargs):
+        return pp.quick_rgb_lines(self.data,**kwargs)
+    def scolor(self,**kwargs):
+        return pp.quick_color_lines(self.data,**kwargs)
+    def idos(self,**kwargs):
+        return pp.plotly_dos_lines(self.data,**kwargs)
+    def irgb(self,**kwargs):
+        return pp.plotly_rgb_lines(self.data,**kwargs)
 
 # Cell
 def link_to_class(cls):

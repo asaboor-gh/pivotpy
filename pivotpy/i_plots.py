@@ -233,7 +233,7 @@ def plotly_rgb_lines(path_evr    = None,
     """
     - Returns plotly's figure object, takes care of spin-polarized calculations automatically. `elements`,`orbs` and `labels` are required to be one-to-one lists of size 3 where each item in list could be another list or integer.
     - **Parameters**
-        - path_ever  : Path/to/vasprun.xml or xml output of `read_asxml`.
+        - path_evr  : Path/to/vasprun.xml or xml output of `read_asxml`.
         - elements   : List of size 3 of list of indices of ions. If not given, picks all ions for each orbital.
         - orbs       : List of size 3 of list of orbital indices, if not gievn, s,p,d plotted.
         - labels  : List of labels for projection.
