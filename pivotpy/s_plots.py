@@ -592,7 +592,7 @@ def quick_rgb_lines(path_evr    = None,
         plt.register_cmap('RGB_m',LSC.from_list('RGB_m',_colors_[1:-1])) #Register cmap for DOS
 
         if colorbar:
-            _tls_ = ['' for l in labels] # To avoid side effects, new labels array.
+            _tls_ = [l for l in labels] # To avoid side effects, new labels array.
             for i,label in enumerate(labels):
                 if label and ISPIN==2:
                     _tls_[i] = (label+'$^↑$' if spin=='up' else label+'$^↓$' if spin=='down' else label+'$^{↑↓}$')
