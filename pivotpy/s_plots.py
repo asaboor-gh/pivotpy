@@ -1025,7 +1025,7 @@ def collect_dos(path_evr      = None,
                 if(elem <= max_ind):
                     elements[i]=range(i,i+1)
                 else:
-                    return print("index {} is out of bound for ions of length {}".format(i,max_ind))
+                    return print("index {} is out of bound for ions of length {}".format(i,max_ind+1))
         if(E_Fermi==None):
             E_Fermi=vr.tdos.E_Fermi
 

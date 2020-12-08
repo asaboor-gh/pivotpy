@@ -289,10 +289,10 @@ def plotly_rgb_lines(path_evr    = None,
                 elements[i] = range(elem_inds[e],elem_inds[e+1])
         _elements_inds = [e for es in elements for e in es]
         if _elements_inds and max(_elements_inds) > max_ind:
-            return print("index {} is out of bound for {} elements.".format(ind,max_ind+1))
+            return print("index {} is out of bound for {} elements.".format(max(_elements_inds),max_ind+1))
         _orb_inds = [p for orb in orbs for p in orb]
         if _orb_inds and max(_orb_inds) > nfields-1:
-            return print("index {} is out of bound for {} ions.".format(ind,max_ind+1))
+            return print("index {} is out of bound for {} orbitals.".format(max(_orb_inds),nfields))
 
         if(E_Fermi==None):
             E_Fermi=vr.bands.E_Fermi
