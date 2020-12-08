@@ -183,7 +183,7 @@ args_dict=dict(elements=elements,orbs=orbs,labels=labels,elim=[-20,15])
 pp.quick_bplot(path_evr=vr1,ax=axs[0],**ti_cks,elim=[-20,15])
 pp.quick_rgb_lines(path_evr=vr1,ax=axs[2],**args_dict,**ti_cks,colorbar=True,color_matrix=pp.color_matrix.T)
 pp.quick_dos_lines(path_evr=vr2,ax=axs[1],vertical=True,spin='both',include_dos='pdos',**args_dict,legend_kwargs={'ncol': 3},color_map='RGB_m')
-pp.color_wheel(axs[2],xy=(0.6,1.15),labels=labels)
+pp.color_wheel(axs[2],xy=(0.6,1.15),labels=[l+'$^{⇅}$' for l in labels])
 pp.show() 
 ```
 
