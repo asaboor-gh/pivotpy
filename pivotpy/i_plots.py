@@ -281,7 +281,7 @@ def plotly_rgb_lines(path_evr    = None,
         elem_inds = vr.sys_info.ElemIndex
         max_ind   = elem_inds[-1]-1 # Last index is used for range in ElemIndex, not python index.
 
-        nfields=len(vr.pro_bands.labels)
+        nfields=len(vr.sys_info.fields)
 
         # Fix int elements and orbs
         for i,e in enumerate(elements):

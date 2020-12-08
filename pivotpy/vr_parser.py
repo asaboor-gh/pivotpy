@@ -702,7 +702,7 @@ def load_export(path= './vasprun.xml',
         SpinUp  = pro_bands[:pblen,:].reshape(NION,NKPTS,NBANDS,-1)
         SpinDown= pro_bands[pblen:,:].reshape(NION,NKPTS,NBANDS,-1)
         pros    = {'SpinUp': SpinUp,'SpinDown': SpinDown}
-        pro_dic = {'labels': fields[1:],'pros': pros}
+        pro_dic = {'labels': fields,'pros': pros}
     # If broken path, then join points.
     try:
         joinPathAt
