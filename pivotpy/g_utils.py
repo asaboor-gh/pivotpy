@@ -2,7 +2,7 @@
 
 __all__ = ['get_file_size', 'interpolate_data', 'ps_to_py', 'ps_to_std', 'select_dirs', 'select_files',
            'get_child_items', 'invert_color', 'printr', 'printg', 'printb', 'printy', 'printm', 'printc',
-           'EncodeFromNumpy', 'DecodeToNumpy', 'Plots', 'link_to_class', 'nav_links']
+           'EncodeFromNumpy', 'DecodeToNumpy', 'Plots', 'link_to_class', 'nav_links', 'export_potential']
 
 # Cell
 def get_file_size(path):
@@ -396,3 +396,58 @@ def nav_links(current_index=0,
     if out_string:
         return md_str
     return Markdown(md_str)
+
+# Cell
+def export_potential(locpot=None):
+    """
+    - Returns Data from LOCPOT and similar structure files.
+    - **Parameters**
+        - locpot: path/to/LOCPOT or similar stuructured file like CHG. LOCPOT is auto picked in CWD.
+    """
+    import numpy as np,os
+    from io import StringIO
+    import pivotpy as pp
+    if locpot is None:
+        if os.path.isfile('LOCPOT'):
+            locpot = 'LOCPOT'
+        else:
+            return print('./LOCPOT not found.')
+    else:
+        if not os.path.isfile(locpot):
+            return print("File {!r} does not exist!".format(locpot))
+    # Reading File
+    f = open(locpot,'r')
+    lines = []
+    f.seek(0)
+    for i in range(8):
+        lines.append(f.readline())
+    N = sum([int(v) for v in lines[6].split()])
+    f.seek(0)
+    poscar = []
+    for i in range(N+8):
+        poscar.append(f.readline())
+    f.readline() # Empty one
+    Nxyz = [int(v) for v in f.readline().split()]
+    nlines = np.ceil(np.prod(Nxyz)/5).astype(int)
+    f.seek(0)
+    potential = f.readlines()[len(poscar)+2:len(poscar)+2+nlines] #indexing avoids reading Magnetization
+    f.close()
+
+    # Read Info
+    basis = np.loadtxt(StringIO(''.join(poscar[2:5])))*float(poscar[1].strip())
+    system = poscar[0].strip()
+    ElemName = poscar[5].split()
+    ElemIndex = [int(v) for v in poscar[6].split()]
+    ElemIndex.insert(0,0)
+    ElemIndex = list(np.cumsum(ElemIndex))
+    positions = np.loadtxt(StringIO(''.join(poscar[8:N+9])))
+
+    #Read Potential
+    first_pot = np.loadtxt(StringIO(''.join(potential[:-1])))
+    last_pot = np.loadtxt(StringIO(''.join(potential[-1]))) #incomplete line to read separately
+    # data written on LOCPOT is this way, x wrapped in y and then xy wrapped in z. so reshape as NGz,NGy,NGx
+    N_reshape = [Nxyz[2],Nxyz[1],Nxyz[0]]
+    xyz_pot = np.hstack([first_pot.reshape((-1)),last_pot]).reshape(N_reshape)
+    xyz_pot = np.transpose(xyz_pot,[2,1,0]) # make xyz back for logical indexing.
+    final_dict = dict(SYSTEM=system,ElemName=ElemName,ElemIndex=ElemIndex,basis=basis,positions=positions,potential=xyz_pot)
+    return pp.Dict2Data(final_dict)
