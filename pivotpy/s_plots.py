@@ -1331,6 +1331,8 @@ def plot_v(path_ep=None,
     ax.plot(x,pot,lw=0.8,c=colors[0],label=labels[0]) #Potential plot
     ret_dict = {'direction':operation.split('_')[1]}
     # Only go below if periodicity is given
+    if period == None:
+        return (ax,ret_dict) # Simple Return
     if period != None:
         period = int(period*len(pot))
         arr_con = np.convolve(pot, np.ones((period,))/period, mode='valid')
