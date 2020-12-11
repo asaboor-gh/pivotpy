@@ -343,10 +343,11 @@ def color_wheel(ax=None,
     ##########
     if showlegend == True:
         colors = plt.cm.get_cmap(color_map)(ticks) # Get colors values.
-        w,h = ax.get_figure().get_size_inches()
-        lspace = pos.height*0.15/h # 0.15 inches for 9 point fonts.
-        for l,p,c in zip(labels,[lspace/scale+0.5,0.5,0.5-lspace/scale],colors):
-            cax.text(rlim[1]+0.1,p,"◾ "+l,va='center',ha='left',color=c,transform=cax.transAxes,fontsize=9)
+        labels = ["◾ "+l for l in labels]
+        labels[0] = labels[0]+'\n' #hack to write labels correctly on a single point.
+        labels[2] = '\n'+ labels[2]
+        for l,p,c in zip(labels,['bottom','center','top'],colors):
+            cax.text(rlim[1]+0.1,0.5,l,va=p,ha='left',color=c,transform=cax.transAxes,fontsize=9)
         cax.set_xticklabels([])
     else:
         cax.set_xticks([t*2*np.pi for t in ticks])
