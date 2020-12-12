@@ -2,7 +2,8 @@
 
 __all__ = ['get_file_size', 'interpolate_data', 'ps_to_py', 'ps_to_std', 'select_dirs', 'select_files',
            'get_child_items', 'invert_color', 'printr', 'printg', 'printb', 'printy', 'printm', 'printc',
-           'EncodeFromNumpy', 'DecodeToNumpy', 'Plots', 'link_to_class', 'nav_links', 'export_potential']
+           'EncodeFromNumpy', 'DecodeToNumpy', 'Vasprun', 'link_to_class', 'nav_links', 'export_potential',
+           'LOCPOT_CHG']
 
 # Cell
 def get_file_size(path):
@@ -275,7 +276,7 @@ class DecodeToNumpy(json.JSONDecoder):
 
 # Cell
 import inspect,pivotpy as pp
-class Plots:
+class Vasprun:
     """
     - All plotting functions that depend on `export_vasprun` are joined under this class and renamed.
     - **Parameters**
@@ -309,12 +310,12 @@ class Plots:
         except: pass
         self.data = pp.export_vasprun(path=path, skipk=skipk, elim=elim, joinPathAt=joinPathAt, shift_kpath=shift_kpath)
         # DOCS
-        Plots.sbands.__doc__ = '\n'.join([l for l in pp.quick_bplot.__doc__.split('\n') if 'path_ev' not in l])
-        Plots.sdos.__doc__ = '\n'.join([l for l in pp.quick_dos_lines.__doc__.split('\n') if 'path_ev' not in l])
-        Plots.srgb.__doc__ = '\n'.join([l for l in pp.quick_rgb_lines.__doc__.split('\n') if 'path_ev' not in l])
-        Plots.scolor.__doc__ = '\n'.join([l for l in pp.quick_color_lines.__doc__.split('\n') if 'path_ev' not in l])
-        Plots.idos.__doc__ = '\n'.join([l for l in pp.plotly_dos_lines.__doc__.split('\n') if 'path_ev' not in l])
-        Plots.irgb.__doc__ = '\n'.join([l for l in pp.plotly_rgb_lines.__doc__.split('\n') if 'path_ev' not in l])
+        Vasprun.sbands.__doc__ = '\n'.join([l for l in pp.quick_bplot.__doc__.split('\n') if 'path_ev' not in l])
+        Vasprun.sdos.__doc__ = '\n'.join([l for l in pp.quick_dos_lines.__doc__.split('\n') if 'path_ev' not in l])
+        Vasprun.srgb.__doc__ = '\n'.join([l for l in pp.quick_rgb_lines.__doc__.split('\n') if 'path_ev' not in l])
+        Vasprun.scolor.__doc__ = '\n'.join([l for l in pp.quick_color_lines.__doc__.split('\n') if 'path_ev' not in l])
+        Vasprun.idos.__doc__ = '\n'.join([l for l in pp.plotly_dos_lines.__doc__.split('\n') if 'path_ev' not in l])
+        Vasprun.irgb.__doc__ = '\n'.join([l for l in pp.plotly_rgb_lines.__doc__.split('\n') if 'path_ev' not in l])
     def get_kwargs(self,plot_type='srgb'):
         """
         - Returns keyword arguments dictionary for given `plot_type` that can be unpacked in function of same plot.
@@ -398,15 +399,20 @@ def nav_links(current_index=0,
     return Markdown(md_str)
 
 # Cell
-def export_potential(locpot=None):
+def export_potential(locpot=None,e = True,m = False):
     """
-    - Returns Data from LOCPOT and similar structure files.
+    - Returns Data from LOCPOT and similar structure files like CHG. Loads only single set out of 2/4 magnetization data to avoid performance/memory cost while can load electrostatic and one set of magnetization together.
     - **Parameters**
         - locpot: path/to/LOCPOT or similar stuructured file like CHG. LOCPOT is auto picked in CWD.
+        - e     : Electric potential/charge density. Default is True.
+        - m     : Magnetization density m. Default is False. If True, picks `m` for spin polarized case, and `m_x` for non-colinear case. Additionally it can take 'x','y' and 'z' in case of non-colinear calculations.
+    - **Exceptions**
+        - Would raise index error if magnetization density set is not present in LOCPOT/CHG in case `m` is not False.
     """
     import numpy as np,os
     from io import StringIO
     import pivotpy as pp
+    from itertools import islice # File generator for faster r
     if locpot is None:
         if os.path.isfile('LOCPOT'):
             locpot = 'LOCPOT'
@@ -415,23 +421,44 @@ def export_potential(locpot=None):
     else:
         if not os.path.isfile(locpot):
             return print("File {!r} does not exist!".format(locpot))
+    if m not in [True,False,'x','y','z']:
+        return print("m expects one of [True,False,'x','y','z'], got {}".format(e))
     # Reading File
-    f = open(locpot,'r')
-    lines = []
-    f.seek(0)
-    for i in range(8):
-        lines.append(f.readline())
-    N = sum([int(v) for v in lines[6].split()])
-    f.seek(0)
-    poscar = []
-    for i in range(N+8):
-        poscar.append(f.readline())
-    f.readline() # Empty one
-    Nxyz = [int(v) for v in f.readline().split()]
-    nlines = np.ceil(np.prod(Nxyz)/5).astype(int)
-    f.seek(0)
-    potential = f.readlines()[len(poscar)+2:len(poscar)+2+nlines] #indexing avoids reading Magnetization
-    f.close()
+    with open(locpot,'r') as f:
+        lines = []
+        f.seek(0)
+        for i in range(8):
+            lines.append(f.readline())
+        N = sum([int(v) for v in lines[6].split()])
+        f.seek(0)
+        poscar = []
+        for i in range(N+8):
+            poscar.append(f.readline())
+        f.readline() # Empty one
+        Nxyz = [int(v) for v in f.readline().split()] # Grid line read
+        nlines = np.ceil(np.prod(Nxyz)/5).astype(int)
+        #islice is faster generator for reading potential
+        if e == True:
+            potential = [l for l in islice(f, nlines)] # Do not join here.
+            ignore_set = 0 # Pointer already ahead.
+        else:
+            ignore_set = nlines # Needs to move pointer to magnetization
+        #reading Magnetization if True
+        ignore_n = np.ceil(N/5).astype(int)+1 #Some kind of useless data
+        if m == True:
+            print("m = True would pick m_x for non-colinear case, and m for ISPIN=2.\nUse m='x' for non-colinear or keep in mind that m will refer to m_x.")
+            # Needs to spare lines in generator, otherwise pointer does not go ahead.
+            _ = [l for l in islice(f, ignore_n+ignore_set)] # +1 for Nx Ny Nz Line
+            mag_pot = [l for l in islice(f, nlines)] # Do not join here.
+        elif m == 'x':
+            _ = [l for l in islice(f, ignore_n+ignore_set)] # +1 for Nx Ny Nz Line
+            mag_pot = [l for l in islice(f, nlines)] # Do not join here.
+        elif m == 'y':
+            _ = [l for l in islice(f, 2*ignore_n+nlines+ignore_set)] # +1 for Nx Ny Nz Line
+            mag_pot = [l for l in islice(f, nlines)] # Do not join here.
+        elif m == 'z':
+            _ = [l for l in islice(f, 3*ignore_n+2*nlines+ignore_set)] # +1 for Nx Ny Nz Line
+            mag_pot = [l for l in islice(f, nlines)] # Do not join here.
 
     # Read Info
     basis = np.loadtxt(StringIO(''.join(poscar[2:5])))*float(poscar[1].strip())
@@ -442,12 +469,83 @@ def export_potential(locpot=None):
     ElemIndex = list(np.cumsum(ElemIndex))
     positions = np.loadtxt(StringIO(''.join(poscar[8:N+9])))
 
-    #Read Potential
-    first_pot = np.loadtxt(StringIO(''.join(potential[:-1])))
-    last_pot = np.loadtxt(StringIO(''.join(potential[-1]))) #incomplete line to read separately
-    # data written on LOCPOT is this way, x wrapped in y and then xy wrapped in z. so reshape as NGz,NGy,NGx
-    N_reshape = [Nxyz[2],Nxyz[1],Nxyz[0]]
-    xyz_pot = np.hstack([first_pot.reshape((-1)),last_pot]).reshape(N_reshape)
-    xyz_pot = np.transpose(xyz_pot,[2,1,0]) # make xyz back for logical indexing.
-    final_dict = dict(SYSTEM=system,ElemName=ElemName,ElemIndex=ElemIndex,basis=basis,positions=positions,potential=xyz_pot)
+    #Reshape Potential and magnetization by this function
+    def fix_v_data(lines,shape):
+        first_pot = np.loadtxt(StringIO(''.join(lines[:-1])))
+        last_pot = np.loadtxt(StringIO(''.join(lines[-1]))) #incomplete line to read separately
+        # data written on LOCPOT is this way, x wrapped in y and then xy wrapped in z. so reshape as NGz,NGy,NGx
+        N_reshape = [shape[2],shape[1],shape[0]]
+        xyz_pot = np.hstack([first_pot.reshape((-1)),last_pot]).reshape(N_reshape)
+        xyz_pot = np.transpose(xyz_pot,[2,1,0]) # make xyz back for logical indexing.
+        return xyz_pot
+    final_dict = dict(SYSTEM=system,ElemName=ElemName,ElemIndex=ElemIndex,basis=basis,positions=positions)
+    if e == True:
+        xyz_pot = fix_v_data(lines=potential,shape=Nxyz)
+        final_dict.update({'e':xyz_pot})
+    if m == True:
+        xyz_pot = fix_v_data(lines=mag_pot,shape=Nxyz)
+        final_dict.update({'m':xyz_pot})
+    elif m == 'x':
+        xyz_pot = fix_v_data(lines=mag_pot,shape=Nxyz)
+        final_dict.update({'m_x':xyz_pot})
+    elif m == 'y':
+        xyz_pot = fix_v_data(lines=mag_pot,shape=Nxyz)
+        final_dict.update({'m_y':xyz_pot})
+    elif m == 'z':
+        xyz_pot = fix_v_data(lines=mag_pot,shape=Nxyz)
+        final_dict.update({'m_z':xyz_pot})
     return pp.Dict2Data(final_dict)
+
+# Cell
+import pivotpy as pp
+class LOCPOT_CHG:
+    """
+    - Returns Data from LOCPOT and similar structure files like CHG. Loads only single set out of 2/4 magnetization data to avoid performance/memory cost while can load electrostatic and one set of magnetization together.
+    - **Parameters**
+        - path: path/to/LOCPOT or similar stuructured file like CHG. LOCPOT is auto picked in CWD.
+        - e   : Electric potential/charge density. Default is True.
+        - m   : Magnetization density m. Default is False. If True, picks `m` for spin polarized case, and `m_x` for non-colinear case. Additionally it can take 'x','y' and 'z' in case of non-colinear calculations.
+    - **Exceptions**
+        - Would raise index error if magnetization density set is not present in LOCPOT/CHG in case `m` is not False.
+    """
+    def __init__(self,path=None,e = True,m = False):
+        try:
+	        shell = get_ipython().__class__.__name__
+	        if shell == 'ZMQInteractiveShell' or shell =='Shell':
+		        from IPython.display import set_matplotlib_formats
+		        set_matplotlib_formats('svg')
+        except: pass
+        self.path = path # Must be
+        self.m = m # Required to put in plots.
+        self.data = pp.export_potential(locpot=path, e=e,m=m)
+        # DOCS
+        lines = pp.plot_potential.__doc__.split('\n')
+        lines = [l for l in [l for l in lines if 'basis' not in l] if 'e_or_m' not in l]
+        LOCPOT_CHG.plot_e.__doc__ = '\n'.join(lines)
+        LOCPOT_CHG.plot_m.__doc__ = '\n'.join(lines)
+
+    def plot_e(self,operation='mean_z',ax=None,period=None,
+                 lr_pos=(0.25,0.75),lr_widths = [0.5,0.5],
+                 labels=(r'$V(z)$',r'$\langle V \rangle _{roll}(z)$',r'$\langle V \rangle $'),
+                 colors = ((0,0.2,0.7),'b','r'),annotate=True):
+        return pp.plot_potential(basis=self.data.basis,e_or_m=self.data.e,operation=operation,
+                                    ax=ax,period=period,lr_pos=lr_pos,lr_widths=lr_widths,
+                                    labels=labels,colors=colors,annotate=annotate)
+
+    def plot_m(self,operation='mean_z',ax=None,period=None,
+                lr_pos=(0.25,0.75),lr_widths = [0.5,0.5],
+                labels=(r'$M(z)$',r'$\langle M \rangle _{roll}(z)$',r'$\langle M \rangle $'),
+                colors = ((0,0.2,0.7),'b','r'),annotate=True):
+        if self.m == True:
+            e_or_m = self.data.m
+        elif self.m == 'x':
+            e_or_m = self.data.m_x
+        elif self.m == 'y':
+            e_or_m = self.data.m_y
+        elif self.m == 'z':
+            e_or_m = self.data.m_z
+        else:
+            return print("Magnetization data set does not exist in {}".format(self.path))
+        return pp.plot_potential(basis=self.data.basis,e_or_m=e_or_m,operation=operation,
+                                    ax=ax,period=period,lr_pos=lr_pos,lr_widths=lr_widths,
+                                    labels=labels,colors=colors,annotate=annotate)

@@ -2,7 +2,7 @@
 
 __all__ = ['plot_bands', 'modify_axes', 'quick_bplot', 'add_text', 'add_legend', 'add_colorbar', 'color_wheel',
            'create_rgb_lines', 'quick_rgb_lines', 'quick_color_lines', 'init_figure', 'select_pdos', 'collect_dos',
-           'quick_dos_lines', 'plt_to_html', 'plot_v']
+           'quick_dos_lines', 'plt_to_html', 'plot_potential']
 
 # Cell
 def plot_bands(ax=None,kpath=None,bands=None,showlegend=False,E_Fermi=None,\
@@ -1267,68 +1267,73 @@ def plt_to_html(plt_fig=None,transparent=True,dash_html=None):
         return html.Img(src="data:image/svg+xml;base64,{}".format(img.decode('utf-8')))
 
 # Cell
-def plot_v(path_ep=None,
+def plot_potential(basis = None,
+           e_or_m=None,
            operation='mean_z',
            ax=None,
            period=None,
            lr_pos=(0.25,0.75),
            lr_widths = [0.5,0.5],
            labels=(r'$V(z)$',r'$\langle V \rangle _{roll}(z)$',r'$\langle V \rangle $'),
-           colors = ((0,0.2,0.7),'b','r')
+           colors = ((0,0.2,0.7),'b','r'),
+           annotate = True
           ):
     """
     - Returns tuple(ax,Data) where Data contains resultatnt parameters of averaged potential of LOCPOT.
     - **Parameters**
-        - path_ep: path/to/LOCPOT or output of `epxort_potential`. As `epxort_potential` is slow, so compute it once and then plot the output data.
+        - basis  : `export_potential().basis`.
+        - e_or_m : `epxort_potential().[e,m,m_x,m_y,m_z]` is 3D grid data. As `epxort_potential` is slow, so compute it once and then plot the output data.
         - operation: Default is 'mean_z'. What to do with provided volumetric potential data. Anyone of these 'mean_x','min_x','max_x','mean_y','min_y','max_y','mean_z','min_z','max_z'.
         - ax: Matplotlib axes, if not given auto picks.
         - period: Periodicity of potential in fraction between 0 and 1. For example if a slab is made of 4 super cells in z-direction, period=0.25.
         - lr_pos: Locations around which averages are taken.Default (0.25,0.75). Provide in fraction between 0 and 1. Center of period is located at these given fractions. Work only if period is given.
         - lr_widths: Default is [0.5,0.5], you may have slabs which have different lengths on left and right side. Provide a pair proportional to widths e.g (1,1), (1,1.1) etc. and it is auto normalized to 1. Works only if period is given.
-        - labels: List of three labels for legend. Use plt.legend() or pp.add_legend() after plot_v for legends to appear. First entry is potential, second is its convolution and third is complete average.
+        - labels: List of three labels for legend. Use plt.legend() or pp.add_legend() for labels to appear. First entry is data plot, second is its convolution and third is complete average.
         - colors: List of three colors for lines.
+        - annotate: True by default, writes difference of right and left averages on plot.
     """
     import pivotpy as pp,matplotlib.pyplot as plt,numpy as np
     check = ['mean_x','min_x','max_x','mean_y','min_y','max_y','mean_z','min_z','max_z']
     if operation not in check:
         return print("`operation` excepts any of {}, got {}".format(check,operation))
-    if path_ep is None:
-        try: ep = pp.export_potential('./LOCPOT')
-        except: return
-    elif isinstance(path_ep,str):
-        ep = pp.export_potential(path_ep)
-    else:
-        ep = path_ep # Assign.
     if ax is None:
         ax = pp.init_figure()
+    if e_or_m is None:
+        print('`e_or_m` not given, trying to autopick LOCPOT...')
+        try:
+            ep = pp.export_potential()
+            basis = ep.basis
+            e_or_m= ep.e
+        except:
+            return print('Could not auto fix. Make sure `basis` and `e_or_m` are provided.')
     if 'min' in operation:
         if '_x' in operation:
-            pot = ep.potential.min(axis=2).min(axis=1)
+            pot = e_or_m.min(axis=2).min(axis=1)
         if '_y' in operation:
-            pot = ep.potential.min(axis=2).min(axis=0)
+            pot = e_or_m.min(axis=2).min(axis=0)
         if '_z' in operation:
-            pot = ep.potential.min(axis=0).min(axis=0)
+            pot = e_or_m.min(axis=0).min(axis=0)
     elif 'max' in operation:
         if '_x' in operation:
-            pot = ep.potential.max(axis=2).max(axis=1)
+            pot = e_or_m.max(axis=2).max(axis=1)
         if '_y' in operation:
-            pot = ep.potential.max(axis=2).max(axis=0)
+            pot = e_or_m.max(axis=2).max(axis=0)
         if '_z' in operation:
-            pot = ep.potential.max(axis=0).max(axis=0)
+            pot = e_or_m.max(axis=0).max(axis=0)
     else: #mean by default
         if '_x' in operation:
-            pot = ep.potential.mean(axis=2).mean(axis=1)
+            pot = e_or_m.mean(axis=2).mean(axis=1)
         if '_y' in operation:
-            pot = ep.potential.mean(axis=2).mean(axis=0)
+            pot = e_or_m.mean(axis=2).mean(axis=0)
         if '_z' in operation:
-            pot = ep.potential.mean(axis=0).mean(axis=0)
+            pot = e_or_m.mean(axis=0).mean(axis=0)
     # Direction axis
     if '_x' in operation:
-        x = np.linalg.norm(ep.basis[0])*np.linspace(0,1,len(pot))
+        x = np.linalg.norm(basis[0])*np.linspace(0,1,len(pot))
     if '_y' in operation:
-        x = np.linalg.norm(ep.basis[1])*np.linspace(0,1,len(pot))
+        x = np.linalg.norm(basis[1])*np.linspace(0,1,len(pot))
     if '_z' in operation:
-        x = np.linalg.norm(ep.basis[2])*np.linspace(0,1,len(pot))
+        x = np.linalg.norm(basis[2])*np.linspace(0,1,len(pot))
     ax.plot(x,pot,lw=0.8,c=colors[0],label=labels[0]) #Potential plot
     ret_dict = {'direction':operation.split('_')[1]}
     # Only go below if periodicity is given
@@ -1358,7 +1363,8 @@ def plot_v(path_ep=None,
         ax.plot([x[ind_1-div_1],x[ind_1+div_1]],[v_1,v_1],c=colors[2],lw=2,label=labels[2])
         ax.plot([x[ind_2-div_2],x[ind_2+div_2]],[v_2,v_2],c=colors[2],lw=2)
         # Annotate
-        ax.text(0.5,0.07,r'$\Delta V = %9.6f$ eV'%(np.round(v_2-v_1,6)),ha="center", va="center",
+        if annotate == True:
+            ax.text(0.5,0.07,r'$\Delta _{R,L} = %9.6f$'%(np.round(v_2-v_1,6)),ha="center", va="center",
                             bbox=dict(edgecolor='white',facecolor='white', alpha=0.5),transform=ax.transAxes)
         ax.set_xlabel('$'+ret_dict['direction']+' ('+u'\u212B'+')$')
         ax.set_xlim([x[0],x[-1]])
