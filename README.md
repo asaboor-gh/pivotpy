@@ -279,6 +279,9 @@ pp.add_text(ax=plt.gca(),txts='Graphene')
 ![svg](docs/images/output_19_0.svg)
 
 
+## LOCPOT,CHG Visualization
+check out the class `pivotpy.LOCPOT_CHG` to visulize local potential/charge and magnetization in a given direction.
+
 ## Running powershell commands from python.
 Some tasks are very tideious in python while just a click way in powershell. See below, and try to list processes in python yourself to see the difference!
 
