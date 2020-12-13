@@ -549,3 +549,56 @@ class LOCPOT_CHG:
         return pp.plot_potential(basis=self.data.basis,e_or_m=e_or_m,operation=operation,
                                     ax=ax,period=period,lr_pos=lr_pos,lr_widths=lr_widths,
                                     labels=labels,colors=colors,annotate=annotate)
+
+    def view_period(self,period_guess=0.25,operation='mean_z',nslice=10,e_or_m=None,):
+        """
+        - Periodicity check by plotly's interactive plot.
+        - **Parameters**
+            - period_guess: Initial guess of period. Default is 0.25. Should be in [0,1].
+            - operation   : Any of ['mean_x','min_x','max_x','mean_y','min_y','max_y','mean_z','min_z','max_z'].
+            - nslice      : Default is 10. Number of periods around and including period_guess. e.g. If you give 0.25 as period_guess and nslice is 10, you will get 10 lines of rolling average over given data from where you can choose best fit or try another guess and so on.
+            - e_or_m      : None by default. Not required in most cases as `view_period()` will try to get data itself from top class in order of `self.data.[e,m,m_x,m_y,m_z]` and if `self.data.e` exists it never goes to others, so you can overwrite this by setting `e_or_m = self.data.[your choice]`.
+        """
+        import plotly.graph_objects as go , numpy as np
+        pos = period_guess
+        check = ['mean_x','min_x','max_x','mean_y','min_y','max_y','mean_z','min_z','max_z']
+        if operation not in check:
+            return print("operation expects any of {!r}, got {}".format(check,operation))
+        if e_or_m is None:
+            try:
+                data = self.data.e
+            except:
+                if self.m == True:
+                    data = self.data.m
+                elif self.m == 'x':
+                    data = self.data.m_x
+                elif self.m == 'y':
+                    data = self.data.m_y
+                elif self.m == 'z':
+                    data = self.data.m_z
+                else:
+                    return print("Magnetization data set does not exist in {}".format(self.path))
+        else:
+            data = e_or_m
+
+        _opr,_dir = operation.split('_')
+        if 'z' in _dir:
+            a1,a2 = 0,0
+        elif 'y' in _dir:
+            a1,a2 = 2,0
+        else:
+            a1,a2 = 1,1
+        fig = go.Figure()
+        _arr = eval("data.{}(axis={}).{}(axis={})".format(_opr,a1,_opr,a2))
+        N = np.rint(pos*len(_arr)).astype(int)
+        _range = range(int(N-nslice/2),int(N+nslice/2+1)) # +1 for range.
+        for div in _range:
+            if div > 0 and div < len(_arr):
+                y = np.convolve(_arr+div,np.ones((div,))/div,mode='valid')
+                x = np.linspace(0,1,len(y))
+                h_text = ["{}: {:>5.3f}</br>v: {:>5.3f}".format(_dir,_h,_v-div) for _h,_v in zip(x,y)]
+                fig.add_trace(go.Scatter(x=x,y=y,name="Roll_av({:>5.3f})".format(div/len(_arr)),hovertext=h_text))
+        fig.update_layout(title = self.data.SYSTEM,font=dict(family="stix serif",size=14),
+                          yaxis = go.layout.YAxis(title_text='No. of Points in Rolling Average'),
+                          xaxis = go.layout.XAxis(title_text="{}({}<sub>max</sub>)".format(_dir,_dir)))
+        return fig
