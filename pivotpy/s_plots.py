@@ -516,6 +516,7 @@ def quick_rgb_lines(path_evr    = None,
     """
     import pivotpy.vr_parser as vp
     import pivotpy.s_plots as sp
+    import pivotpy as pp # All three imports are important
     from matplotlib.collections import LineCollection
     import matplotlib as mpl
     import matplotlib.pyplot as plt
