@@ -649,14 +649,14 @@ class LOCPOT_CHG:
 
 
 # Cell
-def transform_color(arr,b=0,c=0.99,s=0.99,mixing_matrix=None):
+def transform_color(arr,s=1,c=1,b=0,mixing_matrix=None):
     """
-    - Color transformation such as brightness, contrast, saturation and mixing of an input color array.
+    - Color transformation such as brightness, contrast, saturation and mixing of an input color array. Negative values in s,c could invert color.
     - **Parameters**
         - arr: input array, a single RGB/RGBA color or an array with inner most dimension equal to 3 or 4. e.g. [[[0,1,0,1],[0,0,1,1]]].
+        - c  : contrast, default is 1. Can be a float in [-1,1].
+        - s  : saturation, default is 1. Can be a float in [-1,1]. If s = 0, you get a gray scale image.
         - b  : brightness, default is 0. Can be a float in [-1,1] or list of three brightnesses for RGB components.
-        - c  : contrast, default is 0.99. Can be a float in [-1,1].
-        - s  : saturation, default is 0.99. Can be a float in [-1,1]. If s = 0, you get a gray scale image.
         - mixing_matrix: A 3x3 matrix to mix RGB values, such as `pp.color_matrix`.
     [Recoloring](https://docs.microsoft.com/en-us/windows/win32/gdiplus/-gdiplus-recoloring-use?redirectedfrom=MSDN)
     [Rainmeter](https://docs.rainmeter.net/tips/colormatrix-guide/)
@@ -683,7 +683,7 @@ def transform_color(arr,b=0,c=0.99,s=0.99,mixing_matrix=None):
         new_color = np.dot(arr[...,:3],trans_matrix.T)
     if mixing_matrix is not None and np.size(mixing_matrix)==9:
         new_color = np.dot(new_color,np.transpose(mixing_matrix))
-    new_color = new_color - new_color.astype(int)
+    new_color[new_color > 1] = new_color[new_color > 1] - new_color[new_color > 1].astype(int)
     new_color = np.clip(new_color + whiteness,a_max=1,a_min=0)
     if np.shape(arr)[-1]==4:
         axis = len(np.shape(arr))-1 #Add back Alpha value if present

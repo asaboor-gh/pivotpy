@@ -479,7 +479,7 @@ def quick_rgb_lines(path_evr    = None,
                     k           = 3,
                     scale_color = True,
                     colorbar    = True,
-                    color_matrix= None,
+                    color_matrix= None
     ):
     """
     - Returns axes object and plot on which all matplotlib allowed actions could be performed. In this function,orbs,labels,elements all have list of length 3. Inside list, sublists or strings could be any length but should be there even if empty.
@@ -509,7 +509,7 @@ def quick_rgb_lines(path_evr    = None,
         - k          : int, order of interpolation 0,1,2,3. Defualt 3. `n > k` should be hold.
         - scale_color: Boolean. Default True, colors are scaled to 1 at each point.
         - colorbar   : Default is True. Displays a vertical RGB colorbar.
-        - color_matrix: Only works if `scale_color==True`. 3x3 numpy array or list to transform from RGB to another space,sum of each row element should be <= 1. For simply changing the color intensity use np.diag([r,g,b]) with r,g,b interval in [0,1]. Try `pivotpy.color(gray)_matrix` as suggested color matrix and modify!
+        - color_matrix: Only works if `scale_color==True`. 3x3 or 3x4 numpy array or list to transform from RGB to another space,provided that sum(color_matrix[i,:3]) <= 1. 4th column, if given can be used to control the saturation,contrast and brightness as s,c,b = color_matrix[:,3] For simply changing the color intensity use np.diag([r,g,b]) with r,g,b interval in [0,1]. Try `pivotpy.color_matrix` as suggested color matrix and modify, which at s=0 returns gray scale.!
     - **Returns**
         - ax : matplotlib axes object with plotted projected bands.
         - Registers as colormap `RGB_m` to use in DOS to plot in same colors and `RGB_f` to display bands colorbar on another axes.
@@ -551,6 +551,15 @@ def quick_rgb_lines(path_evr    = None,
             raise ValueError(
                 "spin can take `up`,`down` or `both` values only.")
             return
+        # Fix color_matrix here.
+        s,c,b = 1,1,0 # Saturation, contrast, brightness. Defaults
+        if color_matrix is not None:
+            color_matrix = np.array(color_matrix)
+            mix_matrix = color_matrix[:3,:3]
+            try:
+                s,c,b = color_matrix[:,3]
+            except: pass
+
         colorbar_scales = [1,1,1] # default for colorbar
         def _re_collect(ax,arr,clr1,clr2,clr3,max_width=5, uni_width=uni_width):
                 _cl=[[c1[0],c2[1],c3[2]] for c1,c2,c3 in zip(clr1,clr2,clr3)]
@@ -560,8 +569,8 @@ def quick_rgb_lines(path_evr    = None,
                     cl_max = [1 if c==0.0 else c for c in cl_max]
                     cl=np.array([np.array(c)/c_max for c,c_max in zip(_cl,cl_max)])
                     # Apply color_matrix only in scaled case.
-                    if None not in np.unique(color_matrix) and np.size(color_matrix)==9:
-                        cl = np.dot(color_matrix,cl.T).T #Order is important
+                    if None not in np.unique(color_matrix):
+                        cl = pp.transform_color(cl,s=s,c=c,b=b,mixing_matrix=mix_matrix)
                 else:
                     cl=np.array(_cl)/np.max(np.unique(_cl))
 
@@ -640,11 +649,11 @@ def quick_rgb_lines(path_evr    = None,
         # Colorbar and Colormap
         _colors_ = np.multiply([[1,0,1],[1,0,0],[1,1,0],[0,1,0],[0,1,1],
                                     [0,0,1],[1,0,1]],colorbar_scales)
-        if None not in np.unique(color_matrix) and np.size(color_matrix)==9:
+        if None not in np.unique(color_matrix):
             if scale_color==True:  # Only apply color_matrix on scaled colors
                 zero_inds = np.where(colorbar_scales==0)
-                color_matrix[zero_inds,:]=0 # No mixing for zero projection.
-                _colors_ = np.dot(color_matrix,_colors_.T).T
+                mix_matrix[zero_inds,:]=0 # No mixing for zero projection.
+                _colors_ = pp.transform_color(_colors_,s=s,c=c,b=b,mixing_matrix=mix_matrix)
         # register a colormap to use in DOS of same color
         from matplotlib.colors import LinearSegmentedColormap as LSC
         plt.register_cmap('RGB_f',LSC.from_list('RGB_f',_colors_)) #Register cmap for Bands
@@ -662,7 +671,7 @@ def quick_rgb_lines(path_evr    = None,
             ax.set_position([pos.x0,pos.y0,pos.width-2.8*w_f,pos.height])
             new_pos = [pos.x0+pos.width-w_f,pos.y0,w_f,pos.height]
             axb = ax.get_figure().add_axes(new_pos)
-            add_colorbar(ax=axb,vertical=True,ticklabels=_tls_,cmap_or_clist = _colors_)
+            sp.add_colorbar(ax=axb,vertical=True,ticklabels=_tls_,cmap_or_clist = _colors_)
 
         # Finally
         return ax
