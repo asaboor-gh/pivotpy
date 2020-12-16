@@ -2,8 +2,8 @@
 
 __all__ = ['get_file_size', 'interpolate_data', 'ps_to_py', 'ps_to_std', 'select_dirs', 'select_files',
            'get_child_items', 'invert_color', 'printr', 'printg', 'printb', 'printy', 'printm', 'printc',
-           'EncodeFromNumpy', 'DecodeToNumpy', 'Vasprun', 'link_to_class', 'nav_links', 'export_potential',
-           'LOCPOT_CHG']
+           'EncodeFromNumpy', 'DecodeToNumpy', 'Vasprun', 'link_to_class', 'nav_links', 'export_outcar',
+           'export_potential', 'LOCPOT_CHG', 'transform_color']
 
 # Cell
 def get_file_size(path):
@@ -399,6 +399,50 @@ def nav_links(current_index=0,
     return Markdown(md_str)
 
 # Cell
+def export_outcar(path=None):
+    """
+    - Read potential at ionic sites from OUTCAR.
+    """
+    import os,numpy as np, pivotpy as pp
+    from io import StringIO
+    if path is None:
+        path = './OUTCAR'
+    if not os.path.isfile(path):
+        return print("{} does not exist!".format(path))
+    # Raeding it
+    with open(r'{}'.format(path),'r') as f:
+        lines = f.readlines()
+    # Processing
+    for i,l in enumerate(lines):
+        if 'NIONS' in l:
+            N = int(l.split()[-1])
+            nlines = np.ceil(N/5).astype(int)
+        if 'electrostatic' in l:
+            start_index = i+3
+            stop_index = start_index+nlines
+        if 'fractional' in l:
+            first = i+1
+        if 'vectors are now' in l:
+            b_first = i+5
+    # Data manipulation
+    # Potential
+    data = lines[start_index:stop_index]
+    initial = np.loadtxt(StringIO(''.join(data[:-1]))).reshape((-1))
+    last = np.loadtxt(StringIO(data[-1]))
+    pot_arr = np.hstack([initial,last]).reshape((-1,2))
+    pot_arr[:,0] = pot_arr[:,0]-1 # Ion index fixing
+    # Nearest neighbors
+    pos = lines[first:first+N]
+    pos_arr = np.loadtxt(StringIO('\n'.join(pos)))
+    pos_arr[pos_arr>0.98] = pos_arr[pos_arr>0.98]-1 # Fixing outer layers
+    # positions and potential
+    pos_pot = np.hstack([pos_arr,pot_arr[:,1:]])
+    basis = np.loadtxt(StringIO(''.join(lines[b_first:b_first+3])))
+    final_dict = {'ion_pot':pot_arr,'positions':pos_arr,'site_pot':pos_pot,'basis':basis[:,:3],'rec_basis':basis[:,3:]}
+    return pp.Dict2Data(final_dict)
+
+
+# Cell
 def export_potential(locpot=None,e = True,m = False):
     """
     - Returns Data from LOCPOT and similar structure files like CHG. Loads only single set out of 2/4 magnetization data to avoid performance/memory cost while can load electrostatic and one set of magnetization together.
@@ -602,3 +646,46 @@ class LOCPOT_CHG:
                           yaxis = go.layout.YAxis(title_text='No. of Points in Rolling Average'),
                           xaxis = go.layout.XAxis(title_text="{}({}<sub>max</sub>)".format(_dir,_dir)))
         return fig
+
+
+# Cell
+def transform_color(arr,b=0,c=0.99,s=0.99,mixing_matrix=None):
+    """
+    - Color transformation such as brightness, contrast, saturation and mixing of an input color array.
+    - **Parameters**
+        - arr: input array, a single RGB/RGBA color or an array with inner most dimension equal to 3 or 4. e.g. [[[0,1,0,1],[0,0,1,1]]].
+        - b  : brightness, default is 0. Can be a float in [-1,1] or list of three brightnesses for RGB components.
+        - c  : contrast, default is 0.99. Can be a float in [-1,1].
+        - s  : saturation, default is 0.99. Can be a float in [-1,1]. If s = 0, you get a gray scale image.
+        - mixing_matrix: A 3x3 matrix to mix RGB values, such as `pp.color_matrix`.
+    [Recoloring](https://docs.microsoft.com/en-us/windows/win32/gdiplus/-gdiplus-recoloring-use?redirectedfrom=MSDN)
+    [Rainmeter](https://docs.rainmeter.net/tips/colormatrix-guide/)
+    """
+    import numpy as np
+    arr = np.array(arr) # Must
+    t = (1-c)/2 # For fixing gray scale when contrast is 0.
+    if isinstance(b,(int,float)):
+        whiteness = [t+b,t+b,t+b] # need to clip to 1 and 0 after adding to color.
+    else:
+        whiteness = np.array(b[:3])+t
+    sr = (1-s)*0.2125 #red saturation from red luminosity
+    sg = (1-s)*0.7154 #green saturation from green luminosity
+    sb = (1-s)*0.0721 #blue saturation from blue luminosity
+    # trans_matrix is multiplied from left, or multiply its transpose from right.
+    # trans_matrix*color is not normalized but value --> value - int(value) to keep in [0,1].
+    trans_matrix = np.array([
+        [c*(sr+s), c*sg,      c*sb],
+        [c*sr,   c*(sg+s),    c*sb],
+        [c*sr,     c*sg,  c*(sb+s)]])
+    if np.ndim(arr) == 1:
+        new_color = np.dot(trans_matrix,arr)
+    else:
+        new_color = np.dot(arr[...,:3],trans_matrix.T)
+    if mixing_matrix is not None and np.size(mixing_matrix)==9:
+        new_color = np.dot(new_color,np.transpose(mixing_matrix))
+    new_color = new_color - new_color.astype(int)
+    new_color = np.clip(new_color + whiteness,a_max=1,a_min=0)
+    if np.shape(arr)[-1]==4:
+        axis = len(np.shape(arr))-1 #Add back Alpha value if present
+        new_color = np.concatenate([new_color,arr[...,3:]],axis=axis)
+    return new_color
