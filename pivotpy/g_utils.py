@@ -664,10 +664,7 @@ def transform_color(arr,s=1,c=1,b=0,mixing_matrix=None):
     import numpy as np
     arr = np.array(arr) # Must
     t = (1-c)/2 # For fixing gray scale when contrast is 0.
-    if isinstance(b,(int,float)):
-        whiteness = [t+b,t+b,t+b] # need to clip to 1 and 0 after adding to color.
-    else:
-        whiteness = np.array(b[:3])+t
+    whiteness = np.array(b)+t # need to clip to 1 and 0 after adding to color.
     sr = (1-s)*0.2125 #red saturation from red luminosity
     sg = (1-s)*0.7154 #green saturation from green luminosity
     sb = (1-s)*0.0721 #blue saturation from blue luminosity

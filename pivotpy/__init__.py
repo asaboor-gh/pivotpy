@@ -36,5 +36,5 @@ RGB = LSC.from_list('RGB',[(0.9,0,0),(0.9,0.9,0),(0,0.9,0),(0,0.9,0.9),(0,0,0.9)
 plt.register_cmap('RGB',RGB)
 
 # color_marices for quick_rgb_lines
-color_matrix = np.array([[0.5  , 0  , 0.5,1],[0.5  , 0.5, 0., 1],[0.  , 0.5  , 0.5,0 ]])
+color_matrix = np.array([[0.5, 0, 0.5, 1],[0.5, 0.5, 0., 1],[0., 0.5, 0.5,0 ]])
 gray_matrix = np.array([[1,0,0,0],[0,1,0,1],[0,0,1,0]])
