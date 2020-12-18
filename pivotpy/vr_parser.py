@@ -108,18 +108,17 @@ def read_asxml(path=None):
         print("File should end with 'vasprun.xml', prefixes are allowed.")
         return # This is important to stop further errors.
     else:
-        if suppress_warning == False:
-            from .g_utils import get_file_size,printy,printg
-            fsize = get_file_size(path)
-            value = float(fsize.split()[0])
-            print_str = """
-            File: {} is large ({}). It may consume a lot of memory (generally 3 times the file size).
-                An alternative way is to parse vasprun.xml is by using `Vasp2Visual` module in Powershell by command `pivotpy.load_export('path/to/vasprun.xml'), which runs underlying powershell functions to load data whith efficient memory managment. It works on Windows/Linux/MacOS if you have powershell core and Vasp2Visual installed on it.
-            """.format(path,fsize)
-            if 'MB' in fsize and value > 200:
-                printy(textwrap.dedent(print_str))
-            elif 'GB' in fsize and value > 1:
-                printy(textwrap.dedent(print_str))
+        from .g_utils import get_file_size,printy,printg
+        fsize = get_file_size(path)
+        value = float(fsize.split()[0])
+        print_str = """Memory Consumption Warning!
+        File: {} is large ({}). It may consume a lot of memory (generally 3 times the file size).
+            An alternative way is to parse vasprun.xml is by using `Vasp2Visual` module in Powershell by command `pivotpy.load_export('path/to/vasprun.xml'), which runs underlying powershell functions to load data whith efficient memory managment. It works on Windows/Linux/MacOS if you have powershell core and Vasp2Visual installed on it.
+        """.format(path,fsize)
+        if 'MB' in fsize and value > 200:
+            printy(textwrap.dedent(print_str))
+        elif 'GB' in fsize and value > 1:
+            printy(textwrap.dedent(print_str))
 
         tree = ET.parse(path)
         xml_data = tree.getroot()
