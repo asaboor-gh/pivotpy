@@ -36,13 +36,13 @@ def plot_bands(ax=None,kpath=None,bands=None,showlegend=False,E_Fermi=None,\
        E_Fermi = bands.E_Fermi
     # Plotting
     if(bands.ISPIN==1):
-        if(not bands.evals.all()):
+        if(not bands.evals.any()):
             gu.printy("Can not plot an empty eigenvalues object.")
             return gu.printg("Try with large energy range.")
         en=bands.evals-E_Fermi
         ax.plot(kpath,en,color=color1,lw=lw1,ls=style1)
     if(bands.ISPIN==2):
-        if(not bands.evals.SpinUp.all()):
+        if(not bands.evals.SpinUp.any()):
             gu.printy("Can not plot an empty eigenvalues object.")
             return gu.printg("Try with large energy range.")
         enUp=bands.evals.SpinUp-E_Fermi
