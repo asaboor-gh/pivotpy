@@ -111,7 +111,9 @@ def read_asxml(path=None):
         from .g_utils import get_file_size,printy,printg
         fsize = get_file_size(path)
         value = float(fsize.split()[0])
-        print_str = """Memory Consumption Warning!
+        print_str = """
+        Memory Consumption Warning!
+        ---------------------------
         File: {} is large ({}). It may consume a lot of memory (generally 3 times the file size).
             An alternative way is to parse vasprun.xml is by using `Vasp2Visual` module in Powershell by command `pivotpy.load_export('path/to/vasprun.xml'), which runs underlying powershell functions to load data whith efficient memory managment. It works on Windows/Linux/MacOS if you have powershell core and Vasp2Visual installed on it.
         """.format(path,fsize)
