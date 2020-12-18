@@ -87,14 +87,13 @@ class Dict2Data(dict):
         pass  #This is for pickling
 
 # Cell
-def read_asxml(path=None,suppress_warning=False):
+def read_asxml(path=None):
     """
     - Reads a big vasprun.xml file into memory once and then apply commands.
     If current folder contains `vasprun.xml` file, it automatically picks it.
 
     - **Parameters**
         - path             : Path/To/vasprun.xml
-        - suppress_warning : False by defualt. Warns about memory usage for large files > 100 MB.
     - **Returns**
         - xml_data : Xml object to use in other functions
     """
@@ -114,20 +113,16 @@ def read_asxml(path=None,suppress_warning=False):
             fsize = get_file_size(path)
             value = float(fsize.split()[0])
             print_str = """
-            File: {} is large ({}).
-            It may consume a lot of memory (generally 3 times the file size).
-            An alternative way is to parse vasprun.xml is by using `Vasp2Visual` module in Powershell by command `pivotpy.load_export('path/to/vasprun.xml'), which runs underlying powershell functions to load data whith efficient memory managment. It works on Windows/Linux/MacOS if you have powershell core and Vasp2Visual installed on it.
+            File: {} is large ({}). It may consume a lot of memory (generally 3 times the file size).
+                An alternative way is to parse vasprun.xml is by using `Vasp2Visual` module in Powershell by command `pivotpy.load_export('path/to/vasprun.xml'), which runs underlying powershell functions to load data whith efficient memory managment. It works on Windows/Linux/MacOS if you have powershell core and Vasp2Visual installed on it.
             """.format(path,fsize)
-            if 'MB' in fsize and value > 100:
+            if 'MB' in fsize and value > 200:
                 printy(textwrap.dedent(print_str))
             elif 'GB' in fsize and value > 1:
                 printy(textwrap.dedent(print_str))
-                value = value*1024 # To show in MBs for later Use.
 
         tree = ET.parse(path)
         xml_data = tree.getroot()
-        if suppress_warning == False and value > 100:
-            printg('\n      successful!\n')
         return xml_data
 
 # Cell
