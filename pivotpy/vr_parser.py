@@ -414,7 +414,7 @@ def get_bands_pro_set_beta(xml_data=None,spin_set=1,skipk=0,bands_range=None):
         print("Done.")
 
     data = data.reshape((NKPTS,NBANDS,NIONS,NORBS)).transpose((2,0,1,3))
-    return pp.Dict2Data({'labels':fields,'pros':data})
+    return Dict2Data({'labels':fields,'pros':data})
 
 # Cell
 def get_bands_pro_set(xml_data=None,spin_set=1,skipk=0,bands_range=None):
