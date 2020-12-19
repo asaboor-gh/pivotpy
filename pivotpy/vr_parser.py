@@ -2,7 +2,7 @@
 
 __all__ = ['Dict2Data', 'read_asxml', 'exclude_kpts', 'get_ispin', 'get_summary', 'get_kpts', 'get_tdos', 'get_evals',
            'get_bands_pro_set', 'get_dos_pro_set', 'get_structure', 'export_vasprun', 'load_export', 'dump_dict',
-           'load_from_dump']
+           'load_from_dump', 'islice2array']
 
 # Cell
 import numpy
@@ -312,18 +312,18 @@ def get_evals(xml_data=None,skipk=None,elim=[]):
     else:
         skipk=exclude_kpts(xml_data=xml_data) #that much to skip by default
     for neighbor in xml_data.iter('eigenvalues'):
-            for item in neighbor[0].iter('set'):
-                if(ISPIN==1):
-                    if(item.attrib=={'comment': 'spin 1'}):
-                        evals=np.array([[float(th.text.split()[0]) for th in thing] for thing in item])[skipk:]
-                        NBANDS=len(evals[0])
-                if(ISPIN==2):
-                    if(item.attrib=={'comment': 'spin 1'}):
-                        eval_1=np.array([[float(th.text.split()[0]) for th in thing] for thing in item])[skipk:]
-                    if(item.attrib=={'comment': 'spin 2'}):
-                        eval_2=np.array([[float(th.text.split()[0]) for th in thing] for thing in item])[skipk:]
-                        evals={'SpinUp':eval_1,'SpinDown':eval_2}
-                        NBANDS=len(eval_1[0])
+        for item in neighbor[0].iter('set'):
+            if(ISPIN==1):
+                if(item.attrib=={'comment': 'spin 1'}):
+                    evals=np.array([[float(th.text.split()[0]) for th in thing] for thing in item])[skipk:]
+                    NBANDS=len(evals[0])
+            if(ISPIN==2):
+                if(item.attrib=={'comment': 'spin 1'}):
+                    eval_1=np.array([[float(th.text.split()[0]) for th in thing] for thing in item])[skipk:]
+                if(item.attrib=={'comment': 'spin 2'}):
+                    eval_2=np.array([[float(th.text.split()[0]) for th in thing] for thing in item])[skipk:]
+                    evals={'SpinUp':eval_1,'SpinDown':eval_2}
+                    NBANDS=len(eval_1[0])
 
     for i in xml_data.iter('i'): #efermi for condition required.
         if(i.attrib=={'name': 'efermi'}):
@@ -778,3 +778,55 @@ def load_from_dump(file_or_str,keep_as_dict=False):
     if type(out) is dict and keep_as_dict == False:
         return Dict2Data(out)
     return out
+
+# Cell
+def islice2array(path_or_islice,dtype=float,start=None,stop=None,step=None,count=-1,delimiter='\s+',cols=None,include=None,exclude=['#']):
+    """
+    - Reads a sliced array from txt,csv type files and return to array. Also manages if columns lengths are not equal and return 1D array. It is faster than loading  whole file into memory. This single function could be used to parse EIGENVAL, PROCAR, DOCAR and similar files with just a combination of `exclude, include,start,stop,step` arguments.
+    - **Parameters**
+        - path_or_islice: Path/to/file or `itertools.islice(file_object)`. islice is interesting when you want to read different slices of an opened file and do not want to open it again and again. For reference on how to use it just execute `pivotpy.export_potential??` in a notebook cell or ipython terminal to see how islice is used extensively.
+        - dtype: float by default. Data type of output array, it is must have argument.
+        - start,stop,step : These are indices of lines to read from file. Only work if `path_or_islice` is a file path. Note that stop is not included, it is same as end of range() fuction.
+        - count: `np.size(output_array) = nrows x ncols`, if it is known before execution, performance is increased.
+        - delimiter:  Default is `\s+`. Could be any kind of delimiter valid in numpy and in the file.
+        - cols: List of indices of columns to picks. Useful when reading a file like PROCAR which e.g. has text and numbers inline.
+        - include: Deafult is None and includes everything. List of strings to match patterns to keep.
+        - exclude: Deafult is ['#'] to remove comments. List of strings to match patterns to drop.
+    - **Examples**
+        > `islice2array('path/to/PROCAR',start=3,include=['k-point'],cols=[3,4,5],exclude=[])`
+        > # gives all kpoints in an array.
+        > `islice2array('path/to/EIGENVAL',start=7,exclude=['E'],cols=[1,2])`
+        > # gives all energy bands and occupancies in 2D array which can be reshaped to (NKPTS,-1).
+    """
+    from itertools import islice
+    import os, numpy as np
+    if isinstance(path_or_islice,str) and os.path.isfile(path_or_islice):
+        f = open(path_or_islice,'r')
+        _islice = islice(f,start,stop,step)
+    else:
+        _islice = path_or_islice
+    if include is not None:
+        for _in in include:
+            _islice = (l for l in _islice if _in in l)
+    if exclude is not None:
+        for comment in exclude:
+            _islice = (l for l in _islice if comment not in l)
+    # Negative connected things to avoid, especially in PROCAR
+    _islice = (l.replace('-',' -').replace(' -p','-p') for l in _islice)
+    def _gen(_islice):
+        for line in _islice:
+            line = line.strip().replace(delimiter,'  ').split()
+            if cols is not None:
+                line = [line[i] for i in cols if line] # if is must
+            for chars in line:
+                yield dtype(chars)
+        try: # is must as if no data, it will raise error.
+            islice2array.cols = len(line)
+        except: pass
+    data = np.fromiter(_gen(_islice),dtype=dtype,count=count)
+    f.close() # Do not close file before using islice
+    try:
+        if islice2array.cols > 1: #Otherwise single array.
+            data = data.reshape((-1,islice2array.cols))
+    except: pass
+    return data

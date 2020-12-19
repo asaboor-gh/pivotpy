@@ -467,6 +467,15 @@ def export_potential(locpot=None,e = True,m = False):
             return print("File {!r} does not exist!".format(locpot))
     if m not in [True,False,'x','y','z']:
         return print("m expects one of [True,False,'x','y','z'], got {}".format(e))
+    # data fixing after reading islice from file.
+    def fix_data(islice_gen,shape):
+        new_gen = (float(l) for line in islice_gen for l in line.split())
+        COUNT = np.prod(shape).astype(int)
+        data = np.fromiter(new_gen,dtype=float,count=COUNT) # Count is must for performance
+        # data written on LOCPOT is in shape of (NGz,NGy,NGx)
+        N_reshape = [shape[2],shape[1],shape[0]]
+        data = data.reshape(N_reshape).transpose([2,1,0])
+        return data
     # Reading File
     with open(locpot,'r') as f:
         lines = []
@@ -482,8 +491,9 @@ def export_potential(locpot=None,e = True,m = False):
         Nxyz = [int(v) for v in f.readline().split()] # Grid line read
         nlines = np.ceil(np.prod(Nxyz)/5).astype(int)
         #islice is faster generator for reading potential
+        pot_dict = {}
         if e == True:
-            potential = [l for l in islice(f, nlines)] # Do not join here.
+            pot_dict.update({'e':fix_data(islice(f, nlines),Nxyz)})
             ignore_set = 0 # Pointer already ahead.
         else:
             ignore_set = nlines # Needs to move pointer to magnetization
@@ -491,18 +501,17 @@ def export_potential(locpot=None,e = True,m = False):
         ignore_n = np.ceil(N/5).astype(int)+1 #Some kind of useless data
         if m == True:
             print("m = True would pick m_x for non-colinear case, and m for ISPIN=2.\nUse m='x' for non-colinear or keep in mind that m will refer to m_x.")
-            # Needs to spare lines in generator, otherwise pointer does not go ahead.
-            _ = [l for l in islice(f, ignore_n+ignore_set)] # +1 for Nx Ny Nz Line
-            mag_pot = [l for l in islice(f, nlines)] # Do not join here.
+            start = ignore_n+ignore_set
+            pot_dict.update({'m': fix_data(islice(f, start,start+nlines),Nxyz)})
         elif m == 'x':
-            _ = [l for l in islice(f, ignore_n+ignore_set)] # +1 for Nx Ny Nz Line
-            mag_pot = [l for l in islice(f, nlines)] # Do not join here.
+            start = ignore_n+ignore_set
+            pot_dict.update({'m_x': fix_data(islice(f, start,start+nlines),Nxyz)})
         elif m == 'y':
-            _ = [l for l in islice(f, 2*ignore_n+nlines+ignore_set)] # +1 for Nx Ny Nz Line
-            mag_pot = [l for l in islice(f, nlines)] # Do not join here.
+            start = 2*ignore_n+nlines+ignore_set
+            pot_dict.update({'m_y': fix_data(islice(f, start,start+nlines),Nxyz)})
         elif m == 'z':
-            _ = [l for l in islice(f, 3*ignore_n+2*nlines+ignore_set)] # +1 for Nx Ny Nz Line
-            mag_pot = [l for l in islice(f, nlines)] # Do not join here.
+            start = 3*ignore_n+2*nlines+ignore_set
+            pot_dict.update({'m_z': fix_data(islice(f, start,start+nlines),Nxyz)})
 
     # Read Info
     basis = np.loadtxt(StringIO(''.join(poscar[2:5])))*float(poscar[1].strip())
@@ -513,31 +522,8 @@ def export_potential(locpot=None,e = True,m = False):
     ElemIndex = list(np.cumsum(ElemIndex))
     positions = np.loadtxt(StringIO(''.join(poscar[8:N+9])))
 
-    #Reshape Potential and magnetization by this function
-    def fix_v_data(lines,shape):
-        first_pot = np.loadtxt(StringIO(''.join(lines[:-1])))
-        last_pot = np.loadtxt(StringIO(''.join(lines[-1]))) #incomplete line to read separately
-        # data written on LOCPOT is this way, x wrapped in y and then xy wrapped in z. so reshape as NGz,NGy,NGx
-        N_reshape = [shape[2],shape[1],shape[0]]
-        xyz_pot = np.hstack([first_pot.reshape((-1)),last_pot]).reshape(N_reshape)
-        xyz_pot = np.transpose(xyz_pot,[2,1,0]) # make xyz back for logical indexing.
-        return xyz_pot
     final_dict = dict(SYSTEM=system,ElemName=ElemName,ElemIndex=ElemIndex,basis=basis,positions=positions)
-    if e == True:
-        xyz_pot = fix_v_data(lines=potential,shape=Nxyz)
-        final_dict.update({'e':xyz_pot})
-    if m == True:
-        xyz_pot = fix_v_data(lines=mag_pot,shape=Nxyz)
-        final_dict.update({'m':xyz_pot})
-    elif m == 'x':
-        xyz_pot = fix_v_data(lines=mag_pot,shape=Nxyz)
-        final_dict.update({'m_x':xyz_pot})
-    elif m == 'y':
-        xyz_pot = fix_v_data(lines=mag_pot,shape=Nxyz)
-        final_dict.update({'m_y':xyz_pot})
-    elif m == 'z':
-        xyz_pot = fix_v_data(lines=mag_pot,shape=Nxyz)
-        final_dict.update({'m_z':xyz_pot})
+    final_dict = {**final_dict,**pot_dict}
     return pp.Dict2Data(final_dict)
 
 # Cell
