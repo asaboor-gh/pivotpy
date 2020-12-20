@@ -1342,7 +1342,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="islice2array" class="doc_header"><code>islice2array</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L783" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>islice2array</code>(<strong><code>path_or_islice</code></strong>, <strong><code>dtype</code></strong>=<em><code>float</code></em>, <strong><code>start</code></strong>=<em><code>None</code></em>, <strong><code>stop</code></strong>=<em><code>None</code></em>, <strong><code>step</code></strong>=<em><code>None</code></em>, <strong><code>count</code></strong>=<em><code>-1</code></em>, <strong><code>delimiter</code></strong>=<em><code>'\\s+'</code></em>, <strong><code>cols</code></strong>=<em><code>None</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>, <strong><code>exclude</code></strong>=<em><code>['#']</code></em>)</p>
+<h4 id="islice2array" class="doc_header"><code>islice2array</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L783" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>islice2array</code>(<strong><code>path_or_islice</code></strong>, <strong><code>dtype</code></strong>=<em><code>float</code></em>, <strong><code>start</code></strong>=<em><code>None</code></em>, <strong><code>stop</code></strong>=<em><code>None</code></em>, <strong><code>step</code></strong>=<em><code>None</code></em>, <strong><code>count</code></strong>=<em><code>-1</code></em>, <strong><code>delimiter</code></strong>=<em><code>'\\s+'</code></em>, <strong><code>cols</code></strong>=<em><code>None</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>, <strong><code>exclude</code></strong>=<em><code>'#'</code></em>, <strong><code>raw</code></strong>=<em><code>False</code></em>, <strong><code>fix_format</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <ul>
 <li>Reads a sliced array from txt,csv type files and return to array. Also manages if columns lengths are not equal and return 1D array. It is faster than loading  whole file into memory. This single function could be used to parse EIGENVAL, PROCAR, DOCAR and similar files with just a combination of <code>exclude, include,start,stop,step</code> arguments.</li>
@@ -1353,13 +1353,18 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 <li>count: <code>np.size(output_array) = nrows x ncols</code>, if it is known before execution, performance is increased.</li>
 <li>delimiter:  Default is <code>\s+</code>. Could be any kind of delimiter valid in numpy and in the file.</li>
 <li>cols: List of indices of columns to pick. Useful when reading a file like PROCAR which e.g. has text and numbers inline.</li>
-<li>include: Deafult is None and includes everything. List of strings to match patterns to keep.</li>
-<li>exclude: Deafult is ['#'] to remove comments. List of strings to match patterns to drop.</li>
+<li>include: Default is None and includes everything. String of patterns separated by | to keep, could be a regular expression.</li>
+<li>exclude: Default is '#' to remove comments. String of patterns separated by | to drop,could be a regular expression.</li>
+<li>raw    : Default is False, if True, returns list of raw strings. Useful to select <code>cols</code>.</li>
+<li>fix_format: Default is True, it sepearates numbers with poor formatting like 1.000-2.000 to 1.000 2.000 which is useful in PROCAR. Keep it False if want to read string literally.</li>
 </ul>
 </li>
-<li><strong>Examples</strong><blockquote><p><code>islice2array('path/to/PROCAR',start=3,include=['k-point'],cols=[3,4,5],exclude=[])</code></p>
-<h6 id="gives-all-kpoints-as-2D-array.">gives all kpoints as 2D array.<a class="anchor-link" href="#gives-all-kpoints-as-2D-array."> </a></h6><p><code>islice2array('path/to/EIGENVAL',start=7,exclude=['E'],cols=[1,2])</code></p>
-<h6 id="gives-all-energy-bands-and-occupancies-as-2D-array.">gives all energy bands and occupancies as 2D array.<a class="anchor-link" href="#gives-all-energy-bands-and-occupancies-as-2D-array."> </a></h6>
+<li><strong>Examples</strong><blockquote><p><code>islice2array('path/to/PROCAR',start=3,include='k-point',cols=[3,4,5])[:2]</code>
+array([[ 0.125,  0.125,  0.125],
+       [ 0.375,  0.125,  0.125]])
+<code>islice2array('path/to/EIGENVAL',start=7,exclude='E',cols=[1,2])[:2]</code>
+array([[-11.476913,   1.      ],
+       [  0.283532,   1.      ]])</p>
 </blockquote>
 </li>
 </ul>

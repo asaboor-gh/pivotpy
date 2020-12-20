@@ -152,28 +152,23 @@ def select_files(path=os.getcwd(),include=[],exclude=[]):
     return (req_files,path.replace("\\","/"))
 
 # Cell
-def get_child_items(path = os.getcwd(),depth=None,recursive=True,include=[],exclude=[],filesOnly=False,dirsOnly= False):
+def get_child_items(path = os.getcwd(),depth=None,recursive=True,include=None,exclude=None,filesOnly=False,dirsOnly= False):
     """
     - Returns selected directories/files recursively from a parent directory.
     - **Parameters**
         - path    : path to a parent directory, default is `"."`
         - depth   : int, subdirectories depth to get recursively, default is None to list all down.
         - recursive : If False, only list current directory items, if True,list all items recursively down the file system.
-        - include : list or str of keywords to include directories/files, avoid wildcards.
-        - exclude : list or str of keywords to exclude directories/files, avoid wildcards.
+        - include: Default is None and includes everything. String of patterns separated by | to keep, could be a regular expression.
+        - exclude: Default is None and removes nothing. String of patterns separated by | to drop,could be a regular expression.
         - filesOnly : Boolean, if True, returns only files.
         - dirsOnly  : Boolean, if True, returns only directories.
     - **Returns**
         - GLOB : Tuple (children,parent), children is list of selected directories/files and parent is given path. Access by index of by `get_child_items().{children,path}`.
     """
-    import os
-    import glob
+    import os, re, glob
     import numpy as np
     from collections import namedtuple
-    if include != None and type(include) == str:
-        include = [include,]
-    if exclude != None and type(exclude) == str:
-        exclude = [exclude,]
     path = os.path.abspath(path) # important
     pattern = path + '**/**' # Default pattern
     if depth != None and type(depth) == int:
@@ -189,20 +184,13 @@ def get_child_items(path = os.getcwd(),depth=None,recursive=True,include=[],excl
     for g_f in glob_files:
         list_dirs.append(os.path.relpath(g_f,path))
     # Include check
-    req_dirs=[]
-    if include != []:
-        for check in include:
-            req_dirs.extend(list(filter(lambda f: check in f ,list_dirs)))
-    elif include == []:
-        req_dirs = list_dirs
+    if include:
+        list_dirs = [l for l in list_dirs if re.search(include,l)]
     # Exclude check
-    to_exclude = []
-    if exclude != []:
-        for ex in exclude:
-            to_exclude.extend(list(filter(lambda f: ex in f ,req_dirs)))
-        req_dirs = [r_d for r_d in req_dirs if r_d not in to_exclude]
+    if exclude:
+        list_dirs = [l for l in list_dirs if not re.search(exclude,l)]
     # Keep only unique
-    req_dirs = list(np.unique(req_dirs))
+    req_dirs = list(np.unique(list_dirs))
     out_files = namedtuple('GLOB',['children','parent'])
     return out_files(req_dirs,os.path.abspath(path))
 

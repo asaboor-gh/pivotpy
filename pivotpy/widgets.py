@@ -269,8 +269,8 @@ def get_files_gui(auto_fill = 'vasprun.xml',html_style=None,height=320):
             file_type = {}
         try:
             gci = pp.get_child_items(path=path, **file_type,
-                           include= [i for i in incldue_w.value.split(",") if i!=''],
-                           exclude= [e for e in excldue_w.value.split(",") if e!=''],
+                           include= incldue_w.value,
+                           exclude= excldue_w.value,
                            depth=depth_w.value)
         except:
             with gci_output:
@@ -302,8 +302,8 @@ def get_files_gui(auto_fill = 'vasprun.xml',html_style=None,height=320):
     pw.layout = i_layout
     input_box = ipw.VBox([
         ipw.Label('Path to Project Folder',layout=i_layout),pw,
-        ipw.Label('Items to Include (comma separated)',layout=i_layout),incldue_w,
-        ipw.Label('Items to Exclude (comma separated)',layout=i_layout),excldue_w,
+        ipw.Label('Items to Include (separate by |)',layout=i_layout),incldue_w,
+        ipw.Label('Items to Exclude (separate by |)',layout=i_layout),excldue_w,
         item_box,
         applybtn_w],layout=Layout(width='330px'))
     if not html_style:

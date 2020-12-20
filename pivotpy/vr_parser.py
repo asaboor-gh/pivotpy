@@ -780,7 +780,7 @@ def load_from_dump(file_or_str,keep_as_dict=False):
     return out
 
 # Cell
-def islice2array(path_or_islice,dtype=float,start=None,stop=None,step=None,count=-1,delimiter='\s+',cols=None,include=None,exclude=['#']):
+def islice2array(path_or_islice,dtype=float,start=None,stop=None,step=None,count=-1,delimiter='\s+',cols=None,include=None,exclude='#',raw=False,fix_format = True):
     """
     - Reads a sliced array from txt,csv type files and return to array. Also manages if columns lengths are not equal and return 1D array. It is faster than loading  whole file into memory. This single function could be used to parse EIGENVAL, PROCAR, DOCAR and similar files with just a combination of `exclude, include,start,stop,step` arguments.
     - **Parameters**
@@ -790,43 +790,50 @@ def islice2array(path_or_islice,dtype=float,start=None,stop=None,step=None,count
         - count: `np.size(output_array) = nrows x ncols`, if it is known before execution, performance is increased.
         - delimiter:  Default is `\s+`. Could be any kind of delimiter valid in numpy and in the file.
         - cols: List of indices of columns to pick. Useful when reading a file like PROCAR which e.g. has text and numbers inline.
-        - include: Deafult is None and includes everything. List of strings to match patterns to keep.
-        - exclude: Deafult is ['#'] to remove comments. List of strings to match patterns to drop.
+        - include: Default is None and includes everything. String of patterns separated by | to keep, could be a regular expression.
+        - exclude: Default is '#' to remove comments. String of patterns separated by | to drop,could be a regular expression.
+        - raw    : Default is False, if True, returns list of raw strings. Useful to select `cols`.
+        - fix_format: Default is True, it sepearates numbers with poor formatting like 1.000-2.000 to 1.000 2.000 which is useful in PROCAR. Keep it False if want to read string literally.
     - **Examples**
-        > `islice2array('path/to/PROCAR',start=3,include=['k-point'],cols=[3,4,5],exclude=[])`
-        > ###### gives all kpoints as 2D array.
-        > `islice2array('path/to/EIGENVAL',start=7,exclude=['E'],cols=[1,2])`
-        > ###### gives all energy bands and occupancies as 2D array.
+        > `islice2array('path/to/PROCAR',start=3,include='k-point',cols=[3,4,5])[:2]`
+        > array([[ 0.125,  0.125,  0.125],
+        >        [ 0.375,  0.125,  0.125]])
+        > `islice2array('path/to/EIGENVAL',start=7,exclude='E',cols=[1,2])[:2]`
+        > array([[-11.476913,   1.      ],
+        >        [  0.283532,   1.      ]])
     """
     from itertools import islice
-    import os, numpy as np
+    import os,re, numpy as np
     if isinstance(path_or_islice,str) and os.path.isfile(path_or_islice):
         f = open(path_or_islice,'r')
         _islice = islice(f,start,stop,step)
     else:
         _islice = path_or_islice
-    if include is not None:
-        for _in in include:
-            _islice = (l for l in _islice if _in in l)
-    if exclude is not None:
-        for comment in exclude:
-            _islice = (l for l in _islice if comment not in l)
-    # Negative connected things to avoid, especially in PROCAR
-    _islice = (l.replace('-',' -').replace(' -p','-p') for l in _islice)
+    if include:
+        _islice = (l for l in _islice if re.search(include,l))
+    if exclude:
+        _islice = (l for l in _islice if not re.search(exclude,l))
+    # Negative connected digits to avoid, especially in PROCAR
+    if fix_format:
+        _islice = (re.sub(r"(\d)-(\d)",r"\1 -\2",l) for l in _islice)
+    if raw:
+        _lines = list(_islice)
+        f.close()
+        return _lines
+
     def _gen(_islice):
         for line in _islice:
             line = line.strip().replace(delimiter,'  ').split()
-            if cols is not None:
-                line = [line[i] for i in cols if line] # if is must
+            if line and cols is not None: # if is must here.
+                line = [line[i] for i in cols]
             for chars in line:
                 yield dtype(chars)
         try: # is must as if no data, it will raise error.
-            islice2array.cols = len(line)
+            islice2array.ncols = len(line)
         except: pass
     data = np.fromiter(_gen(_islice),dtype=dtype,count=count)
     f.close() # Do not close file before using islice
-    try:
-        if islice2array.cols > 1: #Otherwise single array.
-            data = data.reshape((-1,islice2array.cols))
-    except: pass
+    if islice2array.ncols > 1: #Otherwise single array.
+        try: data = data.reshape((-1,islice2array.ncols))
+        except: pass
     return data
