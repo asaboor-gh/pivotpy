@@ -794,9 +794,9 @@ def islice2array(path_or_islice,dtype=float,start=None,stop=None,step=None,count
         - exclude: Deafult is ['#'] to remove comments. List of strings to match patterns to drop.
     - **Examples**
         > `islice2array('path/to/PROCAR',start=3,include=['k-point'],cols=[3,4,5],exclude=[])`
-        > #gives all kpoints in an array.
+        > ###### gives all kpoints in an array.
         > `islice2array('path/to/EIGENVAL',start=7,exclude=['E'],cols=[1,2])`
-        > #gives all energy bands and occupancies in 2D array which can be reshaped to (NKPTS,-1).
+        > ###### gives all energy bands and occupancies in 2D array which can be reshaped to (NKPTS,-1).
     """
     from itertools import islice
     import os, numpy as np
