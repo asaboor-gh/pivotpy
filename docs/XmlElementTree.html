@@ -1321,6 +1321,16 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Parse-Text-Files-with-Flexibility">Parse Text Files with Flexibility<a class="anchor-link" href="#Parse-Text-Files-with-Flexibility"> </a></h2><ul>
+<li>The function <a href="/pivotpy/XmlElementTree.html#islice2array"><code>islice2array</code></a> is used to read text files which have patterns of text and numbers inline, such as EIGENVAL and PROCAR. With all the options of this function, reading and parsing of such files should take a few lines of code only. It can be used to read txt,csv tsv as well with efficent speed.</li>
+<li>It reads a file without fully loading into memory and you can still access slices of data in the file. That partial data fetching from file is very handy.  </li>
+</ul>
+
+</div>
+</div>
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -1342,7 +1352,7 @@ If current folder contains <code>vasprun.xml</code> file, it automatically picks
 <li>start,stop,step : These are indices of lines to read from file. Only work if <code>path_or_islice</code> is a file path. Note that stop is not included, it is same as end of range() fuction.</li>
 <li>count: <code>np.size(output_array) = nrows x ncols</code>, if it is known before execution, performance is increased.</li>
 <li>delimiter:  Default is <code>\s+</code>. Could be any kind of delimiter valid in numpy and in the file.</li>
-<li>cols: List of indices of columns to picks. Useful when reading a file like PROCAR which e.g. has text and numbers inline.</li>
+<li>cols: List of indices of columns to pick. Useful when reading a file like PROCAR which e.g. has text and numbers inline.</li>
 <li>include: Deafult is None and includes everything. List of strings to match patterns to keep.</li>
 <li>exclude: Deafult is ['#'] to remove comments. List of strings to match patterns to drop.</li>
 </ul>

@@ -789,14 +789,14 @@ def islice2array(path_or_islice,dtype=float,start=None,stop=None,step=None,count
         - start,stop,step : These are indices of lines to read from file. Only work if `path_or_islice` is a file path. Note that stop is not included, it is same as end of range() fuction.
         - count: `np.size(output_array) = nrows x ncols`, if it is known before execution, performance is increased.
         - delimiter:  Default is `\s+`. Could be any kind of delimiter valid in numpy and in the file.
-        - cols: List of indices of columns to picks. Useful when reading a file like PROCAR which e.g. has text and numbers inline.
+        - cols: List of indices of columns to pick. Useful when reading a file like PROCAR which e.g. has text and numbers inline.
         - include: Deafult is None and includes everything. List of strings to match patterns to keep.
         - exclude: Deafult is ['#'] to remove comments. List of strings to match patterns to drop.
     - **Examples**
         > `islice2array('path/to/PROCAR',start=3,include=['k-point'],cols=[3,4,5],exclude=[])`
-        > # gives all kpoints in an array.
+        > #gives all kpoints in an array.
         > `islice2array('path/to/EIGENVAL',start=7,exclude=['E'],cols=[1,2])`
-        > # gives all energy bands and occupancies in 2D array which can be reshaped to (NKPTS,-1).
+        > #gives all energy bands and occupancies in 2D array which can be reshaped to (NKPTS,-1).
     """
     from itertools import islice
     import os, numpy as np
