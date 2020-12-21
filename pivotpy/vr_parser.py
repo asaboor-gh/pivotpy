@@ -2,7 +2,7 @@
 
 __all__ = ['Dict2Data', 'read_asxml', 'exclude_kpts', 'get_ispin', 'get_summary', 'get_kpts', 'get_tdos', 'get_evals',
            'get_bands_pro_set', 'get_dos_pro_set', 'get_structure', 'export_vasprun', 'load_export', 'dump_dict',
-           'load_from_dump', 'islice2array']
+           'load_from_dump', 'islice2array', 'split_vasprun']
 
 # Cell
 import numpy
@@ -343,7 +343,11 @@ def get_evals(xml_data=None,skipk=None,elim=[]):
     return Dict2Data(evals_dic)
 
 # Cell
-def get_bands_pro_set(xml_data=None,spin_set=1,skipk=0,bands_range=None):
+def get_bands_pro_set(xml_data=None,
+                      spin_set=1,
+                      skipk=0,
+                      bands_range=None,
+                      set_path=None):
     """
     - Returns bands projection of a spin_set(default 1). If spin-polarized calculations, gives SpinUp and SpinDown keys as well.
     - **Parameters**
@@ -351,15 +355,36 @@ def get_bands_pro_set(xml_data=None,spin_set=1,skipk=0,bands_range=None):
         - skipk       : Number of initil kpoints to skip (Default 0).
         - spin_set    : Spin set to get, default is 1.
         - bands_range : If elim used in `get_evals`,that will return bands_range to use here. Note that range(0,2) will give 2 bands 0,1 but tuple (0,2) will give 3 bands 0,1,2.
+        - set_path     : path/to/_set[1,2,3,4].txt, works if `split_vasprun` is used before.
     - **Returns**
         - Data     : pivotpy.Dict2Data with attibutes of bands projections and related parameters.
     """
     import numpy as np
-    import pivotpy.g_utils as gu
+    import os, pivotpy as pp
     if(bands_range!=None):
         check_list=list(bands_range)
-        if(check_list==[]):
-            return gu.printr("No bands prjections found in given energy range.")
+        if check_list==[]:
+            return pp.printr("No bands prjections found in given energy range.")
+    # Try to read _set.txt first.
+    if os.path.isfile(set_path):
+        data = pp.islice2array(set_path)
+        if xml_data==None:
+            _path = os.path.join(os.path.split(set_path)[0],'_vasprun.xml')
+            xml_data = pp.read_asxml(_path)
+        nkpts = pp.get_kpts(xml_data).NKPTS
+        _summ = pp.get_summary(xml_data)
+        nions  = _summ.NION
+        fields = _summ.fields
+        data = data.reshape((nkpts,-1,nions,len(fields)))
+        if skipk > 0:
+            data = data[skipk:,...]
+        if bands_range:
+            _b_r = list(bands_range)
+            data = data[:,_b_r[0]:_b_r[-1]+1,:,:]
+        data = data.transpose([2,0,1,3])
+        return pp.Dict2Data({'labels':fields,'pros':data})
+
+    # if above not worked, read from main vasprun.xml file.
     if(xml_data==None):
         xml_data=read_asxml()
     if not xml_data:
@@ -513,12 +538,14 @@ def export_vasprun(path=None,skipk=None,elim=[],joinPathAt=[],shift_kpath=0):
         return vp.load_export(path=(path if path else './vasprun.xml'))
 
     # Proceed if not files from PWSH
-    if(path==None):
-        xml_data=vp.read_asxml(path='./vasprun.xml')
-    else:
+    if path==None:
+        path='./vasprun.xml'
+    try:
         xml_data=vp.read_asxml(path=path)
-    if not xml_data:
+    except:
         return
+    _set = "_set{}.txt".format(spin_set)
+    set_path = os.path.join(os.path.split(os.path.abspath(path))[0],_set)
     #First exclude unnecessary kpoints. Includes only same weight points
     if skipk!=None:
         skipk=skipk
@@ -539,11 +566,11 @@ def export_vasprun(path=None,skipk=None,elim=[],joinPathAt=[],shift_kpath=0):
         bands_range=None #projection function will read itself.
         grid_range=None
     if(info_dic.ISPIN==1):
-        pro_bands=vp.get_bands_pro_set(xml_data=xml_data,spin_set=1,skipk=skipk,bands_range=bands_range)
+        pro_bands=vp.get_bands_pro_set(xml_data=xml_data,spin_set=1,skipk=skipk,bands_range=bands_range,set_path=set_path)
         pro_dos=vp.get_dos_pro_set(xml_data=xml_data,spin_set=1,dos_range=grid_range)
     if(info_dic.ISPIN==2):
-        pro_1=vp.get_bands_pro_set(xml_data=xml_data,spin_set=1,skipk=skipk,bands_range=bands_range)
-        pro_2=vp.get_bands_pro_set(xml_data=xml_data,spin_set=2,skipk=skipk,bands_range=bands_range)
+        pro_1=vp.get_bands_pro_set(xml_data=xml_data,spin_set=1,skipk=skipk,bands_range=bands_range,set_path=set_path)
+        pro_2=vp.get_bands_pro_set(xml_data=xml_data,spin_set=2,skipk=skipk,bands_range=bands_range,set_path=set_path)
         pros={'SpinUp': pro_1.pros,'SpinDown': pro_2.pros}#accessing spins in dictionary after .pro.
         pro_bands={'labels':pro_1.labels,'pros': pros}
         pdos_1=vp.get_dos_pro_set(xml_data=xml_data,spin_set=1,dos_range=grid_range)
@@ -837,3 +864,57 @@ def islice2array(path_or_islice,dtype=float,start=None,stop=None,step=None,count
         try: data = data.reshape((-1,islice2array.ncols))
         except: pass
     return data
+
+# Cell
+def split_vasprun(path=None):
+    """
+    - Splits a given vasprun.xml file into a smaller _vasprun.xml file plus _set[1,2,3,4].txt files which contain projected data for each spin set.
+    - **Parameters**
+        - path: path/to/vasprun.xml file.
+    - **Output**
+        - _vasprun.xml file with projected data.
+        - _set1.txt for projected data of colinear calculation.
+        - _set1.txt for spin up data and _set2.txt for spin-polarized case.
+        - _set[1,2,3,4].txt for each spin set of non-colinear calculations.
+    """
+    import re, os
+    from itertools import islice
+    if not path:
+        path = './vasprun,xml'
+    if not os.path.isfile(path):
+        return print("{!r} does not exist!".format(path))
+    base_dir = os.path.split(os.path.abspath(path))[0]
+    out_file = os.path.join(base_dir,'_vasprun.xml')
+    out_sets = [os.path.join(base_dir,'_set{}.txt'.format(i)) for i in range(1,5)]
+    outf = open(out_file,'w')
+    # process
+    with open(path,'r') as f:
+        lines = islice(f,None)
+        indices = [i for i,l in enumerate(lines) if re.search('projected|/eigenvalues',l)]
+        f.seek(0)
+        print("Writing {!r} ...".format(out_file),end=' ')
+        outf.write(''.join(islice(f,0,indices[1])))
+        f.seek(0)
+        outf.write(''.join(islice(f,indices[-1]+1,None)))
+        outf.close()
+        print('Done')
+        f.seek(0)
+        middle = islice(f,indices[-2]+1,indices[-1]) #projected words excluded
+        spin_inds = [i for i,l in enumerate(middle) if re.search('spin',l)][1:] #first useless.
+        if len(spin_inds)>1:
+            set_length = spin_inds[1]-spin_inds[0] # Must define
+        else:
+            set_length = indices[-1]-indices[-2] #It is technically more than set length, but fine for 1 set
+        f.seek(0) # Must be at zero
+        N_sets = len(spin_inds)
+        for i in range(N_sets): #Reads every set
+            print("Writing {!r} ...".format(out_sets[i]),end=' ')
+            start = (indices[-2]+1+spin_inds[0] if i==0 else 0) # pointer is there next time.
+            stop_ = start + set_length # Should move up to set length only.
+            setf = open(out_sets[i],'w')
+            setf.write("  # Set: {} Shape: (NKPTS[NBANDS[NIONS]],NORBS). pre-processed data.\n".format(i+1))
+            middle = islice(f,start,stop_)
+            setf.write(''.join(l.lstrip().replace('/','').replace('<r>','') for l in middle if '</r>' in l))
+            setf.close()
+            print('Done')
+        outf.close()
