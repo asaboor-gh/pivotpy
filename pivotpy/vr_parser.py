@@ -365,23 +365,31 @@ def get_bands_pro_set(xml_data=None,
         check_list=list(bands_range)
         if check_list==[]:
             return pp.printr("No bands prjections found in given energy range.")
-    # Try to read _set.txt first.
-    if os.path.isfile(set_path):
-        data = pp.islice2array(set_path)
+    # Try to read _set.txt first. instance check is important.
+    if isinstance(set_path,str) and os.path.isfile(set_path):
         if xml_data==None:
-            _path = os.path.join(os.path.split(set_path)[0],'_vasprun.xml')
+            _path = os.path.join(os.path.split(os.path.abspath(set_path))[0],'_vasprun.xml')
             xml_data = pp.read_asxml(_path)
+        # Read Raw data dimensions
         nkpts = pp.get_kpts(xml_data).NKPTS
         _summ = pp.get_summary(xml_data)
+        nbands= pp.get_evals(xml_data).NBANDS
         nions  = _summ.NION
         fields = _summ.fields
-        data = data.reshape((nkpts,-1,nions,len(fields)))
-        if skipk > 0:
-            data = data[skipk:,...]
+        norbs = len(fields)
+        start = skipk*nbands*nions + 1 # First line is comment
+        count = nions*nbands*nkpts*norbs
         if bands_range:
             _b_r = list(bands_range)
-            data = data[:,_b_r[0]:_b_r[-1]+1,:,:]
-        data = data.transpose([2,0,1,3])
+            nbands = _b_r[-1]-_b_r[0]+1
+            start = [start+nions*nbands*k for k in range(nkpts)]
+            nlines = nions*nbands # 1 band has nions
+            nkpts = nkpts-skipk # Update after start
+            count = nions*nbands*nkpts*norbs
+            data = pp.islice2array(set_path,start=start,nlines=nlines,count=count)
+        else:
+            data = pp.islice2array(set_path,start=start,count=count)
+        data = data.reshape((nkpts,nbands,nions,norbs)).transpose([2,0,1,3])
         return pp.Dict2Data({'labels':fields,'pros':data})
 
     # if above not worked, read from main vasprun.xml file.
@@ -544,8 +552,8 @@ def export_vasprun(path=None,skipk=None,elim=[],joinPathAt=[],shift_kpath=0):
         xml_data=vp.read_asxml(path=path)
     except:
         return
-    _set = "_set{}.txt".format(spin_set)
-    set_path = os.path.join(os.path.split(os.path.abspath(path))[0],_set)
+    base_dir = os.path.split(os.path.abspath(path))[0]
+    set_paths = [os.path.join(base_dir,"_set{}.txt".format(i)) for i in (1,2)]
     #First exclude unnecessary kpoints. Includes only same weight points
     if skipk!=None:
         skipk=skipk
@@ -566,11 +574,11 @@ def export_vasprun(path=None,skipk=None,elim=[],joinPathAt=[],shift_kpath=0):
         bands_range=None #projection function will read itself.
         grid_range=None
     if(info_dic.ISPIN==1):
-        pro_bands=vp.get_bands_pro_set(xml_data=xml_data,spin_set=1,skipk=skipk,bands_range=bands_range,set_path=set_path)
+        pro_bands=vp.get_bands_pro_set(xml_data=xml_data,spin_set=1,skipk=skipk,bands_range=bands_range,set_path=set_paths[0])
         pro_dos=vp.get_dos_pro_set(xml_data=xml_data,spin_set=1,dos_range=grid_range)
     if(info_dic.ISPIN==2):
-        pro_1=vp.get_bands_pro_set(xml_data=xml_data,spin_set=1,skipk=skipk,bands_range=bands_range,set_path=set_path)
-        pro_2=vp.get_bands_pro_set(xml_data=xml_data,spin_set=2,skipk=skipk,bands_range=bands_range,set_path=set_path)
+        pro_1=vp.get_bands_pro_set(xml_data=xml_data,spin_set=1,skipk=skipk,bands_range=bands_range,set_path=set_paths[0])
+        pro_2=vp.get_bands_pro_set(xml_data=xml_data,spin_set=2,skipk=skipk,bands_range=bands_range,set_path=set_paths[1])
         pros={'SpinUp': pro_1.pros,'SpinDown': pro_2.pros}#accessing spins in dictionary after .pro.
         pro_bands={'labels':pro_1.labels,'pros': pros}
         pdos_1=vp.get_dos_pro_set(xml_data=xml_data,spin_set=1,dos_range=grid_range)
@@ -807,13 +815,13 @@ def load_from_dump(file_or_str,keep_as_dict=False):
     return out
 
 # Cell
-def islice2array(path_or_islice,dtype=float,start=None,stop=None,step=None,count=-1,delimiter='\s+',cols=None,include=None,exclude='#',raw=False,fix_format = True):
+def islice2array(path_or_islice,dtype=float,start=0,nlines=None,step=None,count=-1,delimiter='\s+',cols=None,include=None,exclude='#',raw=False,fix_format = True):
     """
     - Reads a sliced array from txt,csv type files and return to array. Also manages if columns lengths are not equal and return 1D array. It is faster than loading  whole file into memory. This single function could be used to parse EIGENVAL, PROCAR, DOCAR and similar files with just a combination of `exclude, include,start,stop,step` arguments.
     - **Parameters**
         - path_or_islice: Path/to/file or `itertools.islice(file_object)`. islice is interesting when you want to read different slices of an opened file and do not want to open it again and again. For reference on how to use it just execute `pivotpy.export_potential??` in a notebook cell or ipython terminal to see how islice is used extensively.
         - dtype: float by default. Data type of output array, it is must have argument.
-        - start,stop,step : These are indices of lines to read from file. Only work if `path_or_islice` is a file path. Note that stop is not included, it is same as end of range() fuction.
+        - start,nlines,step : The indices of lines to start reading from,number of lines after start and step as usual respectively. Only work if `path_or_islice` is a file path. all three could be None or int, while start could be a list to read slices from file provided that nlines is int. The spacing between adjacent indices in start should be equal to or greater than nlines as pointer in file do not go back on its own.
         - count: `np.size(output_array) = nrows x ncols`, if it is known before execution, performance is increased.
         - delimiter:  Default is `\s+`. Could be any kind of delimiter valid in numpy and in the file.
         - cols: List of indices of columns to pick. Useful when reading a file like PROCAR which e.g. has text and numbers inline.
@@ -829,11 +837,20 @@ def islice2array(path_or_islice,dtype=float,start=None,stop=None,step=None,count
         > array([[-11.476913,   1.      ],
         >        [  0.283532,   1.      ]])
     """
-    from itertools import islice
+    from itertools import islice,chain
     import os,re, numpy as np
     if isinstance(path_or_islice,str) and os.path.isfile(path_or_islice):
         f = open(path_or_islice,'r')
-        _islice = islice(f,start,stop,step)
+        if isinstance(nlines,int) and isinstance(start,(list,np.ndarray)):
+            #As islice moves the pointer as it reads, start[1:]-nlines-1
+            # This confirms spacing between two indices in start >= nlines
+            start = [start[0],*[s2-s1-nlines for s1,s2 in zip(start,start[1:])]]
+            _islice = chain(*(islice(f,s,s+nlines,step) for s in start))
+        elif isinstance(start,int) and isinstance(nlines,int):
+            _islice = islice(f,start,start+nlines,step)
+        else:
+            _islice = islice(f,start,nlines,step)
+
     else:
         _islice = path_or_islice
     if include:
@@ -860,9 +877,10 @@ def islice2array(path_or_islice,dtype=float,start=None,stop=None,step=None,count
         except: pass
     data = np.fromiter(_gen(_islice),dtype=dtype,count=count)
     f.close() # Do not close file before using islice
-    if islice2array.ncols > 1: #Otherwise single array.
-        try: data = data.reshape((-1,islice2array.ncols))
-        except: pass
+    try:
+        if islice2array.ncols > 1: #Otherwise single array.
+            data = data.reshape((-1,islice2array.ncols))
+    except: pass
     return data
 
 # Cell
