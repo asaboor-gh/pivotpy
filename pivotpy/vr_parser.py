@@ -824,7 +824,7 @@ def islice2array(path_or_islice,dtype=float,start=0,nlines=None,count=-1,delimit
         - path_or_islice: Path/to/file or `itertools.islice(file_object)`. islice is interesting when you want to read different slices of an opened file and do not want to open it again and again. For reference on how to use it just execute `pivotpy.export_potential??` in a notebook cell or ipython terminal to see how islice is used extensively.
         - dtype: float by default. Data type of output array, it is must have argument.
         - start,nlines: The indices of lines to start reading from and number of lines after start respectively. Only work if `path_or_islice` is a file path. both could be None or int, while start could be a list to read slices from file provided that nlines is int. The spacing between adjacent indices in start should be equal to or greater than nlines as pointer in file do not go back on its own.
-        > Note: `start` should count comments if `exclude` is None.
+        > Note: `start` should count comments if `exclude` is None. You can use `slice_rows` function to get a dictionary of start,nlines and count and unpack in argument instead of thinking too much.
         - count: `np.size(output_array) = nrows x ncols`, if it is known before execution, performance is increased.
         - delimiter:  Default is `\s+`. Could be any kind of delimiter valid in numpy and in the file.
         - cols: List of indices of columns to pick. Useful when reading a file like PROCAR which e.g. has text and numbers inline.
@@ -839,6 +839,7 @@ def islice2array(path_or_islice,dtype=float,start=0,nlines=None,count=-1,delimit
         > `islice2array('path/to/EIGENVAL',start=7,exclude='E',cols=[1,2])[:2]`
         > array([[-11.476913,   1.      ],
         >        [  0.283532,   1.      ]])
+    > Note: Slicing a dimension to 100% of its data is faster than let say 80% for inner dimensions, so if you have to slice more than 50% of an inner dimension, then just load full data and slice after it.
     """
     from itertools import islice,chain
     import os,re, numpy as np
@@ -923,15 +924,17 @@ def slice_rows(dim_inds,old_shape):
     _prod_ = product(*dim_inds)
     _mult_ = [np.product(r_shape[i+1:]) for i in range(len(r_shape))]
     _out_ = np.array([np.dot(p,_mult_) for p in _prod_]).astype(int)
-    # check if inner dimensions could be chunked.
+    # check if innermost dimensions could be chunked.
     step = 1
-    while len(_out_) > 1 and _out_[1] - _out_[0] == nlines:
-        for i,v in enumerate(_out_[1:]):
-            if v - _out_[0]==nlines:
-                step = i+2
-        if step > 1:
-            _out_  = _out_[::step]
-            nlines = nlines*step
+    for i in range(-1,-len(dim_inds),-1):
+        _inds = np.array(dim_inds[i]) #innermost
+        if np.max(_inds[1:] - _inds[:-1]) == 1: # consecutive
+            step = len(_inds)
+            _out_ = _out_[::step] # Pick first indices
+            nlines = step*nlines
+            # Now check if all indices picked then make chunks in outer dimensions too.
+            if step != r_shape[i]: # Can't make chunk of outer dimension if inner is not 100% picked.
+                break # Stop more chunking
     return {'start':_out_,'nlines':nlines,'count': nlines*len(_out_)}
 
 
