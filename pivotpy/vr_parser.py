@@ -925,7 +925,7 @@ def slice_rows(dim_inds,old_shape):
     _out_ = np.array([np.dot(p,_mult_) for p in _prod_]).astype(int)
     # check if inner dimensions could be chunked.
     step = 1
-    while _out_[1] - _out_[0] == nlines and len(_out_) > 1:
+    while len(_out_) > 1 and _out_[1] - _out_[0] == nlines:
         for i,v in enumerate(_out_[1:]):
             if v - _out_[0]==nlines:
                 step = i+2
