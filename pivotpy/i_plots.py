@@ -31,6 +31,7 @@ def get_rgb_data(   kpath       = None,
         - kpath    : List of NKPTS. (interpolated if given.)
         - evals    : An (NBAND,NKPTS) numpy arry.
         - colors   : An (NBANDS,NKPTS,3) numpy array.
+        - widths   : An (NBAND,NKPTS) numpy arry, its actually colors summed along z-axis.
     """
     if(pros_set==[]):
         import pivotpy.g_utils as gu
