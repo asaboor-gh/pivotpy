@@ -92,6 +92,7 @@ index = {"get_rgb_data": "InteractivePlots.ipynb",
          "dump_dict": "XmlElementTree.ipynb",
          "load_from_dump": "XmlElementTree.ipynb",
          "islice2array": "XmlElementTree.ipynb",
+         "slice_rows": "XmlElementTree.ipynb",
          "split_vasprun": "XmlElementTree.ipynb"}
 
 modules = ["i_plots.py",

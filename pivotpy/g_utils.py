@@ -391,7 +391,7 @@ def export_outcar(path=None):
     """
     - Read potential at ionic sites from OUTCAR.
     """
-    import os,numpy as np, pivotpy as pp
+    import os,numpy as np, pivotpy as pp ,re
     from io import StringIO
     if path is None:
         path = './OUTCAR'
@@ -412,6 +412,14 @@ def export_outcar(path=None):
             first = i+1
         if 'vectors are now' in l:
             b_first = i+5
+        if 'NION' in l:
+            ion_line = l
+        if 'NKPTS' in l:
+            kpt_line =l
+
+    NKPTS,NKDIMS,NBANDS = [int(v) for v in re.findall(r"\d+",kpt_line)]
+    NEDOS,NIONS = [int(v) for v in re.findall(r"\d+",ion_line)]
+    n_kbi = (NKPTS,NBANDS,NIONS)
     # Data manipulation
     # Potential
     data = lines[start_index:stop_index]
@@ -426,7 +434,7 @@ def export_outcar(path=None):
     # positions and potential
     pos_pot = np.hstack([pos_arr,pot_arr[:,1:]])
     basis = np.loadtxt(StringIO(''.join(lines[b_first:b_first+3])))
-    final_dict = {'ion_pot':pot_arr,'positions':pos_arr,'site_pot':pos_pot,'basis':basis[:,:3],'rec_basis':basis[:,3:]}
+    final_dict = {'ion_pot':pot_arr,'positions':pos_arr,'site_pot':pos_pot,'basis':basis[:,:3],'rec_basis':basis[:,3:],'n_kbi':n_kbi}
     return pp.Dict2Data(final_dict)
 
 

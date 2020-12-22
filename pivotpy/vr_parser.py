@@ -2,7 +2,7 @@
 
 __all__ = ['Dict2Data', 'read_asxml', 'exclude_kpts', 'get_ispin', 'get_summary', 'get_kpts', 'get_tdos', 'get_evals',
            'get_bands_pro_set', 'get_dos_pro_set', 'get_structure', 'export_vasprun', 'load_export', 'dump_dict',
-           'load_from_dump', 'islice2array', 'split_vasprun']
+           'load_from_dump', 'islice2array', 'slice_rows', 'split_vasprun']
 
 # Cell
 import numpy
@@ -367,29 +367,31 @@ def get_bands_pro_set(xml_data=None,
             return pp.printr("No bands prjections found in given energy range.")
     # Try to read _set.txt first. instance check is important.
     if isinstance(set_path,str) and os.path.isfile(set_path):
-        if xml_data==None:
-            _path = os.path.join(os.path.split(os.path.abspath(set_path))[0],'_vasprun.xml')
-            xml_data = pp.read_asxml(_path)
-        # Read Raw data dimensions
-        nkpts = pp.get_kpts(xml_data).NKPTS
-        _summ = pp.get_summary(xml_data)
-        nbands= pp.get_evals(xml_data).NBANDS
-        nions  = _summ.NION
-        fields = _summ.fields
-        norbs = len(fields)
-        start = skipk*nbands*nions + 1 # First line is comment
-        count = nions*nbands*nkpts*norbs
+        _f = open(set_path,'r')
+        _header = _f.readline()
+        _f.close()
+        _shape = [int(v) for v in _header.split('=')[1].strip().split(',')]
+        NKPTS, NBANDS, NIONS, NORBS = _shape
+        if NORBS == 3:
+            fields = ['s','p','d']
+        elif NORBS == 9:
+            fields = ['s','py','pz','px','dxy','dyz','dz2','dxz','x2-y2']
+        else:
+            fields = [str(i) for i in range(NORBS)] #s,p,d in indices.
+        COUNT = NIONS*NBANDS*(NKPTS-skipk)*NORBS
+        start = NBANDS*NIONS*skipk
+        nlines = None # Read till end.
         if bands_range:
             _b_r = list(bands_range)
-            nbands = _b_r[-1]-_b_r[0]+1
-            start = [start+nions*nbands*k for k in range(nkpts)]
-            nlines = nions*nbands # 1 band has nions
-            nkpts = nkpts-skipk # Update after start
-            count = nions*nbands*nkpts*norbs
-            data = pp.islice2array(set_path,start=start,nlines=nlines,count=count)
-        else:
-            data = pp.islice2array(set_path,start=start,count=count)
-        data = data.reshape((nkpts,nbands,nions,norbs)).transpose([2,0,1,3])
+            # First line is comment but it is taken out by exclude in islice2array.
+            start = [[NIONS*NBANDS*k + NIONS*b for b in _b_r] for k in range(skipk,NKPTS)]
+            start = [s for ss in start for s in ss] #flatten
+            nlines = NIONS # 1 band has nions
+            NBANDS = _b_r[-1]-_b_r[0]+1 # upadte after start
+            NKPTS = NKPTS-skipk # Update after start
+            COUNT = NIONS*NBANDS*NKPTS*NORBS
+        data = pp.islice2array(set_path,start=start,nlines=nlines,count=COUNT)
+        data = data.reshape((NKPTS,NBANDS,NIONS,NORBS)).transpose([2,0,1,3])
         return pp.Dict2Data({'labels':fields,'pros':data})
 
     # if above not worked, read from main vasprun.xml file.
@@ -815,13 +817,14 @@ def load_from_dump(file_or_str,keep_as_dict=False):
     return out
 
 # Cell
-def islice2array(path_or_islice,dtype=float,start=0,nlines=None,step=None,count=-1,delimiter='\s+',cols=None,include=None,exclude='#',raw=False,fix_format = True):
+def islice2array(path_or_islice,dtype=float,start=0,nlines=None,count=-1,delimiter='\s+',cols=None,include=None,exclude='#',raw=False,fix_format = True):
     """
     - Reads a sliced array from txt,csv type files and return to array. Also manages if columns lengths are not equal and return 1D array. It is faster than loading  whole file into memory. This single function could be used to parse EIGENVAL, PROCAR, DOCAR and similar files with just a combination of `exclude, include,start,stop,step` arguments.
     - **Parameters**
         - path_or_islice: Path/to/file or `itertools.islice(file_object)`. islice is interesting when you want to read different slices of an opened file and do not want to open it again and again. For reference on how to use it just execute `pivotpy.export_potential??` in a notebook cell or ipython terminal to see how islice is used extensively.
         - dtype: float by default. Data type of output array, it is must have argument.
-        - start,nlines,step : The indices of lines to start reading from,number of lines after start and step as usual respectively. Only work if `path_or_islice` is a file path. all three could be None or int, while start could be a list to read slices from file provided that nlines is int. The spacing between adjacent indices in start should be equal to or greater than nlines as pointer in file do not go back on its own.
+        - start,nlines: The indices of lines to start reading from and number of lines after start respectively. Only work if `path_or_islice` is a file path. both could be None or int, while start could be a list to read slices from file provided that nlines is int. The spacing between adjacent indices in start should be equal to or greater than nlines as pointer in file do not go back on its own.
+        > Note: `start` should count comments if `exclude` is None.
         - count: `np.size(output_array) = nrows x ncols`, if it is known before execution, performance is increased.
         - delimiter:  Default is `\s+`. Could be any kind of delimiter valid in numpy and in the file.
         - cols: List of indices of columns to pick. Useful when reading a file like PROCAR which e.g. has text and numbers inline.
@@ -839,24 +842,34 @@ def islice2array(path_or_islice,dtype=float,start=0,nlines=None,step=None,count=
     """
     from itertools import islice,chain
     import os,re, numpy as np
+
+    if nlines is None and isinstance(start,(list,np.ndarray)):
+        print("`nlines = None` with `start = array/list` is useless combination.")
+        return np.array([]) # return empty array.
+
     if isinstance(path_or_islice,str) and os.path.isfile(path_or_islice):
         f = open(path_or_islice,'r')
-        if isinstance(nlines,int) and isinstance(start,(list,np.ndarray)):
-            #As islice moves the pointer as it reads, start[1:]-nlines-1
-            # This confirms spacing between two indices in start >= nlines
-            start = [start[0],*[s2-s1-nlines for s1,s2 in zip(start,start[1:])]]
-            _islice = chain(*(islice(f,s,s+nlines,step) for s in start))
-        elif isinstance(start,int) and isinstance(nlines,int):
-            _islice = islice(f,start,start+nlines,step)
-        else:
-            _islice = islice(f,start,nlines,step)
-
+        _islice = islice(f,0,None) # Read full, Will fix later.
     else:
         _islice = path_or_islice
+
     if include:
         _islice = (l for l in _islice if re.search(include,l))
+
     if exclude:
         _islice = (l for l in _islice if not re.search(exclude,l))
+
+    # Make slices here after comment excluding.
+    if isinstance(nlines,int) and isinstance(start,(list,np.ndarray)):
+        #As islice moves the pointer as it reads, start[1:]-nlines-1
+        # This confirms spacing between two indices in start >= nlines
+        start = [start[0],*[s2-s1-nlines for s1,s2 in zip(start,start[1:])]]
+        _islice = chain(*(islice(_islice,s,s+nlines) for s in start))
+    elif isinstance(nlines,int) and isinstance(start,int):
+        _islice = islice(_islice,start,start+nlines)
+    elif nlines is None and isinstance(start,int):
+        _islice = islice(_islice,start,None)
+
     # Negative connected digits to avoid, especially in PROCAR
     if fix_format:
         _islice = (re.sub(r"(\d)-(\d)",r"\1 -\2",l) for l in _islice)
@@ -884,6 +897,45 @@ def islice2array(path_or_islice,dtype=float,start=0,nlines=None,step=None,count=
     return data
 
 # Cell
+def slice_rows(dim_inds,old_shape):
+    """
+    - Returns a dictionary that can be unpacked in arguments of isclice2array function.
+    - **Parameters**
+        - dim_inds : List of indices array or range to pick from each dimension. Inner dimensions are more towards right.
+        - old_shape: Shape of data set including the columns length in right most place. This argument's length is one more than `dim_inds` that respresent columns.
+    - **Example**
+        - You have data as 3D arry where third dimension is along column.
+        > 0 0
+        > 0 2
+        > 1 0
+        > 1 2
+        - To pick [[0,2], [1,2]], you need to give
+        > slice_rows(dim_inds = [[0,1],[1]], old_shape=(2,2,2))
+        > {'start': array([1, 3]), 'nlines': 1, 'count': 2}
+        - Unpack above dictionary in `islice2array` and you will get output array.
+    - Note that dimensions are packed from right to left, like 0,2 is repeating in 2nd column.
+    """
+    import numpy as np
+    from itertools import product
+    r_shape = old_shape[:len(dim_inds)]
+    nlines = 1
+    #start = [[NIONS*NBANDS*k + NIONS*b for b in _b_r] for k in range(skipk,NKPTS)] #kind of thing.
+    _prod_ = product(*dim_inds)
+    _mult_ = [np.product(r_shape[i+1:]) for i in range(len(r_shape))]
+    _out_ = np.array([np.dot(p,_mult_) for p in _prod_]).astype(int)
+    # check if inner dimensions could be chunked.
+    step = 1
+    while _out_[1] - _out_[0] == nlines and len(_out_) > 1:
+        for i,v in enumerate(_out_[1:]):
+            if v - _out_[0]==nlines:
+                step = i+2
+        if step > 1:
+            _out_  = _out_[::step]
+            nlines = nlines*step
+    return {'start':_out_,'nlines':nlines,'count': nlines*len(_out_)}
+
+
+# Cell
 def split_vasprun(path=None):
     """
     - Splits a given vasprun.xml file into a smaller _vasprun.xml file plus _set[1,2,3,4].txt files which contain projected data for each spin set.
@@ -895,7 +947,7 @@ def split_vasprun(path=None):
         - _set1.txt for spin up data and _set2.txt for spin-polarized case.
         - _set[1,2,3,4].txt for each spin set of non-colinear calculations.
     """
-    import re, os
+    import re, os, pivotpy as pp
     from itertools import islice
     if not path:
         path = './vasprun,xml'
@@ -925,12 +977,20 @@ def split_vasprun(path=None):
             set_length = indices[-1]-indices[-2] #It is technically more than set length, but fine for 1 set
         f.seek(0) # Must be at zero
         N_sets = len(spin_inds)
+        # Let's read shape from out_file as well.
+        xml_data = pp.read_asxml(out_file)
+        _summary = pp.get_summary(xml_data)
+        NIONS  = _summary.NION
+        NORBS  = len(_summary.fields)
+        NBANDS = pp.get_evals(xml_data).NBANDS
+        NKPTS  = pp.get_kpts(xml_data).NKPTS
+        del xml_data # free meory now.
         for i in range(N_sets): #Reads every set
             print("Writing {!r} ...".format(out_sets[i]),end=' ')
             start = (indices[-2]+1+spin_inds[0] if i==0 else 0) # pointer is there next time.
             stop_ = start + set_length # Should move up to set length only.
             setf = open(out_sets[i],'w')
-            setf.write("  # Set: {} Shape: (NKPTS[NBANDS[NIONS]],NORBS). pre-processed data.\n".format(i+1))
+            setf.write("  # Set: {} Shape: (NKPTS[NBANDS[NIONS]],NORBS) = {},{},{},{}\n".format(i+1,NKPTS,NBANDS,NIONS,NORBS))
             middle = islice(f,start,stop_)
             setf.write(''.join(l.lstrip().replace('/','').replace('<r>','') for l in middle if '</r>' in l))
             setf.close()
