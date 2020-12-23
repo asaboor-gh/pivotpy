@@ -388,11 +388,10 @@ def get_pros_data(kpath      = None,
         import pivotpy.g_utils as gu
         gu.printy("Can not process an empty eigenvalues/projection object.")
         return gu.printg("Try with large `elim` in parent function.")
+    # Empty orbitals/elements are still allowed on purpose for rgb_lines.
     for elem, orb in zip(elements,orbs):
         if isinstance(elem,int) or isinstance(orb,int):
             raise ValueError("Items in elements and orbs should be list, tuple or range, not int.")
-        elif not elem or not orb:
-            raise ValueError("Items in elements and orbs should not be empty.")
 
     arrays_list = []
     for elem,orb in zip(elements,orbs):
@@ -570,9 +569,10 @@ def quick_rgb_lines(path_evr    = None,
         - ax : matplotlib axes object with plotted projected bands.
         - Registers as colormap `RGB_m` to use in DOS to plot in same colors and `RGB_f` to display bands colorbar on another axes.
     """
-    import pivotpy as pp # All three imports are important
-    import matplotlib.pyplot as plt
+    import os
     import numpy as np
+    import matplotlib.pyplot as plt
+    import pivotpy as pp
 
     # Fix orbitals, elements and labels lengths very early.
     if len(elements) != len(orbs) or len(elements) != len(labels):
@@ -783,10 +783,10 @@ def quick_color_lines(path_evr      = None,
     - **Returns**
         - ax : matplotlib axes object with plotted projected bands.
     """
-    import numpy as np
     import os
-    import pivotpy as pp
+    import numpy as np
     import matplotlib.pyplot as plt
+    import pivotpy as pp
 
     # Fix orbitals, elements and labels lengths very early.
     if len(elements) != len(orbs) or len(elements) != len(labels):
