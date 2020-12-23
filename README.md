@@ -29,6 +29,19 @@
 - See [Full Documentation](https://massgh.github.io/pivotpy/).
 - For CLI, use [Vasp2Visual](https://github.com/massgh/Vasp2Visual).
 
+## Changelog for version 0.9.5 onward
+- `pivotpy.s_plots.quick_rgb_lines` and `pivotpy.s_plots.quick_rgb_lines` are refactored and no more depnd on `create_rgb_lines`, so this function is dropped, If you still want to use it, use versions below 0.9.5. 
+- A class `pivotpy.g_utils.Vasprun` is added which provides shortcut for `export_vasprun` and plotting functions. Under this class:
+    - `quick_bplot`       --> `sbands`
+    - `quick_rgb_lines`   --> `srgb`
+    - `plotly_rgb_lines`  --> `irgb`
+    - `quick_color_lines` --> `scolor`
+    - `quick_dos_lines`   --> `sdos`
+    - `plotly_dos_lines`  --> `idos`
+- A class `pivotpy.g_utils.LOCPOT_CHG` is added which can be used to parse and visualize files like LOCPOT and CHG. 
+- A function `pivotpy.vr_parser.split_vasprun` is added which splits `vasprun.xml` file into a small file `_vasprun.xml` without projected data and creates text files `_set[1,2,3,4].txt` based on how many spin sets are there. 
+- A function `pivotpy.vr_parser.islice2array` is added which can reads data from text/csv/tsv files (even if text and numbers are mixed) accoridng to slices you provide, this does not load full file in memory and it is also useful in parsing EIGENVAL, PROCAR like files with a few lines of code only. 
+
 # New: Ipywidgets-based GUI
 See GIF here:
 ![GIF](widget.gif) 
@@ -220,12 +233,6 @@ fig2 = pp.plot_bz([[1,0,0],[0,1,0],[0,0,1]])
 from IPython.display import Markdown
 Markdown("[See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ.html)")
 ```
-
-    E:\Research\pivotpy\pivotpy\sio.py:408: RuntimeWarning:
-    
-    divide by zero encountered in double_scalars
-    
-    
 
 
 

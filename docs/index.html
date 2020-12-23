@@ -83,6 +83,21 @@ nb_path: "index.ipynb"
 <li>See <a href="https://massgh.github.io/pivotpy/">Full Documentation</a>.</li>
 <li>For CLI, use <a href="https://github.com/massgh/Vasp2Visual">Vasp2Visual</a>.</li>
 </ul>
+<h2 id="Changelog-for-version-0.9.5-onward">Changelog for version 0.9.5 onward<a class="anchor-link" href="#Changelog-for-version-0.9.5-onward"> </a></h2><ul>
+<li><code>pivotpy.s_plots.quick_rgb_lines</code> and <code>pivotpy.s_plots.quick_rgb_lines</code> are refactored and no more depnd on <code>create_rgb_lines</code>, so this function is dropped, If you still want to use it, use versions below 0.9.5. </li>
+<li>A class <code>pivotpy.g_utils.Vasprun</code> is added which provides shortcut for <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> and plotting functions. Under this class:<ul>
+<li><a href="/pivotpy/StaticPlots.html#quick_bplot"><code>quick_bplot</code></a>       --&gt; <code>sbands</code></li>
+<li><a href="/pivotpy/StaticPlots.html#quick_rgb_lines"><code>quick_rgb_lines</code></a>   --&gt; <code>srgb</code></li>
+<li><a href="/pivotpy/InteractivePlots.html#plotly_rgb_lines"><code>plotly_rgb_lines</code></a>  --&gt; <code>irgb</code></li>
+<li><a href="/pivotpy/StaticPlots.html#quick_color_lines"><code>quick_color_lines</code></a> --&gt; <code>scolor</code></li>
+<li><a href="/pivotpy/StaticPlots.html#quick_dos_lines"><code>quick_dos_lines</code></a>   --&gt; <code>sdos</code></li>
+<li><a href="/pivotpy/InteractivePlots.html#plotly_dos_lines"><code>plotly_dos_lines</code></a>  --&gt; <code>idos</code></li>
+</ul>
+</li>
+<li>A class <code>pivotpy.g_utils.LOCPOT_CHG</code> is added which can be used to parse and visualize files like LOCPOT and CHG. </li>
+<li>A function <code>pivotpy.vr_parser.split_vasprun</code> is added which splits <code>vasprun.xml</code> file into a small file <code>_vasprun.xml</code> without projected data and creates text files <code>_set[1,2,3,4].txt</code> based on how many spin sets are there. </li>
+<li>A function <code>pivotpy.vr_parser.islice2array</code> is added which can reads data from text/csv/tsv files (even if text and numbers are mixed) accoridng to slices you provide, this does not load full file in memory and it is also useful in parsing EIGENVAL, PROCAR like files with a few lines of code only. </li>
+</ul>
 
 </div>
 </div>
@@ -41328,17 +41343,6 @@ z
 
 <div class="output_wrapper">
 <div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>E:\Research\pivotpy\pivotpy\sio.py:408: RuntimeWarning:
-
-divide by zero encountered in double_scalars
-
-</pre>
-</div>
-</div>
 
 <div class="output_area">
 

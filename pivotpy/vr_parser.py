@@ -542,9 +542,7 @@ def export_vasprun(path=None,skipk=None,elim=[],joinPathAt=[],shift_kpath=0):
         req_files = [os.path.join(os.path.dirname(os.path.abspath(path)),f) for f in req_files]
     logic = [os.path.isfile(f) for f in req_files]
     if not False in logic:
-        from IPython.display import clear_output
         print('Loading from PowerShell Exported Data...')
-        clear_output(wait=True)
         return vp.load_export(path=(path if path else './vasprun.xml'))
 
     # Proceed if not files from PWSH
