@@ -708,7 +708,7 @@ def load_export(path= './vasprun.xml',
         pdos      = pro_dos.reshape(NION,-1,nField_Projection+1)
         pdos_dic  = {'labels': fields,'pros': pdos}
         pros      = pro_bands.reshape(NION,NKPTS,NBANDS,-1)
-        pro_dic   = {'labels': fields[1:],'pros': pros}
+        pro_dic   = {'labels': fields,'pros': pros}
     if(ISPIN==2):
         # Bands
         kpath   = bands[:NKPTS,3]
