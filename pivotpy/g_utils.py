@@ -229,12 +229,12 @@ class Vasprun:
         - scolor    : Shortcut for `quick_color_lines`.
         - idos      : Shortcut for `plotly_dos_lines`.
         - irgb      : Shortcut for `plotly_rgb_lines`.
-        - get_kwargs: Accepts any of ['sbands','sdos','srgb','scolor','idos','irgb'] as argument and returns argument dictionary for given method that can be unpacked in plotting function argument.
+        - Each of above mathods have an attribute `kwargs` which can be accessed, modified and put back as argumnets.
     - **Example**
-        > plots = Plots(path='./vasprun.xml')
-        > args_ = plots.get_kwargs('sbands')
-        > # Modify args_ dictionary as you want
-        > plots.sbands(**args_)
+        > vasp   = Vasprun(path='./vasprun.xml')
+        > kwargs = vasp.sbands.kwargs
+        > Modify kwargs dictionary as you want for input parameters and unpack back in function.
+        > vasp.sbands(**kwargs)
     """
     def __init__(self,path=None, skipk=None, elim=[], joinPathAt=[], shift_kpath=0):
         try:

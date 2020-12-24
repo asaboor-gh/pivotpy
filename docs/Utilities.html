@@ -616,12 +616,13 @@ RETRIEVED DATA : {}
 <li>scolor    : Shortcut for <a href="/pivotpy/StaticPlots.html#quick_color_lines"><code>quick_color_lines</code></a>.</li>
 <li>idos      : Shortcut for <a href="/pivotpy/InteractivePlots.html#plotly_dos_lines"><code>plotly_dos_lines</code></a>.</li>
 <li>irgb      : Shortcut for <a href="/pivotpy/InteractivePlots.html#plotly_rgb_lines"><code>plotly_rgb_lines</code></a>.</li>
-<li>get_kwargs: Accepts any of ['sbands','sdos','srgb','scolor','idos','irgb'] as argument and returns argument dictionary for given method that can be unpacked in plotting function argument.</li>
+<li>Each of above mathods have an attribute <code>kwargs</code> which can be accessed, modified and put back as argumnets.</li>
 </ul>
 </li>
-<li><strong>Example</strong><blockquote><p>plots = Plots(path='./vasprun.xml')
-args_ = plots.get_kwargs('sbands')</p>
-<h1 id="Modify-args_-dictionary-as-you-want">Modify args_ dictionary as you want<a class="anchor-link" href="#Modify-args_-dictionary-as-you-want"> </a></h1><p>plots.sbands(**args_)</p>
+<li><strong>Example</strong><blockquote><p>vasp   = Vasprun(path='./vasprun.xml')
+kwargs = vasp.sbands.kwargs
+Modify kwargs dictionary as you want for input parameters and unpack back in function.
+vasp.sbands(**kwargs)</p>
 </blockquote>
 </li>
 </ul>
