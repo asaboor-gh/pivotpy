@@ -96,7 +96,7 @@ def flip_even_patches(array_1d, patch_length):
     return out_put
 
 # Cell
-def rgb_to_plotly(rgb_data=None,mode='markers',max_width=5,showlegend=False,name='',labels=['s','p','d'],symbol=0):
+def rgb_to_plotly(rgb_data=None,mode='markers',max_width=None,showlegend=False,name='',labels=['s','p','d'],symbol=0):
     """
     - Returns data object of plotly's figure using `get_rgb_data`. Returned data could be fed to a plolty's figure.
     - ** Parameters**
@@ -105,7 +105,7 @@ def rgb_to_plotly(rgb_data=None,mode='markers',max_width=5,showlegend=False,name
             - 'markers' : Plot whole data as a single scatter object. Its too fast.
             - 'bands'   : Plot data such that each band is accessible via legend.
             - 'lines'   : A replica of `matplotlib LineCollection` object. It plots at each point separately, slower than other two modes.
-        - max_width  : Line/Scatter thickness is scaled to `max_width`.
+        - max_width  : Line/Scatter thickness is scaled to `max_width`. None by default and represent actual data.
         - name       : Name to be shown on hover text or legend.
         - labels     : Optional, show red green blue colors corresponding orbitals.
         - showlegend : Optional, only suitbale if spin up/down or 'bands' mode is ON.
@@ -117,15 +117,18 @@ def rgb_to_plotly(rgb_data=None,mode='markers',max_width=5,showlegend=False,name
     if(rgb_data):
         import plotly.graph_objects as go
         import numpy as np
-        k,en,rgb,lw = rgb_data
+        k,en,rgb,lws = rgb_data
 
         _names = [["<sub>{}</sub>".format(int(1+i)) for j in range(len(en[0]))]
                   for i in range(len(en))]
-        clrs=(255*rgb).astype(int)
+        clrs=(255*rgb).astype(int).clip(min=0,max=255) #clip in color range
         _txt=(100*rgb).astype(int)
         colors=[['rgb({},{},{})'.format(*i) for i in _c] for _c in clrs]
         txts=[['RGB({},{},{})'.format(*i) for i in _t] for _t in _txt]
-        lws = max_width*lw
+
+        if max_width:
+            lws = max_width*lws/np.max(lws)
+
         h_template = "Proj: {} <br>{} </br>Band: {}{}"
         h_text=[[h_template.format([*labels],t,name,l) for t,l in zip(ts,ns)]
                 for ts,ns in zip(txts,_names)]

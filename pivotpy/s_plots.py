@@ -407,14 +407,15 @@ def get_pros_data(kpath      = None,
             _colors = _colors/c_max
 
     if(interpolate==True):
+        min_d, max_d = np.min(_colors),np.max(_colors) # For cliping
         from pivotpy import g_utils as gu
         knew, evals = gu.interpolate_data(kpath,evals_set,n=n,k=k)
-        _colors     = gu.interpolate_data(kpath,_colors,n=n,k=k)[1].clip(min=0,max=1)
+        _colors     = gu.interpolate_data(kpath,_colors,n=n,k=k)[1].clip(min=min_d,max=max_d)
         return {'kpath':knew,'evals': evals,'pros': _colors}
     # Return if no interpolation
     return {'kpath':kpath,'evals': evals_set,'pros': _colors}
 
-def make_line_collection(max_width   = 2.5,
+def make_line_collection(max_width   = None,
                          colors_list = None,
                          rgb         = False,
                          uni_width   = False,
@@ -424,11 +425,11 @@ def make_line_collection(max_width   = 2.5,
     - Returns a tuple of line collections. If rgb = True (at len(orbs) = 3 in `get_pros_data`), returns a tuple of two entries, multicolored line collection and RGB maximum values, otherwise return tuple of single colored multiple lines.
     - **Parametrs**
         - **pros_data: Output dictionary from `get_pros_data` containing kpath, evals and colors arrays.
-        - max_width  : Linewidth is scaled to max_width.
+        - max_width  : Default is None and max linwidth = 2.5. Max inewidth is scaled to max_width if an int of float is given.
         - colors_list: List of colors for multiple lines, length equal to 3rd axis length of colors.
         - rgb        : Default is False. If True and np.shape(colors)[-1] == 3, RGB line collection is returned in a tuple of length 1. Tuple is just to support iteration.
         - uni_width  : Default is False, If True, makes linewidth uniform at width = max_width/2.
-        - scale_color: If True, normalizes each point's color value, as (0,0,0.5) --> (0,0,1).
+        - scale_color: If True, normalizes each point's color value, as (0,0,0.5) --> (0,0,1). If False, clips colors in range [0,1] but does not effect linewidth.
     """
     import numpy as np
     import matplotlib.pyplot as plt
@@ -450,15 +451,17 @@ def make_line_collection(max_width   = 2.5,
 
     # Linwidths in orginal shape, but according to scale_data. Should be before scale_color
     if uni_width:
-        lws = [max_width/2 for c in colors]
+        lws = [max_width/2 if max_width else 2.5 for c in colors]
     else:
+        # default linewidth = 2.5 unless specified otherwise
         if rgb: # Single channel line widths
-            lws = np.sum(colors,axis=1)
-            l_max = np.max(lws)
-            if l_max > 0.0000001: # Avoid division error
-                lws = 0.1 + max_width*lws/l_max #residual linewidth is must.
+            lws = 0.1 + 2.5*np.sum(colors,axis=1) #residual linewidth 0.1
         else: # For separate lines
-            lws = 0.1 + max_width*colors.T # .T to access channels in for loop.
+            lws = 0.1 + 2.5*colors.T # .T to access in for loop.
+
+        if max_width:
+            # here division does not fail as min(lws)==0.1
+            lws = max_width*lws/(2.5*np.max(lws)) # Only if not None or zero.
 
     # scale_color only after linewidths
     if scale_color: # Normalize each point color
@@ -466,6 +469,8 @@ def make_line_collection(max_width   = 2.5,
         c_max[c_max == 0] = 1 #Avoid division error:
         for i in [0,1,2]:
             colors[:,i] = colors[:,i]/c_max
+    else:
+        colors = colors.clip(min=0,max=1) # make sure RGB range.
 
     if np.any(colors_list):
         lc_colors = colors_list
@@ -519,7 +524,7 @@ def quick_rgb_lines(path_evr    = None,
                     elements    = [[0],[],[]],
                     orbs        = [[0],[],[]],
                     labels      = ['Elem0-s','',''],
-                    max_width   = 2.5,
+                    max_width   = None,
                     xt_indices  = [0,-1],
                     xt_labels   = [r'$\Gamma$','M'],
                     E_Fermi     = None,
@@ -551,7 +556,7 @@ def quick_rgb_lines(path_evr    = None,
         - elements   : List [[0],[],[]] by default and plots s orbital of first ion..
         - orbs       : List [[r],[g],[b]] of indices of orbitals, could be empty, but shape should be same.
         - labels     : List [str,str,str] of projection labels. empty string should exist to maintain shape. Auto adds `↑`,`↓` for ISPIN=2. If a label is empty i.e. '', it will not show up in colorbar ticks or legend.
-        - max_width  : Width to scale whole projections. if `uni_width=True, width=max_width/2`.
+        - max_width  : Width to scale whole projections. if `uni_width=True, width=max_width/2`. Default is None and linewidth at any point = 2.5*sum(ions+orbitals projection of all three input at that point). Linewidth is scaled to max_width if an int or float is given.
         - figsize    : Tuple (width,height) in inches. Default (3.4.2.6) is article column's width.
         - txt        : Text on figure, if None, SYSTEM's name is printed.
         - xytxt      : [x_coord,y_coord] of text relative to axes.
@@ -561,13 +566,14 @@ def quick_rgb_lines(path_evr    = None,
         - interpolate: Default is False, if True, bands are interpolated.
         - n          : int, number of points, default is 5.
         - k          : int, order of interpolation 0,1,2,3. Defualt 3. `n > k` should be hold.
-        - scale_color: Boolean. Default True, colors are scaled to 1 at each point.
-        - scale_data : Default is True and normalizes projection data to 1. Has no visual effect of scale_color = True too.
+        - scale_color: Boolean. Default True, colors are scaled to 1 at each point. If False, clips colors in range [0,1] but does not effect linewidth.
+        - scale_data : Default is True and normalizes projection data to 1. Has no visual effect if scale_color = True too.
         - colorbar   : Default is True. Displays a vertical RGB colorbar.
         - color_matrix: Only works if `scale_color==True`. 3x3 or 3x4 numpy array or list to transform from RGB to another space,provided that sum(color_matrix[i,:3]) <= 1. 4th column, if given can be used to control the saturation,contrast and brightness as s,c,b = color_matrix[:,3] For simply changing the color intensity use np.diag([r,g,b]) with r,g,b interval in [0,1]. Try `pivotpy.color_matrix` as suggested color matrix and modify, which at s=0 returns gray scale.!
     - **Returns**
         - ax : matplotlib axes object with plotted projected bands.
         - Registers as colormap `RGB_m` to use in DOS to plot in same colors and `RGB_f` to display bands colorbar on another axes.
+    > Note: Two figures made by this function could be comapred quantitatively only if `scale_data=False, max_width=None, scale_color=False` as these parameters act internally on data.
     """
     import os
     import numpy as np
@@ -735,7 +741,7 @@ def quick_color_lines(path_evr      = None,
                       labels        = ['s'],
                       color_map     = 'gist_rainbow',
                       scale_data    = False,
-                      max_width     = 2.5,
+                      max_width     = None,
                       spin          = 'both',
                       xt_indices    = [0, -1],
                       xt_labels     = ['$\\Gamma$', 'M'],
@@ -769,7 +775,7 @@ def quick_color_lines(path_evr      = None,
         - color_map  : Matplotlib's standard color maps. Default is 'gist_ranibow'.
         - showlegend : True by defualt and displays legend relative to axes[0]. If False, it writes text on individual ax.
         - scale_data : Default is False, If True, normalize projection data to 1.
-        - max_width  : Width to scale whole projections. if `uni_width=True, width=max_width/2`.
+        - max_width  : Width to scale whole projections. Default is None and linewidth at any point on a line = 2.5*sum(ions+orbitals projection of the input for that line at that point). Linewidth is scaled to max_width if an int or float is given.
         - figsize    : Tuple (width,height) in inches. Default (3.4.2.6) is article column's width.
         - txt        : Text on figure, if None, SYSTEM's name is printed.
         - xytxt      : [x_coord,y_coord] of text relative to axes.
@@ -782,6 +788,7 @@ def quick_color_lines(path_evr      = None,
         - **subplots_adjust_kwargs : plt.subplots_adjust parameters.
     - **Returns**
         - ax : matplotlib axes object with plotted projected bands.
+    > Note: Two figures made by this function could be comapred quantitatively only if `scale_data=False, max_width=None` as these parameters act internally on data.
     """
     import os
     import numpy as np
@@ -885,7 +892,8 @@ def quick_color_lines(path_evr      = None,
             _tls_[i] = (label+'$^↑$' if spin=='up' else label+'$^↓$' if spin=='down' else label+'$^{↑↓}$')
 
     if showlegend:
-        pp.add_legend(ax=axes[0],colors=colors,labels=_tls_,widths=max_width/2,**legend_kwargs)
+        width = (max_width/2 if max_width else 2.5)
+        pp.add_legend(ax=axes[0],colors=colors,labels=_tls_,widths=width,**legend_kwargs)
     else:
         x,y=[*xytxt]
         _ = [pp.add_text(ax=ax,xs=x,ys=y,txts=_tl_,colors=ctxt) for ax,_tl_ in zip(axes,_tls_)]
