@@ -34,9 +34,9 @@ def get_rgb_data(   kpath       = None,
         - widths   : An (NBAND,NKPTS) numpy arry, its actually colors summed along z-axis.
     """
     if(pros_set==[]):
-        import pivotpy.g_utils as gu
-        gu.printy("Can not plot an empty eigenvalues object.")
-        return gu.printg("Try with large energy range.")
+        from .g_utils import color
+        print(color.y("Can not plot an empty eigenvalues object."))
+        return print(color.g("Try with large energy range."))
     if len(orbs)<3 :
         raise ValueError("orbs have structure [[],[],[]], do not reduce structure even if it is empty.")
     elif len(elements) <3:
@@ -196,9 +196,9 @@ def plotly_to_html(fig,filename=None,out_string=False,modebar=True):
         f.close()
     else:
         if modebar==True: #Only for docs issue
-            config = "{displayModeBar: true,editable: true,scrollZoom: true}"
+            config = "{displayModeBar: true,scrollZoom: true}"
         else:
-            config = "{displayModeBar: false,editable: true,scrollZoom: true}"
+            config = "{displayModeBar: false,scrollZoom: true}"
         template = """<div>
         <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
             <div id='{}'><!-- Plotly chart DIV --></div>
@@ -277,9 +277,9 @@ def plotly_rgb_lines(path_evr    = None,
     else:
         ## Main working here.
         if(vr.pro_bands==None):
-            import pivotpy.g_utils as gu
-            gu.printy("Can not plot an empty eigenvalues object.")
-            return gu.printg("Try with large energy range.")
+            from .g_utils import color
+            print(color.y("Can not plot an empty eigenvalues object."))
+            return print(color.g("Try with large energy range."))
         #=====================================================
         orbs = [[item] if type(item)==int else item for item in orbs] #Fix if integer given.
         elem_inds = vr.sys_info.ElemIndex
@@ -420,8 +420,8 @@ def plotly_dos_lines(path_evr     = None,
         try:
             en,tdos,pdos,labels,vr = cl_dos
         except TypeError:
-            import pivotpy.g_utils as gu
-            return gu.printg("Try with large energy range.")
+            from .g_utils import color
+            return print(color.g("Try with large energy range."))
 
         labels=[label.replace('$','').replace('^↑','<sup>↑</sup>').replace('^↓','<sup>↓</sup>') for label in labels]
         # Make additional colors for spin down. Inverted colors are better.
@@ -447,7 +447,7 @@ def plotly_dos_lines(path_evr     = None,
             return print("`color_map` expects one of the follwoing:\n{}".format(plt.colormaps()))
         # Total DOS colors
         t_color=mpl.colors.to_rgb(tdos_color)
-        it_color=gu.invert_color(color=t_color)
+        it_color=gu.transform_color(t_color,c = -1) #inverts for c = -1
         #========Title Name========
         SYSTEM=vr.sys_info.SYSTEM
         if(title==None):

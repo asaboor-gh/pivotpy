@@ -65,6 +65,13 @@ nb_path: "Utilities.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -72,7 +79,7 @@ nb_path: "Utilities.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_file_size" class="doc_header"><code>get_file_size</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L9" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_file_size</code>(<strong><code>path</code></strong>)</p>
+<h4 id="get_file_size" class="doc_header"><code>get_file_size</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L14" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_file_size</code>(<strong><code>path</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -136,7 +143,7 @@ nb_path: "Utilities.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="interpolate_data" class="doc_header"><code>interpolate_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L21" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>interpolate_data</code>(<strong><code>x</code></strong>, <strong><code>y</code></strong>, <strong><code>n</code></strong>=<em><code>10</code></em>, <strong><code>k</code></strong>=<em><code>3</code></em>)</p>
+<h4 id="interpolate_data" class="doc_header"><code>interpolate_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L25" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>interpolate_data</code>(<strong><code>x</code></strong>, <strong><code>y</code></strong>, <strong><code>n</code></strong>=<em><code>10</code></em>, <strong><code>k</code></strong>=<em><code>3</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns interpolated xnew,ynew. If two points are same, it will add 0.1*min(dx&gt;0) to compensate it.</li>
@@ -185,7 +192,7 @@ nb_path: "Utilities.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ps_to_py" class="doc_header"><code>ps_to_py</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L52" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ps_to_py</code>(<strong><code>ps_command</code></strong>=<em><code>'Get-ChildItem'</code></em>, <strong><code>exec_type</code></strong>=<em><code>'-Command'</code></em>, <strong><code>path_to_ps</code></strong>=<em><code>'powershell.exe'</code></em>)</p>
+<h4 id="ps_to_py" class="doc_header"><code>ps_to_py</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L55" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ps_to_py</code>(<strong><code>ps_command</code></strong>=<em><code>'Get-ChildItem'</code></em>, <strong><code>exec_type</code></strong>=<em><code>'-Command'</code></em>, <strong><code>path_to_ps</code></strong>=<em><code>'powershell.exe'</code></em>)</p>
 </blockquote>
 <ul>
 <li>Captures powershell output in python.</li>
@@ -225,7 +232,7 @@ nb_path: "Utilities.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ps_to_std" class="doc_header"><code>ps_to_std</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L86" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ps_to_std</code>(<strong><code>ps_command</code></strong>=<em><code>'Get-ChildItem'</code></em>, <strong><code>exec_type</code></strong>=<em><code>'-Command'</code></em>, <strong><code>path_to_ps</code></strong>=<em><code>'powershell.exe'</code></em>)</p>
+<h4 id="ps_to_std" class="doc_header"><code>ps_to_std</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L89" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ps_to_std</code>(<strong><code>ps_command</code></strong>=<em><code>'Get-ChildItem'</code></em>, <strong><code>exec_type</code></strong>=<em><code>'-Command'</code></em>, <strong><code>path_to_ps</code></strong>=<em><code>'powershell.exe'</code></em>)</p>
 </blockquote>
 <ul>
 <li>Prints powershell output in python std.</li>
@@ -352,88 +359,7 @@ nb_path: "Utilities.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="select_dirs" class="doc_header"><code>select_dirs</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L103" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>select_dirs</code>(<strong><code>path</code></strong>=<em><code>'E:\\Research\\pivotpy'</code></em>, <strong><code>include</code></strong>=<em><code>[]</code></em>, <strong><code>exclude</code></strong>=<em><code>[]</code></em>)</p>
-</blockquote>
-<ul>
-<li>Returns selected directories recursively from a parent directory.</li>
-<li><strong>Parameters</strong><ul>
-<li>path    : path to a parent directory, default is <code>"."</code></li>
-<li>include : list of keywords to include directories, avoid wildcards.</li>
-<li>exclude : list of keywords to exclude directories, avoid wildcards.</li>
-</ul>
-</li>
-<li><strong>Returns</strong><ul>
-<li>Tuple of two elements, list of selcted directories and given path.</li>
-</ul>
-</li>
-</ul>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="select_files" class="doc_header"><code>select_files</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L131" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>select_files</code>(<strong><code>path</code></strong>=<em><code>'E:\\Research\\pivotpy'</code></em>, <strong><code>include</code></strong>=<em><code>[]</code></em>, <strong><code>exclude</code></strong>=<em><code>[]</code></em>)</p>
-</blockquote>
-<ul>
-<li>Returns selected files from a given directory.</li>
-<li><strong>Parameters</strong><ul>
-<li>path    : path to a parent directory, default is <code>"."</code></li>
-<li>include : list of keywords to include files, avoid wildcards.</li>
-<li>exclude : list of keywords to exclude files, avoid wildcards.</li>
-</ul>
-</li>
-<li><strong>Returns</strong><ul>
-<li>Tuple of two elements, list of selcted files and given path.</li>
-</ul>
-</li>
-</ul>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_child_items" class="doc_header"><code>get_child_items</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L155" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_child_items</code>(<strong><code>path</code></strong>=<em><code>'E:\\Research\\pivotpy'</code></em>, <strong><code>depth</code></strong>=<em><code>None</code></em>, <strong><code>recursive</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>, <strong><code>exclude</code></strong>=<em><code>None</code></em>, <strong><code>filesOnly</code></strong>=<em><code>False</code></em>, <strong><code>dirsOnly</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="get_child_items" class="doc_header"><code>get_child_items</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L103" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_child_items</code>(<strong><code>path</code></strong>=<em><code>'E:\\Research\\pivotpy'</code></em>, <strong><code>depth</code></strong>=<em><code>None</code></em>, <strong><code>recursive</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>, <strong><code>exclude</code></strong>=<em><code>None</code></em>, <strong><code>filesOnly</code></strong>=<em><code>False</code></em>, <strong><code>dirsOnly</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns selected directories/files recursively from a parent directory.</li>
@@ -466,105 +392,6 @@ nb_path: "Utilities.ipynb"
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pivotpy.g_utils</span> <span class="k">as</span> <span class="nn">gu</span>
-<span class="n">dirs</span><span class="p">,</span><span class="n">fromdir</span><span class="o">=</span><span class="n">gu</span><span class="o">.</span><span class="n">select_dirs</span><span class="p">(</span> <span class="n">path</span><span class="o">=</span> <span class="s2">&quot;E:/Research/III_V_Interface/All_Interfaces&quot;</span> <span class="p">,</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mal&#39;</span><span class="p">],</span><span class="n">exclude</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;oped&#39;</span><span class="p">,</span><span class="s1">&#39;test&#39;</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">fromdir</span><span class="p">)</span>
-<span class="n">dirs</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Use command `get_child_items()` instead for more flexibility.
-E:/Research/III_V_Interface/All_Interfaces
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>[&#39;E:/Research/III_V_Interface/All_Interfaces/AlAs_Bi/primitive/Normal&#39;,
- &#39;E:/Research/III_V_Interface/All_Interfaces/AlAs_Bi/primitive/Normal/__pycache__&#39;,
- &#39;E:/Research/III_V_Interface/All_Interfaces/AlSb_Bi/primitive/Normal&#39;,
- &#39;E:/Research/III_V_Interface/All_Interfaces/GaAs_Bi/primitive/Normal&#39;,
- &#39;E:/Research/III_V_Interface/All_Interfaces/GaSb_Bi/primitive/Normal&#39;,
- &#39;E:/Research/III_V_Interface/All_Interfaces/InAs_Bi/primitive/Normal&#39;,
- &#39;E:/Research/III_V_Interface/All_Interfaces/InSb_Bi/primitive/Normal&#39;]</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">files</span><span class="p">,</span><span class="n">fromdir</span><span class="o">=</span><span class="n">gu</span><span class="o">.</span><span class="n">select_files</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ipynb&#39;</span><span class="p">],</span><span class="n">exclude</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;check&#39;</span><span class="p">,</span><span class="s1">&#39;Plots&#39;</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">fromdir</span><span class="p">)</span>
-<span class="n">files</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Use command `get_child_items()` instead for more flexibility.
-.
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>[&#39;index.ipynb&#39;,
- &#39;StructureIO.ipynb&#39;,
- &#39;Utilities.ipynb&#39;,
- &#39;Widgets.ipynb&#39;,
- &#39;XmlElementTree.ipynb&#39;]</pre>
-</div>
-
-</div>
-
-</div>
-</div>
 
 </div>
     {% endraw %}
@@ -616,70 +443,27 @@ E:/Research/III_V_Interface/All_Interfaces
     
 <div class="cell border-box-sizing code_cell rendered">
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="invert_color" class="doc_header"><code>invert_color</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L198" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>invert_color</code>(<strong><code>color</code></strong>=<em><code>(1, 1, 1)</code></em>)</p>
-</blockquote>
-<ul>
-<li>Returns opposite of given complementary color.</li>
-<li>Input: Tuple (r,g,b).</li>
-</ul>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
 </div>
     {% endraw %}
 
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">invert_color</span><span class="p">((</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(1.0, 0.5, 0.5)</pre>
-</div>
-
-</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>$\text{color.r }\color{red}{\text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $<br>
+ $\text{color.rb}\color{red}{\bf \text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $<br>
+ $\text{color.g }\color{green}{\text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $<br>
+ $\text{color.gb}\color{green}{\bf \text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $<br>
+ $\text{color.b }\color{blue}{\text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $<br>
+ $\text{color.bb}\color{blue}{ \bf\text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $<br>
+ $\text{color.y }\color{yellow}{\text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $<br>
+ $\text{color.yb}\color{yellow}{\bf \text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $<br>
+ $\text{color.m }\color{magenta}{\text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $<br>
+ $\text{color.mb}\color{magenta}{\bf \text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $<br>
+ $\text{color.c }\color{cyan}{\text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $<br>
+ $\text{color.cb}\color{cyan}{\bf \text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $</p>
 
 </div>
 </div>
-
 </div>
-    {% endraw %}
-
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -691,201 +475,7 @@ E:/Research/III_V_Interface/All_Interfaces
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="printr" class="doc_header"><code>printr</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L207" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>printr</code>(<strong><code>s</code></strong>)</p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="printg" class="doc_header"><code>printg</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L208" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>printg</code>(<strong><code>s</code></strong>)</p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="printb" class="doc_header"><code>printb</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L209" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>printb</code>(<strong><code>s</code></strong>)</p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="printy" class="doc_header"><code>printy</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L210" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>printy</code>(<strong><code>s</code></strong>)</p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="printm" class="doc_header"><code>printm</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L211" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>printm</code>(<strong><code>s</code></strong>)</p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="printc" class="doc_header"><code>printc</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L212" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>printc</code>(<strong><code>s</code></strong>)</p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">printm</span><span class="p">(</span><span class="s1">&#39;######|||||||||||+++++|||||||||||||######&#39;</span><span class="p">)</span> 
-<span class="n">printr</span><span class="p">(</span><span class="s1">&#39;######|||||||||||+++++|||||||||||||######&#39;</span><span class="p">)</span> 
-<span class="n">printy</span><span class="p">(</span><span class="s1">&#39;######|||||||||||+++++|||||||||||||######&#39;</span><span class="p">)</span> 
-<span class="n">printg</span><span class="p">(</span><span class="s1">&#39;######|||||||||||+++++|||||||||||||######&#39;</span><span class="p">)</span> 
-<span class="n">printc</span><span class="p">(</span><span class="s1">&#39;######|||||||||||+++++|||||||||||||######&#39;</span><span class="p">)</span> 
-<span class="n">printb</span><span class="p">(</span><span class="s1">&#39;######|||||||||||+++++|||||||||||||######&#39;</span><span class="p">)</span> 
-<span class="n">printm</span><span class="p">(</span><span class="s1">&#39;######|||||||||||+++++|||||||||||||######&#39;</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre><span class="ansi-magenta-intense-fg"> ######|||||||||||+++++|||||||||||||######</span>
-<span class="ansi-red-intense-fg"> ######|||||||||||+++++|||||||||||||######</span>
-<span class="ansi-yellow-intense-fg"> ######|||||||||||+++++|||||||||||||######</span>
-<span class="ansi-green-intense-fg"> ######|||||||||||+++++|||||||||||||######</span>
-<span class="ansi-cyan-intense-fg"> ######|||||||||||+++++|||||||||||||######</span>
-<span class="ansi-blue-fg"> ######|||||||||||+++++|||||||||||||######</span>
-<span class="ansi-magenta-intense-fg"> ######|||||||||||+++++|||||||||||||######</span>
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="EncodeFromNumpy" class="doc_header"><code>class</code> <code>EncodeFromNumpy</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L216" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>EncodeFromNumpy</code>(<strong><code>skipkeys</code></strong>=<em><code>False</code></em>, <strong><code>ensure_ascii</code></strong>=<em><code>True</code></em>, <strong><code>check_circular</code></strong>=<em><code>True</code></em>, <strong><code>allow_nan</code></strong>=<em><code>True</code></em>, <strong><code>sort_keys</code></strong>=<em><code>False</code></em>, <strong><code>indent</code></strong>=<em><code>None</code></em>, <strong><code>separators</code></strong>=<em><code>None</code></em>, <strong><code>default</code></strong>=<em><code>None</code></em>) :: <code>JSONEncoder</code></p>
+<h2 id="EncodeFromNumpy" class="doc_header"><code>class</code> <code>EncodeFromNumpy</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L162" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>EncodeFromNumpy</code>(<strong><code>skipkeys</code></strong>=<em><code>False</code></em>, <strong><code>ensure_ascii</code></strong>=<em><code>True</code></em>, <strong><code>check_circular</code></strong>=<em><code>True</code></em>, <strong><code>allow_nan</code></strong>=<em><code>True</code></em>, <strong><code>sort_keys</code></strong>=<em><code>False</code></em>, <strong><code>indent</code></strong>=<em><code>None</code></em>, <strong><code>separators</code></strong>=<em><code>None</code></em>, <strong><code>default</code></strong>=<em><code>None</code></em>) :: <code>JSONEncoder</code></p>
 </blockquote>
 <ul>
 <li>Serializes python/Numpy objects via customizing json encoder.</li>
@@ -917,7 +507,7 @@ E:/Research/III_V_Interface/All_Interfaces
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="DecodeToNumpy" class="doc_header"><code>class</code> <code>DecodeToNumpy</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L244" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DecodeToNumpy</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <code>JSONDecoder</code></p>
+<h2 id="DecodeToNumpy" class="doc_header"><code>class</code> <code>DecodeToNumpy</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L190" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DecodeToNumpy</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <code>JSONDecoder</code></p>
 </blockquote>
 <ul>
 <li>Deserilizes JSON object to Python/Numpy's objects.</li>
@@ -1003,7 +593,7 @@ RETRIEVED DATA : {}
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Vasprun" class="doc_header"><code>class</code> <code>Vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L267" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Vasprun</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>joinPathAt</code></strong>=<em><code>[]</code></em>, <strong><code>shift_kpath</code></strong>=<em><code>0</code></em>)</p>
+<h2 id="Vasprun" class="doc_header"><code>class</code> <code>Vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L214" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Vasprun</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>joinPathAt</code></strong>=<em><code>[]</code></em>, <strong><code>shift_kpath</code></strong>=<em><code>0</code></em>)</p>
 </blockquote>
 <ul>
 <li>All plotting functions that depend on <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> are joined under this class and renamed.</li>
@@ -1053,20 +643,6 @@ args_ = plots.get_kwargs('sbands')</p>
 </div>
     {% endraw %}
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Add-a-function-as-method-to-a-class-without-defining-inside-class-itself">Add a function as method to a class without defining inside class itself<a class="anchor-link" href="#Add-a-function-as-method-to-a-class-without-defining-inside-class-itself"> </a></h2><ul>
-<li>We can add a function <code>f</code> to a class <code>C</code> if function includes parameter <code>self</code> as shown below:<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-   <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Do something!&#39;</span><span class="p">)</span>
-<span class="nb">setattr</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-</pre></div>
-</li>
-<li>We can define a wrapper to attach a method to class without keeping <code>self</code> as argument too.</li>
-</ul>
-
-</div>
-</div>
-</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -1078,96 +654,7 @@ args_ = plots.get_kwargs('sbands')</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="link_to_class" class="doc_header"><code>link_to_class</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L346" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>link_to_class</code>()</p>
-</blockquote>
-<ul>
-<li>Binds wrapper of a function to class as attribute that does exactly the same as function. Also function returned from wrapper can be used normally as well.</li>
-<li><strong>Parameters</strong><ul>
-<li>cls : A class object to which function is attached.</li>
-</ul>
-</li>
-</ul>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">Parent</span><span class="p">:</span>
-    <span class="k">pass</span>
-<span class="n">a</span> <span class="o">=</span> <span class="n">Parent</span><span class="p">()</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">a</span><span class="o">.</span><span class="n">f</span><span class="p">()</span>
-<span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">ae</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">ae</span><span class="p">)</span> 
-
-<span class="c1"># Now lets add f to Parent.</span>
-<span class="nd">@link_to_class</span><span class="p">(</span><span class="n">Parent</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-
-<span class="n">a</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="s1">&#39;I am from class Parent!&#39;</span><span class="p">)</span>
-<span class="n">f</span><span class="p">(</span><span class="s1">&#39;I am independent function!&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">f</span><span class="p">)</span> 
-<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> 
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>&#39;Parent&#39; object has no attribute &#39;f&#39;
-I am from class Parent!
-I am independent function!
-&lt;bound method f of &lt;__main__.Parent object at 0x000001F74F491808&gt;&gt;
-&lt;function f at 0x000001F74F3D4DC8&gt;
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="nav_links" class="doc_header"><code>nav_links</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L362" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>nav_links</code>(<strong><code>current_index</code></strong>=<em><code>0</code></em>, <strong><code>doc_url</code></strong>=<em><code>'https://massgh.github.io/pivotpy/'</code></em>, <strong><code>items</code></strong>=<em><code>['Index', 'XmlElementTree', 'StaticPlots', 'InteractivePlots', 'Utilities', 'StructureIO', 'Widgets']</code></em>, <strong><code>horizontal</code></strong>=<em><code>False</code></em>, <strong><code>out_string</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="nav_links" class="doc_header"><code>nav_links</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L277" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>nav_links</code>(<strong><code>current_index</code></strong>=<em><code>0</code></em>, <strong><code>doc_url</code></strong>=<em><code>'https://massgh.github.io/pivotpy/'</code></em>, <strong><code>items</code></strong>=<em><code>['Index', 'XmlElementTree', 'StaticPlots', 'InteractivePlots', 'Utilities', 'StructureIO', 'Widgets']</code></em>, <strong><code>horizontal</code></strong>=<em><code>False</code></em>, <strong><code>out_string</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 
 </div>
@@ -1198,7 +685,7 @@ I am independent function!
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="export_outcar" class="doc_header"><code>export_outcar</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L390" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_outcar</code>(<strong><code>path</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="export_outcar" class="doc_header"><code>export_outcar</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L305" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_outcar</code>(<strong><code>path</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Read potential at ionic sites from OUTCAR.</li>
@@ -1232,7 +719,7 @@ I am independent function!
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="export_potential" class="doc_header"><code>export_potential</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L442" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_potential</code>(<strong><code>locpot</code></strong>=<em><code>None</code></em>, <strong><code>e</code></strong>=<em><code>True</code></em>, <strong><code>m</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="export_potential" class="doc_header"><code>export_potential</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L357" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_potential</code>(<strong><code>locpot</code></strong>=<em><code>None</code></em>, <strong><code>e</code></strong>=<em><code>True</code></em>, <strong><code>m</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns Data from LOCPOT and similar structure files like CHG. Loads only single set out of 2/4 magnetization data to avoid performance/memory cost while can load electrostatic and one set of magnetization together.</li>
@@ -1276,7 +763,7 @@ I am independent function!
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="LOCPOT_CHG" class="doc_header"><code>class</code> <code>LOCPOT_CHG</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L527" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LOCPOT_CHG</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>e</code></strong>=<em><code>True</code></em>, <strong><code>m</code></strong>=<em><code>False</code></em>)</p>
+<h2 id="LOCPOT_CHG" class="doc_header"><code>class</code> <code>LOCPOT_CHG</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L441" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LOCPOT_CHG</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>e</code></strong>=<em><code>True</code></em>, <strong><code>m</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns Data from LOCPOT and similar structure files like CHG. Loads only single set out of 2/4 magnetization data to avoid performance/memory cost while can load electrostatic and one set of magnetization together.</li>
@@ -1320,21 +807,21 @@ I am independent function!
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="transform_color" class="doc_header"><code>transform_color</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L634" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>transform_color</code>(<strong><code>arr</code></strong>, <strong><code>s</code></strong>=<em><code>1</code></em>, <strong><code>c</code></strong>=<em><code>1</code></em>, <strong><code>b</code></strong>=<em><code>0</code></em>, <strong><code>mixing_matrix</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="transform_color" class="doc_header"><code>transform_color</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L548" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>transform_color</code>(<strong><code>arr</code></strong>, <strong><code>s</code></strong>=<em><code>1</code></em>, <strong><code>c</code></strong>=<em><code>1</code></em>, <strong><code>b</code></strong>=<em><code>0</code></em>, <strong><code>mixing_matrix</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
-<li>Color transformation such as brightness, contrast, saturation and mixing of an input color array. Negative values in s,c could invert color.</li>
+<li>Color transformation such as brightness, contrast, saturation and mixing of an input color array. <code>c = -1</code> would invert color,keeping everything else same.</li>
 <li><strong>Parameters</strong><ul>
 <li>arr: input array, a single RGB/RGBA color or an array with inner most dimension equal to 3 or 4. e.g. [[[0,1,0,1],[0,0,1,1]]].</li>
 <li>c  : contrast, default is 1. Can be a float in [-1,1].</li>
 <li>s  : saturation, default is 1. Can be a float in [-1,1]. If s = 0, you get a gray scale image.</li>
 <li>b  : brightness, default is 0. Can be a float in [-1,1] or list of three brightnesses for RGB components.</li>
-<li>mixing_matrix: A 3x3 matrix to mix RGB values, such as <code>pp.color_matrix</code>.
-<a href="https://docs.microsoft.com/en-us/windows/win32/gdiplus/-gdiplus-recoloring-use?redirectedfrom=MSDN">Recoloring</a>
-<a href="https://docs.rainmeter.net/tips/colormatrix-guide/">Rainmeter</a></li>
+<li>mixing_matrix: A 3x3 matrix to mix RGB values, such as <code>pp.color_matrix</code>.</li>
 </ul>
 </li>
 </ul>
+<p><a href="https://docs.microsoft.com/en-us/windows/win32/gdiplus/-gdiplus-recoloring-use?redirectedfrom=MSDN">Recoloring</a>
+<a href="https://docs.rainmeter.net/tips/colormatrix-guide/">Rainmeter</a></p>
 
 </div>
 

@@ -2,11 +2,10 @@
 
 __all__ = ['Dict2Data', 'read_asxml', 'exclude_kpts', 'get_ispin', 'get_summary', 'get_kpts', 'get_tdos', 'get_evals',
            'get_bands_pro_set', 'get_dos_pro_set', 'get_structure', 'export_vasprun', 'load_export', 'dump_dict',
-           'load_from_dump', 'islice2array', 'slice_rows', 'split_vasprun']
+           'load_from_dump', 'islice2array', 'slice_data', 'split_vasprun']
 
 # Cell
 import numpy
-#from nbdev import show_doc
 class Dict2Data(dict):
     """
     - Returns a Data object with dictionary keys as attributes of Data accessible by dot notation.
@@ -108,7 +107,7 @@ def read_asxml(path=None):
         print("File should end with 'vasprun.xml', prefixes are allowed.")
         return # This is important to stop further errors.
     else:
-        from .g_utils import get_file_size,printy,printg
+        from .g_utils import get_file_size,color
         fsize = get_file_size(path)
         value = float(fsize.split()[0])
         print_str = """
@@ -118,9 +117,9 @@ def read_asxml(path=None):
             An alternative way is to parse vasprun.xml is by using `Vasp2Visual` module in Powershell by command `pivotpy.load_export('path/to/vasprun.xml'), which runs underlying powershell functions to load data whith efficient memory managment. It works on Windows/Linux/MacOS if you have powershell core and Vasp2Visual installed on it.
         """.format(path,fsize)
         if 'MB' in fsize and value > 200:
-            printy(textwrap.dedent(print_str))
+            print(color.y(textwrap.dedent(print_str)))
         elif 'GB' in fsize and value > 1:
-            printy(textwrap.dedent(print_str))
+            print(color.y(textwrap.dedent(print_str)))
 
         tree = ET.parse(path)
         xml_data = tree.getroot()
@@ -364,12 +363,10 @@ def get_bands_pro_set(xml_data=None,
     if(bands_range!=None):
         check_list=list(bands_range)
         if check_list==[]:
-            return pp.printr("No bands prjections found in given energy range.")
+            return print(pp.color.r("No bands prjections found in given energy range."))
     # Try to read _set.txt first. instance check is important.
     if isinstance(set_path,str) and os.path.isfile(set_path):
-        _f = open(set_path,'r')
-        _header = _f.readline()
-        _f.close()
+        _header = pp.islice2array(set_path,nlines=1,raw=True,exclude=None)
         _shape = [int(v) for v in _header.split('=')[1].strip().split(',')]
         NKPTS, NBANDS, NIONS, NORBS = _shape
         if NORBS == 3:
@@ -456,7 +453,7 @@ def get_dos_pro_set(xml_data=None,spin_set=1,dos_range=None):
     if(dos_range!=None):
         check_list=list(dos_range)
         if(check_list==[]):
-            return gu.printr("No DOS prjections found in given energy range.")
+            return print(gu.color.r("No DOS prjections found in given energy range."))
     if(xml_data==None):
         xml_data=read_asxml()
     if not xml_data:
@@ -815,21 +812,25 @@ def load_from_dump(file_or_str,keep_as_dict=False):
     return out
 
 # Cell
-def islice2array(path_or_islice,dtype=float,start=0,nlines=None,count=-1,delimiter='\s+',cols=None,include=None,exclude='#',raw=False,fix_format = True):
+def islice2array(path_or_islice,dtype=float,delimiter='\s+',
+                include=None,exclude='#',raw=False,fix_format = True,
+                start=0,nlines=None,count=-1,cols=None,new_shape=None
+                ):
     """
     - Reads a sliced array from txt,csv type files and return to array. Also manages if columns lengths are not equal and return 1D array. It is faster than loading  whole file into memory. This single function could be used to parse EIGENVAL, PROCAR, DOCAR and similar files with just a combination of `exclude, include,start,stop,step` arguments.
     - **Parameters**
         - path_or_islice: Path/to/file or `itertools.islice(file_object)`. islice is interesting when you want to read different slices of an opened file and do not want to open it again and again. For reference on how to use it just execute `pivotpy.export_potential??` in a notebook cell or ipython terminal to see how islice is used extensively.
         - dtype: float by default. Data type of output array, it is must have argument.
-        - start,nlines: The indices of lines to start reading from and number of lines after start respectively. Only work if `path_or_islice` is a file path. both could be None or int, while start could be a list to read slices from file provided that nlines is int. The spacing between adjacent indices in start should be equal to or greater than nlines as pointer in file do not go back on its own.
-        > Note: `start` should count comments if `exclude` is None. You can use `slice_rows` function to get a dictionary of start,nlines and count and unpack in argument instead of thinking too much.
-        - count: `np.size(output_array) = nrows x ncols`, if it is known before execution, performance is increased.
+        - start,nlines: The indices of lines to start reading from and number of lines after start respectively. Only work if `path_or_islice` is a file path. both could be None or int, while start could be a list to read slices from file provided that nlines is int. The spacing between adjacent indices in start should be equal to or greater than nlines as pointer in file do not go back on its own.  These parameters are in output of `slice_data`
+        > Note: `start` should count comments if `exclude` is None. You can use `slice_data` function to get a dictionary of `start,nlines, count, cols, new_shape` and unpack in argument instead of thinking too much.
+        - count: `np.size(output_array) = nrows x ncols`, if it is known before execution, performance is increased. This parameter is in output of `slice_data`.
         - delimiter:  Default is `\s+`. Could be any kind of delimiter valid in numpy and in the file.
-        - cols: List of indices of columns to pick. Useful when reading a file like PROCAR which e.g. has text and numbers inline.
+        - cols: List of indices of columns to pick. Useful when reading a file like PROCAR which e.g. has text and numbers inline. This parameter is in output of `slice_data`.
         - include: Default is None and includes everything. String of patterns separated by | to keep, could be a regular expression.
         - exclude: Default is '#' to remove comments. String of patterns separated by | to drop,could be a regular expression.
         - raw    : Default is False, if True, returns list of raw strings. Useful to select `cols`.
         - fix_format: Default is True, it sepearates numbers with poor formatting like 1.000-2.000 to 1.000 2.000 which is useful in PROCAR. Keep it False if want to read string literally.
+        - new_shape : Tuple of shape Default is None. Will try to reshape in this shape, if fails fallbacks to 2D or 1D. This parameter is in output of `slice_data`.
     - **Examples**
         > `islice2array('path/to/PROCAR',start=3,include='k-point',cols=[3,4,5])[:2]`
         > array([[ 0.125,  0.125,  0.125],
@@ -873,7 +874,7 @@ def islice2array(path_or_islice,dtype=float,start=0,nlines=None,count=-1,delimit
     if fix_format:
         _islice = (re.sub(r"(\d)-(\d)",r"\1 -\2",l) for l in _islice)
     if raw:
-        _lines = list(_islice)
+        _lines = ''.join(_islice) # join is faster than making list
         f.close()
         return _lines
 
@@ -889,19 +890,23 @@ def islice2array(path_or_islice,dtype=float,start=0,nlines=None,count=-1,delimit
         except: pass
     data = np.fromiter(_gen(_islice),dtype=dtype,count=count)
     f.close() # Do not close file before using islice
-    try:
-        if islice2array.ncols > 1: #Otherwise single array.
-            data = data.reshape((-1,islice2array.ncols))
-    except: pass
+    if new_shape:
+        try:
+            data = data.reshape(new_shape)
+        except:
+            try:
+                if islice2array.ncols > 1: #Otherwise single array.
+                    data = data.reshape((-1,islice2array.ncols))
+            except: pass
     return data
 
 # Cell
-def slice_rows(dim_inds,old_shape):
+def slice_data(dim_inds,old_shape):
     """
-    - Returns a dictionary that can be unpacked in arguments of isclice2array function.
+    - Returns a dictionary that can be unpacked in arguments of isclice2array function. This function works only for regular txt/csv/tsv data files which have rectangular data written.
     - **Parameters**
-        - dim_inds : List of indices array or range to pick from each dimension. Inner dimensions are more towards right.
-        - old_shape: Shape of data set including the columns length in right most place. This argument's length is one more than `dim_inds` that respresent columns.
+        - dim_inds : List of indices array or range to pick from each dimension. Inner dimensions are more towards right. Last itmes in dim_inds is considered to be columns. If you want to include all values in a dimension, you can put -1 in that dimension. Note that negative indexing does not work in file readig, -1 is s special case to fetch all items.
+        - old_shape: Shape of data set including the columns length in right most place.
     - **Example**
         - You have data as 3D arry where third dimension is along column.
         > 0 0
@@ -909,14 +914,24 @@ def slice_rows(dim_inds,old_shape):
         > 1 0
         > 1 2
         - To pick [[0,2], [1,2]], you need to give
-        > slice_rows(dim_inds = [[0,1],[1]], old_shape=(2,2,2))
+        > slice_data(dim_inds = [[0,1],[1],-1], old_shape=(2,2,2))
         > {'start': array([1, 3]), 'nlines': 1, 'count': 2}
         - Unpack above dictionary in `islice2array` and you will get output array.
     - Note that dimensions are packed from right to left, like 0,2 is repeating in 2nd column.
     """
     import numpy as np
     from itertools import product
-    r_shape = old_shape[:len(dim_inds)]
+    # Columns are treated diffiernetly.
+    if dim_inds[-1] == -1:
+        cols = None
+    else:
+        cols = list(dim_inds[-1])
+
+    r_shape = old_shape[:-1]
+    dim_inds = dim_inds[:-1]
+    for i,ind in enumerate(dim_inds.copy()):
+        if ind == -1:
+            dim_inds[i] = range(r_shape[i])
     nlines = 1
     #start = [[NIONS*NBANDS*k + NIONS*b for b in _b_r] for k in range(skipk,NKPTS)] #kind of thing.
     _prod_ = product(*dim_inds)
@@ -933,7 +948,9 @@ def slice_rows(dim_inds,old_shape):
             # Now check if all indices picked then make chunks in outer dimensions too.
             if step != r_shape[i]: # Can't make chunk of outer dimension if inner is not 100% picked.
                 break # Stop more chunking
-    return {'start':_out_,'nlines':nlines,'count': nlines*len(_out_)}
+    new_shape = [len(inds) for inds in dim_inds] #dim_inds are only in rows.
+    new_shape.append(old_shape[-1])
+    return {'start':_out_,'nlines':nlines,'count': nlines*len(_out_),'cols':cols,'new_shape':tuple(new_shape)}
 
 
 # Cell
@@ -951,7 +968,7 @@ def split_vasprun(path=None):
     import re, os, pivotpy as pp
     from itertools import islice
     if not path:
-        path = './vasprun,xml'
+        path = './vasprun.xml'
     if not os.path.isfile(path):
         return print("{!r} does not exist!".format(path))
     base_dir = os.path.split(os.path.abspath(path))[0]

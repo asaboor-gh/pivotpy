@@ -19,7 +19,7 @@ def plot_bands(ax=None,kpath=None,bands=None,showlegend=False,E_Fermi=None,\
     - **Returns**
         - ax : matplotlib axes object with plotted bands.
     """
-    import pivotpy.g_utils as gu
+    from .g_utils import color
     # Fixing ax argument
     if(ax==None):
         import matplotlib.pyplot as plt
@@ -37,14 +37,14 @@ def plot_bands(ax=None,kpath=None,bands=None,showlegend=False,E_Fermi=None,\
     # Plotting
     if(bands.ISPIN==1):
         if(not bands.evals.any()):
-            gu.printy("Can not plot an empty eigenvalues object.")
-            return gu.printg("Try with large energy range.")
+            print(color.y("Can not plot an empty eigenvalues object."))
+            return print(color.g("Try with large energy range."))
         en=bands.evals-E_Fermi
         ax.plot(kpath,en,color=color1,lw=lw1,ls=style1)
     if(bands.ISPIN==2):
         if(not bands.evals.SpinUp.any()):
-            gu.printy("Can not plot an empty eigenvalues object.")
-            return gu.printg("Try with large energy range.")
+            print(color.y("Can not plot an empty eigenvalues object."))
+            return print(color.g("Try with large energy range."))
         enUp=bands.evals.SpinUp-E_Fermi
         enDown=bands.evals.SpinDown-E_Fermi
         ax.plot(kpath,enUp,color=color1,lw=lw1,ls=style1)
@@ -385,9 +385,9 @@ def get_pros_data(kpath      = None,
     """
     import numpy as np
     if not np.any(pros_set):
-        import pivotpy.g_utils as gu
-        gu.printy("Can not process an empty eigenvalues/projection object.")
-        return gu.printg("Try with large `elim` in parent function.")
+        from .g_utils import color
+        print(color.y("Can not process an empty eigenvalues/projection object."))
+        return print(color.g("Try with large `elim` in parent function."))
     # Empty orbitals/elements are still allowed on purpose for rgb_lines.
     for elem, orb in zip(elements,orbs):
         if isinstance(elem,int) or isinstance(orb,int):
@@ -601,8 +601,9 @@ def quick_rgb_lines(path_evr    = None,
 
     # Main working here.
     if vr.pro_bands == None:
-        pp.printy("Can not plot an empty eigenvalues object.")
-        return gu.printg("Try with large energy range.")
+        from .g_utils import color
+        print(color.y("Can not plot an empty eigenvalues object."))
+        return print(color.g("Try with large energy range."))
     if not spin in ('up','down','both'):
         raise ValueError("spin can take any of ['up','down'. 'both'] only.")
 
@@ -816,8 +817,9 @@ def quick_color_lines(path_evr      = None,
 
     # Main working here.
     if vr.pro_bands == None:
-        pp.printy("Can not plot an empty eigenvalues object.")
-        return gu.printg("Try with large energy range.")
+        from .g_utils import color
+        print(color.y("Can not plot an empty eigenvalues object."))
+        return print(color.g("Try with large energy range."))
     if not spin in ('up','down','both'):
         raise ValueError("spin can take any of ['up','down'. 'both'] only.")
 
@@ -983,8 +985,8 @@ def select_pdos(tdos        = None,
         - k        : int, order of interpolation, defualt is 3. `n > k` should be hold.
     """
     if tdos==[]:
-        import pivotpy.g_utils as gu
-        return gu.printy("Can not plot empty DOS.")
+        from .g_utils import color
+        return print(color.y("Can not plot empty DOS."))
     import numpy as np
     en = tdos[:,0]-E_Fermi
     t_dos = tdos[:,1]
@@ -1054,8 +1056,8 @@ def collect_dos(path_evr      = None,
     else:
         # Main working here.
         if(vr.pro_dos==None):
-            import pivotpy.g_utils as gu
-            return gu.printy("Can not plot an empty DOS object.")
+            from .g_utils import color
+            return print(color.y("Can not plot an empty DOS object."))
         if not spin in ('up','down','both'):
             raise ValueError(
                 "spin can take `up`,`down` or `both` values only.")
@@ -1197,8 +1199,8 @@ def quick_dos_lines(path_evr      = None,
         try:
             en,tdos,pdos,labels,vr=cl_dos # Labels updated
         except TypeError:
-            import pivotpy.g_utils as gu
-            return gu.printg("Try with large energy range.")
+            from .g_utils import color
+            return print(color.g("Try with large energy range."))
         # Fix elements and colors length
         if color_map in plt.colormaps():
             from matplotlib.pyplot import cm
@@ -1218,7 +1220,7 @@ def quick_dos_lines(path_evr      = None,
 
         # Make additional colors for spin down. Inverted colors are better.
         t_color=mpl.colors.to_rgb(tdos_color)
-        it_color=gu.invert_color(color=t_color)
+        it_color=gu.transform_color(t_color,c=-1) # -1 contrast inverts color
         if(ax==None):
             ax=sp.init_figure(figsize=figsize)
         if(vertical==False):
