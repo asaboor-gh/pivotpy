@@ -72,6 +72,13 @@ nb_path: "StructureIO.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -79,7 +86,7 @@ nb_path: "StructureIO.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="save_mp_API" class="doc_header"><code>save_mp_API</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L8" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>save_mp_API</code>(<strong><code>api_key</code></strong>)</p>
+<h4 id="save_mp_API" class="doc_header"><code>save_mp_API</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L25" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>save_mp_API</code>(<strong><code>api_key</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Save materials project api key for autoload in functions.</li>
@@ -113,7 +120,7 @@ nb_path: "StructureIO.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="load_mp_data" class="doc_header"><code>load_mp_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L29" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_mp_data</code>(<strong><code>formula</code></strong>, <strong><code>api_key</code></strong>=<em><code>None</code></em>, <strong><code>mp_id</code></strong>=<em><code>None</code></em>, <strong><code>max_sites</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="load_mp_data" class="doc_header"><code>load_mp_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L44" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_mp_data</code>(<strong><code>formula</code></strong>, <strong><code>api_key</code></strong>=<em><code>None</code></em>, <strong><code>mp_id</code></strong>=<em><code>None</code></em>, <strong><code>max_sites</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns fetched data using request api of python form materials project website.</li>
@@ -154,7 +161,7 @@ nb_path: "StructureIO.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_crystal" class="doc_header"><code>get_crystal</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L72" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_crystal</code>(<strong><code>formula</code></strong>, <strong><code>api_key</code></strong>=<em><code>None</code></em>, <strong><code>mp_id</code></strong>=<em><code>None</code></em>, <strong><code>max_sites</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_crystal" class="doc_header"><code>get_crystal</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L84" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_crystal</code>(<strong><code>formula</code></strong>, <strong><code>api_key</code></strong>=<em><code>None</code></em>, <strong><code>mp_id</code></strong>=<em><code>None</code></em>, <strong><code>max_sites</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns crystal information dictionary including cif data format.</li>
@@ -195,7 +202,7 @@ nb_path: "StructureIO.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_poscar" class="doc_header"><code>get_poscar</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L96" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_poscar</code>(<strong><code>formula</code></strong>, <strong><code>api_key</code></strong>=<em><code>None</code></em>, <strong><code>mp_id</code></strong>=<em><code>None</code></em>, <strong><code>max_sites</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_poscar" class="doc_header"><code>get_poscar</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L106" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_poscar</code>(<strong><code>formula</code></strong>, <strong><code>api_key</code></strong>=<em><code>None</code></em>, <strong><code>mp_id</code></strong>=<em><code>None</code></em>, <strong><code>max_sites</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns poscar information dictionary including cif data format.</li>
@@ -320,7 +327,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_kpath" class="doc_header"><code>get_kpath</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L168" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_kpath</code>(<strong><code>hsk_list</code></strong>=<em><code>[]</code></em>, <strong><code>labels</code></strong>=<em><code>[]</code></em>, <strong><code>n</code></strong>=<em><code>5</code></em>, <strong><code>weight</code></strong>=<em><code>None</code></em>, <strong><code>ibzkpt</code></strong>=<em><code>None</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_kpath" class="doc_header"><code>get_kpath</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L176" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_kpath</code>(<strong><code>hsk_list</code></strong>=<em><code>[]</code></em>, <strong><code>labels</code></strong>=<em><code>[]</code></em>, <strong><code>n</code></strong>=<em><code>5</code></em>, <strong><code>weight</code></strong>=<em><code>None</code></em>, <strong><code>ibzkpt</code></strong>=<em><code>None</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Generate list of kpoints along high symmetry path. Options are write to file or return KPOINTS list. It generates uniformly spaced point with input <code>n</code> as just a scale factor of number of points per unit length. You can also specify custom number of kpoints in an interval by putting number of kpoints as 4th entry in left kpoint.</li>
@@ -455,7 +462,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_kmesh" class="doc_header"><code>get_kmesh</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L240" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_kmesh</code>(<strong><code>n_xyz</code></strong>=<em><code>[5, 5, 5]</code></em>, <strong><code>weight</code></strong>=<em><code>None</code></em>, <strong><code>gamma</code></strong>=<em><code>True</code></em>, <strong><code>ibzkpt</code></strong>=<em><code>None</code></em>, <strong><code>poscar</code></strong>=<em><code>None</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>, <strong><code>plot</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="get_kmesh" class="doc_header"><code>get_kmesh</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L245" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_kmesh</code>(<strong><code>n_xyz</code></strong>=<em><code>[5, 5, 5]</code></em>, <strong><code>weight</code></strong>=<em><code>None</code></em>, <strong><code>gamma</code></strong>=<em><code>True</code></em>, <strong><code>ibzkpt</code></strong>=<em><code>None</code></em>, <strong><code>poscar</code></strong>=<em><code>None</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>, <strong><code>plot</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <ul>
 <li>Generate uniform mesh of kpoints. Options are write to file, plot or return KPOINTS list.</li>
@@ -558,7 +565,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="intersect_3p_p_3v" class="doc_header"><code>intersect_3p_p_3v</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L360" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>intersect_3p_p_3v</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>, <strong><code>c</code></strong>)</p>
+<h4 id="intersect_3p_p_3v" class="doc_header"><code>intersect_3p_p_3v</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L359" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>intersect_3p_p_3v</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>, <strong><code>c</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns intersection point of 3 planes in 3D.</li>
@@ -589,7 +596,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="centroid" class="doc_header"><code>centroid</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L373" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>centroid</code>(<strong><code>points</code></strong>)</p>
+<h4 id="centroid" class="doc_header"><code>centroid</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L371" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>centroid</code>(<strong><code>points</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns centroid of a list of 3D points.</li>
@@ -620,7 +627,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="order" class="doc_header"><code>order</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L390" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>order</code>(<strong><code>points</code></strong>)</p>
+<h4 id="order" class="doc_header"><code>order</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L387" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>order</code>(<strong><code>points</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns counterclockwise ordered vertices of a plane in 3D. Append first vertex at end to make loop.</li>
@@ -651,7 +658,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="in_vol_sector" class="doc_header"><code>in_vol_sector</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L438" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>in_vol_sector</code>(<strong><code>test_point</code></strong>, <strong><code>p1</code></strong>, <strong><code>p2</code></strong>, <strong><code>p3</code></strong>)</p>
+<h4 id="in_vol_sector" class="doc_header"><code>in_vol_sector</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L434" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>in_vol_sector</code>(<strong><code>test_point</code></strong>, <strong><code>p1</code></strong>, <strong><code>p2</code></strong>, <strong><code>p3</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns True if test_point lies inside/on the overlapping planes of three vectors.</li>
@@ -682,7 +689,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="out_bz_plane" class="doc_header"><code>out_bz_plane</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L460" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>out_bz_plane</code>(<strong><code>test_point</code></strong>, <strong><code>plane</code></strong>)</p>
+<h4 id="out_bz_plane" class="doc_header"><code>out_bz_plane</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L454" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>out_bz_plane</code>(<strong><code>test_point</code></strong>, <strong><code>plane</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns True if test_point is between plane and origin. Could be used to sample BZ mesh in place of ConvexHull.</li>
@@ -714,7 +721,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="to_xy" class="doc_header"><code>to_xy</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L479" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>to_xy</code>(<strong><code>v</code></strong>)</p>
+<h4 id="to_xy" class="doc_header"><code>to_xy</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L471" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>to_xy</code>(<strong><code>v</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Rotate a 3D vector v in xy-plane.</li>
@@ -745,7 +752,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="rad_angle" class="doc_header"><code>rad_angle</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L495" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>rad_angle</code>(<strong><code>v1</code></strong>, <strong><code>v2</code></strong>)</p>
+<h4 id="rad_angle" class="doc_header"><code>rad_angle</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L486" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>rad_angle</code>(<strong><code>v1</code></strong>, <strong><code>v2</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns interier angle between two vectors.</li>
@@ -776,7 +783,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="arctan_full" class="doc_header"><code>arctan_full</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L509" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>arctan_full</code>(<strong><code>perp</code></strong>, <strong><code>base</code></strong>)</p>
+<h4 id="arctan_full" class="doc_header"><code>arctan_full</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L499" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>arctan_full</code>(<strong><code>perp</code></strong>, <strong><code>base</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns full angle from x-axis counter clockwise.</li>
@@ -864,7 +871,7 @@ Rotate to XY [0.8660254  1.11803399 0.        ]
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_bz" class="doc_header"><code>get_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L541" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_bz</code>(<strong><code>poscar</code></strong>=<em><code>None</code></em>, <strong><code>loop</code></strong>=<em><code>True</code></em>, <strong><code>digits</code></strong>=<em><code>8</code></em>)</p>
+<h4 id="get_bz" class="doc_header"><code>get_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L530" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_bz</code>(<strong><code>poscar</code></strong>=<em><code>None</code></em>, <strong><code>loop</code></strong>=<em><code>True</code></em>, <strong><code>digits</code></strong>=<em><code>8</code></em>)</p>
 </blockquote>
 <ul>
 <li>Return required information to construct first Brillouin zone in form of tuple (basis, normals, vertices, faces).</li>
@@ -2854,7 +2861,7 @@ z
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="plot_bz" class="doc_header"><code>plot_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L636" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>plot_bz</code>(<strong><code>poscar_or_bz</code></strong>=<em><code>None</code></em>, <strong><code>fill</code></strong>=<em><code>True</code></em>, <strong><code>color</code></strong>=<em><code>'rgba(168,204,216,0.4)'</code></em>, <strong><code>background</code></strong>=<em><code>'rgb(255,255,255)'</code></em>)</p>
+<h4 id="plot_bz" class="doc_header"><code>plot_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L619" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>plot_bz</code>(<strong><code>poscar_or_bz</code></strong>=<em><code>None</code></em>, <strong><code>fill</code></strong>=<em><code>True</code></em>, <strong><code>color</code></strong>=<em><code>'rgba(168,204,216,0.4)'</code></em>, <strong><code>background</code></strong>=<em><code>'rgb(255,255,255)'</code></em>)</p>
 </blockquote>
 <ul>
 <li>Plots interactive figure showing axes,BZ surface, special points and basis, each of which could be hidden or shown.</li>

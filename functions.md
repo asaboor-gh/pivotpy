@@ -1,4 +1,4 @@
-## Functions Reference
+# Functions Reference
 
 ```python
 from nbdev import show_doc
@@ -12,7 +12,7 @@ _ = [show_doc(eval('pp.{}'.format(f))) for f in all_ if f not in ['Dict2Data','s
 ```
 
 
-<h2 id="Dict2Data" class="doc_header"><code>class</code> <code>Dict2Data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L10" class="source_link" style="float:right">[source]</a></h2>
+<h2 id="Dict2Data" class="doc_header"><code>class</code> <code>Dict2Data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L21" class="source_link" style="float:right">[source]</a></h2>
 
 > <code>Dict2Data</code>(**`d`**) :: `dict`
 
@@ -37,7 +37,7 @@ _ = [show_doc(eval('pp.{}'.format(f))) for f in all_ if f not in ['Dict2Data','s
 
 
 
-<h4 id="Dict2Data.to_dict" class="doc_header"><code>Dict2Data.to_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L41" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="Dict2Data.to_dict" class="doc_header"><code>Dict2Data.to_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L52" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>Dict2Data.to_dict</code>()
 
@@ -45,7 +45,7 @@ _ = [show_doc(eval('pp.{}'.format(f))) for f in all_ if f not in ['Dict2Data','s
 
 
 
-<h4 id="Dict2Data.to_json" class="doc_header"><code>Dict2Data.to_json</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L52" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="Dict2Data.to_json" class="doc_header"><code>Dict2Data.to_json</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L63" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>Dict2Data.to_json</code>(**`outfile`**=*`None`*, **`indent`**=*`1`*)
 
@@ -56,7 +56,7 @@ _ = [show_doc(eval('pp.{}'.format(f))) for f in all_ if f not in ['Dict2Data','s
 
 
 
-<h4 id="Dict2Data.to_pickle" class="doc_header"><code>Dict2Data.to_pickle</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L62" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="Dict2Data.to_pickle" class="doc_header"><code>Dict2Data.to_pickle</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L72" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>Dict2Data.to_pickle</code>(**`outfile`**=*`None`*)
 
@@ -66,7 +66,7 @@ _ = [show_doc(eval('pp.{}'.format(f))) for f in all_ if f not in ['Dict2Data','s
 
 
 
-<h4 id="read_asxml" class="doc_header"><code>read_asxml</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L90" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="read_asxml" class="doc_header"><code>read_asxml</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L99" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>read_asxml</code>(**`path`**=*`None`*)
 
@@ -80,7 +80,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="exclude_kpts" class="doc_header"><code>exclude_kpts</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L130" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="exclude_kpts" class="doc_header"><code>exclude_kpts</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L136" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>exclude_kpts</code>(**`xml_data`**=*`None`*)
 
@@ -92,7 +92,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="get_ispin" class="doc_header"><code>get_ispin</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L151" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_ispin" class="doc_header"><code>get_ispin</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L157" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_ispin</code>(**`xml_data`**=*`None`*)
 
@@ -104,7 +104,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="get_summary" class="doc_header"><code>get_summary</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L168" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_summary" class="doc_header"><code>get_summary</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L174" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_summary</code>(**`xml_data`**=*`None`*)
 
@@ -116,7 +116,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="get_kpts" class="doc_header"><code>get_kpts</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L206" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_kpts" class="doc_header"><code>get_kpts</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L212" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_kpts</code>(**`xml_data`**=*`None`*, **`skipk`**=*`0`*, **`joinPathAt`**=*`[]`*)
 
@@ -130,7 +130,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="get_tdos" class="doc_header"><code>get_tdos</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L240" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_tdos" class="doc_header"><code>get_tdos</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L245" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_tdos</code>(**`xml_data`**=*`None`*, **`spin_set`**=*`1`*, **`elim`**=*`[]`*)
 
@@ -144,7 +144,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="get_evals" class="doc_header"><code>get_evals</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L293" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_evals" class="doc_header"><code>get_evals</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L297" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_evals</code>(**`xml_data`**=*`None`*, **`skipk`**=*`None`*, **`elim`**=*`[]`*)
 
@@ -158,7 +158,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="get_bands_pro_set" class="doc_header"><code>get_bands_pro_set</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L346" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_bands_pro_set" class="doc_header"><code>get_bands_pro_set</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L349" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_bands_pro_set</code>(**`xml_data`**=*`None`*, **`spin_set`**=*`1`*, **`skipk`**=*`0`*, **`bands_range`**=*`None`*, **`set_path`**=*`None`*)
 
@@ -174,7 +174,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="get_dos_pro_set" class="doc_header"><code>get_dos_pro_set</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L444" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_dos_pro_set" class="doc_header"><code>get_dos_pro_set</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L443" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_dos_pro_set</code>(**`xml_data`**=*`None`*, **`spin_set`**=*`1`*, **`dos_range`**=*`None`*)
 
@@ -188,7 +188,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="get_structure" class="doc_header"><code>get_structure</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L487" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_structure" class="doc_header"><code>get_structure</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L484" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_structure</code>(**`xml_data`**=*`None`*)
 
@@ -200,7 +200,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="export_vasprun" class="doc_header"><code>export_vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L515" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="export_vasprun" class="doc_header"><code>export_vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L511" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>export_vasprun</code>(**`path`**=*`None`*, **`skipk`**=*`None`*, **`elim`**=*`[]`*, **`joinPathAt`**=*`[]`*, **`shift_kpath`**=*`0`*)
 
@@ -225,7 +225,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="load_export" class="doc_header"><code>load_export</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L600" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="load_export" class="doc_header"><code>load_export</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L593" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>load_export</code>(**`path`**=*`'./vasprun.xml'`*, **`joinPathAt`**=*`[]`*, **`shift_kpath`**=*`0`*, **`path_to_ps`**=*`'pwsh'`*, **`skipk`**=*`None`*, **`max_filled`**=*`10`*, **`max_empty`**=*`10`*, **`keep_files`**=*`True`*)
 
@@ -253,7 +253,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="dump_dict" class="doc_header"><code>dump_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L754" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="dump_dict" class="doc_header"><code>dump_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L737" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>dump_dict</code>(**`dict_data`**=*`None`*, **`dump_to`**=*`'pickle'`*, **`outfile`**=*`None`*, **`indent`**=*`1`*)
 
@@ -266,7 +266,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="load_from_dump" class="doc_header"><code>load_from_dump</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L787" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="load_from_dump" class="doc_header"><code>load_from_dump</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L767" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>load_from_dump</code>(**`file_or_str`**, **`keep_as_dict`**=*`False`*)
 
@@ -277,23 +277,24 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="islice2array" class="doc_header"><code>islice2array</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L818" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="islice2array" class="doc_header"><code>islice2array</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L797" class="source_link" style="float:right">[source]</a></h4>
 
-> <code>islice2array</code>(**`path_or_islice`**, **`dtype`**=*`float`*, **`start`**=*`0`*, **`nlines`**=*`None`*, **`count`**=*`-1`*, **`delimiter`**=*`'\\s+'`*, **`cols`**=*`None`*, **`include`**=*`None`*, **`exclude`**=*`'#'`*, **`raw`**=*`False`*, **`fix_format`**=*`True`*)
+> <code>islice2array</code>(**`path_or_islice`**, **`dtype`**=*`float`*, **`delimiter`**=*`'\\s+'`*, **`include`**=*`None`*, **`exclude`**=*`'#'`*, **`raw`**=*`False`*, **`fix_format`**=*`True`*, **`start`**=*`0`*, **`nlines`**=*`None`*, **`count`**=*`-1`*, **`cols`**=*`None`*, **`new_shape`**=*`None`*)
 
 - Reads a sliced array from txt,csv type files and return to array. Also manages if columns lengths are not equal and return 1D array. It is faster than loading  whole file into memory. This single function could be used to parse EIGENVAL, PROCAR, DOCAR and similar files with just a combination of `exclude, include,start,stop,step` arguments.
 - **Parameters**
     - path_or_islice: Path/to/file or `itertools.islice(file_object)`. islice is interesting when you want to read different slices of an opened file and do not want to open it again and again. For reference on how to use it just execute `pivotpy.export_potential??` in a notebook cell or ipython terminal to see how islice is used extensively.
     - dtype: float by default. Data type of output array, it is must have argument.
-    - start,nlines: The indices of lines to start reading from and number of lines after start respectively. Only work if `path_or_islice` is a file path. both could be None or int, while start could be a list to read slices from file provided that nlines is int. The spacing between adjacent indices in start should be equal to or greater than nlines as pointer in file do not go back on its own.
-    > Note: `start` should count comments if `exclude` is None. You can use `slice_rows` function to get a dictionary of start,nlines and count and unpack in argument instead of thinking too much.
-    - count: `np.size(output_array) = nrows x ncols`, if it is known before execution, performance is increased.
+    - start,nlines: The indices of lines to start reading from and number of lines after start respectively. Only work if `path_or_islice` is a file path. both could be None or int, while start could be a list to read slices from file provided that nlines is int. The spacing between adjacent indices in start should be equal to or greater than nlines as pointer in file do not go back on its own.  These parameters are in output of `slice_data`
+    > Note: `start` should count comments if `exclude` is None. You can use `slice_data` function to get a dictionary of `start,nlines, count, cols, new_shape` and unpack in argument instead of thinking too much.
+    - count: `np.size(output_array) = nrows x ncols`, if it is known before execution, performance is increased. This parameter is in output of `slice_data`.
     - delimiter:  Default is `\s+`. Could be any kind of delimiter valid in numpy and in the file.
-    - cols: List of indices of columns to pick. Useful when reading a file like PROCAR which e.g. has text and numbers inline.
+    - cols: List of indices of columns to pick. Useful when reading a file like PROCAR which e.g. has text and numbers inline. This parameter is in output of `slice_data`.
     - include: Default is None and includes everything. String of patterns separated by | to keep, could be a regular expression.
     - exclude: Default is '#' to remove comments. String of patterns separated by | to drop,could be a regular expression.
     - raw    : Default is False, if True, returns list of raw strings. Useful to select `cols`.
     - fix_format: Default is True, it sepearates numbers with poor formatting like 1.000-2.000 to 1.000 2.000 which is useful in PROCAR. Keep it False if want to read string literally.
+    - new_shape : Tuple of shape Default is None. Will try to reshape in this shape, if fails fallbacks to 2D or 1D. This parameter is in output of `slice_data`.
 - **Examples**
     > `islice2array('path/to/PROCAR',start=3,include='k-point',cols=[3,4,5])[:2]`
     > array([[ 0.125,  0.125,  0.125],
@@ -305,14 +306,14 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="slice_rows" class="doc_header"><code>slice_rows</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L899" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="slice_data" class="doc_header"><code>slice_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L883" class="source_link" style="float:right">[source]</a></h4>
 
-> <code>slice_rows</code>(**`dim_inds`**, **`old_shape`**)
+> <code>slice_data</code>(**`dim_inds`**, **`old_shape`**)
 
-- Returns a dictionary that can be unpacked in arguments of isclice2array function.
+- Returns a dictionary that can be unpacked in arguments of isclice2array function. This function works only for regular txt/csv/tsv data files which have rectangular data written.
 - **Parameters**
-    - dim_inds : List of indices array or range to pick from each dimension. Inner dimensions are more towards right.
-    - old_shape: Shape of data set including the columns length in right most place. This argument's length is one more than `dim_inds` that respresent columns.
+    - dim_inds : List of indices array or range to pick from each dimension. Inner dimensions are more towards right. Last itmes in dim_inds is considered to be columns. If you want to include all values in a dimension, you can put -1 in that dimension. Note that negative indexing does not work in file readig, -1 is s special case to fetch all items.
+    - old_shape: Shape of data set including the columns length in right most place.
 - **Example**
     - You have data as 3D arry where third dimension is along column.
     > 0 0
@@ -320,14 +321,14 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
     > 1 0
     > 1 2
     - To pick [[0,2], [1,2]], you need to give
-    > slice_rows(dim_inds = [[0,1],[1]], old_shape=(2,2,2))
+    > slice_data(dim_inds = [[0,1],[1],-1], old_shape=(2,2,2))
     > {'start': array([1, 3]), 'nlines': 1, 'count': 2}
     - Unpack above dictionary in `islice2array` and you will get output array.
 - Note that dimensions are packed from right to left, like 0,2 is repeating in 2nd column.
 
 
 
-<h4 id="split_vasprun" class="doc_header"><code>split_vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L940" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="split_vasprun" class="doc_header"><code>split_vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L934" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>split_vasprun</code>(**`path`**=*`None`*)
 
@@ -342,7 +343,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="get_file_size" class="doc_header"><code>get_file_size</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L9" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_file_size" class="doc_header"><code>get_file_size</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L25" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_file_size</code>(**`path`**)
 
@@ -350,7 +351,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="interpolate_data" class="doc_header"><code>interpolate_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L21" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="interpolate_data" class="doc_header"><code>interpolate_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L37" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>interpolate_data</code>(**`x`**, **`y`**, **`n`**=*`10`*, **`k`**=*`3`*)
 
@@ -368,7 +369,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="ps_to_py" class="doc_header"><code>ps_to_py</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L52" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="ps_to_py" class="doc_header"><code>ps_to_py</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L66" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>ps_to_py</code>(**`ps_command`**=*`'Get-ChildItem'`*, **`exec_type`**=*`'-Command'`*, **`path_to_ps`**=*`'powershell.exe'`*)
 
@@ -380,7 +381,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="ps_to_std" class="doc_header"><code>ps_to_std</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L86" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="ps_to_std" class="doc_header"><code>ps_to_std</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L99" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>ps_to_std</code>(**`ps_command`**=*`'Get-ChildItem'`*, **`exec_type`**=*`'-Command'`*, **`path_to_ps`**=*`'powershell.exe'`*)
 
@@ -392,35 +393,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="select_dirs" class="doc_header"><code>select_dirs</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L103" class="source_link" style="float:right">[source]</a></h4>
-
-> <code>select_dirs</code>(**`path`**=*`'C:\\Users\\mass_\\AppData\\Local\\Temp'`*, **`include`**=*`[]`*, **`exclude`**=*`[]`*)
-
-- Returns selected directories recursively from a parent directory.
-- **Parameters**
-    - path    : path to a parent directory, default is `"."`
-    - include : list of keywords to include directories, avoid wildcards.
-    - exclude : list of keywords to exclude directories, avoid wildcards.
-- **Returns**
-    - Tuple of two elements, list of selcted directories and given path.
-
-
-
-<h4 id="select_files" class="doc_header"><code>select_files</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L131" class="source_link" style="float:right">[source]</a></h4>
-
-> <code>select_files</code>(**`path`**=*`'C:\\Users\\mass_\\AppData\\Local\\Temp'`*, **`include`**=*`[]`*, **`exclude`**=*`[]`*)
-
-- Returns selected files from a given directory.
-- **Parameters**
-    - path    : path to a parent directory, default is `"."`
-    - include : list of keywords to include files, avoid wildcards.
-    - exclude : list of keywords to exclude files, avoid wildcards.
-- **Returns**
-    - Tuple of two elements, list of selcted files and given path.
-
-
-
-<h4 id="get_child_items" class="doc_header"><code>get_child_items</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L155" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_child_items" class="doc_header"><code>get_child_items</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L113" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_child_items</code>(**`path`**=*`'C:\\Users\\mass_\\AppData\\Local\\Temp'`*, **`depth`**=*`None`*, **`recursive`**=*`True`*, **`include`**=*`None`*, **`exclude`**=*`None`*, **`filesOnly`**=*`False`*, **`dirsOnly`**=*`False`*)
 
@@ -438,64 +411,15 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="invert_color" class="doc_header"><code>invert_color</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L198" class="source_link" style="float:right">[source]</a></h4>
+<h2 id="color" class="doc_header"><code>class</code> <code>color</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L153" class="source_link" style="float:right">[source]</a></h2>
 
-> <code>invert_color</code>(**`color`**=*`(1, 1, 1)`*)
-
-- Returns opposite of given complementary color.
-- Input: Tuple (r,g,b).
-
-
-
-<h4 id="printr" class="doc_header"><code>printr</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L207" class="source_link" style="float:right">[source]</a></h4>
-
-> <code>printr</code>(**`s`**)
+> <code>color</code>()
 
 
 
 
 
-<h4 id="printg" class="doc_header"><code>printg</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L208" class="source_link" style="float:right">[source]</a></h4>
-
-> <code>printg</code>(**`s`**)
-
-
-
-
-
-<h4 id="printb" class="doc_header"><code>printb</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L209" class="source_link" style="float:right">[source]</a></h4>
-
-> <code>printb</code>(**`s`**)
-
-
-
-
-
-<h4 id="printy" class="doc_header"><code>printy</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L210" class="source_link" style="float:right">[source]</a></h4>
-
-> <code>printy</code>(**`s`**)
-
-
-
-
-
-<h4 id="printm" class="doc_header"><code>printm</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L211" class="source_link" style="float:right">[source]</a></h4>
-
-> <code>printm</code>(**`s`**)
-
-
-
-
-
-<h4 id="printc" class="doc_header"><code>printc</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L212" class="source_link" style="float:right">[source]</a></h4>
-
-> <code>printc</code>(**`s`**)
-
-
-
-
-
-<h2 id="EncodeFromNumpy" class="doc_header"><code>class</code> <code>EncodeFromNumpy</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L216" class="source_link" style="float:right">[source]</a></h2>
+<h2 id="EncodeFromNumpy" class="doc_header"><code>class</code> <code>EncodeFromNumpy</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L168" class="source_link" style="float:right">[source]</a></h2>
 
 > <code>EncodeFromNumpy</code>(**`skipkeys`**=*`False`*, **`ensure_ascii`**=*`True`*, **`check_circular`**=*`True`*, **`allow_nan`**=*`True`*, **`sort_keys`**=*`False`*, **`indent`**=*`None`*, **`separators`**=*`None`*, **`default`**=*`None`*) :: `JSONEncoder`
 
@@ -506,7 +430,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h2 id="DecodeToNumpy" class="doc_header"><code>class</code> <code>DecodeToNumpy</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L244" class="source_link" style="float:right">[source]</a></h2>
+<h2 id="DecodeToNumpy" class="doc_header"><code>class</code> <code>DecodeToNumpy</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L195" class="source_link" style="float:right">[source]</a></h2>
 
 > <code>DecodeToNumpy</code>(**\*`args`**, **\*\*`kwargs`**) :: `JSONDecoder`
 
@@ -516,7 +440,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h2 id="Vasprun" class="doc_header"><code>class</code> <code>Vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L267" class="source_link" style="float:right">[source]</a></h2>
+<h2 id="Vasprun" class="doc_header"><code>class</code> <code>Vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L216" class="source_link" style="float:right">[source]</a></h2>
 
 > <code>Vasprun</code>(**`path`**=*`None`*, **`skipk`**=*`None`*, **`elim`**=*`[]`*, **`joinPathAt`**=*`[]`*, **`shift_kpath`**=*`0`*)
 
@@ -536,26 +460,16 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
     - scolor    : Shortcut for `quick_color_lines`.
     - idos      : Shortcut for `plotly_dos_lines`.
     - irgb      : Shortcut for `plotly_rgb_lines`.
-    - get_kwargs: Accepts any of ['sbands','sdos','srgb','scolor','idos','irgb'] as argument and returns argument dictionary for given method that can be unpacked in plotting function argument.
+    - Each of above mathods have an attribute `kwargs` which can be accessed, modified and put back as argumnets.
 - **Example**
-    > plots = Plots(path='./vasprun.xml')
-    > args_ = plots.get_kwargs('sbands')
-    > # Modify args_ dictionary as you want
-    > plots.sbands(**args_)
+    > vasp   = Vasprun(path='./vasprun.xml')
+    > kwargs = vasp.sbands.kwargs
+    > Modify kwargs dictionary as you want for input parameters and unpack back in function.
+    > vasp.sbands(**kwargs)
 
 
 
-<h4 id="link_to_class" class="doc_header"><code>link_to_class</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L346" class="source_link" style="float:right">[source]</a></h4>
-
-> <code>link_to_class</code>()
-
-- Binds wrapper of a function to class as attribute that does exactly the same as function. Also function returned from wrapper can be used normally as well.
-- **Parameters**
-    - cls : A class object to which function is attached.
-
-
-
-<h4 id="nav_links" class="doc_header"><code>nav_links</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L362" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="nav_links" class="doc_header"><code>nav_links</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L280" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>nav_links</code>(**`current_index`**=*`0`*, **`doc_url`**=*`'https://massgh.github.io/pivotpy/'`*, **`items`**=*`['Index', 'XmlElementTree', 'StaticPlots', 'InteractivePlots', 'Utilities', 'StructureIO', 'Widgets']`*, **`horizontal`**=*`False`*, **`out_string`**=*`False`*)
 
@@ -563,7 +477,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="export_outcar" class="doc_header"><code>export_outcar</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L390" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="export_outcar" class="doc_header"><code>export_outcar</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L308" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>export_outcar</code>(**`path`**=*`None`*)
 
@@ -571,7 +485,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="export_potential" class="doc_header"><code>export_potential</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L442" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="export_potential" class="doc_header"><code>export_potential</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L358" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>export_potential</code>(**`locpot`**=*`None`*, **`e`**=*`True`*, **`m`**=*`False`*)
 
@@ -585,7 +499,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h2 id="LOCPOT_CHG" class="doc_header"><code>class</code> <code>LOCPOT_CHG</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L527" class="source_link" style="float:right">[source]</a></h2>
+<h2 id="LOCPOT_CHG" class="doc_header"><code>class</code> <code>LOCPOT_CHG</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L438" class="source_link" style="float:right">[source]</a></h2>
 
 > <code>LOCPOT_CHG</code>(**`path`**=*`None`*, **`e`**=*`True`*, **`m`**=*`False`*)
 
@@ -599,23 +513,24 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="transform_color" class="doc_header"><code>transform_color</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L634" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="transform_color" class="doc_header"><code>transform_color</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L545" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>transform_color</code>(**`arr`**, **`s`**=*`1`*, **`c`**=*`1`*, **`b`**=*`0`*, **`mixing_matrix`**=*`None`*)
 
-- Color transformation such as brightness, contrast, saturation and mixing of an input color array. Negative values in s,c could invert color.
+- Color transformation such as brightness, contrast, saturation and mixing of an input color array. `c = -1` would invert color,keeping everything else same.
 - **Parameters**
     - arr: input array, a single RGB/RGBA color or an array with inner most dimension equal to 3 or 4. e.g. [[[0,1,0,1],[0,0,1,1]]].
     - c  : contrast, default is 1. Can be a float in [-1,1].
     - s  : saturation, default is 1. Can be a float in [-1,1]. If s = 0, you get a gray scale image.
     - b  : brightness, default is 0. Can be a float in [-1,1] or list of three brightnesses for RGB components.
     - mixing_matrix: A 3x3 matrix to mix RGB values, such as `pp.color_matrix`.
+
 [Recoloring](https://docs.microsoft.com/en-us/windows/win32/gdiplus/-gdiplus-recoloring-use?redirectedfrom=MSDN)
 [Rainmeter](https://docs.rainmeter.net/tips/colormatrix-guide/)
 
 
 
-<h4 id="plot_bands" class="doc_header"><code>plot_bands</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L8" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="plot_bands" class="doc_header"><code>plot_bands</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L38" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>plot_bands</code>(**`ax`**=*`None`*, **`kpath`**=*`None`*, **`bands`**=*`None`*, **`showlegend`**=*`False`*, **`E_Fermi`**=*`None`*, **`color1`**=*`(0, 0, 0.8)`*, **`style1`**=*`'solid'`*, **`lw1`**=*`0.7`*, **`color2`**=*`(0.8, 0, 0)`*, **`style2`**=*`'dashed'`*, **`lw2`**=*`0.7`*)
 
@@ -632,7 +547,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="modify_axes" class="doc_header"><code>modify_axes</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L60" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="modify_axes" class="doc_header"><code>modify_axes</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L88" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>modify_axes</code>(**`ax`**=*`None`*, **`xticks`**=*`[]`*, **`xt_labels`**=*`[]`*, **`xlim`**=*`[]`*, **`yticks`**=*`[]`*, **`yt_labels`**=*`[]`*, **`ylim`**=*`[]`*, **`xlabel`**=*`None`*, **`ylabel`**=*`None`*, **`vlines`**=*`True`*, **`zeroline`**=*`True`*)
 
@@ -648,7 +563,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="quick_bplot" class="doc_header"><code>quick_bplot</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L105" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="quick_bplot" class="doc_header"><code>quick_bplot</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L127" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>quick_bplot</code>(**`path_evr`**=*`None`*, **`ax`**=*`None`*, **`skipk`**=*`None`*, **`joinPathAt`**=*`[]`*, **`elim`**=*`[]`*, **`xt_indices`**=*`[]`*, **`xt_labels`**=*`[]`*, **`E_Fermi`**=*`None`*, **`figsize`**=*`(3.4, 2.6)`*, **`txt`**=*`None`*, **`xytxt`**=*`[0.05, 0.9]`*, **`ctxt`**=*`'black'`*)
 
@@ -668,7 +583,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="add_text" class="doc_header"><code>add_text</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L168" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="add_text" class="doc_header"><code>add_text</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L181" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>add_text</code>(**`ax`**=*`None`*, **`xs`**=*`0.05`*, **`ys`**=*`0.9`*, **`txts`**=*`'[List]'`*, **`colors`**=*`'r'`*)
 
@@ -681,7 +596,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="add_legend" class="doc_header"><code>add_legend</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L193" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="add_legend" class="doc_header"><code>add_legend</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L201" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>add_legend</code>(**`ax`**=*`None`*, **`colors`**=*`[]`*, **`labels`**=*`[]`*, **`styles`**=*`'solid'`*, **`widths`**=*`0.7`*, **`anchor`**=*`(0, 1)`*, **`ncol`**=*`3`*, **`loc`**=*`'lower left'`*, **`fontsize`**=*`'small'`*, **`frameon`**=*`False`*, **\*\*`legend_kwargs`**)
 
@@ -696,7 +611,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="add_colorbar" class="doc_header"><code>add_colorbar</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L232" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="add_colorbar" class="doc_header"><code>add_colorbar</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L234" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>add_colorbar</code>(**`ax`**=*`None`*, **`cmap_or_clist`**=*`None`*, **`N`**=*`256`*, **`ticks`**=*`[0.16666666666666666, 0.5, 0.8333333333333334]`*, **`ticklabels`**=*`['r', 'g', 'b']`*, **`vertical`**=*`False`*, **`fontsize`**=*`8`*)
 
@@ -713,7 +628,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="color_wheel" class="doc_header"><code>color_wheel</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L301" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="color_wheel" class="doc_header"><code>color_wheel</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L295" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>color_wheel</code>(**`ax`**=*`None`*, **`xy`**=*`(1, 1)`*, **`scale`**=*`0.12`*, **`rlim`**=*`(0.2, 1)`*, **`N`**=*`256`*, **`color_map`**=*`None`*, **`ticks`**=*`[0.16666666666666666, 0.5, 0.8333333333333334]`*, **`labels`**=*`['s', 'p', 'd']`*, **`showlegend`**=*`True`*)
 
@@ -731,7 +646,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="get_pros_data" class="doc_header"><code>get_pros_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L358" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_pros_data" class="doc_header"><code>get_pros_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L348" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_pros_data</code>(**`kpath`**=*`None`*, **`evals_set`**=*`None`*, **`pros_set`**=*`None`*, **`elements`**=*`[[0]]`*, **`orbs`**=*`[[0]]`*, **`interpolate`**=*`False`*, **`scale_data`**=*`False`*, **`n`**=*`5`*, **`k`**=*`3`*)
 
@@ -754,22 +669,22 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="make_line_collection" class="doc_header"><code>make_line_collection</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L418" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="make_line_collection" class="doc_header"><code>make_line_collection</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L406" class="source_link" style="float:right">[source]</a></h4>
 
-> <code>make_line_collection</code>(**`max_width`**=*`2.5`*, **`colors_list`**=*`None`*, **`rgb`**=*`False`*, **`uni_width`**=*`False`*, **`scale_color`**=*`False`*, **\*\*`pros_data`**)
+> <code>make_line_collection</code>(**`max_width`**=*`None`*, **`colors_list`**=*`None`*, **`rgb`**=*`False`*, **`uni_width`**=*`False`*, **`scale_color`**=*`False`*, **\*\*`pros_data`**)
 
 - Returns a tuple of line collections. If rgb = True (at len(orbs) = 3 in `get_pros_data`), returns a tuple of two entries, multicolored line collection and RGB maximum values, otherwise return tuple of single colored multiple lines.
 - **Parametrs**
     - **pros_data: Output dictionary from `get_pros_data` containing kpath, evals and colors arrays.
-    - max_width  : Linewidth is scaled to max_width.
+    - max_width  : Default is None and max linwidth = 2.5. Max inewidth is scaled to max_width if an int of float is given.
     - colors_list: List of colors for multiple lines, length equal to 3rd axis length of colors.
     - rgb        : Default is False. If True and np.shape(colors)[-1] == 3, RGB line collection is returned in a tuple of length 1. Tuple is just to support iteration.
     - uni_width  : Default is False, If True, makes linewidth uniform at width = max_width/2.
-    - scale_color: If True, normalizes each point's color value, as (0,0,0.5) --> (0,0,1).
+    - scale_color: If True, normalizes each point's color value, as (0,0,0.5) --> (0,0,1). If False, clips colors in range [0,1] but does not effect linewidth.
 
 
 
-<h4 id="plot_collection" class="doc_header"><code>plot_collection</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L491" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="plot_collection" class="doc_header"><code>plot_collection</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L480" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>plot_collection</code>(**`gpd_args`**, **`mlc_args`**, **`axes`**=*`None`*)
 
@@ -783,9 +698,9 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="quick_rgb_lines" class="doc_header"><code>quick_rgb_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L515" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="quick_rgb_lines" class="doc_header"><code>quick_rgb_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L502" class="source_link" style="float:right">[source]</a></h4>
 
-> <code>quick_rgb_lines</code>(**`path_evr`**=*`None`*, **`ax`**=*`None`*, **`skipk`**=*`None`*, **`joinPathAt`**=*`[]`*, **`elim`**=*`[]`*, **`elements`**=*`[[0], [], []]`*, **`orbs`**=*`[[0], [], []]`*, **`labels`**=*`['Elem0-s', '', '']`*, **`max_width`**=*`2.5`*, **`xt_indices`**=*`[0, -1]`*, **`xt_labels`**=*`['$\\Gamma$', 'M']`*, **`E_Fermi`**=*`None`*, **`figsize`**=*`(3.4, 2.6)`*, **`txt`**=*`None`*, **`xytxt`**=*`[0.05, 0.9]`*, **`ctxt`**=*`'black'`*, **`uni_width`**=*`False`*, **`interpolate`**=*`False`*, **`spin`**=*`'both'`*, **`n`**=*`5`*, **`k`**=*`3`*, **`scale_color`**=*`True`*, **`scale_data`**=*`True`*, **`colorbar`**=*`True`*, **`color_matrix`**=*`None`*)
+> <code>quick_rgb_lines</code>(**`path_evr`**=*`None`*, **`ax`**=*`None`*, **`skipk`**=*`None`*, **`joinPathAt`**=*`[]`*, **`elim`**=*`[]`*, **`elements`**=*`[[0], [], []]`*, **`orbs`**=*`[[0], [], []]`*, **`labels`**=*`['Elem0-s', '', '']`*, **`max_width`**=*`None`*, **`xt_indices`**=*`[0, -1]`*, **`xt_labels`**=*`['$\\Gamma$', 'M']`*, **`E_Fermi`**=*`None`*, **`figsize`**=*`(3.4, 2.6)`*, **`txt`**=*`None`*, **`xytxt`**=*`[0.05, 0.9]`*, **`ctxt`**=*`'black'`*, **`uni_width`**=*`False`*, **`interpolate`**=*`False`*, **`spin`**=*`'both'`*, **`n`**=*`5`*, **`k`**=*`3`*, **`scale_color`**=*`True`*, **`scale_data`**=*`True`*, **`colorbar`**=*`True`*, **`color_matrix`**=*`None`*)
 
 - Returns axes object and plot on which all matplotlib allowed actions could be performed. In this function,orbs,labels,elements all have list of length 3. Inside list, sublists or strings could be any length but should be there even if empty.
 - **Parameters**
@@ -800,7 +715,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
     - elements   : List [[0],[],[]] by default and plots s orbital of first ion..
     - orbs       : List [[r],[g],[b]] of indices of orbitals, could be empty, but shape should be same.
     - labels     : List [str,str,str] of projection labels. empty string should exist to maintain shape. Auto adds `↑`,`↓` for ISPIN=2. If a label is empty i.e. '', it will not show up in colorbar ticks or legend.
-    - max_width  : Width to scale whole projections. if `uni_width=True, width=max_width/2`.
+    - max_width  : Width to scale whole projections. if `uni_width=True, width=max_width/2`. Default is None and linewidth at any point = 2.5*sum(ions+orbitals projection of all three input at that point). Linewidth is scaled to max_width if an int or float is given.
     - figsize    : Tuple (width,height) in inches. Default (3.4.2.6) is article column's width.
     - txt        : Text on figure, if None, SYSTEM's name is printed.
     - xytxt      : [x_coord,y_coord] of text relative to axes.
@@ -810,19 +725,20 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
     - interpolate: Default is False, if True, bands are interpolated.
     - n          : int, number of points, default is 5.
     - k          : int, order of interpolation 0,1,2,3. Defualt 3. `n > k` should be hold.
-    - scale_color: Boolean. Default True, colors are scaled to 1 at each point.
-    - scale_data : Default is True and normalizes projection data to 1. Has no visual effect of scale_color = True too.
+    - scale_color: Boolean. Default True, colors are scaled to 1 at each point. If False, clips colors in range [0,1] but does not effect linewidth.
+    - scale_data : Default is True and normalizes projection data to 1. Has no visual effect if scale_color = True too.
     - colorbar   : Default is True. Displays a vertical RGB colorbar.
     - color_matrix: Only works if `scale_color==True`. 3x3 or 3x4 numpy array or list to transform from RGB to another space,provided that sum(color_matrix[i,:3]) <= 1. 4th column, if given can be used to control the saturation,contrast and brightness as s,c,b = color_matrix[:,3] For simply changing the color intensity use np.diag([r,g,b]) with r,g,b interval in [0,1]. Try `pivotpy.color_matrix` as suggested color matrix and modify, which at s=0 returns gray scale.!
 - **Returns**
     - ax : matplotlib axes object with plotted projected bands.
     - Registers as colormap `RGB_m` to use in DOS to plot in same colors and `RGB_f` to display bands colorbar on another axes.
+> Note: Two figures made by this function could be comapred quantitatively only if `scale_data=False, max_width=None, scale_color=False` as these parameters act internally on data.
 
 
 
-<h4 id="quick_color_lines" class="doc_header"><code>quick_color_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L728" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="quick_color_lines" class="doc_header"><code>quick_color_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L712" class="source_link" style="float:right">[source]</a></h4>
 
-> <code>quick_color_lines</code>(**`path_evr`**=*`None`*, **`axes`**=*`None`*, **`skipk`**=*`None`*, **`joinPathAt`**=*`[]`*, **`elim`**=*`[]`*, **`elements`**=*`[[0]]`*, **`orbs`**=*`[[0]]`*, **`labels`**=*`['s']`*, **`color_map`**=*`'gist_rainbow'`*, **`scale_data`**=*`False`*, **`max_width`**=*`2.5`*, **`spin`**=*`'both'`*, **`xt_indices`**=*`[0, -1]`*, **`xt_labels`**=*`['$\\Gamma$', 'M']`*, **`E_Fermi`**=*`None`*, **`showlegend`**=*`True`*, **`figsize`**=*`(3.4, 2.6)`*, **`txt`**=*`None`*, **`xytxt`**=*`[0.05, 0.85]`*, **`ctxt`**=*`'black'`*, **`interpolate`**=*`False`*, **`n`**=*`5`*, **`k`**=*`3`*, **`legend_kwargs`**=*`{'ncol': 4, 'anchor': (0, 1.05), 'handletextpad': 0.5, 'handlelength': 1, 'fontsize': 'small', 'frameon': False}`*, **\*\*`subplots_adjust_kwargs`**)
+> <code>quick_color_lines</code>(**`path_evr`**=*`None`*, **`axes`**=*`None`*, **`skipk`**=*`None`*, **`joinPathAt`**=*`[]`*, **`elim`**=*`[]`*, **`elements`**=*`[[0]]`*, **`orbs`**=*`[[0]]`*, **`labels`**=*`['s']`*, **`color_map`**=*`'gist_rainbow'`*, **`scale_data`**=*`False`*, **`max_width`**=*`None`*, **`spin`**=*`'both'`*, **`xt_indices`**=*`[0, -1]`*, **`xt_labels`**=*`['$\\Gamma$', 'M']`*, **`E_Fermi`**=*`None`*, **`showlegend`**=*`True`*, **`figsize`**=*`(3.4, 2.6)`*, **`txt`**=*`None`*, **`xytxt`**=*`[0.05, 0.85]`*, **`ctxt`**=*`'black'`*, **`interpolate`**=*`False`*, **`n`**=*`5`*, **`k`**=*`3`*, **`legend_kwargs`**=*`{'ncol': 4, 'anchor': (0, 1.05), 'handletextpad': 0.5, 'handlelength': 1, 'fontsize': 'small', 'frameon': False}`*, **\*\*`subplots_adjust_kwargs`**)
 
 - Returns axes object and plot on which all matplotlib allowed actions could be performed. If given, elements, orbs, and labels must have same length. If not given, zeroth ion is plotted with s-orbital.
 - **Parameters**
@@ -840,7 +756,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
     - color_map  : Matplotlib's standard color maps. Default is 'gist_ranibow'.
     - showlegend : True by defualt and displays legend relative to axes[0]. If False, it writes text on individual ax.
     - scale_data : Default is False, If True, normalize projection data to 1.
-    - max_width  : Width to scale whole projections. if `uni_width=True, width=max_width/2`.
+    - max_width  : Width to scale whole projections. Default is None and linewidth at any point on a line = 2.5*sum(ions+orbitals projection of the input for that line at that point). Linewidth is scaled to max_width if an int or float is given.
     - figsize    : Tuple (width,height) in inches. Default (3.4.2.6) is article column's width.
     - txt        : Text on figure, if None, SYSTEM's name is printed.
     - xytxt      : [x_coord,y_coord] of text relative to axes.
@@ -853,10 +769,11 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
     - **subplots_adjust_kwargs : plt.subplots_adjust parameters.
 - **Returns**
     - ax : matplotlib axes object with plotted projected bands.
+> Note: Two figures made by this function could be comapred quantitatively only if `scale_data=False, max_width=None` as these parameters act internally on data.
 
 
 
-<h4 id="init_figure" class="doc_header"><code>init_figure</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L897" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="init_figure" class="doc_header"><code>init_figure</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L878" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>init_figure</code>(**`figsize`**=*`(3.4, 2.6)`*, **`nrows`**=*`1`*, **`ncols`**=*`1`*, **`widths`**=*`[]`*, **`heights`**=*`[]`*, **`axes_off`**=*`[]`*, **`sharex`**=*`False`*, **`sharey`**=*`False`*, **\*\*`subplots_adjust_kwargs`**)
 
@@ -873,7 +790,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="select_pdos" class="doc_header"><code>select_pdos</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L956" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="select_pdos" class="doc_header"><code>select_pdos</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L920" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>select_pdos</code>(**`tdos`**=*`None`*, **`pdos_set`**=*`None`*, **`ions`**=*`[0]`*, **`orbs`**=*`[0]`*, **`E_Fermi`**=*`0`*, **`interpolate`**=*`False`*, **`n`**=*`5`*, **`k`**=*`3`*)
 
@@ -890,7 +807,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="collect_dos" class="doc_header"><code>collect_dos</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L996" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="collect_dos" class="doc_header"><code>collect_dos</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L958" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>collect_dos</code>(**`path_evr`**=*`None`*, **`elim`**=*`[]`*, **`elements`**=*`[[0]]`*, **`orbs`**=*`[[0]]`*, **`labels`**=*`['s']`*, **`E_Fermi`**=*`None`*, **`spin`**=*`'both'`*, **`interpolate`**=*`False`*, **`n`**=*`5`*, **`k`**=*`3`*)
 
@@ -915,7 +832,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="quick_dos_lines" class="doc_header"><code>quick_dos_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L1112" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="quick_dos_lines" class="doc_header"><code>quick_dos_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L1069" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>quick_dos_lines</code>(**`path_evr`**=*`None`*, **`ax`**=*`None`*, **`elim`**=*`[]`*, **`include_dos`**=*`'both'`*, **`elements`**=*`[[0]]`*, **`orbs`**=*`[[0]]`*, **`labels`**=*`['s']`*, **`color_map`**=*`'gist_rainbow'`*, **`tdos_color`**=*`(0.8, 0.95, 0.8)`*, **`linewidth`**=*`0.5`*, **`fill_area`**=*`True`*, **`vertical`**=*`False`*, **`E_Fermi`**=*`None`*, **`figsize`**=*`(3.4, 2.6)`*, **`txt`**=*`None`*, **`xytxt`**=*`[0.05, 0.85]`*, **`ctxt`**=*`'black'`*, **`spin`**=*`'both'`*, **`interpolate`**=*`False`*, **`n`**=*`5`*, **`k`**=*`3`*, **`showlegend`**=*`True`*, **`legend_kwargs`**=*`{'ncol': 4, 'anchor': (0, 1), 'handletextpad': 0.5, 'handlelength': 1, 'fontsize': 'small', 'frameon': False}`*)
 
@@ -947,7 +864,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="plt_to_html" class="doc_header"><code>plt_to_html</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L1269" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="plt_to_html" class="doc_header"><code>plt_to_html</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L1221" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>plt_to_html</code>(**`plt_fig`**=*`None`*, **`transparent`**=*`True`*, **`dash_html`**=*`None`*)
 
@@ -961,7 +878,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="plot_potential" class="doc_header"><code>plot_potential</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L1305" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="plot_potential" class="doc_header"><code>plot_potential</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L1254" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>plot_potential</code>(**`basis`**=*`None`*, **`e_or_m`**=*`None`*, **`operation`**=*`'mean_z'`*, **`ax`**=*`None`*, **`period`**=*`None`*, **`lr_pos`**=*`(0.25, 0.75)`*, **`lr_widths`**=*`[0.5, 0.5]`*, **`labels`**=*`('$V(z)$', '$\\langle V \\rangle _{roll}(z)$', '$\\langle V \\rangle $')`*, **`colors`**=*`((0, 0.2, 0.7), 'b', 'r')`*, **`annotate`**=*`True`*)
 
@@ -980,7 +897,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="get_rgb_data" class="doc_header"><code>get_rgb_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L7" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_rgb_data" class="doc_header"><code>get_rgb_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L18" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_rgb_data</code>(**`kpath`**=*`None`*, **`evals_set`**=*`None`*, **`pros_set`**=*`None`*, **`elements`**=*`[[0], [], []]`*, **`orbs`**=*`[[0], [], []]`*, **`interpolate`**=*`False`*, **`n`**=*`5`*, **`k`**=*`3`*, **`scale_color`**=*`False`*)
 
@@ -1004,7 +921,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="flip_even_patches" class="doc_header"><code>flip_even_patches</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L75" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="flip_even_patches" class="doc_header"><code>flip_even_patches</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L85" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>flip_even_patches</code>(**`array_1d`**, **`patch_length`**)
 
@@ -1021,9 +938,9 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="rgb_to_plotly" class="doc_header"><code>rgb_to_plotly</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L99" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="rgb_to_plotly" class="doc_header"><code>rgb_to_plotly</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L108" class="source_link" style="float:right">[source]</a></h4>
 
-> <code>rgb_to_plotly</code>(**`rgb_data`**=*`None`*, **`mode`**=*`'markers'`*, **`max_width`**=*`5`*, **`showlegend`**=*`False`*, **`name`**=*`''`*, **`labels`**=*`['s', 'p', 'd']`*, **`symbol`**=*`0`*)
+> <code>rgb_to_plotly</code>(**`rgb_data`**=*`None`*, **`mode`**=*`'markers'`*, **`max_width`**=*`None`*, **`showlegend`**=*`False`*, **`name`**=*`''`*, **`labels`**=*`['s', 'p', 'd']`*, **`symbol`**=*`0`*)
 
 - Returns data object of plotly's figure using `get_rgb_data`. Returned data could be fed to a plolty's figure.
 - ** Parameters**
@@ -1032,7 +949,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
         - 'markers' : Plot whole data as a single scatter object. Its too fast.
         - 'bands'   : Plot data such that each band is accessible via legend.
         - 'lines'   : A replica of `matplotlib LineCollection` object. It plots at each point separately, slower than other two modes.
-    - max_width  : Line/Scatter thickness is scaled to `max_width`.
+    - max_width  : Line/Scatter thickness is scaled to `max_width`. None by default and represent actual data.
     - name       : Name to be shown on hover text or legend.
     - labels     : Optional, show red green blue colors corresponding orbitals.
     - showlegend : Optional, only suitbale if spin up/down or 'bands' mode is ON.
@@ -1040,7 +957,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="plotly_to_html" class="doc_header"><code>plotly_to_html</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L164" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="plotly_to_html" class="doc_header"><code>plotly_to_html</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L174" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>plotly_to_html</code>(**`fig`**, **`filename`**=*`None`*, **`out_string`**=*`False`*, **`modebar`**=*`True`*)
 
@@ -1052,7 +969,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="plotly_rgb_lines" class="doc_header"><code>plotly_rgb_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L215" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="plotly_rgb_lines" class="doc_header"><code>plotly_rgb_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L225" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>plotly_rgb_lines</code>(**`path_evr`**=*`None`*, **`elements`**=*`[[], [], []]`*, **`orbs`**=*`[[], [], []]`*, **`labels`**=*`['', '', '']`*, **`mode`**=*`'markers'`*, **`elim`**=*`[]`*, **`E_Fermi`**=*`None`*, **`skipk`**=*`None`*, **`joinPathAt`**=*`[]`*, **`max_width`**=*`6`*, **`title`**=*`None`*, **`xt_indices`**=*`[0, -1]`*, **`xt_labels`**=*`['Γ', 'M']`*, **`figsize`**=*`None`*, **`interpolate`**=*`False`*, **`n`**=*`5`*, **`k`**=*`3`*)
 
@@ -1070,7 +987,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="plotly_dos_lines" class="doc_header"><code>plotly_dos_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L369" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="plotly_dos_lines" class="doc_header"><code>plotly_dos_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L374" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>plotly_dos_lines</code>(**`path_evr`**=*`None`*, **`elim`**=*`[]`*, **`elements`**=*`[[0]]`*, **`orbs`**=*`[[0]]`*, **`labels`**=*`['s']`*, **`color_map`**=*`'gist_rainbow'`*, **`tdos_color`**=*`(0.5, 0.95, 0)`*, **`linewidth`**=*`2`*, **`fill_area`**=*`True`*, **`vertical`**=*`False`*, **`E_Fermi`**=*`None`*, **`figsize`**=*`None`*, **`spin`**=*`'both'`*, **`interpolate`**=*`False`*, **`n`**=*`5`*, **`k`**=*`3`*, **`title`**=*`None`*)
 
@@ -1095,7 +1012,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="save_mp_API" class="doc_header"><code>save_mp_API</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L8" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="save_mp_API" class="doc_header"><code>save_mp_API</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L25" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>save_mp_API</code>(**`api_key`**)
 
@@ -1103,7 +1020,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="load_mp_data" class="doc_header"><code>load_mp_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L29" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="load_mp_data" class="doc_header"><code>load_mp_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L44" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>load_mp_data</code>(**`formula`**, **`api_key`**=*`None`*, **`mp_id`**=*`None`*, **`max_sites`**=*`None`*)
 
@@ -1116,7 +1033,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="get_crystal" class="doc_header"><code>get_crystal</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L72" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_crystal" class="doc_header"><code>get_crystal</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L84" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_crystal</code>(**`formula`**, **`api_key`**=*`None`*, **`mp_id`**=*`None`*, **`max_sites`**=*`None`*)
 
@@ -1129,7 +1046,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="get_poscar" class="doc_header"><code>get_poscar</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L96" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_poscar" class="doc_header"><code>get_poscar</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L106" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_poscar</code>(**`formula`**, **`api_key`**=*`None`*, **`mp_id`**=*`None`*, **`max_sites`**=*`None`*)
 
@@ -1144,7 +1061,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="get_kpath" class="doc_header"><code>get_kpath</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L168" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_kpath" class="doc_header"><code>get_kpath</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L176" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_kpath</code>(**`hsk_list`**=*`[]`*, **`labels`**=*`[]`*, **`n`**=*`5`*, **`weight`**=*`None`*, **`ibzkpt`**=*`None`*, **`outfile`**=*`None`*)
 
@@ -1165,7 +1082,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="get_kmesh" class="doc_header"><code>get_kmesh</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L240" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_kmesh" class="doc_header"><code>get_kmesh</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L245" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_kmesh</code>(**`n_xyz`**=*`[5, 5, 5]`*, **`weight`**=*`None`*, **`gamma`**=*`True`*, **`ibzkpt`**=*`None`*, **`poscar`**=*`None`*, **`outfile`**=*`None`*, **`plot`**=*`False`*)
 
@@ -1186,7 +1103,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="intersect_3p_p_3v" class="doc_header"><code>intersect_3p_p_3v</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L360" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="intersect_3p_p_3v" class="doc_header"><code>intersect_3p_p_3v</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L359" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>intersect_3p_p_3v</code>(**`a`**, **`b`**, **`c`**)
 
@@ -1196,7 +1113,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="centroid" class="doc_header"><code>centroid</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L373" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="centroid" class="doc_header"><code>centroid</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L371" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>centroid</code>(**`points`**)
 
@@ -1206,7 +1123,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="order" class="doc_header"><code>order</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L390" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="order" class="doc_header"><code>order</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L387" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>order</code>(**`points`**)
 
@@ -1216,7 +1133,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="in_vol_sector" class="doc_header"><code>in_vol_sector</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L438" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="in_vol_sector" class="doc_header"><code>in_vol_sector</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L434" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>in_vol_sector</code>(**`test_point`**, **`p1`**, **`p2`**, **`p3`**)
 
@@ -1226,7 +1143,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="out_bz_plane" class="doc_header"><code>out_bz_plane</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L460" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="out_bz_plane" class="doc_header"><code>out_bz_plane</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L454" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>out_bz_plane</code>(**`test_point`**, **`plane`**)
 
@@ -1237,7 +1154,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="to_xy" class="doc_header"><code>to_xy</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L479" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="to_xy" class="doc_header"><code>to_xy</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L471" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>to_xy</code>(**`v`**)
 
@@ -1247,7 +1164,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="rad_angle" class="doc_header"><code>rad_angle</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L495" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="rad_angle" class="doc_header"><code>rad_angle</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L486" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>rad_angle</code>(**`v1`**, **`v2`**)
 
@@ -1257,7 +1174,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="arctan_full" class="doc_header"><code>arctan_full</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L509" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="arctan_full" class="doc_header"><code>arctan_full</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L499" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>arctan_full</code>(**`perp`**, **`base`**)
 
@@ -1268,7 +1185,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="get_bz" class="doc_header"><code>get_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L541" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_bz" class="doc_header"><code>get_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L530" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_bz</code>(**`poscar`**=*`None`*, **`loop`**=*`True`*, **`digits`**=*`8`*)
 
@@ -1286,7 +1203,7 @@ If current folder contains `vasprun.xml` file, it automatically picks it.
 
 
 
-<h4 id="plot_bz" class="doc_header"><code>plot_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L636" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="plot_bz" class="doc_header"><code>plot_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L619" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>plot_bz</code>(**`poscar_or_bz`**=*`None`*, **`fill`**=*`True`*, **`color`**=*`'rgba(168,204,216,0.4)'`*, **`background`**=*`'rgb(255,255,255)'`*)
 
@@ -1369,7 +1286,7 @@ errors defaults to 'strict'.
 
 
 
-<h4 id="get_files_gui" class="doc_header"><code>get_files_gui</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L222" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_files_gui" class="doc_header"><code>get_files_gui</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L230" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_files_gui</code>(**`auto_fill`**=*`'vasprun.xml'`*, **`html_style`**=*`None`*, **`height`**=*`320`*)
 
@@ -1383,7 +1300,7 @@ errors defaults to 'strict'.
 
 
 
-<h4 id="get_input_gui" class="doc_header"><code>get_input_gui</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L319" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="get_input_gui" class="doc_header"><code>get_input_gui</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L327" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>get_input_gui</code>(**`rgb`**=*`True`*, **`sys_info`**=*`None`*, **`html_style`**=*`None`*, **`height`**=*`400`*)
 
@@ -1397,7 +1314,7 @@ errors defaults to 'strict'.
 
 
 
-<h4 id="read_data" class="doc_header"><code>read_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L483" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="read_data" class="doc_header"><code>read_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L490" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>read_data</code>(**`tabel_w`**, **`poscar`**=*`None`*, **`sys_info`**=*`None`*)
 
@@ -1405,7 +1322,7 @@ errors defaults to 'strict'.
 
 
 
-<h4 id="click_data" class="doc_header"><code>click_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L496" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="click_data" class="doc_header"><code>click_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L503" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>click_data</code>(**`sel_en_w`**, **`fermi_w`**, **`tabel_w`**, **`fig`**)
 
@@ -1413,7 +1330,7 @@ errors defaults to 'strict'.
 
 
 
-<h4 id="tabulate_data" class="doc_header"><code>tabulate_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L513" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="tabulate_data" class="doc_header"><code>tabulate_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L520" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>tabulate_data</code>(**`data_dict`**)
 
@@ -1421,7 +1338,7 @@ errors defaults to 'strict'.
 
 
 
-<h4 id="save_data" class="doc_header"><code>save_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L551" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="save_data" class="doc_header"><code>save_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L558" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>save_data</code>(**`out_w1`**, **`data_dict`**)
 
@@ -1429,7 +1346,7 @@ errors defaults to 'strict'.
 
 
 
-<h4 id="color_toggle" class="doc_header"><code>color_toggle</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L557" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="color_toggle" class="doc_header"><code>color_toggle</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L564" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>color_toggle</code>(**`tog_w`**, **`fig`**, **`rd_btn`**)
 
@@ -1437,7 +1354,7 @@ errors defaults to 'strict'.
 
 
 
-<h4 id="clear_cache" class="doc_header"><code>clear_cache</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L582" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="clear_cache" class="doc_header"><code>clear_cache</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L589" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>clear_cache</code>(**`out_w1`**, **`cache_w`**, **`tabel_w`**)
 
@@ -1445,7 +1362,7 @@ errors defaults to 'strict'.
 
 
 
-<h4 id="matplotlib_code" class="doc_header"><code>matplotlib_code</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L604" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="matplotlib_code" class="doc_header"><code>matplotlib_code</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L611" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>matplotlib_code</code>(**`rd_btn`**, **`out_w1`**, **`dict_html`**)
 
@@ -1453,7 +1370,7 @@ errors defaults to 'strict'.
 
 
 
-<h4 id="generate_summary" class="doc_header"><code>generate_summary</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L619" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="generate_summary" class="doc_header"><code>generate_summary</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L626" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>generate_summary</code>(**`paths_list`**=*`None`*)
 
@@ -1461,7 +1378,7 @@ errors defaults to 'strict'.
 
 
 
-<h4 id="show_app" class="doc_header"><code>show_app</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L667" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="show_app" class="doc_header"><code>show_app</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L673" class="source_link" style="float:right">[source]</a></h4>
 
 > <code>show_app</code>(**`height`**=*`600`*)
 

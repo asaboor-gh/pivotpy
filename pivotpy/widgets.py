@@ -4,15 +4,23 @@ __all__ = ['light_style', 'dark_style', 'get_files_gui', 'get_input_gui', 'read_
            'save_data', 'color_toggle', 'clear_cache', 'matplotlib_code', 'generate_summary', 'show_app']
 
 # Cell
-import plotly.graph_objects as go
-import numpy as np
-import shutil
-from IPython.display import display,HTML
-from ipywidgets import interact, Layout,Label,Button, Box,HBox,VBox
+import os
+import json
+from time import sleep
+
+# Widgets Imports
+from IPython.display import display, Markdown
 import ipywidgets as ipw
-import os,json,pickle
-from datetime import datetime
-import pivotpy as pp
+from ipywidgets import Layout,Label,Button, Box,HBox,VBox
+from ipywidgets.embed import embed_minimal_html, dependency_state
+
+# More exports
+import numpy as np
+import pandas as pd
+import plotly.graph_objects as go
+import pivotpy.vr_parser as vp
+import pivotpy.g_utils as gu
+import pivotpy.i_plots as ip
 
 # Cell
 light_style = """<style>
@@ -259,7 +267,7 @@ def get_files_gui(auto_fill = 'vasprun.xml',html_style=None,height=320):
                 print("Falling back to PWD: {}".format(os.getcwd()))
             path = os.getcwd()
             pw.value = path
-        gci = pp.Dict2Data({'children':[],'parent':path})
+        gci = vp.Dict2Data({'children':[],'parent':path})
 
         if 'Files' in item_w.value:
             file_type = dict(filesOnly=True)
@@ -268,7 +276,7 @@ def get_files_gui(auto_fill = 'vasprun.xml',html_style=None,height=320):
         else:
             file_type = {}
         try:
-            gci = pp.get_child_items(path=path, **file_type,
+            gci = gu.get_child_items(path=path, **file_type,
                            include= incldue_w.value,
                            exclude= excldue_w.value,
                            depth=depth_w.value)
@@ -326,11 +334,10 @@ def get_input_gui(rgb=True,sys_info=None,html_style=None,height=400):
     - **Returns**
         - Tuple(GUI_gridbox,json_in_HTML). Access second one by item.value.
     """
-    from time import sleep
     if not html_style:
         html_style = ''
     if sys_info ==None:
-        sys_info = pp.Dict2Data({'fields':['s'],'ElemIndex':[0,1],'ElemName':['A']})
+        sys_info = vp.Dict2Data({'fields':['s'],'ElemIndex':[0,1],'ElemName':['A']})
     layout = Layout(width='30%')
     orbs_w  = ipw.Dropdown(options={'s':0},value=0,layout=layout)
     orbi_w  = ipw.Text(layout=layout)
@@ -550,7 +557,7 @@ def tabulate_data(data_dict):
 # Send Data
 def save_data(out_w1,data_dict):
     out_f = os.path.join(os.path.split(out_w1.value)[0],'result.json')
-    pp.dump_dict(data_dict,dump_to='json',outfile=out_f)
+    vp.dump_dict(data_dict,dump_to='json',outfile=out_f)
 
 
 # Cell
@@ -618,7 +625,6 @@ def matplotlib_code(rd_btn,out_w1,dict_html):
 # Cell
 def generate_summary(paths_list=None):
     # Make Data Frame
-    import pandas as pd, numpy as np, os
     result_paths = []
     common_prefix = '' #placeholder
     if paths_list:
@@ -737,7 +743,7 @@ def show_app(height=600):
                  tabel_w.value = '\n'.join(f.readlines())
             f.close()
             file = os.path.join(path,'sys_info.pickle')
-            sys_info = pp.load_from_dump(file)
+            sys_info = vp.load_from_dump(file)
             print('Cache Loaded')
         except:
             files = [os.path.join(os.path.split(out_w1.value)[0],f)
@@ -745,15 +751,15 @@ def show_app(height=600):
             logic = [os.path.isfile(f) for f in files]
             if False in logic:
                 print('Loading from Python ...')
-                evr = pp.export_vasprun(out_w1.value)
+                evr = vp.export_vasprun(out_w1.value)
                 print('Caching From: {}'.format(out_w1.value)) #Cache result
                 ifile = os.path.join(os.path.split(out_w1.value)[0],'sys_info.pickle')
                 vfile = os.path.join(os.path.split(out_w1.value)[0],'vasprun.pickle')
-                pp.dump_dict(evr.sys_info,outfile=ifile)
-                pp.dump_dict(evr,outfile=vfile)
+                vp.dump_dict(evr.sys_info,outfile=ifile)
+                vp.dump_dict(evr,outfile=vfile)
             else:
                 print('Loading from Powershell (No Cache Required)...')
-                evr = pp.load_export(out_w1.value)
+                evr = vp.load_export(out_w1.value)
             sys_info = evr.sys_info # required here.
             _rrdd_ = read_data(tabel_w,evr.poscar,sys_info) # Update Table data on load
             print('Done')
@@ -794,7 +800,6 @@ def show_app(height=600):
     save_fig_w = ipw.Button(description='Save Fig',icon='fa-download',layout=l_btn)
     @out_tab.capture(clear_output=True,wait=True)
     def save_connected(btn):
-        from ipywidgets.embed import embed_minimal_html, dependency_state
         s_p = os.path.split(out_w1.value)[0]
         filename = os.path.join(s_p,'ConnectedFig.html')
         views = VBox([theme_html,fig,view_tab_w],layout=Layout(width='500px',height='490px')).add_class('borderless')
@@ -821,14 +826,12 @@ def show_app(height=600):
     @out_tab.capture(clear_output=True,wait=True)
     def mpl_code(btn):
         tab.selected_index = 2
-        from IPython.display import Markdown, display
         display(ipw.HTML("<h3>Copy code below and run</h3>"))
         mpl_btn.description = 'Generating...'
         string = matplotlib_code(rd_btn,out_w1,dict_html)
         display(Markdown("```python\n{}\n```".format(string)))
         mpl_btn.description = 'See STD(out/err) Tab'
         mpl_btn.style.button_color = '#FFDAB9'
-        from time import sleep
         sleep(2)
         mpl_btn.description = 'Grenerate Matplotib Code'
         mpl_btn.style.button_color = 'skyblue'
@@ -840,7 +843,6 @@ def show_app(height=600):
     def df_out(btn):
         tab.selected_index = 2
         summary_btn.description = 'See STD(out/err) Tab'
-        from IPython.display import display,Markdown
         paths = [v for k,v in out_w1.options.items()]
         df = generate_summary(paths_list=paths)
         display(df)
@@ -905,7 +907,7 @@ def show_app(height=600):
 
         in_box.children = childs
 
-    _start = update_box(0) # initialize box
+    _ = update_box(0) # initialize box
     rd_btn.observe(update_box,'value')
 
     upper_box = VBox([
@@ -927,7 +929,7 @@ def show_app(height=600):
                 print('Trying to Load Cache for Graph ...')
                 file = os.path.join(os.path.split(out_w1.value)[0],'vasprun.pickle')
                 graph_btn.description = file
-                evr = pp.load_from_dump(file)
+                evr = vp.load_from_dump(file)
             except:
                 graph_btn.description = 'loading export...'
                 print('No cache found. Loading from file {} ...'.format(out_w1.value))
@@ -936,10 +938,10 @@ def show_app(height=600):
                 logic = [os.path.isfile(f) for f in files]
                 if False in logic:
                     print('Loading from Python ...')
-                    evr = pp.export_vasprun(out_w1.value)
+                    evr = vp.export_vasprun(out_w1.value)
                 else:
                     print('Loading from Powershell ...')
-                    evr = pp.load_export(out_w1.value)
+                    evr = vp.load_export(out_w1.value)
             print('Done')
             graph_btn.description = 'Load Graph'
             _rrdd_ = read_data(tabel_w,evr.poscar,evr.sys_info) # Update Table data
@@ -956,9 +958,9 @@ def show_app(height=600):
                                             if kticks_w.value else [0,-1])})
                 argdict.update({'xt_labels':([v for v in ktickv_w.value.split(',')]
                                             if ktickv_w.value else ['A','B'])})
-                fig_data = pp.plotly_rgb_lines(path_evr=evr,**argdict)
+                fig_data = ip.plotly_rgb_lines(path_evr=evr,**argdict)
             else:
-                fig_data = pp.plotly_dos_lines(path_evr=evr,**argdict)
+                fig_data = ip.plotly_dos_lines(path_evr=evr,**argdict)
             tab.selected_index = 1
             with fig.batch_animate():
                 for d in fig_data.data:
@@ -987,7 +989,6 @@ def show_app(height=600):
     top_right.children = [*top_right.children,expand_w]
     @out_tab.capture(clear_output=True,wait=True)
     def expand_fig(btn):
-        from IPython.display import display
         tab.selected_index = 2
         sel_en_w.value = 'None'
         display(fig)

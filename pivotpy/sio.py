@@ -5,12 +5,27 @@ __all__ = ['save_mp_API', 'load_mp_data', 'get_crystal', 'get_poscar', 'get_kpat
            'plot_bz']
 
 # Cell
+import os
+import json
+import math
+import numpy as np
+from pathlib import Path
+import requests as req
+from collections import namedtuple
+from itertools import permutations
+from itertools import product
+
+from scipy.spatial import ConvexHull
+from scipy.spatial import Voronoi
+import plotly.graph_objects as go
+
+import pivotpy.vr_parser as vp
+
+# Cell
 def save_mp_API(api_key):
     """
     - Save materials project api key for autoload in functions.
     """
-    import os
-    from pathlib import Path
     home = str(Path.home())
     file = os.path.join(home,'.pivotpyrc')
     lines = []
@@ -37,8 +52,6 @@ def load_mp_data(formula,api_key=None,mp_id=None,max_sites = None):
     """
     if api_key is None:
         try:
-            import os
-            from pathlib import Path
             home = str(Path.home())
             file = os.path.join(home,'.pivotpyrc')
             with open(file,'r') as f:
@@ -48,8 +61,7 @@ def load_mp_data(formula,api_key=None,mp_id=None,max_sites = None):
                         api_key = line.split('=')[1].strip()
         except:
             return print("api_key not given. provide in argument or generate in file using `save_mp_API(your_mp_api_key)")
-    import json
-    import requests as req
+
     url = "https://www.materialsproject.org/rest/v2/materials/_____/vasp?API_KEY=|||||"
     url = url.replace('_____',formula).replace('|||||',api_key)
     resp = req.request(method='GET',url=url)
@@ -78,8 +90,6 @@ def get_crystal(formula,api_key=None,mp_id=None,max_sites = None):
         - mp_id    : Optional, you can specify material ID to filter results.
         -max_sites : Option, you can set maximum number of sites to load fastly as it will not fetch all large data sets.
     """
-    import json
-    import pivotpy as pp
     all_res = load_mp_data(formula=formula,api_key = api_key, mp_id = mp_id, max_sites = max_sites)
     cifs = []
     for res in all_res:
@@ -89,7 +99,7 @@ def get_crystal(formula,api_key=None,mp_id=None,max_sites = None):
         unit    = res['unit_cell_formula']
         mp_id   = res['material_id']
         crs = dict(mp_id = mp_id,symbol = symbol, crystal = crystal, unit = unit, cif = cif)
-        cifs.append(pp.Dict2Data(crs))
+        cifs.append(vp.Dict2Data(crs))
     return cifs
 
 # Cell
@@ -104,8 +114,6 @@ def get_poscar(formula ,api_key=None,mp_id=None,max_sites = None):
     - **Usage**
         - `get_poscar('GaAs',api_key,**kwargs)`. Same result is returned from `Get-POSCAR` command in PowerShell terminal if Vasp2Visual module is installed.
     """
-    import numpy as np
-    import pivotpy.vr_parser as vp
     crys = get_crystal(formula = formula,api_key = api_key, mp_id = mp_id, max_sites = max_sites)
     poscars = []
     for cr in crys:
@@ -182,7 +190,6 @@ def get_kpath(hsk_list=[],labels=[], n = 5,weight= None ,ibzkpt = None,outfile=N
             - kpoints : get_kmesh().kpoints.
             - weights : get_kmesh().weights.
     """
-    import numpy as np
     if hsk_list:
         try: hsk_list[0][0][0]
         except: hsk_list = [hsk_list] # Make overall 3 dimensions to include breaks in path
@@ -211,7 +218,6 @@ def get_kpath(hsk_list=[],labels=[], n = 5,weight= None ,ibzkpt = None,outfile=N
     out_str = '\n'.join(out_str)
     N = np.size(xs)
     if ibzkpt != None:
-        import os
         if os.path.isfile(ibzkpt):
             f = open(ibzkpt,'r')
             lines = f.readlines()
@@ -232,7 +238,6 @@ def get_kpath(hsk_list=[],labels=[], n = 5,weight= None ,ibzkpt = None,outfile=N
         f.write(out_str)
         f.close()
     else:
-        from collections import namedtuple
         mesh = namedtuple('Mesh',['nkpts','kpoints','weights'])
         return mesh(N,np.array([[x,y,x] for x,y,z in zip(xs,ys,zs)]),[weight for x in xs])
 
@@ -254,9 +259,6 @@ def get_kmesh(n_xyz=[5,5,5],weight = None,gamma=True,ibzkpt= None,poscar=None,ou
             - kpoints : get_kmesh().kpoints.
             - weight : get_kmesh().weight, its one float number, provided or calculated.
     """
-    import numpy as np
-    from scipy.spatial import ConvexHull
-    import math
     if type(n_xyz) == int:
         nx,ny,nz = n_xyz,n_xyz,n_xyz
     else:
@@ -317,7 +319,6 @@ def get_kmesh(n_xyz=[5,5,5],weight = None,gamma=True,ibzkpt= None,poscar=None,ou
     out_str = '\n'.join(out_str)
     N = len(points)
     if ibzkpt != None:
-        import os
         if os.path.isfile(ibzkpt):
             f = open(ibzkpt,'r')
             lines = f.readlines()
@@ -333,7 +334,6 @@ def get_kmesh(n_xyz=[5,5,5],weight = None,gamma=True,ibzkpt= None,poscar=None,ou
         f.write(out_str)
         f.close()
     if plot == True:
-        import plotly.graph_objects as go
         print('NKPTS: ',N)
         if poscar == None:
             poscar = [[1,0,0],[0,1,0],[0,0,1]]
@@ -352,7 +352,6 @@ def get_kmesh(n_xyz=[5,5,5],weight = None,gamma=True,ibzkpt= None,poscar=None,ou
         fig.update_layout(scene_camera=camera,plot_bgcolor='rgb(255,255,255)')
         return fig
     else:
-        from collections import namedtuple
         mesh = namedtuple('Mesh',['nkpts','kpoints','weight'])
         return mesh(N,points,weight)
 
@@ -363,7 +362,6 @@ def intersect_3p_p_3v(a,b,c):
     - **Parameters**
         - a,b,c : three vectors in 3D, whose perpendicular planes will be intersected.
     """
-    import numpy as np
     M = np.array([a,b,c])
     b = np.array([np.linalg.norm(a)**2,np.linalg.norm(b)**2,np.linalg.norm(c)**2]).reshape(3,1)
     out = []
@@ -376,7 +374,6 @@ def centroid(points):
     - **Parameters**
         - points: List[List(len=3)]
     """
-    import numpy as np
     _x = [p[0] for p in points]
     _y = [p[1] for p in points]
     _z = [p[2] for p in points]
@@ -393,7 +390,6 @@ def order(points):
     - **Parameters**
         - points: List[List(len=3)]
     """
-    import numpy as np
     center = centroid(points)
     ex = [p-c for p,c in zip(points[0],center)]
     ey = np.cross(center,ex)
@@ -441,8 +437,6 @@ def in_vol_sector(test_point,p1,p2,p3):
     - **Parameters**
         - p1,p2,p3: Three vectors points in 3D.
     """
-    import numpy as np
-    from itertools import permutations
     p_test = np.array(test_point)/np.linalg.norm(test_point)
     p1 = np.array(p1)/np.linalg.norm(p1)
     p2 = np.array(p2)/np.linalg.norm(p2)
@@ -464,8 +458,6 @@ def out_bz_plane(test_point,plane):
         - test_points: 3D point.
         - plane      : List of at least three coplanar points.
     """
-    import numpy as np
-    import math
     outside = True
     p_test = np.array(test_point)
     plane = np.array(plane)
@@ -482,7 +474,6 @@ def to_xy(v):
     - **Parameters**
         - v: Ponit in 3D.
     """
-    import numpy as np
     x = v[0]
     y = 1 # by default to hold if x and y both zero
     if v[1] != 0 and v[2] !=0:
@@ -498,7 +489,6 @@ def rad_angle(v1,v2):
     - **Parameters**
         - v1,v2 : Two vectors/points in 3D.
     """
-    import numpy as np
     v1 = np.array(v1)
     v2 = np.array(v2)
     norm  = np.linalg.norm(v1)*np.linalg.norm(v2)
@@ -513,7 +503,6 @@ def arctan_full(perp,base):
         - perp: Perpendicular componet of vector including sign.
         - base: Base compoent of vector including sign.
     """
-    import numpy as np
     vy = perp
     vx = base
     angle = 0  # Place hodler to handle exceptions
@@ -552,11 +541,6 @@ def get_bz(poscar = None,loop = True,digits=8):
         - faces   : get_bz().faces, vertices arranged into faces, could be input to Poly3DCollection of matplotlib for creating BZ from faces' patches.
         - specials : get_bz().specials, Dictionary of high symmetry KPOINTS with keys as points relative to basis and values are corresponding positions in recirprocal coordinates space.
     """
-    import os
-    import numpy as np
-    from scipy.spatial import Voronoi
-    from itertools import product
-    import math
     if poscar == None and os.path.isfile('./POSCAR') == True:
         poscar = './POSCAR'
     elif poscar == None and os.path.isfile('./POSCAR') == False:
@@ -628,7 +612,6 @@ def get_bz(poscar = None,loop = True,digits=8):
     verts        = np.round(verts,digits)
     faces        = [np.round(face,digits) for face in faces]
     one_to_one   = {tuple(x):tuple(y) for x,y in zip(mid_basis_p,mid_all_p)}
-    from collections import namedtuple
     BZ = namedtuple('BZ', ['basis', 'normals','vertices','faces','specials'])
     return BZ(basis,face_vectors,verts,np.array(faces),one_to_one)
 
@@ -644,17 +627,14 @@ def plot_bz(poscar_or_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',back
     - **Returns**
         - fig   : plotly.graph_object's Figure instance.
     """
-    import plotly.graph_objects as go
-    import numpy as np
-    import pivotpy.sio as sio
     if poscar_or_bz == None:
-        bz = sio.get_bz(poscar_or_bz)
+        bz = get_bz(poscar_or_bz)
     else:
         try:
             poscar_or_bz.basis
             bz = poscar_or_bz
         except AttributeError:
-            bz = sio.get_bz(poscar_or_bz)
+            bz = get_bz(poscar_or_bz)
 
     fig = go.Figure()
     # Axes
@@ -683,7 +663,7 @@ def plot_bz(poscar_or_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',back
             color = 'black'
             fill_axis = None
         elif fill == True:
-            face_dir = np.abs(sio.centroid(np.unique(pts,axis=0))) # same fill axis in negative axes too
+            face_dir = np.abs(centroid(np.unique(pts,axis=0))) # same fill axis in negative axes too
             if np.max(face_dir) == face_dir[0]:
                 fill_axis = 0
             elif np.max(face_dir) == face_dir[1]:

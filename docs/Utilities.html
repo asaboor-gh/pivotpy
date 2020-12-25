@@ -79,7 +79,7 @@ nb_path: "Utilities.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_file_size" class="doc_header"><code>get_file_size</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L14" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_file_size</code>(<strong><code>path</code></strong>)</p>
+<h4 id="get_file_size" class="doc_header"><code>get_file_size</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L25" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_file_size</code>(<strong><code>path</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -143,7 +143,7 @@ nb_path: "Utilities.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="interpolate_data" class="doc_header"><code>interpolate_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L25" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>interpolate_data</code>(<strong><code>x</code></strong>, <strong><code>y</code></strong>, <strong><code>n</code></strong>=<em><code>10</code></em>, <strong><code>k</code></strong>=<em><code>3</code></em>)</p>
+<h4 id="interpolate_data" class="doc_header"><code>interpolate_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L37" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>interpolate_data</code>(<strong><code>x</code></strong>, <strong><code>y</code></strong>, <strong><code>n</code></strong>=<em><code>10</code></em>, <strong><code>k</code></strong>=<em><code>3</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns interpolated xnew,ynew. If two points are same, it will add 0.1*min(dx&gt;0) to compensate it.</li>
@@ -192,7 +192,7 @@ nb_path: "Utilities.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ps_to_py" class="doc_header"><code>ps_to_py</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L55" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ps_to_py</code>(<strong><code>ps_command</code></strong>=<em><code>'Get-ChildItem'</code></em>, <strong><code>exec_type</code></strong>=<em><code>'-Command'</code></em>, <strong><code>path_to_ps</code></strong>=<em><code>'powershell.exe'</code></em>)</p>
+<h4 id="ps_to_py" class="doc_header"><code>ps_to_py</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L66" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ps_to_py</code>(<strong><code>ps_command</code></strong>=<em><code>'Get-ChildItem'</code></em>, <strong><code>exec_type</code></strong>=<em><code>'-Command'</code></em>, <strong><code>path_to_ps</code></strong>=<em><code>'powershell.exe'</code></em>)</p>
 </blockquote>
 <ul>
 <li>Captures powershell output in python.</li>
@@ -232,7 +232,7 @@ nb_path: "Utilities.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ps_to_std" class="doc_header"><code>ps_to_std</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L89" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ps_to_std</code>(<strong><code>ps_command</code></strong>=<em><code>'Get-ChildItem'</code></em>, <strong><code>exec_type</code></strong>=<em><code>'-Command'</code></em>, <strong><code>path_to_ps</code></strong>=<em><code>'powershell.exe'</code></em>)</p>
+<h4 id="ps_to_std" class="doc_header"><code>ps_to_std</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L99" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ps_to_std</code>(<strong><code>ps_command</code></strong>=<em><code>'Get-ChildItem'</code></em>, <strong><code>exec_type</code></strong>=<em><code>'-Command'</code></em>, <strong><code>path_to_ps</code></strong>=<em><code>'powershell.exe'</code></em>)</p>
 </blockquote>
 <ul>
 <li>Prints powershell output in python std.</li>
@@ -359,7 +359,7 @@ nb_path: "Utilities.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_child_items" class="doc_header"><code>get_child_items</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L103" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_child_items</code>(<strong><code>path</code></strong>=<em><code>'E:\\Research\\pivotpy'</code></em>, <strong><code>depth</code></strong>=<em><code>None</code></em>, <strong><code>recursive</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>, <strong><code>exclude</code></strong>=<em><code>None</code></em>, <strong><code>filesOnly</code></strong>=<em><code>False</code></em>, <strong><code>dirsOnly</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="get_child_items" class="doc_header"><code>get_child_items</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L113" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_child_items</code>(<strong><code>path</code></strong>=<em><code>'E:\\Research\\pivotpy'</code></em>, <strong><code>depth</code></strong>=<em><code>None</code></em>, <strong><code>recursive</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>, <strong><code>exclude</code></strong>=<em><code>None</code></em>, <strong><code>filesOnly</code></strong>=<em><code>False</code></em>, <strong><code>dirsOnly</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns selected directories/files recursively from a parent directory.</li>
@@ -443,23 +443,51 @@ nb_path: "Utilities.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="color" class="doc_header"><code>class</code> <code>color</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L153" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>color</code>()</p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
 </div>
     {% endraw %}
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>$\text{color.r }\color{red}{\text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $<br>
- $\text{color.rb}\color{red}{\bf \text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $<br>
- $\text{color.g }\color{green}{\text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $<br>
- $\text{color.gb}\color{green}{\bf \text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $<br>
- $\text{color.b }\color{blue}{\text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $<br>
- $\text{color.bb}\color{blue}{ \bf\text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $<br>
- $\text{color.y }\color{yellow}{\text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $<br>
- $\text{color.yb}\color{yellow}{\bf \text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $<br>
- $\text{color.m }\color{magenta}{\text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $<br>
- $\text{color.mb}\color{magenta}{\bf \text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $<br>
- $\text{color.c }\color{cyan}{\text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $<br>
- $\text{color.cb}\color{cyan}{\bf \text{# + - = _ ! &lt; &gt; / , . 1 A a @ % &amp; ^ * ( ) [ ]}} $</p>
+<ul>
+<li><code>pivotpy.g_utils.color</code> contains following attributes:<br>
+color.r  --&gt; red<br>
+color.rb --&gt; red-bold<br>
+color.g  --&gt; green<br>
+color.gb --&gt; green-bold<br>
+color.b  --&gt; blue<br>
+color.bb --&gt; blue-bold<br>
+color.y  --&gt; yellow<br>
+color.yb --&gt; yellow-bold<br>
+color.m  --&gt; magenta<br>
+color.mb --&gt; magenta-bold<br>
+color.c  --&gt; cyan<br>
+color.cb --&gt; cyan-bold    </li>
+<li><strong>Usage</strong>: print(color.r('This is red'))           </li>
+</ul>
 
 </div>
 </div>
@@ -475,7 +503,7 @@ nb_path: "Utilities.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="EncodeFromNumpy" class="doc_header"><code>class</code> <code>EncodeFromNumpy</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L162" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>EncodeFromNumpy</code>(<strong><code>skipkeys</code></strong>=<em><code>False</code></em>, <strong><code>ensure_ascii</code></strong>=<em><code>True</code></em>, <strong><code>check_circular</code></strong>=<em><code>True</code></em>, <strong><code>allow_nan</code></strong>=<em><code>True</code></em>, <strong><code>sort_keys</code></strong>=<em><code>False</code></em>, <strong><code>indent</code></strong>=<em><code>None</code></em>, <strong><code>separators</code></strong>=<em><code>None</code></em>, <strong><code>default</code></strong>=<em><code>None</code></em>) :: <code>JSONEncoder</code></p>
+<h2 id="EncodeFromNumpy" class="doc_header"><code>class</code> <code>EncodeFromNumpy</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L168" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>EncodeFromNumpy</code>(<strong><code>skipkeys</code></strong>=<em><code>False</code></em>, <strong><code>ensure_ascii</code></strong>=<em><code>True</code></em>, <strong><code>check_circular</code></strong>=<em><code>True</code></em>, <strong><code>allow_nan</code></strong>=<em><code>True</code></em>, <strong><code>sort_keys</code></strong>=<em><code>False</code></em>, <strong><code>indent</code></strong>=<em><code>None</code></em>, <strong><code>separators</code></strong>=<em><code>None</code></em>, <strong><code>default</code></strong>=<em><code>None</code></em>) :: <code>JSONEncoder</code></p>
 </blockquote>
 <ul>
 <li>Serializes python/Numpy objects via customizing json encoder.</li>
@@ -507,7 +535,7 @@ nb_path: "Utilities.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="DecodeToNumpy" class="doc_header"><code>class</code> <code>DecodeToNumpy</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L190" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DecodeToNumpy</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <code>JSONDecoder</code></p>
+<h2 id="DecodeToNumpy" class="doc_header"><code>class</code> <code>DecodeToNumpy</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L195" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DecodeToNumpy</code>(<strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <code>JSONDecoder</code></p>
 </blockquote>
 <ul>
 <li>Deserilizes JSON object to Python/Numpy's objects.</li>
@@ -593,7 +621,7 @@ RETRIEVED DATA : {}
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Vasprun" class="doc_header"><code>class</code> <code>Vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L214" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Vasprun</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>joinPathAt</code></strong>=<em><code>[]</code></em>, <strong><code>shift_kpath</code></strong>=<em><code>0</code></em>)</p>
+<h2 id="Vasprun" class="doc_header"><code>class</code> <code>Vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L216" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Vasprun</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>joinPathAt</code></strong>=<em><code>[]</code></em>, <strong><code>shift_kpath</code></strong>=<em><code>0</code></em>)</p>
 </blockquote>
 <ul>
 <li>All plotting functions that depend on <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> are joined under this class and renamed.</li>
@@ -655,7 +683,7 @@ vasp.sbands(**kwargs)</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="nav_links" class="doc_header"><code>nav_links</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L277" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>nav_links</code>(<strong><code>current_index</code></strong>=<em><code>0</code></em>, <strong><code>doc_url</code></strong>=<em><code>'https://massgh.github.io/pivotpy/'</code></em>, <strong><code>items</code></strong>=<em><code>['Index', 'XmlElementTree', 'StaticPlots', 'InteractivePlots', 'Utilities', 'StructureIO', 'Widgets']</code></em>, <strong><code>horizontal</code></strong>=<em><code>False</code></em>, <strong><code>out_string</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="nav_links" class="doc_header"><code>nav_links</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L280" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>nav_links</code>(<strong><code>current_index</code></strong>=<em><code>0</code></em>, <strong><code>doc_url</code></strong>=<em><code>'https://massgh.github.io/pivotpy/'</code></em>, <strong><code>items</code></strong>=<em><code>['Index', 'XmlElementTree', 'StaticPlots', 'InteractivePlots', 'Utilities', 'StructureIO', 'Widgets']</code></em>, <strong><code>horizontal</code></strong>=<em><code>False</code></em>, <strong><code>out_string</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 
 </div>
@@ -686,7 +714,7 @@ vasp.sbands(**kwargs)</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="export_outcar" class="doc_header"><code>export_outcar</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L305" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_outcar</code>(<strong><code>path</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="export_outcar" class="doc_header"><code>export_outcar</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L308" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_outcar</code>(<strong><code>path</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Read potential at ionic sites from OUTCAR.</li>
@@ -720,7 +748,7 @@ vasp.sbands(**kwargs)</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="export_potential" class="doc_header"><code>export_potential</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L357" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_potential</code>(<strong><code>locpot</code></strong>=<em><code>None</code></em>, <strong><code>e</code></strong>=<em><code>True</code></em>, <strong><code>m</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="export_potential" class="doc_header"><code>export_potential</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L358" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_potential</code>(<strong><code>locpot</code></strong>=<em><code>None</code></em>, <strong><code>e</code></strong>=<em><code>True</code></em>, <strong><code>m</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns Data from LOCPOT and similar structure files like CHG. Loads only single set out of 2/4 magnetization data to avoid performance/memory cost while can load electrostatic and one set of magnetization together.</li>
@@ -764,7 +792,7 @@ vasp.sbands(**kwargs)</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="LOCPOT_CHG" class="doc_header"><code>class</code> <code>LOCPOT_CHG</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L441" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LOCPOT_CHG</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>e</code></strong>=<em><code>True</code></em>, <strong><code>m</code></strong>=<em><code>False</code></em>)</p>
+<h2 id="LOCPOT_CHG" class="doc_header"><code>class</code> <code>LOCPOT_CHG</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L438" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LOCPOT_CHG</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>e</code></strong>=<em><code>True</code></em>, <strong><code>m</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns Data from LOCPOT and similar structure files like CHG. Loads only single set out of 2/4 magnetization data to avoid performance/memory cost while can load electrostatic and one set of magnetization together.</li>
@@ -808,7 +836,7 @@ vasp.sbands(**kwargs)</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="transform_color" class="doc_header"><code>transform_color</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L548" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>transform_color</code>(<strong><code>arr</code></strong>, <strong><code>s</code></strong>=<em><code>1</code></em>, <strong><code>c</code></strong>=<em><code>1</code></em>, <strong><code>b</code></strong>=<em><code>0</code></em>, <strong><code>mixing_matrix</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="transform_color" class="doc_header"><code>transform_color</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L545" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>transform_color</code>(<strong><code>arr</code></strong>, <strong><code>s</code></strong>=<em><code>1</code></em>, <strong><code>c</code></strong>=<em><code>1</code></em>, <strong><code>b</code></strong>=<em><code>0</code></em>, <strong><code>mixing_matrix</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Color transformation such as brightness, contrast, saturation and mixing of an input color array. <code>c = -1</code> would invert color,keeping everything else same.</li>

@@ -4,6 +4,17 @@ __all__ = ['get_rgb_data', 'flip_even_patches', 'rgb_to_plotly', 'plotly_to_html
            'plotly_dos_lines']
 
 # Cell
+import numpy as np
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+
+import plotly.graph_objects as go
+
+import pivotpy.vr_parser as vp
+import pivotpy.s_plots as sp
+import pivotpy.g_utils as gu
+
+# Cell
 def get_rgb_data(   kpath       = None,
                     evals_set   = None,
                     pros_set    = None,
@@ -42,7 +53,6 @@ def get_rgb_data(   kpath       = None,
     elif len(elements) <3:
         raise ValueError("elements have structure [[],[],[]], do not reduce structure even if it is empty.")
     else:
-       import numpy as np
        r = np.take(pros_set,orbs[0],axis=3).sum(axis=3)
        r = np.take(r,list(elements[0]),axis=0).sum(axis=0)
        g = np.take(pros_set,orbs[1],axis=3).sum(axis=3)
@@ -85,7 +95,6 @@ def flip_even_patches(array_1d, patch_length):
         > flip_even_patches(k,3)
         > [1,2,3,3,2,1]
     """
-    import numpy as np
     out_put = []
     n= patch_length
     for i in range(len(array_1d)):
@@ -114,9 +123,7 @@ def rgb_to_plotly(rgb_data=None,mode='markers',max_width=None,showlegend=False,n
     if mode not in ('markers','bands','lines'):
         raise TypeError("Argument `mode` expects one of ['markers','bands','lines'], got '{}'.".format(mode))
         return
-    if(rgb_data):
-        import plotly.graph_objects as go
-        import numpy as np
+    if rgb_data:
         k,en,rgb,lws = rgb_data
 
         _names = [["<sub>{}</sub>".format(int(1+i)) for j in range(len(en[0]))]
@@ -247,11 +254,6 @@ def plotly_rgb_lines(path_evr    = None,
             - 'lines'   : A replica of `matplotlib LineCollection` object. It plots at each point separately, slower than other two modes.
         - **kwargs      : interpolate, ticks, figsize,elim,joinPathAt,max_width,title etc.
     """
-    import numpy as np
-    import pivotpy.vr_parser as vp
-    import pivotpy.s_plots as sp
-    import pivotpy.i_plots as ip
-    import plotly.graph_objects as go
     if mode not in ('markers','bands','lines'):
         raise TypeError("Argument `mode` expects one of ['markers','bands','lines'], got '{}'.".format(mode))
         return
@@ -407,13 +409,6 @@ def plotly_dos_lines(path_evr     = None,
         - **Returns**
             - fig        : Plotly's figure object.
         """
-        import pivotpy.s_plots as sp
-        import matplotlib.pyplot as plt
-        import numpy as np
-        import pivotpy.g_utils as gu
-        import matplotlib as mpl
-        import plotly.graph_objects as go
-
         en,tdos,pdos,vr=None,None,None,None # Place holders for defining
         cl_dos=sp.collect_dos(path_evr=path_evr,elim=elim, elements=elements, orbs=orbs,\
                               labels=labels, E_Fermi=E_Fermi, spin='both', interpolate=interpolate, n=n, k=k)

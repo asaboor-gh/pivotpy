@@ -5,10 +5,21 @@ __all__ = ['get_file_size', 'interpolate_data', 'ps_to_py', 'ps_to_std', 'get_ch
            'transform_color']
 
 # Cell
+import re
 import os
 import json
-import numpy as np
+import glob
+from collections import namedtuple
+from subprocess import Popen, PIPE
+from inspect import getcallargs as gcargs
+from io import StringIO
+from itertools import islice # File generator for faster r
 
+import numpy as np
+import plotly.graph_objects as go
+import pivotpy.vr_parser as vp
+import pivotpy.s_plots as sp
+import pivotpy.i_plots as ip
 
 # Cell
 def get_file_size(path):
@@ -22,6 +33,7 @@ def get_file_size(path):
         return ''
 
 # Cell
+from scipy.interpolate import make_interp_spline, BSpline
 def interpolate_data(x,y,n=10,k=3):
     """
     - Returns interpolated xnew,ynew. If two points are same, it will add 0.1*min(dx>0) to compensate it.
@@ -44,7 +56,6 @@ def interpolate_data(x,y,n=10,k=3):
         for pt in ind:
             x[pt:]=x[pt:]-x[pt]+x[pt-1]+dx
     # Now Apply interpolation
-    from scipy.interpolate import make_interp_spline, BSpline
     xnew=[np.linspace(x[i],x[i+1],n) for i in range(len(x)-1)]
     xnew=np.reshape(xnew,(-1))
     spl = make_interp_spline(x, y, k=k) #BSpline object
@@ -60,7 +71,6 @@ def ps_to_py(ps_command='Get-ChildItem', exec_type='-Command', path_to_ps='power
         - exec_type : type of execution, default '-Command', could be '-File'.
         - path_to_ps: path to powerhell.exe if not added to PATH variables.
     """
-    from subprocess import Popen, PIPE
     try: # Works on Linux and Windows if PS version > 5.
         cmd = ['pwsh', '-ExecutionPolicy', 'Bypass', exec_type, ps_command]
         proc = Popen(cmd, stdout=PIPE, stderr=PIPE)
@@ -94,7 +104,7 @@ def ps_to_std(ps_command='Get-ChildItem', exec_type='-Command', path_to_ps='powe
         - exec_type: type of execution, default '-Command', could be '-File'.
         - path_to_ps: path to powerhell.exe if not added to PATH variables.
     """
-    out=ps_to_py(path_to_ps=path_to_ps,exec_type=exec_type,ps_command=ps_command)
+    out = ps_to_py(path_to_ps=path_to_ps,exec_type=exec_type,ps_command=ps_command)
     for item in out:
         print(item)
     return None
@@ -114,8 +124,6 @@ def get_child_items(path = os.getcwd(),depth=None,recursive=True,include=None,ex
     - **Returns**
         - GLOB : Tuple (children,parent), children is list of selected directories/files and parent is given path. Access by index of by `get_child_items().{children,path}`.
     """
-    import re, glob
-    from collections import namedtuple
     path = os.path.abspath(path) # important
     pattern = path + '**/**' # Default pattern
     if depth != None and type(depth) == int:
@@ -142,21 +150,19 @@ def get_child_items(path = os.getcwd(),depth=None,recursive=True,include=None,ex
     return out_files(req_dirs,os.path.abspath(path))
 
 # Cell
-from .vr_parser import Dict2Data
-color = Dict2Data({
-     'r' : lambda text: f"\033[0;91m {text}\033[00m",
-     'rb': lambda text: f"\033[1;91m {text}\033[00m",
-     'g' : lambda text: f"\033[0;92m {text}\033[00m",
-     'gb': lambda text: f"\033[1;92m {text}\033[00m",
-     'b' : lambda text: f"\033[0;34m {text}\033[00m",
-     'bb': lambda text: f"\033[1;34m {text}\033[00m",
-     'y' : lambda text: f"\033[0;93m {text}\033[00m",
-     'yb': lambda text: f"\033[1;93m {text}\033[00m",
-     'm' : lambda text: f"\033[0;95m {text}\033[00m",
-     'mb': lambda text: f"\033[1;95m {text}\033[00m",
-     'c' : lambda text: f"\033[0;96m {text}\033[00m",
-     'cb': lambda text: f"\033[1;96m {text}\033[00m"
-})
+class color:
+     r  = lambda text: f"\033[0;91m {text}\033[00m"
+     rb = lambda text: f"\033[1;91m {text}\033[00m"
+     g  = lambda text: f"\033[0;92m {text}\033[00m"
+     gb = lambda text: f"\033[1;92m {text}\033[00m"
+     b  = lambda text: f"\033[0;34m {text}\033[00m"
+     bb = lambda text: f"\033[1;34m {text}\033[00m"
+     y  = lambda text: f"\033[0;93m {text}\033[00m"
+     yb = lambda text: f"\033[1;93m {text}\033[00m"
+     m  = lambda text: f"\033[0;95m {text}\033[00m"
+     mb = lambda text: f"\033[1;95m {text}\033[00m"
+     c  = lambda text: f"\033[0;96m {text}\033[00m"
+     cb = lambda text: f"\033[1;96m {text}\033[00m"
 
 # Cell
 class EncodeFromNumpy(json.JSONEncoder):
@@ -167,15 +173,14 @@ class EncodeFromNumpy(json.JSONEncoder):
         - `json.dump(*args, cls=EncodeFromNumpy)` to create a file.json.
     """
     def default(self, obj):
-        import numpy
-        if isinstance(obj, numpy.ndarray):
+        if isinstance(obj, np.ndarray):
             return {
                 "_kind_": "ndarray",
                 "_value_": obj.tolist()
             }
-        if isinstance(obj, numpy.integer):
+        if isinstance(obj, np.integer):
             return int(obj)
-        elif isinstance(obj, numpy.floating):
+        elif isinstance(obj, np.floating):
             return float(obj)
         elif isinstance(obj,range):
             value = list(obj)
@@ -197,20 +202,17 @@ class DecodeToNumpy(json.JSONDecoder):
         json.JSONDecoder.__init__(self, object_hook=self.object_hook, *args, **kwargs)
 
     def object_hook(self, obj):
-        import numpy
         if '_kind_' not in obj:
             return obj
         kind = obj['_kind_']
         if kind == 'ndarray':
-            return numpy.array(obj['_value_'])
+            return np.array(obj['_value_'])
         elif kind == 'range':
             value = obj['_value_']
             return range(value[0],value[-1])
         return obj
 
 # Cell
-import pivotpy as pp
-from inspect import getcallargs as gcargs
 class Vasprun:
     """
     - All plotting functions that depend on `export_vasprun` are joined under this class and renamed.
@@ -238,40 +240,41 @@ class Vasprun:
     """
     def __init__(self,path=None, skipk=None, elim=[], joinPathAt=[], shift_kpath=0):
         try:
-	        shell = get_ipython().__class__.__name__
-	        if shell == 'ZMQInteractiveShell' or shell =='Shell':
-		        from IPython.display import set_matplotlib_formats
-		        set_matplotlib_formats('svg')
+            from IPython import get_ipython
+            shell = get_ipython().__class__.__name__
+            if shell == 'ZMQInteractiveShell' or shell =='Shell':
+                from IPython.display import set_matplotlib_formats
+                set_matplotlib_formats('svg')
         except: pass
-        self.data = pp.export_vasprun(path=path, skipk=skipk, elim=elim, joinPathAt=joinPathAt, shift_kpath=shift_kpath)
+        self.data = vp.export_vasprun(path=path, skipk=skipk, elim=elim, joinPathAt=joinPathAt, shift_kpath=shift_kpath)
         # Set DOCS
-        Vasprun.sbands.__doc__ = '\n'.join(l for l in pp.quick_bplot.__doc__.splitlines() if 'path_ev' not in l)
-        Vasprun.sdos.__doc__ = '\n'.join(l for l in pp.quick_dos_lines.__doc__.splitlines() if 'path_ev' not in l)
-        Vasprun.srgb.__doc__ = '\n'.join(l for l in pp.quick_rgb_lines.__doc__.splitlines() if 'path_ev' not in l)
-        Vasprun.scolor.__doc__ = '\n'.join(l for l in pp.quick_color_lines.__doc__.splitlines() if 'path_ev' not in l)
-        Vasprun.idos.__doc__ = '\n'.join(l for l in pp.plotly_dos_lines.__doc__.splitlines() if 'path_ev' not in l)
-        Vasprun.irgb.__doc__ = '\n'.join(l for l in pp.plotly_rgb_lines.__doc__.splitlines() if 'path_ev' not in l)
+        Vasprun.sbands.__doc__ = '\n'.join(l for l in sp.quick_bplot.__doc__.splitlines() if 'path_ev' not in l)
+        Vasprun.sdos.__doc__ = '\n'.join(l for l in sp.quick_dos_lines.__doc__.splitlines() if 'path_ev' not in l)
+        Vasprun.srgb.__doc__ = '\n'.join(l for l in sp.quick_rgb_lines.__doc__.splitlines() if 'path_ev' not in l)
+        Vasprun.scolor.__doc__ = '\n'.join(l for l in sp.quick_color_lines.__doc__.splitlines() if 'path_ev' not in l)
+        Vasprun.idos.__doc__ = '\n'.join(l for l in ip.plotly_dos_lines.__doc__.splitlines() if 'path_ev' not in l)
+        Vasprun.irgb.__doc__ = '\n'.join(l for l in ip.plotly_rgb_lines.__doc__.splitlines() if 'path_ev' not in l)
 
         # Set kwargs attribute for.
-        Vasprun.sbands.kwargs = {k:v for k,v in gcargs(pp.quick_bplot).items() if 'path_evr' not in k}
-        Vasprun.sdos.kwargs   = {k:v for k,v in gcargs(pp.quick_dos_lines).items() if 'path_evr' not in k}
-        Vasprun.scolor.kwargs = {k:v for k,v in gcargs(pp.quick_color_lines).items() if 'path_evr' not in k}
-        Vasprun.idos.kwargs   = {k:v for k,v in gcargs(pp.plotly_dos_lines).items() if 'path_evr' not in k}
-        Vasprun.srgb.kwargs   = {k:v for k,v in gcargs(pp.quick_rgb_lines).items() if 'path_evr' not in k}
-        Vasprun.irgb.kwargs   = {k:v for k,v in gcargs(pp.plotly_rgb_lines).items() if 'path_evr' not in k}
+        Vasprun.sbands.kwargs = {k:v for k,v in gcargs(sp.quick_bplot).items() if 'path_evr' not in k}
+        Vasprun.sdos.kwargs   = {k:v for k,v in gcargs(sp.quick_dos_lines).items() if 'path_evr' not in k}
+        Vasprun.scolor.kwargs = {k:v for k,v in gcargs(sp.quick_color_lines).items() if 'path_evr' not in k}
+        Vasprun.idos.kwargs   = {k:v for k,v in gcargs(ip.plotly_dos_lines).items() if 'path_evr' not in k}
+        Vasprun.srgb.kwargs   = {k:v for k,v in gcargs(sp.quick_rgb_lines).items() if 'path_evr' not in k}
+        Vasprun.irgb.kwargs   = {k:v for k,v in gcargs(ip.plotly_rgb_lines).items() if 'path_evr' not in k}
 
     def sbands(self,**kwargs):
-        return pp.quick_bplot(self.data,**kwargs)
+        return sp.quick_bplot(self.data,**kwargs)
     def sdos(self,**kwargs):
-        return pp.quick_dos_lines(self.data,**kwargs)
+        return sp.quick_dos_lines(self.data,**kwargs)
     def srgb(self,**kwargs):
-        return pp.quick_rgb_lines(self.data,**kwargs)
+        return sp.quick_rgb_lines(self.data,**kwargs)
     def scolor(self,**kwargs):
-        return pp.quick_color_lines(self.data,**kwargs)
+        return sp.quick_color_lines(self.data,**kwargs)
     def idos(self,**kwargs):
-        return pp.plotly_dos_lines(self.data,**kwargs)
+        return ip.plotly_dos_lines(self.data,**kwargs)
     def irgb(self,**kwargs):
-        return pp.plotly_rgb_lines(self.data,**kwargs)
+        return ip.plotly_rgb_lines(self.data,**kwargs)
 
 # Cell
 def nav_links(current_index=0,
@@ -306,8 +309,6 @@ def export_outcar(path=None):
     """
     - Read potential at ionic sites from OUTCAR.
     """
-    import os,numpy as np, pivotpy as pp ,re
-    from io import StringIO
     if path is None:
         path = './OUTCAR'
     if not os.path.isfile(path):
@@ -350,7 +351,7 @@ def export_outcar(path=None):
     pos_pot = np.hstack([pos_arr,pot_arr[:,1:]])
     basis = np.loadtxt(StringIO(''.join(lines[b_first:b_first+3])))
     final_dict = {'ion_pot':pot_arr,'positions':pos_arr,'site_pot':pos_pot,'basis':basis[:,:3],'rec_basis':basis[:,3:],'n_kbi':n_kbi}
-    return pp.Dict2Data(final_dict)
+    return vp.Dict2Data(final_dict)
 
 
 # Cell
@@ -364,9 +365,6 @@ def export_potential(locpot=None,e = True,m = False):
     - **Exceptions**
         - Would raise index error if magnetization density set is not present in LOCPOT/CHG in case `m` is not False.
     """
-    from io import StringIO
-    import pivotpy as pp
-    from itertools import islice # File generator for faster r
     if locpot is None:
         if os.path.isfile('LOCPOT'):
             locpot = 'LOCPOT'
@@ -434,10 +432,9 @@ def export_potential(locpot=None,e = True,m = False):
 
     final_dict = dict(SYSTEM=system,ElemName=ElemName,ElemIndex=ElemIndex,basis=basis,positions=positions)
     final_dict = {**final_dict,**pot_dict}
-    return pp.Dict2Data(final_dict)
+    return vp.Dict2Data(final_dict)
 
 # Cell
-import pivotpy as pp
 class LOCPOT_CHG:
     """
     - Returns Data from LOCPOT and similar structure files like CHG. Loads only single set out of 2/4 magnetization data to avoid performance/memory cost while can load electrostatic and one set of magnetization together.
@@ -450,16 +447,17 @@ class LOCPOT_CHG:
     """
     def __init__(self,path=None,e = True,m = False):
         try:
-	        shell = get_ipython().__class__.__name__
-	        if shell == 'ZMQInteractiveShell' or shell =='Shell':
-		        from IPython.display import set_matplotlib_formats
-		        set_matplotlib_formats('svg')
+            from IPython import get_ipython
+            shell = get_ipython().__class__.__name__
+            if shell == 'ZMQInteractiveShell' or shell =='Shell':
+                from IPython.display import set_matplotlib_formats
+                set_matplotlib_formats('svg')
         except: pass
         self.path = path # Must be
         self.m = m # Required to put in plots.
-        self.data = pp.export_potential(locpot=path, e=e,m=m)
+        self.data = export_potential(locpot=path, e=e,m=m)
         # DOCS
-        lines = pp.plot_potential.__doc__.split('\n')
+        lines = sp.plot_potential.__doc__.split('\n')
         lines = [l for l in [l for l in lines if 'basis' not in l] if 'e_or_m' not in l]
         LOCPOT_CHG.plot_e.__doc__ = '\n'.join(lines)
         LOCPOT_CHG.plot_m.__doc__ = '\n'.join(lines)
@@ -468,7 +466,7 @@ class LOCPOT_CHG:
                  lr_pos=(0.25,0.75),lr_widths = [0.5,0.5],
                  labels=(r'$V(z)$',r'$\langle V \rangle _{roll}(z)$',r'$\langle V \rangle $'),
                  colors = ((0,0.2,0.7),'b','r'),annotate=True):
-        return pp.plot_potential(basis=self.data.basis,e_or_m=self.data.e,operation=operation,
+        return sp.plot_potential(basis=self.data.basis,e_or_m=self.data.e,operation=operation,
                                     ax=ax,period=period,lr_pos=lr_pos,lr_widths=lr_widths,
                                     labels=labels,colors=colors,annotate=annotate)
 
@@ -486,7 +484,7 @@ class LOCPOT_CHG:
             e_or_m = self.data.m_z
         else:
             return print("Magnetization data set does not exist in {}".format(self.path))
-        return pp.plot_potential(basis=self.data.basis,e_or_m=e_or_m,operation=operation,
+        return sp.plot_potential(basis=self.data.basis,e_or_m=e_or_m,operation=operation,
                                     ax=ax,period=period,lr_pos=lr_pos,lr_widths=lr_widths,
                                     labels=labels,colors=colors,annotate=annotate)
 
@@ -499,7 +497,6 @@ class LOCPOT_CHG:
             - nslice      : Default is 10. Number of periods around and including period_guess. e.g. If you give 0.25 as period_guess and nslice is 10, you will get 10 lines of rolling average over given data from where you can choose best fit or try another guess and so on.
             - e_or_m      : None by default. Not required in most cases as `view_period()` will try to get data itself from top class in order of `self.data.[e,m,m_x,m_y,m_z]` and if `self.data.e` exists it never goes to others, so you can overwrite this by setting `e_or_m = self.data.[your choice]`.
         """
-        import plotly.graph_objects as go , numpy as np
         pos = period_guess
         check = ['mean_x','min_x','max_x','mean_y','min_y','max_y','mean_z','min_z','max_z']
         if operation not in check:

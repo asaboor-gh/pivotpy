@@ -5,7 +5,19 @@ __all__ = ['Dict2Data', 'read_asxml', 'exclude_kpts', 'get_ispin', 'get_summary'
            'load_from_dump', 'islice2array', 'slice_data', 'split_vasprun']
 
 # Cell
-import numpy
+import re
+import os
+import json
+import pickle
+from itertools import islice, chain, product
+
+import numpy as np
+from importlib.machinery import SourceFileLoader
+import textwrap
+import xml.etree.ElementTree as ET
+import pivotpy.g_utils as gu
+
+# Cell
 class Dict2Data(dict):
     """
     - Returns a Data object with dictionary keys as attributes of Data accessible by dot notation.
@@ -55,7 +67,6 @@ class Dict2Data(dict):
             - outfile : Default is None and returns string. If given, writes to file.
             - indent  : Json indent. Default is 1.
         """
-        from .vr_parser import dump_dict
         return dump_dict(self,dump_to='json',outfile=outfile,indent=indent)
 
     def to_pickle(self,outfile=None):
@@ -64,15 +75,14 @@ class Dict2Data(dict):
         - **Parameters**
             - outfile : Default is None and returns string. If given, writes to file.
         """
-        from .vr_parser import dump_dict
         return dump_dict(self,dump_to='pickle',outfile=outfile)
 
     def __repr__(self):
         items= []
         for k,v in self.__dict__.items():
             if type(v) not in (str,float,int,range) and not isinstance(v,Dict2Data):
-                if isinstance(v,numpy.ndarray):
-                    v = "<{}:shape={}>".format(v.__class__.__name__,numpy.shape(v))
+                if isinstance(v,np.ndarray):
+                    v = "<{}:shape={}>".format(v.__class__.__name__,np.shape(v))
                 elif type(v) in (list,tuple):
                     v = ("<{}:len={}>".format(v.__class__.__name__,len(v)) if len(v) > 10 else v)
                 else:
@@ -98,8 +108,6 @@ def read_asxml(path=None):
     """
     if(path==None):
         path='./vasprun.xml'
-    import xml.etree.ElementTree as ET
-    import os,textwrap
     if not os.path.isfile(path):
         print("File: '{}'' does not exist!".format(path))
         return # This is important to stop further errors.
@@ -107,8 +115,7 @@ def read_asxml(path=None):
         print("File should end with 'vasprun.xml', prefixes are allowed.")
         return # This is important to stop further errors.
     else:
-        from .g_utils import get_file_size,color
-        fsize = get_file_size(path)
+        fsize = gu.get_file_size(path)
         value = float(fsize.split()[0])
         print_str = """
         Memory Consumption Warning!
@@ -117,9 +124,9 @@ def read_asxml(path=None):
             An alternative way is to parse vasprun.xml is by using `Vasp2Visual` module in Powershell by command `pivotpy.load_export('path/to/vasprun.xml'), which runs underlying powershell functions to load data whith efficient memory managment. It works on Windows/Linux/MacOS if you have powershell core and Vasp2Visual installed on it.
         """.format(path,fsize)
         if 'MB' in fsize and value > 200:
-            print(color.y(textwrap.dedent(print_str)))
+            print(gu.color.y(textwrap.dedent(print_str)))
         elif 'GB' in fsize and value > 1:
-            print(color.y(textwrap.dedent(print_str)))
+            print(gu.color.y(textwrap.dedent(print_str)))
 
         tree = ET.parse(path)
         xml_data = tree.getroot()
@@ -216,7 +223,6 @@ def get_kpts(xml_data=None,skipk=0,joinPathAt=[]):
         xml_data=read_asxml()
     if not xml_data:
         return
-    import numpy as np
     for kpts in xml_data.iter('varray'):
         if(kpts.attrib=={'name': 'kpointlist'}):
             kpoints=[[float(item) for item in arr.text.split()] for arr in kpts.iter('v')]
@@ -250,9 +256,8 @@ def get_tdos(xml_data=None,spin_set=1,elim=[]):
         xml_data=read_asxml()
     if not xml_data:
         return
-    import numpy as np #Mandatory to avoid errors.
     tdos=[]; #assign for safely exit if wrong spin set entered.
-    ISPIN=get_ispin(xml_data=xml_data)
+    ISPIN = get_ispin(xml_data=xml_data)
     for neighbor in xml_data.iter('dos'):
         for item in neighbor[1].iter('set'):
             if(ISPIN==1 and spin_set==1):
@@ -303,7 +308,6 @@ def get_evals(xml_data=None,skipk=None,elim=[]):
         xml_data=read_asxml()
     if not xml_data:
         return
-    import numpy as np #Mandatory to avoid errors.
     evals=[]; #assign for safely exit if wrong spin set entered.
     ISPIN=get_ispin(xml_data=xml_data)
     if skipk!=None:
@@ -358,15 +362,13 @@ def get_bands_pro_set(xml_data=None,
     - **Returns**
         - Data     : pivotpy.Dict2Data with attibutes of bands projections and related parameters.
     """
-    import numpy as np
-    import os, pivotpy as pp
     if(bands_range!=None):
         check_list=list(bands_range)
         if check_list==[]:
-            return print(pp.color.r("No bands prjections found in given energy range."))
+            return print(gu.color.r("No bands prjections found in given energy range."))
     # Try to read _set.txt first. instance check is important.
     if isinstance(set_path,str) and os.path.isfile(set_path):
-        _header = pp.islice2array(set_path,nlines=1,raw=True,exclude=None)
+        _header = vp.islice2array(set_path,nlines=1,raw=True,exclude=None)
         _shape = [int(v) for v in _header.split('=')[1].strip().split(',')]
         NKPTS, NBANDS, NIONS, NORBS = _shape
         if NORBS == 3:
@@ -387,9 +389,9 @@ def get_bands_pro_set(xml_data=None,
             NBANDS = _b_r[-1]-_b_r[0]+1 # upadte after start
             NKPTS = NKPTS-skipk # Update after start
             COUNT = NIONS*NBANDS*NKPTS*NORBS
-        data = pp.islice2array(set_path,start=start,nlines=nlines,count=COUNT)
+        data = vp.islice2array(set_path,start=start,nlines=nlines,count=COUNT)
         data = data.reshape((NKPTS,NBANDS,NIONS,NORBS)).transpose([2,0,1,3])
-        return pp.Dict2Data({'labels':fields,'pros':data})
+        return Dict2Data({'labels':fields,'pros':data})
 
     # if above not worked, read from main vasprun.xml file.
     if(xml_data==None):
@@ -448,8 +450,6 @@ def get_dos_pro_set(xml_data=None,spin_set=1,dos_range=None):
     - **Returns**
         - Data     : pivotpy.Dict2Data with attibutes of dos projections and related parameters.
     """
-    import numpy as np
-    import pivotpy.g_utils as gu
     if(dos_range!=None):
         check_list=list(dos_range)
         if(check_list==[]):
@@ -493,7 +493,6 @@ def get_structure(xml_data=None):
         xml_data=read_asxml()
     if not xml_data:
         return
-    import numpy as np
     for final in xml_data.iter('structure'):
         if(final.attrib=={'name': 'finalpos'}):
             for i in final.iter('i'):
@@ -530,9 +529,6 @@ def export_vasprun(path=None,skipk=None,elim=[],joinPathAt=[],shift_kpath=0):
             - pro_dos   : Data containing dos projections.
             - poscar    : Data containing basis,positions, rec_basis and volume.
     """
-    import numpy as np, os
-    import pivotpy.vr_parser as vp
-
     # Try to get files if exported data in PowerShell.
     req_files = ['Bands.txt','tDOS.txt','pDOS.txt','Projection.txt','SysInfo.py']
     if path and os.path.isfile(path):
@@ -540,13 +536,13 @@ def export_vasprun(path=None,skipk=None,elim=[],joinPathAt=[],shift_kpath=0):
     logic = [os.path.isfile(f) for f in req_files]
     if not False in logic:
         print('Loading from PowerShell Exported Data...')
-        return vp.load_export(path=(path if path else './vasprun.xml'))
+        return load_export(path=(path if path else './vasprun.xml'))
 
     # Proceed if not files from PWSH
     if path==None:
         path='./vasprun.xml'
     try:
-        xml_data=vp.read_asxml(path=path)
+        xml_data = read_asxml(path=path)
     except:
         return
     base_dir = os.path.split(os.path.abspath(path))[0]
@@ -555,14 +551,14 @@ def export_vasprun(path=None,skipk=None,elim=[],joinPathAt=[],shift_kpath=0):
     if skipk!=None:
         skipk=skipk
     else:
-        skipk=vp.exclude_kpts(xml_data=xml_data) #that much to skip by default
-    info_dic=vp.get_summary(xml_data=xml_data) #Reads important information of system.
+        skipk = exclude_kpts(xml_data=xml_data) #that much to skip by default
+    info_dic = get_summary(xml_data=xml_data) #Reads important information of system.
     #KPOINTS
-    kpts=vp.get_kpts(xml_data=xml_data,skipk=skipk,joinPathAt=joinPathAt)
+    kpts = get_kpts(xml_data=xml_data,skipk=skipk,joinPathAt=joinPathAt)
     #EIGENVALS
-    eigenvals=vp.get_evals(xml_data=xml_data,skipk=skipk,elim=elim)
+    eigenvals = get_evals(xml_data=xml_data,skipk=skipk,elim=elim)
     #TDOS
-    tot_dos=vp.get_tdos(xml_data=xml_data,spin_set=1,elim=elim)
+    tot_dos = get_tdos(xml_data=xml_data,spin_set=1,elim=elim)
     #Bands and DOS Projection
     if elim:
         bands_range=eigenvals.bands_range
@@ -571,27 +567,27 @@ def export_vasprun(path=None,skipk=None,elim=[],joinPathAt=[],shift_kpath=0):
         bands_range=None #projection function will read itself.
         grid_range=None
     if(info_dic.ISPIN==1):
-        pro_bands=vp.get_bands_pro_set(xml_data=xml_data,spin_set=1,skipk=skipk,bands_range=bands_range,set_path=set_paths[0])
-        pro_dos=vp.get_dos_pro_set(xml_data=xml_data,spin_set=1,dos_range=grid_range)
+        pro_bands = get_bands_pro_set(xml_data=xml_data,spin_set=1,skipk=skipk,bands_range=bands_range,set_path=set_paths[0])
+        pro_dos = get_dos_pro_set(xml_data=xml_data,spin_set=1,dos_range=grid_range)
     if(info_dic.ISPIN==2):
-        pro_1=vp.get_bands_pro_set(xml_data=xml_data,spin_set=1,skipk=skipk,bands_range=bands_range,set_path=set_paths[0])
-        pro_2=vp.get_bands_pro_set(xml_data=xml_data,spin_set=2,skipk=skipk,bands_range=bands_range,set_path=set_paths[1])
+        pro_1 = get_bands_pro_set(xml_data=xml_data,spin_set=1,skipk=skipk,bands_range=bands_range,set_path=set_paths[0])
+        pro_2 = get_bands_pro_set(xml_data=xml_data,spin_set=2,skipk=skipk,bands_range=bands_range,set_path=set_paths[1])
         pros={'SpinUp': pro_1.pros,'SpinDown': pro_2.pros}#accessing spins in dictionary after .pro.
         pro_bands={'labels':pro_1.labels,'pros': pros}
-        pdos_1=vp.get_dos_pro_set(xml_data=xml_data,spin_set=1,dos_range=grid_range)
-        pdos_2=vp.get_dos_pro_set(xml_data=xml_data,spin_set=1,dos_range=grid_range)
+        pdos_1 = get_dos_pro_set(xml_data=xml_data,spin_set=1,dos_range=grid_range)
+        pdos_2 = get_dos_pro_set(xml_data=xml_data,spin_set=1,dos_range=grid_range)
         pdos={'SpinUp': pdos_1.pros,'SpinDown': pdos_2.pros}#accessing spins in dictionary after .pro.
         pro_dos={'labels':pdos_1.labels,'pros': pdos}
 
     #Structure
-    poscar=vp.get_structure(xml_data=xml_data)
+    poscar = get_structure(xml_data=xml_data)
     #Dimensions dictionary.
     dim_dic={'⇅':'Each of SpinUp/SpinDown Arrays','kpoints':'(NKPTS,3)','kpath':'(NKPTS,1)','bands':'⇅(NKPTS,NBANDS)','dos':'⇅(grid_size,3)','pro_dos':'⇅(NION,grid_size,en+pro_fields)','pro_bands':'⇅(NION,NKPTS,NBANDS,pro_fields)'}
     #Writing everything to be accessible via dot notation
     kpath=[k+shift_kpath for k in kpts.kpath]  # shift kpath for side by side calculations.
     full_dic={'sys_info':info_dic,'dim_info':dim_dic,'kpoints':kpts.kpoints,'kpath':kpath,'bands':eigenvals,
              'tdos':tot_dos,'pro_bands':pro_bands,'pro_dos':pro_dos,'poscar': poscar}
-    return vp.Dict2Data(full_dic)
+    return Dict2Data(full_dic)
 
 # Cell
 def load_export(path= './vasprun.xml',
@@ -626,11 +622,6 @@ def load_export(path= './vasprun.xml',
             - pro_dos   : Data containing dos projections.
             - poscar    : Data containing basis,positions, rec_basis and volume.
     """
-    import numpy as np
-    import os
-    import importlib as il
-    import pivotpy as pp
-    import pivotpy.vr_parser as vp
     this_loc = os.getcwd()
     split_path= os.path.split(os.path.abspath(path)) # abspath is important to split.
     file_name = split_path[1]
@@ -645,16 +636,11 @@ def load_export(path= './vasprun.xml',
            i=i+1
     if(i<5):
         if (skipk != None):
-            pp.ps_to_std(path_to_ps=path_to_ps,ps_command='Import-Module Vasp2Visual; Export-VR -InputFile {} -MaxFilled {} -MaxEmpty {} -SkipK {}'.format(path,max_filled,max_empty,skipk))
+            gu.ps_to_std(path_to_ps=path_to_ps,ps_command='Import-Module Vasp2Visual; Export-VR -InputFile {} -MaxFilled {} -MaxEmpty {} -SkipK {}'.format(path,max_filled,max_empty,skipk))
         else:
-            pp.ps_to_std(path_to_ps=path_to_ps,ps_command='Import-Module Vasp2Visual; Export-VR -InputFile {} -MaxFilled {} -MaxEmpty {}'.format(path,max_filled,max_empty))
+            gu.ps_to_std(path_to_ps=path_to_ps,ps_command='Import-Module Vasp2Visual; Export-VR -InputFile {} -MaxFilled {} -MaxEmpty {}'.format(path,max_filled,max_empty))
 
-    # Enable reloading SysInfo.py file.
-
-    #import SysInfo
-    #_vars = il.reload(SysInfo)
-    # Single Load instead
-    from importlib.machinery import SourceFileLoader
+    # Enable loading SysInfo.py file as source.
     _vars = SourceFileLoader("SysInfo", "./SysInfo.py").load_module()
 
     SYSTEM            = _vars.SYSTEM
@@ -762,7 +748,6 @@ def dump_dict(dict_data = None, dump_to = 'pickle',outfile = None,indent=1):
     try: dict_obj = dict_data.to_dict() # Change Data object to dictionary
     except: dict_obj = dict_data
     if dump_to == 'pickle':
-        import pickle
         if outfile == None:
             return pickle.dumps(dict_obj)
         outfile = outfile.split('.')[0] + '.pickle'
@@ -770,13 +755,11 @@ def dump_dict(dict_data = None, dump_to = 'pickle',outfile = None,indent=1):
         pickle.dump(dict_obj,f)
         f.close()
     if dump_to == 'json':
-        import json
-        from .g_utils import EncodeFromNumpy
         if outfile == None:
-            return json.dumps(dict_obj,cls=EncodeFromNumpy,indent=indent)
+            return json.dumps(dict_obj,cls = gu.EncodeFromNumpy,indent=indent)
         outfile = outfile.split('.')[0] + '.json'
         f = open(outfile,'w')
-        json.dump(dict_obj,f,cls=EncodeFromNumpy,indent=indent)
+        json.dump(dict_obj,f,cls = gu.EncodeFromNumpy,indent=indent)
         f.close()
     return None
 
@@ -789,7 +772,6 @@ def load_from_dump(file_or_str,keep_as_dict=False):
         - keep_as_dict: Defualt is False and return `Data` object. If True, returns dictionary.
     """
     out = {}
-    import os,pickle,json,pivotpy as pp
     if not isinstance(file_or_str,bytes):
         try: #must try, else fails due to path length issue
             if os.path.isfile(file_or_str):
@@ -799,11 +781,11 @@ def load_from_dump(file_or_str,keep_as_dict=False):
                     f.close()
                 elif '.json' in file_or_str:
                     with open(file_or_str,'r') as f:
-                        out = json.load(f,cls=pp.DecodeToNumpy)
+                        out = json.load(f,cls = gu.DecodeToNumpy)
                     f.close()
-            else: out = json.loads(file_or_str,cls=pp.DecodeToNumpy)
+            else: out = json.loads(file_or_str,cls = gu.DecodeToNumpy)
             # json.loads required in else and except both as long str > 260 causes issue in start of try block
-        except: out = json.loads(file_or_str,cls=pp.DecodeToNumpy)
+        except: out = json.loads(file_or_str,cls = gu.DecodeToNumpy)
     elif isinstance(file_or_str,bytes):
             out = pickle.loads(file_or_str)
 
@@ -840,9 +822,6 @@ def islice2array(path_or_islice,dtype=float,delimiter='\s+',
         >        [  0.283532,   1.      ]])
     > Note: Slicing a dimension to 100% of its data is faster than let say 80% for inner dimensions, so if you have to slice more than 50% of an inner dimension, then just load full data and slice after it.
     """
-    from itertools import islice,chain
-    import os,re, numpy as np
-
     if nlines is None and isinstance(start,(list,np.ndarray)):
         print("`nlines = None` with `start = array/list` is useless combination.")
         return np.array([]) # return empty array.
@@ -919,8 +898,6 @@ def slice_data(dim_inds,old_shape):
         - Unpack above dictionary in `islice2array` and you will get output array.
     - Note that dimensions are packed from right to left, like 0,2 is repeating in 2nd column.
     """
-    import numpy as np
-    from itertools import product
     # Columns are treated diffiernetly.
     if dim_inds[-1] == -1:
         cols = None
@@ -965,8 +942,6 @@ def split_vasprun(path=None):
         - _set1.txt for spin up data and _set2.txt for spin-polarized case.
         - _set[1,2,3,4].txt for each spin set of non-colinear calculations.
     """
-    import re, os, pivotpy as pp
-    from itertools import islice
     if not path:
         path = './vasprun.xml'
     if not os.path.isfile(path):
@@ -996,12 +971,12 @@ def split_vasprun(path=None):
         f.seek(0) # Must be at zero
         N_sets = len(spin_inds)
         # Let's read shape from out_file as well.
-        xml_data = pp.read_asxml(out_file)
-        _summary = pp.get_summary(xml_data)
+        xml_data = read_asxml(out_file)
+        _summary = get_summary(xml_data)
         NIONS  = _summary.NION
         NORBS  = len(_summary.fields)
-        NBANDS = pp.get_evals(xml_data).NBANDS
-        NKPTS  = pp.get_kpts(xml_data).NKPTS
+        NBANDS = get_evals(xml_data).NBANDS
+        NKPTS  = get_kpts(xml_data).NKPTS
         del xml_data # free meory now.
         for i in range(N_sets): #Reads every set
             print("Writing {!r} ...".format(out_sets[i]),end=' ')

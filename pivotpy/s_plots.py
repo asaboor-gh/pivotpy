@@ -5,6 +5,36 @@ __all__ = ['plot_bands', 'modify_axes', 'quick_bplot', 'add_text', 'add_legend',
            'init_figure', 'select_pdos', 'collect_dos', 'quick_dos_lines', 'plt_to_html', 'plot_potential']
 
 # Cell
+import os
+import numpy as np
+from io import BytesIO
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap as LSC
+from matplotlib.collections import LineCollection
+
+import pivotpy.vr_parser as vp
+import pivotpy.g_utils as gu
+
+from IPython import get_ipython
+from IPython.display import HTML, set_matplotlib_formats #HTML for plt_to_html
+
+# print SVG in ipython
+try:
+    shell = get_ipython().__class__.__name__
+    if shell == 'ZMQInteractiveShell' or shell == 'Shell': # Shell for colab.
+        set_matplotlib_formats('svg')
+except: pass # Not in terminal
+
+# Gloabal settings matplotlib
+mpl.rcParams['axes.linewidth'] = 0.4 #set the value globally
+mpl.rcParams['font.serif'] = "STIXGeneral"
+mpl.rcParams['font.family'] = "serif"
+mpl.rcParams['mathtext.fontset'] = "stix"
+
+
+# Cell
 def plot_bands(ax=None,kpath=None,bands=None,showlegend=False,E_Fermi=None,\
                 color1=(0,0,0.8),style1='solid',lw1=0.7,color2=(0.8,0,0),style2='dashed',lw2=0.7):
     """
@@ -19,10 +49,8 @@ def plot_bands(ax=None,kpath=None,bands=None,showlegend=False,E_Fermi=None,\
     - **Returns**
         - ax : matplotlib axes object with plotted bands.
     """
-    from .g_utils import color
     # Fixing ax argument
     if(ax==None):
-        import matplotlib.pyplot as plt
         fig,ax=plt.subplots(1,1,figsize=(3.4,2.6))
     else:
         ax==ax
@@ -37,14 +65,14 @@ def plot_bands(ax=None,kpath=None,bands=None,showlegend=False,E_Fermi=None,\
     # Plotting
     if(bands.ISPIN==1):
         if(not bands.evals.any()):
-            print(color.y("Can not plot an empty eigenvalues object."))
-            return print(color.g("Try with large energy range."))
+            print(gu.color.y("Can not plot an empty eigenvalues object."))
+            return print(gu.color.g("Try with large energy range."))
         en=bands.evals-E_Fermi
         ax.plot(kpath,en,color=color1,lw=lw1,ls=style1)
     if(bands.ISPIN==2):
         if(not bands.evals.SpinUp.any()):
-            print(color.y("Can not plot an empty eigenvalues object."))
-            return print(color.g("Try with large energy range."))
+            print(gu.color.y("Can not plot an empty eigenvalues object."))
+            return print(gu.color.g("Try with large energy range."))
         enUp=bands.evals.SpinUp-E_Fermi
         enDown=bands.evals.SpinDown-E_Fermi
         ax.plot(kpath,enUp,color=color1,lw=lw1,ls=style1)
@@ -71,15 +99,9 @@ def modify_axes(ax=None,xticks=[],xt_labels=[],xlim=[],\
         - vlines : If true, drawn when `ylim` is not empty.
         - zeroline : If True, drawn when `xlim` is not empty.
     """
-    if(ax==None):
+    if ax==None:
         raise ValueError("Matplotlib axes (ax) is not given.")
     else:
-        import matplotlib as mpl
-        from matplotlib import rc
-        mpl.rcParams['axes.linewidth'] = 0.4 #set the value globally
-        mpl.rcParams['font.serif'] = "STIXGeneral"
-        mpl.rcParams['font.family'] = "serif"
-        mpl.rcParams['mathtext.fontset'] = "stix"
         if(xticks):
             ax.set_xticks(xticks)
             ax.set_xticklabels(xt_labels)
@@ -119,15 +141,6 @@ def quick_bplot(path_evr=None,ax=None,skipk=None,joinPathAt=[],elim=[],xt_indice
     - **Returns**
         - ax : matplotlib axes object with plotted bands.
     """
-    import pivotpy.vr_parser as vp
-    import pivotpy.s_plots as sp
-    import matplotlib as mpl
-    import matplotlib.pyplot as plt
-    from matplotlib import rc
-    mpl.rcParams['axes.linewidth'] = 0.4 #set the value globally
-    mpl.rcParams['font.serif'] = "STIXGeneral"
-    mpl.rcParams['font.family'] = "serif"
-    mpl.rcParams['mathtext.fontset'] = "stix"
     #checking type of given path.
     if(path_evr==None):
         vr=vp.export_vasprun(path=path_evr,skipk=skipk,elim=elim,joinPathAt=joinPathAt)
@@ -155,8 +168,8 @@ def quick_bplot(path_evr=None,ax=None,skipk=None,joinPathAt=[],elim=[],xt_indice
             ylim=[]
         if(ax==None):
             fig,ax=plt.subplots(1,1,figsize=figsize)
-        sp.modify_axes(ax=ax,ylabel='Energy (eV)',xticks=xticks,xt_labels=xt_labels,xlim=xlim,ylim=ylim)
-        sp.plot_bands(ax=ax,kpath=K,bands=vr.bands,showlegend=True,E_Fermi=E_Fermi,lw1=0.9)
+        modify_axes(ax=ax,ylabel='Energy (eV)',xticks=xticks,xt_labels=xt_labels,xlim=xlim,ylim=ylim)
+        plot_bands(ax=ax,kpath=K,bands=vr.bands,showlegend=True,E_Fermi=E_Fermi,lw1=0.9)
         if(txt!=None):
             ax.text(*xytxt,txt,bbox=dict(edgecolor='white',facecolor='white', alpha=0.9),transform=ax.transAxes,color=ctxt)
         else:
@@ -174,15 +187,10 @@ def add_text(ax=None,xs=0.05,ys=0.9,txts='[List]',colors='r'):
         - txts  : List of strings or one string.
         - colors: List of x colors of txts or one color.
     """
-    if(ax==None):
+    if ax==None:
         raise ValueError("Matplotlib axes (ax) is not given.")
     else:
-        import matplotlib as mpl
-        from matplotlib import rc
-        mpl.rcParams['font.serif'] = "STIXGeneral"
-        mpl.rcParams['font.family'] = "serif"
-        mpl.rcParams['mathtext.fontset'] = "stix"
-        if(type(txts)==str):
+        if type(txts) == str:
             ax.text(xs,ys,txts,bbox=dict(edgecolor='white',facecolor='white', alpha=0.9),transform=ax.transAxes,color=colors)
         if(type(txts)==list):
             for x,y,txt,color in zip(xs,ys,txts,colors):
@@ -205,12 +213,6 @@ def add_legend(ax=None,colors=[],labels=[],styles='solid',\
     if(ax==None):
         raise ValueError("Matplotlib axes (ax) is not given.")
     else:
-        import matplotlib.pyplot as plt
-        from matplotlib import rc
-        import matplotlib as mpl
-        mpl.rcParams['font.serif'] = "STIXGeneral"
-        mpl.rcParams['font.family'] = "serif"
-        mpl.rcParams['mathtext.fontset'] = "stix"
         if(type(widths)==float or type(widths)==int):
             if(type(styles)==str):
                 for color,label in zip(colors,labels):
@@ -246,14 +248,6 @@ def add_colorbar(ax=None,cmap_or_clist=None,N=256,ticks=[1/6,1/2,5/6],\
     if(ax==None):
         raise ValueError("Matplotlib axes (ax) is not given.")
     else:
-        import matplotlib as mpl
-        from matplotlib import rc
-        import matplotlib.pyplot as plt
-        from matplotlib.colors import LinearSegmentedColormap as LSC
-        import numpy as np
-        mpl.rcParams['font.serif'] = "STIXGeneral"
-        mpl.rcParams['font.family'] = "serif"
-        mpl.rcParams['mathtext.fontset'] = "stix"
         if cmap_or_clist is None:
             try:
                 _hsv_ = plt.cm.get_cmap('RGB_f')
@@ -320,12 +314,8 @@ def color_wheel(ax=None,
         - labels    : Ticks labels.
         - showlegend: True or False.
     """
-    import matplotlib as mpl, matplotlib.pyplot as plt, numpy as np,pivotpy as pp
-    mpl.rcParams['font.serif'] = "STIXGeneral"
-    mpl.rcParams['font.family'] = "serif"
-    mpl.rcParams['mathtext.fontset'] = "stix"
     if ax is None:
-        ax = pp.init_figure()
+        ax = init_figure()
     if color_map is None:
         try: color_map = plt.cm.get_cmap('RGB_f')
         except: color_map = 'viridis'
@@ -383,11 +373,9 @@ def get_pros_data(kpath      = None,
             - 'evals' : Given or interpolated evals_set of shape (NKPTS,NBANDS).
             - 'pros': An array of shape (NKPTS,NBANDS,n) where n is length of input elements list. If scale_data = True, normalizes this array to 1.
     """
-    import numpy as np
     if not np.any(pros_set):
-        from .g_utils import color
-        print(color.y("Can not process an empty eigenvalues/projection object."))
-        return print(color.g("Try with large `elim` in parent function."))
+        print(gu.color.y("Can not process an empty eigenvalues/projection object."))
+        return print(gu.color.g("Try with large `elim` in parent function."))
     # Empty orbitals/elements are still allowed on purpose for rgb_lines.
     for elem, orb in zip(elements,orbs):
         if isinstance(elem,int) or isinstance(orb,int):
@@ -431,9 +419,6 @@ def make_line_collection(max_width   = None,
         - uni_width  : Default is False, If True, makes linewidth uniform at width = max_width/2.
         - scale_color: If True, normalizes each point's color value, as (0,0,0.5) --> (0,0,1). If False, clips colors in range [0,1] but does not effect linewidth.
     """
-    import numpy as np
-    import matplotlib.pyplot as plt
-    from matplotlib.collections import LineCollection
     if not pros_data:
         return print("No pros_data given.")
     else:
@@ -502,8 +487,6 @@ def plot_collection(gpd_args,mlc_args,axes=None):
     - **Returns**
         - axes:  axes to return are spacially useful when axes = None, you can perform other actions on those axes. It will be a list of axes and all items could be same, depending on whether one are many axes were given/generated.
     """
-    from .s_plots import init_figure, get_pros_data,make_line_collection
-    import numpy as np
     if not np.any(axes):
         axes = init_figure()
     axes = np.array([axes]).ravel() # Safe list any axes size
@@ -575,11 +558,6 @@ def quick_rgb_lines(path_evr    = None,
         - Registers as colormap `RGB_m` to use in DOS to plot in same colors and `RGB_f` to display bands colorbar on another axes.
     > Note: Two figures made by this function could be comapred quantitatively only if `scale_data=False, max_width=None, scale_color=False` as these parameters act internally on data.
     """
-    import os
-    import numpy as np
-    import matplotlib.pyplot as plt
-    import pivotpy as pp
-
     # Fix orbitals, elements and labels lengths very early.
     if len(elements) != len(orbs) or len(elements) != len(labels):
         raise ValueError("`elements`, `orbs` and `labels` expect same length, even if empty.")
@@ -587,10 +565,10 @@ def quick_rgb_lines(path_evr    = None,
     if path_evr == None:
         path_evr = './vasprun.xml'
 
-    if type(path_evr) == pp.Dict2Data:
+    if type(path_evr) == vp.Dict2Data:
         vr = path_evr
     elif os.path.isfile(path_evr):
-        vr = pp.export_vasprun(path=path_evr,skipk=skipk,elim=elim,joinPathAt=joinPathAt)
+        vr = vp.export_vasprun(path=path_evr,skipk=skipk,elim=elim,joinPathAt=joinPathAt)
     else:
         return print("path_evr = {!r} does not exist".format(path_evr))
     # Apply a robust final check.
@@ -601,9 +579,8 @@ def quick_rgb_lines(path_evr    = None,
 
     # Main working here.
     if vr.pro_bands == None:
-        from .g_utils import color
-        print(color.y("Can not plot an empty eigenvalues object."))
-        return print(color.g("Try with large energy range."))
+        print(gu.color.y("Can not plot an empty eigenvalues object."))
+        return print(gu.color.g("Try with large energy range."))
     if not spin in ('up','down','both'):
         raise ValueError("spin can take any of ['up','down'. 'both'] only.")
 
@@ -617,7 +594,7 @@ def quick_rgb_lines(path_evr    = None,
                 info = "elements[{}] = {} is converted to {} which picks all ions of {!r}.".format(
                         i,elem,elements[i],vr.sys_info.ElemName[elem])
                 info += "To just pick one ion at this index, wrap it in brackets []."
-                pp.printg(info)
+                print(gu.color.g(info))
             except:
                 raise IndexError("Wrap elements[{}] in [] and try again.".format(i))
     max_e = np.max([e for ee in elements for e in ee])
@@ -643,7 +620,7 @@ def quick_rgb_lines(path_evr    = None,
 
     # Make axes if not given.
     if not np.any([ax]):
-        ax = pp.init_figure()
+        ax = init_figure()
 
     # Fix color_matrix here.
     s,c,b = 1,1,0 # Saturation, contrast, brightness. Defaults
@@ -657,18 +634,18 @@ def quick_rgb_lines(path_evr    = None,
     colorbar_scales = [1,1,1] # default for colorbar
     #=====================================================
     def _add_collection(gpd_args,mlc_args,ax):
-        pros_data = pp.get_pros_data(**gpd_args)
+        pros_data = get_pros_data(**gpd_args)
 
         if scale_color and None not in np.unique(color_matrix):
             colors = pros_data['pros']
             c_max = np.max(colors,axis=0).max(axis=0) # ndims = 3
             c_max[c_max == 0] = 1 #Avoid division error:
             colors = colors/c_max
-            colors = pp.transform_color(colors,s=s,c=c,b=b,mixing_matrix=mix_matrix)
+            colors = gu.transform_color(colors,s=s,c=c,b=b,mixing_matrix=mix_matrix)
             pros_data['pros'] = colors
             mlc_args['scale_color'] = False # No more scaling in make_line_collection.
 
-        line_coll,scales = pp.make_line_collection(**pros_data,**mlc_args)
+        line_coll,scales = make_line_collection(**pros_data,**mlc_args)
         colorbar_scales[:] = scales
         ax.add_collection(line_coll)
         ax.autoscale_view()
@@ -701,15 +678,15 @@ def quick_rgb_lines(path_evr    = None,
     # Aethetcis of plot.
     if not txt:
         txt=vr.sys_info.SYSTEM
-    pp.add_text(ax=ax,xs=xytxt[0],ys=xytxt[1],txts=txt,colors=ctxt)
-    pp.modify_axes(ax=ax,xticks=xticks,xt_labels=xt_labels,xlim=xlim,ylim=ylim)
+    add_text(ax=ax,xs=xytxt[0],ys=xytxt[1],txts=txt,colors=ctxt)
+    modify_axes(ax=ax,xticks=xticks,xt_labels=xt_labels,xlim=xlim,ylim=ylim)
     # Colorbar and Colormap
     _colors_ = np.multiply([[1,0,1],[1,0,0],[1,1,0],[0,1,0],[0,1,1],
                                 [0,0,1],[1,0,1]],colorbar_scales)
     if scale_color and None not in np.unique(color_matrix): # Only apply color_matrix on scaled colors
         zero_inds = np.where(colorbar_scales == 0)
         mix_matrix[zero_inds,:] = 0 # No mixing for zero projection.
-        _colors_ = pp.transform_color(_colors_,s=s,c=c,b=b,mixing_matrix=mix_matrix)
+        _colors_ = gu.transform_color(_colors_,s=s,c=c,b=b,mixing_matrix=mix_matrix)
     # register a colormap to use in DOS of same color
     from matplotlib.colors import LinearSegmentedColormap as LSC
     plt.register_cmap('RGB_f',LSC.from_list('RGB_f',_colors_)) #Register cmap for Bands
@@ -727,7 +704,7 @@ def quick_rgb_lines(path_evr    = None,
         ax.set_position([pos.x0,pos.y0,pos.width-2.8*w_f,pos.height])
         new_pos = [pos.x0+pos.width-w_f,pos.y0,w_f,pos.height]
         axb = ax.get_figure().add_axes(new_pos)
-        pp.add_colorbar(ax=axb,vertical=True,ticklabels=_tls_,cmap_or_clist = _colors_)
+        add_colorbar(ax=axb,vertical=True,ticklabels=_tls_,cmap_or_clist = _colors_)
 
     return ax
 
@@ -791,11 +768,6 @@ def quick_color_lines(path_evr      = None,
         - ax : matplotlib axes object with plotted projected bands.
     > Note: Two figures made by this function could be comapred quantitatively only if `scale_data=False, max_width=None` as these parameters act internally on data.
     """
-    import os
-    import numpy as np
-    import matplotlib.pyplot as plt
-    import pivotpy as pp
-
     # Fix orbitals, elements and labels lengths very early.
     if len(elements) != len(orbs) or len(elements) != len(labels):
         raise ValueError("`elements`, `orbs` and `labels` expect same length, even if empty.")
@@ -803,10 +775,10 @@ def quick_color_lines(path_evr      = None,
     if path_evr == None:
         path_evr = './vasprun.xml'
 
-    if type(path_evr) == pp.Dict2Data:
+    if type(path_evr) == vp.Dict2Data:
         vr = path_evr
     elif os.path.isfile(path_evr):
-        vr = pp.export_vasprun(path=path_evr,skipk=skipk,elim=elim,joinPathAt=joinPathAt)
+        vr = vp.export_vasprun(path=path_evr,skipk=skipk,elim=elim,joinPathAt=joinPathAt)
     else:
         return print("path_evr = {!r} does not exist".format(path_evr))
     # Apply a robust final check.
@@ -817,9 +789,8 @@ def quick_color_lines(path_evr      = None,
 
     # Main working here.
     if vr.pro_bands == None:
-        from .g_utils import color
-        print(color.y("Can not plot an empty eigenvalues object."))
-        return print(color.g("Try with large energy range."))
+        print(gu.color.y("Can not plot an empty eigenvalues object."))
+        return print(gu.color.g("Try with large energy range."))
     if not spin in ('up','down','both'):
         raise ValueError("spin can take any of ['up','down'. 'both'] only.")
 
@@ -832,7 +803,7 @@ def quick_color_lines(path_evr      = None,
                 elements[i] = range(elem_inds[elem],elem_inds[elem+1])
                 info = "elements[{}] = {} is converted to {} which picks all ions of {!r}.".format(i,elem,elements[i],vr.sys_info.ElemName[elem])
                 info += "To just pick one ion at this index, wrap it in brackets []."
-                pp.printg(info)
+                print(gu.color.g(info))
             except:
                 raise IndexError("Wrap elements[{}] in [] and try again.".format(i))
     max_e = np.max([e for ee in elements for e in ee])
@@ -872,20 +843,20 @@ def quick_color_lines(path_evr      = None,
 
     if(ISPIN==1):
         gpd_args.update(dict(kpath=K,evals_set=vr.bands.evals-E_Fermi,pros_set=vr.pro_bands.pros))
-        axes = pp.plot_collection(gpd_args,mlc_args,axes=axes)
+        axes = plot_collection(gpd_args,mlc_args,axes=axes)
     if ISPIN == 2:
         gpd_args1 = dict(kpath=K,evals_set=vr.bands.evals.SpinUp-E_Fermi,
                         pros_set=vr.pro_bands.pros.SpinUp,**gpd_args)
         gpd_args2 = dict(kpath=K,evals_set=vr.bands.evals.SpinDown-E_Fermi,
                         pros_set=vr.pro_bands.pros.SpinDown,**gpd_args)
         if spin=='up':
-            axes = pp.plot_collection(gpd_args1,mlc_args,axes=axes)
+            axes = plot_collection(gpd_args1,mlc_args,axes=axes)
         if spin=='down':
-            axes = pp.plot_collection(gpd_args2,mlc_args,axes=axes)
+            axes = plot_collection(gpd_args2,mlc_args,axes=axes)
         if spin=='both':
-            axes = pp.plot_collection(gpd_args1,mlc_args,axes=axes)
+            axes = plot_collection(gpd_args1,mlc_args,axes=axes)
             # Axes from above are reused in spin down plot. to avoid double graph
-            axes = pp.plot_collection(gpd_args2,mlc_args,axes=axes)
+            axes = plot_collection(gpd_args2,mlc_args,axes=axes)
 
     # Aesthetics
     _tls_ = [l for l in labels] # To avoid side effects, new labels array.
@@ -895,11 +866,11 @@ def quick_color_lines(path_evr      = None,
 
     if showlegend:
         width = (max_width/2 if max_width else 2.5)
-        pp.add_legend(ax=axes[0],colors=colors,labels=_tls_,widths=width,**legend_kwargs)
+        add_legend(ax=axes[0],colors=colors,labels=_tls_,widths=width,**legend_kwargs)
     else:
         x,y=[*xytxt]
-        _ = [pp.add_text(ax=ax,xs=x,ys=y,txts=_tl_,colors=ctxt) for ax,_tl_ in zip(axes,_tls_)]
-    _ = [pp.modify_axes(ax=ax,xticks=xticks,xt_labels=xt_labels,xlim=xlim,ylim=ylim) for ax in axes]
+        _ = [add_text(ax=ax,xs=x,ys=y,txts=_tl_,colors=ctxt) for ax,_tl_ in zip(axes,_tls_)]
+    _ = [modify_axes(ax=ax,xticks=xticks,xt_labels=xt_labels,xlim=xlim,ylim=ylim) for ax in axes]
     plt.subplots_adjust(**subplots_adjust_kwargs)
     return axes
 
@@ -926,23 +897,6 @@ def init_figure(figsize   = (3.4,2.6),
         - axes_off  : Turn off axes visibility, If `nrows = ncols = 1, set True/False`, If anyone of `nrows or ncols > 1`, provide list of axes indices to turn off. If both `nrows and ncols > 1`, provide list of tuples (x_index,y_index) of axes.
         - **subplots_adjust_kwargs : These are same as `plt.subplots_adjust()`'s arguements.
     """
-    import matplotlib.pyplot as plt
-    import pivotpy.s_plots as sp
-    import matplotlib as mpl
-    from matplotlib import rc
-    from matplotlib.gridspec import GridSpec
-    mpl.rcParams['axes.linewidth'] = 0.4 #set the value globally
-    mpl.rcParams['font.serif'] = "STIXGeneral"
-    mpl.rcParams['font.family'] = "serif"
-    mpl.rcParams['mathtext.fontset'] = "stix"
-    # print SVG in ipython
-    try:
-	    shell = get_ipython().__class__.__name__
-	    if shell == 'ZMQInteractiveShell' or shell == 'Shell':
-		    from IPython.display import set_matplotlib_formats
-		    set_matplotlib_formats('svg')
-    except: pass
-    # ----------------------------
     if(figsize[0] <=2.38):
         mpl.rc('font', size=8)
     gs_kw=dict({}) # Define Empty Dictionary.
@@ -952,11 +906,11 @@ def init_figure(figsize   = (3.4,2.6),
         gs_kw = dict({**gs_kw,'height_ratios':heights})
     fig,axs=plt.subplots(nrows,ncols,figsize=figsize,gridspec_kw=gs_kw,sharex=sharex,sharey=sharey)
     if nrows*ncols==1:
-        sp.modify_axes(ax=axs)
+        modify_axes(ax=axs)
         if axes_off==True:
             axs.set_axis_off()
     else:
-        _ = [sp.modify_axes(ax=ax) for ax in axs.ravel()]
+        _ = [modify_axes(ax=ax) for ax in axs.ravel()]
         _ = [axs[inds].set_axis_off() for inds in axes_off if axes_off!=[]]
 
     plt.subplots_adjust(**subplots_adjust_kwargs)
@@ -985,9 +939,7 @@ def select_pdos(tdos        = None,
         - k        : int, order of interpolation, defualt is 3. `n > k` should be hold.
     """
     if tdos==[]:
-        from .g_utils import color
-        return print(color.y("Can not plot empty DOS."))
-    import numpy as np
+        return print(gu.color.y("Can not plot empty DOS."))
     en = tdos[:,0]-E_Fermi
     t_dos = tdos[:,1]
     pros = np.take(pdos_set[:,:,1:],list(ions),axis=0).sum(axis=0)
@@ -1034,17 +986,13 @@ def collect_dos(path_evr      = None,
         - labels : ['label1,'label2',...] spin polarized is auto-fixed.
         - vr     : Exported vasprun.
     """
-    import numpy as np
-    import pivotpy.vr_parser as vp
-    import pivotpy.s_plots as sp
     #checking type of given path.
     if(path_evr==None):
         vr=vp.export_vasprun(path=path_evr,elim=elim)
     if(path_evr!=None):
-        from os import path as pt
         if(type(path_evr)==vp.Dict2Data):
             vr=path_evr
-        elif(pt.isfile(path_evr)):
+        elif(os.path.isfile(path_evr)):
             vr=vp.export_vasprun(path=path_evr,elim=elim)
         else:
             return print("path_evr = `{}` does not exist".format(path_evr))
@@ -1056,8 +1004,7 @@ def collect_dos(path_evr      = None,
     else:
         # Main working here.
         if(vr.pro_dos==None):
-            from .g_utils import color
-            return print(color.y("Can not plot an empty DOS object."))
+            return print(gu.color.y("Can not plot an empty DOS object."))
         if not spin in ('up','down','both'):
             raise ValueError(
                 "spin can take `up`,`down` or `both` values only.")
@@ -1089,7 +1036,7 @@ def collect_dos(path_evr      = None,
             if ISPIN==1:
                 tdos=vr.tdos.tdos
                 pdos_set=vr.pro_dos.pros
-                e,t,p=sp.select_pdos(tdos=tdos,pdos_set=pdos_set, **args_dict)
+                e,t,p = select_pdos(tdos=tdos,pdos_set=pdos_set, **args_dict)
                 ps.append(p)
                 ls.append(label)
                 ts = t
@@ -1099,20 +1046,20 @@ def collect_dos(path_evr      = None,
                 pdos_set1=vr.pro_dos.pros.SpinUp
                 pdos_set2=vr.pro_dos.pros.SpinDown
                 if spin=='up':
-                    e,t1,p1=sp.select_pdos(tdos=tdos1,pdos_set=pdos_set1, **args_dict)
+                    e,t1,p1 = select_pdos(tdos=tdos1,pdos_set=pdos_set1, **args_dict)
                     ps.append(p1)
                     ls.append((label+'$^↑$' if label else ''))
                     ts = t1
                 if spin=='down':
-                    e,t2,p2=sp.select_pdos(tdos=tdos2,pdos_set=pdos_set2, **args_dict)
+                    e,t2,p2 = select_pdos(tdos=tdos2,pdos_set=pdos_set2, **args_dict)
                     ps.append(p2)
                     ls.append((label+'$^↓$' if label else ''))
                     ts = t2
                 if spin=='both':
-                    e,t1,p1=sp.select_pdos(tdos=tdos1,pdos_set=pdos_set1, **args_dict)
+                    e,t1,p1 = select_pdos(tdos=tdos1,pdos_set=pdos_set1, **args_dict)
                     ps.append(p1)
                     ls.append((label+'$^↑$' if label else ''))
-                    e,t2,p2=sp.select_pdos(tdos=tdos2,pdos_set=pdos_set2, **args_dict)
+                    e,t2,p2 = select_pdos(tdos=tdos2,pdos_set=pdos_set2, **args_dict)
                     ps.append(-p2)
                     ls.append((label+'$^↓$' if label else ''))
                     ts=[t1,-t2]
@@ -1179,11 +1126,6 @@ def quick_dos_lines(path_evr      = None,
         """
         if(include_dos not in ('both','pdos','tdos')):
             return print("`include_dos` expects one of ['both','pdos','tdos'], got {}.".format(include_dos))
-        import pivotpy.s_plots as sp
-        import numpy as np, pivotpy as pp
-        import pivotpy.g_utils as gu
-        import matplotlib as mpl
-        import matplotlib.pyplot as plt
 
         en,tdos,pdos,vr=None,None,None,None # Placeholders for defining. must be here.
         cl_dos=collect_dos(path_evr=path_evr,
@@ -1200,7 +1142,7 @@ def quick_dos_lines(path_evr      = None,
             en,tdos,pdos,labels,vr=cl_dos # Labels updated
         except TypeError:
             from .g_utils import color
-            return print(color.g("Try with large energy range."))
+            return print(gu.color.g("Try with large energy range."))
         # Fix elements and colors length
         if color_map in plt.colormaps():
             from matplotlib.pyplot import cm
@@ -1222,7 +1164,7 @@ def quick_dos_lines(path_evr      = None,
         t_color=mpl.colors.to_rgb(tdos_color)
         it_color=gu.transform_color(t_color,c=-1) # -1 contrast inverts color
         if(ax==None):
-            ax=sp.init_figure(figsize=figsize)
+            ax = init_figure(figsize=figsize)
         if(vertical==False):
             if(fill_area==False):
                 if(include_dos!='pdos'):
@@ -1272,7 +1214,7 @@ def quick_dos_lines(path_evr      = None,
             if elim:
                 ax.set_ylim([min(elim),max(elim)])
         if(showlegend==True):
-            sp.add_legend(ax=ax,labels=[],colors=colors,widths=linewidth,**legend_kwargs)
+            add_legend(ax=ax,labels=[],colors=colors,widths=linewidth,**legend_kwargs)
         return ax
 
 # Cell
@@ -1286,8 +1228,6 @@ def plt_to_html(plt_fig=None,transparent=True,dash_html=None):
             - If True, returns html.Img object for plotly's dash.
             - If False, returns <svg> object to embed in HTML DOM.
     """
-    from io import BytesIO
-    import matplotlib.pyplot as plt
     if plt_fig==None:
         plt_fig = plt.gcf()
     plot_bytes = BytesIO()
@@ -1296,7 +1236,6 @@ def plt_to_html(plt_fig=None,transparent=True,dash_html=None):
         try:
             shell = get_ipython().__class__.__name__
             if shell == 'ZMQInteractiveShell' or shell=='Shell': #Shell for Colab. Don't know why Google ...
-                from IPython.display import HTML # HTML
                 _ = plt.clf() # Clear other display
                 return HTML('<svg' + plot_bytes.getvalue().decode('utf-8').split('<svg')[1])
         except:
@@ -1337,16 +1276,15 @@ def plot_potential(basis = None,
         - colors: List of three colors for lines.
         - annotate: True by default, writes difference of right and left averages on plot.
     """
-    import pivotpy as pp,matplotlib.pyplot as plt,numpy as np
     check = ['mean_x','min_x','max_x','mean_y','min_y','max_y','mean_z','min_z','max_z']
     if operation not in check:
         return print("`operation` excepts any of {}, got {}".format(check,operation))
     if ax is None:
-        ax = pp.init_figure()
+        ax = init_figure()
     if e_or_m is None:
         print('`e_or_m` not given, trying to autopick LOCPOT...')
         try:
-            ep = pp.export_potential()
+            ep = gu.export_potential()
             basis = ep.basis
             e_or_m= ep.e
         except:
@@ -1413,4 +1351,4 @@ def plot_potential(basis = None,
                             bbox=dict(edgecolor='white',facecolor='white', alpha=0.5),transform=ax.transAxes)
         ax.set_xlabel('$'+ret_dict['direction']+' ('+u'\u212B'+')$')
         ax.set_xlim([x[0],x[-1]])
-        return (ax,pp.Dict2Data(ret_dict))
+        return (ax,vp.Dict2Data(ret_dict))
