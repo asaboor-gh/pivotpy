@@ -368,7 +368,7 @@ def get_bands_pro_set(xml_data=None,
             return print(gu.color.r("No bands prjections found in given energy range."))
     # Try to read _set.txt first. instance check is important.
     if isinstance(set_path,str) and os.path.isfile(set_path):
-        _header = vp.islice2array(set_path,nlines=1,raw=True,exclude=None)
+        _header = islice2array(set_path,nlines=1,raw=True,exclude=None)
         _shape = [int(v) for v in _header.split('=')[1].strip().split(',')]
         NKPTS, NBANDS, NIONS, NORBS = _shape
         if NORBS == 3:
@@ -389,7 +389,7 @@ def get_bands_pro_set(xml_data=None,
             NBANDS = _b_r[-1]-_b_r[0]+1 # upadte after start
             NKPTS = NKPTS-skipk # Update after start
             COUNT = NIONS*NBANDS*NKPTS*NORBS
-        data = vp.islice2array(set_path,start=start,nlines=nlines,count=COUNT)
+        data = islice2array(set_path,start=start,nlines=nlines,count=COUNT)
         data = data.reshape((NKPTS,NBANDS,NIONS,NORBS)).transpose([2,0,1,3])
         return Dict2Data({'labels':fields,'pros':data})
 
