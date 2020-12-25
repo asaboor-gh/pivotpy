@@ -45,9 +45,8 @@ def get_rgb_data(   kpath       = None,
         - widths   : An (NBAND,NKPTS) numpy arry, its actually colors summed along z-axis.
     """
     if(pros_set==[]):
-        from .g_utils import color
-        print(color.y("Can not plot an empty eigenvalues object."))
-        return print(color.g("Try with large energy range."))
+        print(gu.color.y("Can not plot an empty eigenvalues object."))
+        return print(gu.color.g("Try with large energy range."))
     if len(orbs)<3 :
         raise ValueError("orbs have structure [[],[],[]], do not reduce structure even if it is empty.")
     elif len(elements) <3:
@@ -279,9 +278,8 @@ def plotly_rgb_lines(path_evr    = None,
     else:
         ## Main working here.
         if(vr.pro_bands==None):
-            from .g_utils import color
-            print(color.y("Can not plot an empty eigenvalues object."))
-            return print(color.g("Try with large energy range."))
+            print(gu.color.y("Can not plot an empty eigenvalues object."))
+            return print(gu.color.g("Try with large energy range."))
         #=====================================================
         orbs = [[item] if type(item)==int else item for item in orbs] #Fix if integer given.
         elem_inds = vr.sys_info.ElemIndex
@@ -415,8 +413,7 @@ def plotly_dos_lines(path_evr     = None,
         try:
             en,tdos,pdos,labels,vr = cl_dos
         except TypeError:
-            from .g_utils import color
-            return print(color.g("Try with large energy range."))
+            return print(gu.color.g("Try with large energy range."))
 
         labels=[label.replace('$','').replace('^↑','<sup>↑</sup>').replace('^↓','<sup>↓</sup>') for label in labels]
         # Make additional colors for spin down. Inverted colors are better.
