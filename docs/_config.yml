@@ -58,6 +58,6 @@ defaults:
 sidebars: [home_sidebar]
 permalink: pretty
 baseurl: /pivotpy/
-#theme: jekyll-theme-cayman
+theme: jekyll-theme-cayman
 
-theme: jekyll-theme-minimal
+#theme: jekyll-theme-minimal
