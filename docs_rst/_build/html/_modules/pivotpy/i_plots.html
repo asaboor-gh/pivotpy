@@ -13,7 +13,6 @@
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/language_data.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
@@ -50,7 +49,7 @@
 <span class="kn">import</span> <span class="nn">pivotpy.g_utils</span> <span class="k">as</span> <span class="nn">gu</span>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="get_rgb_data"><a class="viewcode-back" href="../../api.html#pivotpy.get_rgb_data">[docs]</a><span class="k">def</span> <span class="nf">get_rgb_data</span><span class="p">(</span>   <span class="n">kpath</span>       <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="get_rgb_data"><a class="viewcode-back" href="../../api.html#pivotpy.i_plots.get_rgb_data">[docs]</a><span class="k">def</span> <span class="nf">get_rgb_data</span><span class="p">(</span>   <span class="n">kpath</span>       <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                     <span class="n">evals_set</span>   <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                     <span class="n">pros_set</span>    <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                     <span class="n">elements</span>    <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">],[],[]],</span>
@@ -116,7 +115,7 @@
        <span class="k">return</span> <span class="n">knew</span><span class="p">,</span><span class="n">evals</span><span class="p">,</span><span class="n">rgb</span><span class="p">,</span> <span class="n">widths</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="flip_even_patches"><a class="viewcode-back" href="../../api.html#pivotpy.flip_even_patches">[docs]</a><span class="k">def</span> <span class="nf">flip_even_patches</span><span class="p">(</span><span class="n">array_1d</span><span class="p">,</span> <span class="n">patch_length</span><span class="p">):</span>
+<div class="viewcode-block" id="flip_even_patches"><a class="viewcode-back" href="../../api.html#pivotpy.i_plots.flip_even_patches">[docs]</a><span class="k">def</span> <span class="nf">flip_even_patches</span><span class="p">(</span><span class="n">array_1d</span><span class="p">,</span> <span class="n">patch_length</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - When you reshape bands data to 1D array, you may need to draw lines which do not link ends of plot, for that, it is required to flip patches, so that next band start from where 1st end and so one.</span>
 <span class="sd">    - **Parameters**</span>
@@ -139,7 +138,7 @@
     <span class="k">return</span> <span class="n">out_put</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="rgb_to_plotly"><a class="viewcode-back" href="../../api.html#pivotpy.rgb_to_plotly">[docs]</a><span class="k">def</span> <span class="nf">rgb_to_plotly</span><span class="p">(</span><span class="n">rgb_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;markers&#39;</span><span class="p">,</span><span class="n">max_width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">showlegend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;s&#39;</span><span class="p">,</span><span class="s1">&#39;p&#39;</span><span class="p">,</span><span class="s1">&#39;d&#39;</span><span class="p">],</span><span class="n">symbol</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="rgb_to_plotly"><a class="viewcode-back" href="../../api.html#pivotpy.i_plots.rgb_to_plotly">[docs]</a><span class="k">def</span> <span class="nf">rgb_to_plotly</span><span class="p">(</span><span class="n">rgb_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;markers&#39;</span><span class="p">,</span><span class="n">max_width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">showlegend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;s&#39;</span><span class="p">,</span><span class="s1">&#39;p&#39;</span><span class="p">,</span><span class="s1">&#39;d&#39;</span><span class="p">],</span><span class="n">symbol</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Returns data object of plotly&#39;s figure using `get_rgb_data`. Returned data could be fed to a plolty&#39;s figure.</span>
 <span class="sd">    - ** Parameters**</span>
@@ -205,7 +204,7 @@
         <span class="k">return</span> <span class="n">data</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="plotly_to_html"><a class="viewcode-back" href="../../api.html#pivotpy.plotly_to_html">[docs]</a><span class="k">def</span> <span class="nf">plotly_to_html</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span><span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">out_string</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">modebar</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="plotly_to_html"><a class="viewcode-back" href="../../api.html#pivotpy.i_plots.plotly_to_html">[docs]</a><span class="k">def</span> <span class="nf">plotly_to_html</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span><span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">out_string</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">modebar</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Writes plotly&#39;s figure as HTML file or display in IPython which is accessible when online. It is different than plotly&#39;s `fig.to_html` as it is minimal in memory. If you need to have offline working file, just use `fig.write_html(&#39;file.html&#39;)` which will be larger in size.</span>
 <span class="sd">    - **Parameters**</span>
@@ -256,7 +255,7 @@
             <span class="k">return</span> <span class="n">HTML</span><span class="p">(</span><span class="n">template</span><span class="p">)</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="plotly_rgb_lines"><a class="viewcode-back" href="../../api.html#pivotpy.plotly_rgb_lines">[docs]</a><span class="k">def</span> <span class="nf">plotly_rgb_lines</span><span class="p">(</span><span class="n">path_evr</span>    <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="plotly_rgb_lines"><a class="viewcode-back" href="../../api.html#pivotpy.i_plots.plotly_rgb_lines">[docs]</a><span class="k">def</span> <span class="nf">plotly_rgb_lines</span><span class="p">(</span><span class="n">path_evr</span>    <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                     <span class="n">elements</span>    <span class="o">=</span> <span class="p">[[],[],[]],</span>
                     <span class="n">orbs</span>        <span class="o">=</span> <span class="p">[[],[],[]],</span>
                     <span class="n">labels</span>      <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">],</span>
@@ -404,7 +403,7 @@
         <span class="k">return</span> <span class="n">fig</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="plotly_dos_lines"><a class="viewcode-back" href="../../api.html#pivotpy.plotly_dos_lines">[docs]</a><span class="k">def</span> <span class="nf">plotly_dos_lines</span><span class="p">(</span><span class="n">path_evr</span>     <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="plotly_dos_lines"><a class="viewcode-back" href="../../api.html#pivotpy.i_plots.plotly_dos_lines">[docs]</a><span class="k">def</span> <span class="nf">plotly_dos_lines</span><span class="p">(</span><span class="n">path_evr</span>     <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                     <span class="n">elim</span>          <span class="o">=</span> <span class="p">[],</span>
                     <span class="n">elements</span>      <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,],],</span>
                     <span class="n">orbs</span>          <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">],],</span>

@@ -13,7 +13,6 @@
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/language_data.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
@@ -69,7 +68,7 @@
 
 <span class="c1"># Cell</span>
 <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">make_interp_spline</span><span class="p">,</span> <span class="n">BSpline</span>
-<div class="viewcode-block" id="interpolate_data"><a class="viewcode-back" href="../../api.html#pivotpy.interpolate_data">[docs]</a><span class="k">def</span> <span class="nf">interpolate_data</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">n</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<div class="viewcode-block" id="interpolate_data"><a class="viewcode-back" href="../../api.html#pivotpy.g_utils.interpolate_data">[docs]</a><span class="k">def</span> <span class="nf">interpolate_data</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">n</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Returns interpolated xnew,ynew. If two points are same, it will add 0.1*min(dx&gt;0) to compensate it.</span>
 <span class="sd">    - **Parameters**</span>
@@ -98,7 +97,7 @@
     <span class="k">return</span> <span class="n">xnew</span><span class="p">,</span><span class="n">ynew</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="ps_to_py"><a class="viewcode-back" href="../../api.html#pivotpy.ps_to_py">[docs]</a><span class="k">def</span> <span class="nf">ps_to_py</span><span class="p">(</span><span class="n">ps_command</span><span class="o">=</span><span class="s1">&#39;Get-ChildItem&#39;</span><span class="p">,</span> <span class="n">exec_type</span><span class="o">=</span><span class="s1">&#39;-Command&#39;</span><span class="p">,</span> <span class="n">path_to_ps</span><span class="o">=</span><span class="s1">&#39;powershell.exe&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="ps_to_py"><a class="viewcode-back" href="../../api.html#pivotpy.g_utils.ps_to_py">[docs]</a><span class="k">def</span> <span class="nf">ps_to_py</span><span class="p">(</span><span class="n">ps_command</span><span class="o">=</span><span class="s1">&#39;Get-ChildItem&#39;</span><span class="p">,</span> <span class="n">exec_type</span><span class="o">=</span><span class="s1">&#39;-Command&#39;</span><span class="p">,</span> <span class="n">path_to_ps</span><span class="o">=</span><span class="s1">&#39;powershell.exe&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Captures powershell output in python.</span>
 <span class="sd">    - **Parameters**</span>
@@ -131,7 +130,7 @@
     <span class="k">return</span> <span class="n">out</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="ps_to_std"><a class="viewcode-back" href="../../api.html#pivotpy.ps_to_std">[docs]</a><span class="k">def</span> <span class="nf">ps_to_std</span><span class="p">(</span><span class="n">ps_command</span><span class="o">=</span><span class="s1">&#39;Get-ChildItem&#39;</span><span class="p">,</span> <span class="n">exec_type</span><span class="o">=</span><span class="s1">&#39;-Command&#39;</span><span class="p">,</span> <span class="n">path_to_ps</span><span class="o">=</span><span class="s1">&#39;powershell.exe&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="ps_to_std"><a class="viewcode-back" href="../../api.html#pivotpy.g_utils.ps_to_std">[docs]</a><span class="k">def</span> <span class="nf">ps_to_std</span><span class="p">(</span><span class="n">ps_command</span><span class="o">=</span><span class="s1">&#39;Get-ChildItem&#39;</span><span class="p">,</span> <span class="n">exec_type</span><span class="o">=</span><span class="s1">&#39;-Command&#39;</span><span class="p">,</span> <span class="n">path_to_ps</span><span class="o">=</span><span class="s1">&#39;powershell.exe&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Prints powershell output in python std.</span>
 <span class="sd">    - **Parameters**</span>
@@ -145,7 +144,7 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="get_child_items"><a class="viewcode-back" href="../../api.html#pivotpy.get_child_items">[docs]</a><span class="k">def</span> <span class="nf">get_child_items</span><span class="p">(</span><span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span><span class="n">depth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">include</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">exclude</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">filesOnly</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">dirsOnly</span><span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="get_child_items"><a class="viewcode-back" href="../../api.html#pivotpy.g_utils.get_child_items">[docs]</a><span class="k">def</span> <span class="nf">get_child_items</span><span class="p">(</span><span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span><span class="n">depth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">include</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">exclude</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">filesOnly</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">dirsOnly</span><span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Returns selected directories/files recursively from a parent directory.</span>
 <span class="sd">    - **Parameters**</span>
@@ -200,14 +199,14 @@
      <span class="n">cb</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">text</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[1;96m </span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="se">\033</span><span class="s2">[00m&quot;</span>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="EncodeFromNumpy"><a class="viewcode-back" href="../../api.html#pivotpy.EncodeFromNumpy">[docs]</a><span class="k">class</span> <span class="nc">EncodeFromNumpy</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="p">):</span>
+<div class="viewcode-block" id="EncodeFromNumpy"><a class="viewcode-back" href="../../api.html#pivotpy.g_utils.EncodeFromNumpy">[docs]</a><span class="k">class</span> <span class="nc">EncodeFromNumpy</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Serializes python/Numpy objects via customizing json encoder.</span>
 <span class="sd">    - **Usage**</span>
 <span class="sd">        - `json.dumps(python_dict, cls=EncodeFromNumpy)` to get json string.</span>
 <span class="sd">        - `json.dump(*args, cls=EncodeFromNumpy)` to create a file.json.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="EncodeFromNumpy.default"><a class="viewcode-back" href="../../api.html#pivotpy.EncodeFromNumpy.default">[docs]</a>    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<div class="viewcode-block" id="EncodeFromNumpy.default"><a class="viewcode-back" href="../../api.html#pivotpy.g_utils.EncodeFromNumpy.default">[docs]</a>    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">{</span>
                 <span class="s2">&quot;_kind_&quot;</span><span class="p">:</span> <span class="s2">&quot;ndarray&quot;</span><span class="p">,</span>
@@ -227,7 +226,7 @@
 
 
 
-<div class="viewcode-block" id="DecodeToNumpy"><a class="viewcode-back" href="../../api.html#pivotpy.DecodeToNumpy">[docs]</a><span class="k">class</span> <span class="nc">DecodeToNumpy</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">JSONDecoder</span><span class="p">):</span>
+<div class="viewcode-block" id="DecodeToNumpy"><a class="viewcode-back" href="../../api.html#pivotpy.g_utils.DecodeToNumpy">[docs]</a><span class="k">class</span> <span class="nc">DecodeToNumpy</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">JSONDecoder</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Deserilizes JSON object to Python/Numpy&#39;s objects.</span>
 <span class="sd">    - **Usage**</span>
@@ -257,7 +256,7 @@
     <span class="n">f</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">gcargs</span><span class="p">(</span><span class="n">_map_d</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="p">])</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="s1">&#39;path_evr&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">k</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">f</span>
 
-<div class="viewcode-block" id="Vasprun"><a class="viewcode-back" href="../../api.html#pivotpy.Vasprun">[docs]</a><span class="k">class</span> <span class="nc">Vasprun</span><span class="p">:</span>
+<div class="viewcode-block" id="Vasprun"><a class="viewcode-back" href="../../api.html#pivotpy.g_utils.Vasprun">[docs]</a><span class="k">class</span> <span class="nc">Vasprun</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - All plotting functions that depend on `export_vasprun` are joined under this class and renamed.</span>
 <span class="sd">    - **Parameters**</span>
@@ -292,22 +291,22 @@
         <span class="k">except</span><span class="p">:</span> <span class="k">pass</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">export_vasprun</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">skipk</span><span class="o">=</span><span class="n">skipk</span><span class="p">,</span> <span class="n">elim</span><span class="o">=</span><span class="n">elim</span><span class="p">,</span> <span class="n">joinPathAt</span><span class="o">=</span><span class="n">joinPathAt</span><span class="p">,</span> <span class="n">shift_kpath</span><span class="o">=</span><span class="n">shift_kpath</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Vasprun.sbands"><a class="viewcode-back" href="../../api.html#pivotpy.Vasprun.sbands">[docs]</a>    <span class="nd">@_g2f</span>
+<div class="viewcode-block" id="Vasprun.sbands"><a class="viewcode-back" href="../../api.html#pivotpy.g_utils.Vasprun.sbands">[docs]</a>    <span class="nd">@_g2f</span>
     <span class="k">def</span> <span class="nf">sbands</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">quick_bplot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
-<div class="viewcode-block" id="Vasprun.sdos"><a class="viewcode-back" href="../../api.html#pivotpy.Vasprun.sdos">[docs]</a>    <span class="nd">@_g2f</span>
+<div class="viewcode-block" id="Vasprun.sdos"><a class="viewcode-back" href="../../api.html#pivotpy.g_utils.Vasprun.sdos">[docs]</a>    <span class="nd">@_g2f</span>
     <span class="k">def</span> <span class="nf">sdos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">quick_dos_lines</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
-<div class="viewcode-block" id="Vasprun.srgb"><a class="viewcode-back" href="../../api.html#pivotpy.Vasprun.srgb">[docs]</a>    <span class="nd">@_g2f</span>
+<div class="viewcode-block" id="Vasprun.srgb"><a class="viewcode-back" href="../../api.html#pivotpy.g_utils.Vasprun.srgb">[docs]</a>    <span class="nd">@_g2f</span>
     <span class="k">def</span> <span class="nf">srgb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">quick_rgb_lines</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
-<div class="viewcode-block" id="Vasprun.scolor"><a class="viewcode-back" href="../../api.html#pivotpy.Vasprun.scolor">[docs]</a>    <span class="nd">@_g2f</span>
+<div class="viewcode-block" id="Vasprun.scolor"><a class="viewcode-back" href="../../api.html#pivotpy.g_utils.Vasprun.scolor">[docs]</a>    <span class="nd">@_g2f</span>
     <span class="k">def</span> <span class="nf">scolor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">quick_color_lines</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
-<div class="viewcode-block" id="Vasprun.idos"><a class="viewcode-back" href="../../api.html#pivotpy.Vasprun.idos">[docs]</a>    <span class="nd">@_g2f</span>
+<div class="viewcode-block" id="Vasprun.idos"><a class="viewcode-back" href="../../api.html#pivotpy.g_utils.Vasprun.idos">[docs]</a>    <span class="nd">@_g2f</span>
     <span class="k">def</span> <span class="nf">idos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">ip</span><span class="o">.</span><span class="n">plotly_dos_lines</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
-<div class="viewcode-block" id="Vasprun.irgb"><a class="viewcode-back" href="../../api.html#pivotpy.Vasprun.irgb">[docs]</a>    <span class="nd">@_g2f</span>
+<div class="viewcode-block" id="Vasprun.irgb"><a class="viewcode-back" href="../../api.html#pivotpy.g_utils.Vasprun.irgb">[docs]</a>    <span class="nd">@_g2f</span>
     <span class="k">def</span> <span class="nf">irgb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">ip</span><span class="o">.</span><span class="n">plotly_rgb_lines</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 
@@ -340,7 +339,7 @@
     <span class="k">return</span> <span class="n">Markdown</span><span class="p">(</span><span class="n">md_str</span><span class="p">)</span>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="export_outcar"><a class="viewcode-back" href="../../api.html#pivotpy.export_outcar">[docs]</a><span class="k">def</span> <span class="nf">export_outcar</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="export_outcar"><a class="viewcode-back" href="../../api.html#pivotpy.g_utils.export_outcar">[docs]</a><span class="k">def</span> <span class="nf">export_outcar</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Read potential at ionic sites from OUTCAR.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -390,7 +389,7 @@
 
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="export_potential"><a class="viewcode-back" href="../../api.html#pivotpy.export_potential">[docs]</a><span class="k">def</span> <span class="nf">export_potential</span><span class="p">(</span><span class="n">locpot</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">e</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span><span class="n">m</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="export_potential"><a class="viewcode-back" href="../../api.html#pivotpy.g_utils.export_potential">[docs]</a><span class="k">def</span> <span class="nf">export_potential</span><span class="p">(</span><span class="n">locpot</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">e</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span><span class="n">m</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Returns Data from LOCPOT and similar structure files like CHG. Loads only single set out of 2/4 magnetization data to avoid performance/memory cost while can load electrostatic and one set of magnetization together.</span>
 <span class="sd">    - **Parameters**</span>
@@ -470,7 +469,7 @@
     <span class="k">return</span> <span class="n">vp</span><span class="o">.</span><span class="n">Dict2Data</span><span class="p">(</span><span class="n">final_dict</span><span class="p">)</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="LOCPOT_CHG"><a class="viewcode-back" href="../../api.html#pivotpy.LOCPOT_CHG">[docs]</a><span class="k">class</span> <span class="nc">LOCPOT_CHG</span><span class="p">:</span>
+<div class="viewcode-block" id="LOCPOT_CHG"><a class="viewcode-back" href="../../api.html#pivotpy.g_utils.LOCPOT_CHG">[docs]</a><span class="k">class</span> <span class="nc">LOCPOT_CHG</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Returns Data from LOCPOT and similar structure files like CHG. Loads only single set out of 2/4 magnetization data to avoid performance/memory cost while can load electrostatic and one set of magnetization together.</span>
 <span class="sd">    - **Parameters**</span>
@@ -523,7 +522,7 @@
                                     <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span><span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="p">,</span><span class="n">lr_pos</span><span class="o">=</span><span class="n">lr_pos</span><span class="p">,</span><span class="n">lr_widths</span><span class="o">=</span><span class="n">lr_widths</span><span class="p">,</span>
                                     <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span><span class="n">colors</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span><span class="n">annotate</span><span class="o">=</span><span class="n">annotate</span><span class="p">)</span>
 
-<div class="viewcode-block" id="LOCPOT_CHG.view_period"><a class="viewcode-back" href="../../api.html#pivotpy.LOCPOT_CHG.view_period">[docs]</a>    <span class="k">def</span> <span class="nf">view_period</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">period_guess</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span><span class="n">operation</span><span class="o">=</span><span class="s1">&#39;mean_z&#39;</span><span class="p">,</span><span class="n">nslice</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">e_or_m</span><span class="o">=</span><span class="kc">None</span><span class="p">,):</span>
+<div class="viewcode-block" id="LOCPOT_CHG.view_period"><a class="viewcode-back" href="../../api.html#pivotpy.g_utils.LOCPOT_CHG.view_period">[docs]</a>    <span class="k">def</span> <span class="nf">view_period</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">period_guess</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span><span class="n">operation</span><span class="o">=</span><span class="s1">&#39;mean_z&#39;</span><span class="p">,</span><span class="n">nslice</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">e_or_m</span><span class="o">=</span><span class="kc">None</span><span class="p">,):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        - Periodicity check by plotly&#39;s interactive plot.</span>
 <span class="sd">        - **Parameters**</span>
@@ -577,7 +576,7 @@
 
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="transform_color"><a class="viewcode-back" href="../../api.html#pivotpy.transform_color">[docs]</a><span class="k">def</span> <span class="nf">transform_color</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span><span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">mixing_matrix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="transform_color"><a class="viewcode-back" href="../../api.html#pivotpy.g_utils.transform_color">[docs]</a><span class="k">def</span> <span class="nf">transform_color</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span><span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">mixing_matrix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Color transformation such as brightness, contrast, saturation and mixing of an input color array. `c = -1` would invert color,keeping everything else same.</span>
 <span class="sd">    - **Parameters**</span>

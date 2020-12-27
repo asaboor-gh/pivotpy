@@ -13,7 +13,6 @@
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/language_data.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
@@ -70,7 +69,7 @@
 
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="plot_bands"><a class="viewcode-back" href="../../api.html#pivotpy.plot_bands">[docs]</a><span class="k">def</span> <span class="nf">plot_bands</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">kpath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">bands</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">showlegend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">E_Fermi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>\
+<div class="viewcode-block" id="plot_bands"><a class="viewcode-back" href="../../api.html#pivotpy.s_plots.plot_bands">[docs]</a><span class="k">def</span> <span class="nf">plot_bands</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">kpath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">bands</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">showlegend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">E_Fermi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>\
                 <span class="n">color1</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.8</span><span class="p">),</span><span class="n">style1</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span><span class="n">lw1</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span><span class="n">color2</span><span class="o">=</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="n">style2</span><span class="o">=</span><span class="s1">&#39;dashed&#39;</span><span class="p">,</span><span class="n">lw2</span><span class="o">=</span><span class="mf">0.7</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Returns axes object and plot on which all matplotlib allowed actions could be performed.</span>
@@ -120,7 +119,7 @@
     <span class="k">return</span> <span class="n">ax</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="modify_axes"><a class="viewcode-back" href="../../api.html#pivotpy.modify_axes">[docs]</a><span class="k">def</span> <span class="nf">modify_axes</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">xticks</span><span class="o">=</span><span class="p">[],</span><span class="n">xt_labels</span><span class="o">=</span><span class="p">[],</span><span class="n">xlim</span><span class="o">=</span><span class="p">[],</span>\
+<div class="viewcode-block" id="modify_axes"><a class="viewcode-back" href="../../api.html#pivotpy.s_plots.modify_axes">[docs]</a><span class="k">def</span> <span class="nf">modify_axes</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">xticks</span><span class="o">=</span><span class="p">[],</span><span class="n">xt_labels</span><span class="o">=</span><span class="p">[],</span><span class="n">xlim</span><span class="o">=</span><span class="p">[],</span>\
             <span class="n">yticks</span><span class="o">=</span><span class="p">[],</span><span class="n">yt_labels</span><span class="o">=</span><span class="p">[],</span><span class="n">ylim</span><span class="o">=</span><span class="p">[],</span><span class="n">xlabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">ylabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>\
             <span class="n">vlines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">zeroline</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -159,7 +158,7 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="quick_bplot"><a class="viewcode-back" href="../../api.html#pivotpy.quick_bplot">[docs]</a><span class="k">def</span> <span class="nf">quick_bplot</span><span class="p">(</span><span class="n">path_evr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">skipk</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">joinPathAt</span><span class="o">=</span><span class="p">[],</span><span class="n">elim</span><span class="o">=</span><span class="p">[],</span><span class="n">xt_indices</span><span class="o">=</span><span class="p">[],</span>\
+<div class="viewcode-block" id="quick_bplot"><a class="viewcode-back" href="../../api.html#pivotpy.s_plots.quick_bplot">[docs]</a><span class="k">def</span> <span class="nf">quick_bplot</span><span class="p">(</span><span class="n">path_evr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">skipk</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">joinPathAt</span><span class="o">=</span><span class="p">[],</span><span class="n">elim</span><span class="o">=</span><span class="p">[],</span><span class="n">xt_indices</span><span class="o">=</span><span class="p">[],</span>\
             <span class="n">xt_labels</span><span class="o">=</span><span class="p">[],</span><span class="n">E_Fermi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">3.4</span><span class="p">,</span><span class="mf">2.6</span><span class="p">),</span><span class="n">txt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">xytxt</span><span class="o">=</span><span class="p">[</span><span class="mf">0.05</span><span class="p">,</span><span class="mf">0.9</span><span class="p">],</span><span class="n">ctxt</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Returns axes object and plot on which all matplotlib allowed actions could be performed.</span>
@@ -213,7 +212,7 @@
         <span class="k">return</span> <span class="n">ax</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="add_text"><a class="viewcode-back" href="../../api.html#pivotpy.add_text">[docs]</a><span class="k">def</span> <span class="nf">add_text</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">xs</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span><span class="n">ys</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span><span class="n">txts</span><span class="o">=</span><span class="s1">&#39;[List]&#39;</span><span class="p">,</span><span class="n">colors</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="add_text"><a class="viewcode-back" href="../../api.html#pivotpy.s_plots.add_text">[docs]</a><span class="k">def</span> <span class="nf">add_text</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">xs</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span><span class="n">ys</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span><span class="n">txts</span><span class="o">=</span><span class="s1">&#39;[List]&#39;</span><span class="p">,</span><span class="n">colors</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Adds text entries on axes, given single string or list.</span>
 <span class="sd">    - **Parameters**</span>
@@ -233,7 +232,7 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="add_legend"><a class="viewcode-back" href="../../api.html#pivotpy.add_legend">[docs]</a><span class="k">def</span> <span class="nf">add_legend</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">colors</span><span class="o">=</span><span class="p">[],</span><span class="n">labels</span><span class="o">=</span><span class="p">[],</span><span class="n">styles</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span>\
+<div class="viewcode-block" id="add_legend"><a class="viewcode-back" href="../../api.html#pivotpy.s_plots.add_legend">[docs]</a><span class="k">def</span> <span class="nf">add_legend</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">colors</span><span class="o">=</span><span class="p">[],</span><span class="n">labels</span><span class="o">=</span><span class="p">[],</span><span class="n">styles</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span>\
                 <span class="n">widths</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span><span class="n">anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower left&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;small&#39;</span><span class="p">,</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="o">**</span><span class="n">legend_kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Adds custom legeneds on a given axes,returns None.</span>
@@ -266,7 +265,7 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="add_colorbar"><a class="viewcode-back" href="../../api.html#pivotpy.add_colorbar">[docs]</a><span class="k">def</span> <span class="nf">add_colorbar</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">cmap_or_clist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">N</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span><span class="n">ticks</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="mi">6</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="o">/</span><span class="mi">6</span><span class="p">],</span>\
+<div class="viewcode-block" id="add_colorbar"><a class="viewcode-back" href="../../api.html#pivotpy.s_plots.add_colorbar">[docs]</a><span class="k">def</span> <span class="nf">add_colorbar</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">cmap_or_clist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">N</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span><span class="n">ticks</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="mi">6</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="o">/</span><span class="mi">6</span><span class="p">],</span>\
             <span class="n">ticklabels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">,</span><span class="s1">&#39;g&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">],</span><span class="n">vertical</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Plots colorbar on a given axes. This axes should be only for colorbar. Returns None or throws ValueError for given colors.</span>
@@ -327,7 +326,7 @@
                 <span class="n">child</span><span class="o">.</span><span class="n">set_color</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.4</span><span class="p">))</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="color_wheel"><a class="viewcode-back" href="../../api.html#pivotpy.color_wheel">[docs]</a><span class="k">def</span> <span class="nf">color_wheel</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="color_wheel"><a class="viewcode-back" href="../../api.html#pivotpy.s_plots.color_wheel">[docs]</a><span class="k">def</span> <span class="nf">color_wheel</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
                 <span class="n">scale</span> <span class="o">=</span> <span class="mf">0.12</span><span class="p">,</span>
                 <span class="n">rlim</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
@@ -380,7 +379,7 @@
     <span class="k">return</span> <span class="n">cax</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="get_pros_data"><a class="viewcode-back" href="../../api.html#pivotpy.get_pros_data">[docs]</a><span class="k">def</span> <span class="nf">get_pros_data</span><span class="p">(</span><span class="n">kpath</span>      <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="get_pros_data"><a class="viewcode-back" href="../../api.html#pivotpy.s_plots.get_pros_data">[docs]</a><span class="k">def</span> <span class="nf">get_pros_data</span><span class="p">(</span><span class="n">kpath</span>      <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">evals_set</span>   <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">pros_set</span>    <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">elements</span>    <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">],],</span>
@@ -438,7 +437,7 @@
     <span class="c1"># Return if no interpolation</span>
     <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;kpath&#39;</span><span class="p">:</span><span class="n">kpath</span><span class="p">,</span><span class="s1">&#39;evals&#39;</span><span class="p">:</span> <span class="n">evals_set</span><span class="p">,</span><span class="s1">&#39;pros&#39;</span><span class="p">:</span> <span class="n">_colors</span><span class="p">}</span></div>
 
-<div class="viewcode-block" id="make_line_collection"><a class="viewcode-back" href="../../api.html#pivotpy.make_line_collection">[docs]</a><span class="k">def</span> <span class="nf">make_line_collection</span><span class="p">(</span><span class="n">max_width</span>   <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="make_line_collection"><a class="viewcode-back" href="../../api.html#pivotpy.s_plots.make_line_collection">[docs]</a><span class="k">def</span> <span class="nf">make_line_collection</span><span class="p">(</span><span class="n">max_width</span>   <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                          <span class="n">colors_list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                          <span class="n">rgb</span>         <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                          <span class="n">uni_width</span>   <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -512,7 +511,7 @@
         <span class="n">lcs</span> <span class="o">=</span> <span class="p">[</span><span class="n">LineCollection</span><span class="p">(</span><span class="n">marr</span><span class="p">,</span><span class="n">colors</span><span class="o">=</span><span class="n">_cl</span><span class="p">,</span><span class="n">linewidths</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span> <span class="k">for</span> <span class="n">_cl</span><span class="p">,</span><span class="n">lw</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">lc_colors</span><span class="p">,</span><span class="n">lws</span><span class="p">)]</span>
         <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">lcs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="plot_collection"><a class="viewcode-back" href="../../api.html#pivotpy.plot_collection">[docs]</a><span class="k">def</span> <span class="nf">plot_collection</span><span class="p">(</span><span class="n">gpd_args</span><span class="p">,</span><span class="n">mlc_args</span><span class="p">,</span><span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_collection"><a class="viewcode-back" href="../../api.html#pivotpy.s_plots.plot_collection">[docs]</a><span class="k">def</span> <span class="nf">plot_collection</span><span class="p">(</span><span class="n">gpd_args</span><span class="p">,</span><span class="n">mlc_args</span><span class="p">,</span><span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Plots line collection from the output of get_pros_data and make_line_collection on axes.</span>
 <span class="sd">    - **Parameters**</span>
@@ -534,7 +533,7 @@
     <span class="k">return</span> <span class="n">axes</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="quick_rgb_lines"><a class="viewcode-back" href="../../api.html#pivotpy.quick_rgb_lines">[docs]</a><span class="k">def</span> <span class="nf">quick_rgb_lines</span><span class="p">(</span><span class="n">path_evr</span>    <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="quick_rgb_lines"><a class="viewcode-back" href="../../api.html#pivotpy.s_plots.quick_rgb_lines">[docs]</a><span class="k">def</span> <span class="nf">quick_rgb_lines</span><span class="p">(</span><span class="n">path_evr</span>    <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                     <span class="n">ax</span>          <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                     <span class="n">skipk</span>       <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                     <span class="n">joinPathAt</span>  <span class="o">=</span> <span class="p">[],</span>
@@ -744,7 +743,7 @@
     <span class="k">return</span> <span class="n">ax</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="quick_color_lines"><a class="viewcode-back" href="../../api.html#pivotpy.quick_color_lines">[docs]</a><span class="k">def</span> <span class="nf">quick_color_lines</span><span class="p">(</span><span class="n">path_evr</span>      <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="quick_color_lines"><a class="viewcode-back" href="../../api.html#pivotpy.s_plots.quick_color_lines">[docs]</a><span class="k">def</span> <span class="nf">quick_color_lines</span><span class="p">(</span><span class="n">path_evr</span>      <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                       <span class="n">axes</span>          <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                       <span class="n">skipk</span>         <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                       <span class="n">joinPathAt</span>    <span class="o">=</span> <span class="p">[],</span>
@@ -910,7 +909,7 @@
     <span class="k">return</span> <span class="n">axes</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="init_figure"><a class="viewcode-back" href="../../api.html#pivotpy.init_figure">[docs]</a><span class="k">def</span> <span class="nf">init_figure</span><span class="p">(</span><span class="n">figsize</span>   <span class="o">=</span> <span class="p">(</span><span class="mf">3.4</span><span class="p">,</span><span class="mf">2.6</span><span class="p">),</span>
+<div class="viewcode-block" id="init_figure"><a class="viewcode-back" href="../../api.html#pivotpy.s_plots.init_figure">[docs]</a><span class="k">def</span> <span class="nf">init_figure</span><span class="p">(</span><span class="n">figsize</span>   <span class="o">=</span> <span class="p">(</span><span class="mf">3.4</span><span class="p">,</span><span class="mf">2.6</span><span class="p">),</span>
                 <span class="n">nrows</span>     <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
                 <span class="n">ncols</span>     <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
                 <span class="n">widths</span>    <span class="o">=</span> <span class="p">[],</span>
@@ -952,7 +951,7 @@
     <span class="k">return</span> <span class="n">axs</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="select_pdos"><a class="viewcode-back" href="../../api.html#pivotpy.select_pdos">[docs]</a><span class="k">def</span> <span class="nf">select_pdos</span><span class="p">(</span><span class="n">tdos</span>        <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="select_pdos"><a class="viewcode-back" href="../../api.html#pivotpy.s_plots.select_pdos">[docs]</a><span class="k">def</span> <span class="nf">select_pdos</span><span class="p">(</span><span class="n">tdos</span>        <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="n">pdos_set</span>    <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="n">ions</span>        <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,],</span>
                 <span class="n">orbs</span>        <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,],</span>
@@ -990,7 +989,7 @@
     <span class="k">return</span> <span class="n">_en</span><span class="p">,</span><span class="n">_tdos</span><span class="p">,</span><span class="n">_pdos</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="collect_dos"><a class="viewcode-back" href="../../api.html#pivotpy.collect_dos">[docs]</a><span class="k">def</span> <span class="nf">collect_dos</span><span class="p">(</span><span class="n">path_evr</span>      <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="collect_dos"><a class="viewcode-back" href="../../api.html#pivotpy.s_plots.collect_dos">[docs]</a><span class="k">def</span> <span class="nf">collect_dos</span><span class="p">(</span><span class="n">path_evr</span>      <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="n">elim</span>          <span class="o">=</span> <span class="p">[],</span>
                 <span class="n">elements</span>      <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">],],</span>
                 <span class="n">orbs</span>          <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">],],</span>
@@ -1101,7 +1100,7 @@
         <span class="k">return</span> <span class="n">e</span><span class="p">,</span><span class="n">ts</span><span class="p">,</span><span class="n">ps</span><span class="p">,</span><span class="n">ls</span><span class="p">,</span><span class="n">vr</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="quick_dos_lines"><a class="viewcode-back" href="../../api.html#pivotpy.quick_dos_lines">[docs]</a><span class="k">def</span> <span class="nf">quick_dos_lines</span><span class="p">(</span><span class="n">path_evr</span>      <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="quick_dos_lines"><a class="viewcode-back" href="../../api.html#pivotpy.s_plots.quick_dos_lines">[docs]</a><span class="k">def</span> <span class="nf">quick_dos_lines</span><span class="p">(</span><span class="n">path_evr</span>      <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                     <span class="n">ax</span>            <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                     <span class="n">elim</span>          <span class="o">=</span> <span class="p">[],</span>
                     <span class="n">include_dos</span>   <span class="o">=</span> <span class="s1">&#39;both&#39;</span><span class="p">,</span>
@@ -1253,7 +1252,7 @@
         <span class="k">return</span> <span class="n">ax</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="plt_to_html"><a class="viewcode-back" href="../../api.html#pivotpy.plt_to_html">[docs]</a><span class="k">def</span> <span class="nf">plt_to_html</span><span class="p">(</span><span class="n">plt_fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">dash_html</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="plt_to_html"><a class="viewcode-back" href="../../api.html#pivotpy.s_plots.plt_to_html">[docs]</a><span class="k">def</span> <span class="nf">plt_to_html</span><span class="p">(</span><span class="n">plt_fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">dash_html</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Returns base64 encoded Image to display in notebook or HTML &lt;svg&gt; or plotly&#39;s dash_html_components.Img object.</span>
 <span class="sd">    - **Parameters**</span>
@@ -1286,7 +1285,7 @@
         <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="s2">&quot;data:image/svg+xml;base64,</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)))</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="plot_potential"><a class="viewcode-back" href="../../api.html#pivotpy.plot_potential">[docs]</a><span class="k">def</span> <span class="nf">plot_potential</span><span class="p">(</span><span class="n">basis</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="plot_potential"><a class="viewcode-back" href="../../api.html#pivotpy.s_plots.plot_potential">[docs]</a><span class="k">def</span> <span class="nf">plot_potential</span><span class="p">(</span><span class="n">basis</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
            <span class="n">e_or_m</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
            <span class="n">operation</span><span class="o">=</span><span class="s1">&#39;mean_z&#39;</span><span class="p">,</span>
            <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
