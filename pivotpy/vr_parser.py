@@ -97,15 +97,14 @@ class Dict2Data(dict):
 
 # Cell
 def read_asxml(path=None):
-    """Reads a big vasprun.xml file into memory once and then apply commands. If current folder contains `vasprun.xml` file, it automatically picks it.
+    """
+    - Reads a big vasprun.xml file into memory once and then apply commands. If current folder contains `vasprun.xml` file, it automatically picks it.
 
-    Parameters
-    ----------
-    path : Path/To/vasprun.xml
+    - **Parameters**
+        - path : Path/To/vasprun.xml
 
-    Returns
-    -------
-    xml_data : Xml object to use in other functions
+    - **Returns**
+        - xml_data : Xml object to use in other functions
     """
     if(path==None):
         path='./vasprun.xml'
