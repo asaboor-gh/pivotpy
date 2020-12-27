@@ -213,6 +213,15 @@ class DecodeToNumpy(json.JSONDecoder):
         return obj
 
 # Cell
+def _g2f(f):
+    """Add kwargs of `_g` as attribute to `f` and assing __doc__."""
+    _map_d = { # Define inside function, otherwise will throw error in runtime.
+    'sbands': sp.quick_bplot, 'sdos'  : sp.quick_dos_lines, 'scolor': sp.quick_color_lines,
+    'srgb'  : sp.quick_rgb_lines, 'irgb'  : ip.plotly_rgb_lines, 'idos'  : ip.plotly_dos_lines}
+    f.__doc__ = '\n'.join(l for l in _map_d[f.__name__].__doc__.splitlines() if 'path_evr' not in l)
+    f.kwargs = {k:v for k,v in gcargs(_map_d[f.__name__]).items() if 'path_evr' not in k}
+    return f
+
 class Vasprun:
     """
     - All plotting functions that depend on `export_vasprun` are joined under this class and renamed.
@@ -247,32 +256,23 @@ class Vasprun:
                 set_matplotlib_formats('svg')
         except: pass
         self.data = vp.export_vasprun(path=path, skipk=skipk, elim=elim, joinPathAt=joinPathAt, shift_kpath=shift_kpath)
-        # Set DOCS
-        Vasprun.sbands.__doc__ = '\n'.join(l for l in sp.quick_bplot.__doc__.splitlines() if 'path_ev' not in l)
-        Vasprun.sdos.__doc__ = '\n'.join(l for l in sp.quick_dos_lines.__doc__.splitlines() if 'path_ev' not in l)
-        Vasprun.srgb.__doc__ = '\n'.join(l for l in sp.quick_rgb_lines.__doc__.splitlines() if 'path_ev' not in l)
-        Vasprun.scolor.__doc__ = '\n'.join(l for l in sp.quick_color_lines.__doc__.splitlines() if 'path_ev' not in l)
-        Vasprun.idos.__doc__ = '\n'.join(l for l in ip.plotly_dos_lines.__doc__.splitlines() if 'path_ev' not in l)
-        Vasprun.irgb.__doc__ = '\n'.join(l for l in ip.plotly_rgb_lines.__doc__.splitlines() if 'path_ev' not in l)
 
-        # Set kwargs attribute for.
-        Vasprun.sbands.kwargs = {k:v for k,v in gcargs(sp.quick_bplot).items() if 'path_evr' not in k}
-        Vasprun.sdos.kwargs   = {k:v for k,v in gcargs(sp.quick_dos_lines).items() if 'path_evr' not in k}
-        Vasprun.scolor.kwargs = {k:v for k,v in gcargs(sp.quick_color_lines).items() if 'path_evr' not in k}
-        Vasprun.idos.kwargs   = {k:v for k,v in gcargs(ip.plotly_dos_lines).items() if 'path_evr' not in k}
-        Vasprun.srgb.kwargs   = {k:v for k,v in gcargs(sp.quick_rgb_lines).items() if 'path_evr' not in k}
-        Vasprun.irgb.kwargs   = {k:v for k,v in gcargs(ip.plotly_rgb_lines).items() if 'path_evr' not in k}
-
+    @_g2f
     def sbands(self,**kwargs):
         return sp.quick_bplot(self.data,**kwargs)
+    @_g2f
     def sdos(self,**kwargs):
         return sp.quick_dos_lines(self.data,**kwargs)
+    @_g2f
     def srgb(self,**kwargs):
         return sp.quick_rgb_lines(self.data,**kwargs)
+    @_g2f
     def scolor(self,**kwargs):
         return sp.quick_color_lines(self.data,**kwargs)
+    @_g2f
     def idos(self,**kwargs):
         return ip.plotly_dos_lines(self.data,**kwargs)
+    @_g2f
     def irgb(self,**kwargs):
         return ip.plotly_rgb_lines(self.data,**kwargs)
 
