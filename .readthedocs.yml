@@ -7,4 +7,3 @@ python:
   install:
     - requirements: docs_rst/requirements.txt
     - method: pip
-      path: pivotpy
