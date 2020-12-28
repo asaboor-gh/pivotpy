@@ -49,7 +49,7 @@ extensions = [
     "sphinx_rtd_theme",
     #'jupyter_sphinx.embed_widgets',
     #'sphinx_gallery.load_style',
-	'nbsphinx',
+	#'nbsphinx',
 ]
 
 autosummary_generate = True
