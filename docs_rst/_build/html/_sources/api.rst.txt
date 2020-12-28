@@ -5,6 +5,7 @@ Pivotpy API Reference
     :maxdepth: 2
 
     vr
+    examples
 
 Static Plots
 =================
