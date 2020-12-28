@@ -164,7 +164,7 @@
 <dl class="py class">
 <dt id="pivotpy.vr_parser.Dict2Data">
 <em class="property">class </em><code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">Dict2Data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">d</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#Dict2Data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.Dict2Data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <ul class="simple">
 <li><p>Returns a Data object with dictionary keys as attributes of Data accessible by dot notation.</p></li>
 <li><dl class="simple">
@@ -198,57 +198,6 @@
 </dl>
 </li>
 </ul>
-<dl class="py method">
-<dt id="pivotpy.vr_parser.Dict2Data.clear">
-<code class="sig-name descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None.  Remove all items from D.<a class="headerlink" href="#pivotpy.vr_parser.Dict2Data.clear" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="pivotpy.vr_parser.Dict2Data.copy">
-<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; a shallow copy of D<a class="headerlink" href="#pivotpy.vr_parser.Dict2Data.copy" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="pivotpy.vr_parser.Dict2Data.fromkeys">
-<code class="sig-name descname">fromkeys</code><span class="sig-paren">(</span><em class="sig-param">value=None</em>, <em class="sig-param">/</em><span class="sig-paren">)</span><a class="headerlink" href="#pivotpy.vr_parser.Dict2Data.fromkeys" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a new dictionary with keys from iterable and values set to value.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="pivotpy.vr_parser.Dict2Data.get">
-<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">key</em>, <em class="sig-param">default=None</em>, <em class="sig-param">/</em><span class="sig-paren">)</span><a class="headerlink" href="#pivotpy.vr_parser.Dict2Data.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the value for key if key is in the dictionary, else default.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="pivotpy.vr_parser.Dict2Data.items">
-<code class="sig-name descname">items</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; a set-like object providing a view on D’s items<a class="headerlink" href="#pivotpy.vr_parser.Dict2Data.items" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="pivotpy.vr_parser.Dict2Data.keys">
-<code class="sig-name descname">keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; a set-like object providing a view on D’s keys<a class="headerlink" href="#pivotpy.vr_parser.Dict2Data.keys" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="pivotpy.vr_parser.Dict2Data.pop">
-<code class="sig-name descname">pop</code><span class="sig-paren">(</span><em class="sig-param">k</em><span class="optional">[</span>, <em class="sig-param">d</em><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; v, remove specified key and return the corresponding value.<a class="headerlink" href="#pivotpy.vr_parser.Dict2Data.pop" title="Permalink to this definition">¶</a></dt>
-<dd><p>If key is not found, d is returned if given, otherwise KeyError is raised</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="pivotpy.vr_parser.Dict2Data.popitem">
-<code class="sig-name descname">popitem</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; (k, v), remove and return some (key, value) pair as a<a class="headerlink" href="#pivotpy.vr_parser.Dict2Data.popitem" title="Permalink to this definition">¶</a></dt>
-<dd><p>2-tuple; but raise KeyError if D is empty.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="pivotpy.vr_parser.Dict2Data.setdefault">
-<code class="sig-name descname">setdefault</code><span class="sig-paren">(</span><em class="sig-param">key</em>, <em class="sig-param">default=None</em>, <em class="sig-param">/</em><span class="sig-paren">)</span><a class="headerlink" href="#pivotpy.vr_parser.Dict2Data.setdefault" title="Permalink to this definition">¶</a></dt>
-<dd><p>Insert key with a value of default if key is not in the dictionary.</p>
-<p>Return the value for key if key is in the dictionary, else default.</p>
-</dd></dl>
-
 <dl class="py method">
 <dt id="pivotpy.vr_parser.Dict2Data.to_dict">
 <code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#Dict2Data.to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.Dict2Data.to_dict" title="Permalink to this definition">¶</a></dt>
@@ -287,19 +236,6 @@
 </li>
 </ul>
 </dd></dl>
-
-<dl class="py method">
-<dt id="pivotpy.vr_parser.Dict2Data.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param">E</em>, <span class="optional">]</span><em class="sig-param">**F</em><span class="sig-paren">)</span> &#x2192; None.  Update D from dict/iterable E and F.<a class="headerlink" href="#pivotpy.vr_parser.Dict2Data.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>If E is present and has a .keys() method, then does:  for k in E: D[k] = E[k]
-If E is present and lacks a .keys() method, then does:  for k, v in E: D[k] = v
-In either case, this is followed by: for k in F:  D[k] = F[k]</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="pivotpy.vr_parser.Dict2Data.values">
-<code class="sig-name descname">values</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; an object providing a view on D’s values<a class="headerlink" href="#pivotpy.vr_parser.Dict2Data.values" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 

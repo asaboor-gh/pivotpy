@@ -18,7 +18,7 @@ import xml.etree.ElementTree as ET
 import pivotpy.g_utils as gu
 
 # Cell
-class Dict2Data(dict):
+class Dict2Data:
     """
     - Returns a Data object with dictionary keys as attributes of Data accessible by dot notation.
     - **Parmeters**
