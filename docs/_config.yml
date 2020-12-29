@@ -61,8 +61,8 @@ defaults:
       tooltip: true
 
 sidebars: [home_sidebar]
-#permalink: pretty
+#permalink: pretty #This makes issues of broken link
 baseurl: /pivotpy/
-theme: jekyll-theme-cayman
+#theme: jekyll-theme-cayman
 
-#theme: jekyll-theme-minimal
+theme: jekyll-theme-minimal
