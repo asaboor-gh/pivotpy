@@ -9,6 +9,8 @@ Pivotpy API Reference
 Static Plots
 =================
 
+.. autofunction:: numpy.loadtext
+
 .. automodule:: pivotpy.s_plots
     :members: init_figure, quick_bplot, quick_rgb_lines, quick_color_lines, quick_dos_lines, plt_to_html, plot_potential
 
