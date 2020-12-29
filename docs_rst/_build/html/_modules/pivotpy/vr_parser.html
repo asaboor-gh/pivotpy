@@ -30,7 +30,6 @@
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -168,7 +167,7 @@
 <span class="kn">import</span> <span class="nn">pivotpy.g_utils</span> <span class="k">as</span> <span class="nn">gu</span>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="Dict2Data"><a class="viewcode-back" href="../../vr.html#pivotpy.vr_parser.Dict2Data">[docs]</a><span class="k">class</span> <span class="nc">Dict2Data</span><span class="p">:</span>
+<div class="viewcode-block" id="Dict2Data"><a class="viewcode-back" href="../../api.html#pivotpy.vr_parser.Dict2Data">[docs]</a><span class="k">class</span> <span class="nc">Dict2Data</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Returns a Data object with dictionary keys as attributes of Data accessible by dot notation.</span>
 <span class="sd">    - **Parmeters**</span>
@@ -246,7 +245,7 @@
         <span class="k">pass</span>  <span class="c1">#This is for pickling</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="read_asxml"><a class="viewcode-back" href="../../vr.html#pivotpy.vr_parser.read_asxml">[docs]</a><span class="k">def</span> <span class="nf">read_asxml</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="read_asxml"><a class="viewcode-back" href="../../api.html#pivotpy.vr_parser.read_asxml">[docs]</a><span class="k">def</span> <span class="nf">read_asxml</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Reads a big vasprun.xml file into memory once and then apply commands. If current folder contains `vasprun.xml` file, it automatically picks it.</span>
 
@@ -321,7 +320,7 @@
             <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="get_summary"><a class="viewcode-back" href="../../vr.html#pivotpy.vr_parser.get_summary">[docs]</a><span class="k">def</span> <span class="nf">get_summary</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get_summary"><a class="viewcode-back" href="../../api.html#pivotpy.vr_parser.get_summary">[docs]</a><span class="k">def</span> <span class="nf">get_summary</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Returns overview of system parameters.</span>
 <span class="sd">    - **Parameters**</span>
@@ -359,11 +358,11 @@
     <span class="k">return</span> <span class="n">Dict2Data</span><span class="p">(</span><span class="n">info_dic</span><span class="p">)</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="get_kpts"><a class="viewcode-back" href="../../vr.html#pivotpy.vr_parser.get_kpts">[docs]</a><span class="k">def</span> <span class="nf">get_kpts</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">skipk</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">joinPathAt</span><span class="o">=</span><span class="p">[]):</span>
+<div class="viewcode-block" id="get_kpts"><a class="viewcode-back" href="../../api.html#pivotpy.vr_parser.get_kpts">[docs]</a><span class="k">def</span> <span class="nf">get_kpts</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">skipk</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">joinPathAt</span><span class="o">=</span><span class="p">[]):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Returns kpoints and calculated kpath.</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
+<span class="sd">    Parameters:</span>
+
 <span class="sd">    xml_data</span>
 <span class="sd">        From `read_asxml` function.</span>
 
@@ -373,24 +372,10 @@
 <span class="sd">    joinPathAt : list</span>
 <span class="sd">        List of indices of kpoints where path is broken.</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
+<span class="sd">    Returns:</span>
+
 <span class="sd">    Data : pivotpy.Dict2Data</span>
 <span class="sd">        with attibutes `kpath` and `kpoints`.</span>
-
-<span class="sd">    See Also</span>
-<span class="sd">    --------</span>
-<span class="sd">    get_kpath</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    Notes about the implementation algorithm (if needed).</span>
-<span class="sd">    This can have multiple paragraphs.</span>
-<span class="sd">    You may include some math:</span>
-
-<span class="sd">    .. math:: X(e^{j\omega } ) = x(n)e^{ - j\omega n}</span>
-
-<span class="sd">    And even use a greek symbol like :math:`omega` inline.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span><span class="p">(</span><span class="n">xml_data</span><span class="o">==</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">xml_data</span><span class="o">=</span><span class="n">read_asxml</span><span class="p">()</span>
@@ -415,7 +400,7 @@
     <span class="k">return</span> <span class="n">Dict2Data</span><span class="p">({</span><span class="s1">&#39;NKPTS&#39;</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">kpoints</span><span class="p">),</span><span class="s1">&#39;kpoints&#39;</span><span class="p">:</span><span class="n">kpoints</span><span class="p">,</span><span class="s1">&#39;kpath&#39;</span><span class="p">:</span><span class="n">kpath</span><span class="p">})</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="get_tdos"><a class="viewcode-back" href="../../vr.html#pivotpy.vr_parser.get_tdos">[docs]</a><span class="k">def</span> <span class="nf">get_tdos</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">spin_set</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[]):</span>
+<div class="viewcode-block" id="get_tdos"><a class="viewcode-back" href="../../api.html#pivotpy.vr_parser.get_tdos">[docs]</a><span class="k">def</span> <span class="nf">get_tdos</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">spin_set</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[]):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Returns total dos for a spin_set (default 1) and energy limit. If spin-polarized calculations, gives SpinUp and SpinDown keys as well.</span>
 <span class="sd">    - **Parameters**</span>
@@ -467,7 +452,7 @@
     <span class="k">return</span> <span class="n">Dict2Data</span><span class="p">(</span><span class="n">dos_dic</span><span class="p">)</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="get_evals"><a class="viewcode-back" href="../../vr.html#pivotpy.vr_parser.get_evals">[docs]</a><span class="k">def</span> <span class="nf">get_evals</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">skipk</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[]):</span>
+<div class="viewcode-block" id="get_evals"><a class="viewcode-back" href="../../api.html#pivotpy.vr_parser.get_evals">[docs]</a><span class="k">def</span> <span class="nf">get_evals</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">skipk</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[]):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Returns eigenvalues as numpy array. If spin-polarized calculations, gives SpinUp and SpinDown keys as well.</span>
 <span class="sd">    - **Parameters**</span>
@@ -519,7 +504,7 @@
     <span class="k">return</span> <span class="n">Dict2Data</span><span class="p">(</span><span class="n">evals_dic</span><span class="p">)</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="get_bands_pro_set"><a class="viewcode-back" href="../../vr.html#pivotpy.vr_parser.get_bands_pro_set">[docs]</a><span class="k">def</span> <span class="nf">get_bands_pro_set</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="get_bands_pro_set"><a class="viewcode-back" href="../../api.html#pivotpy.vr_parser.get_bands_pro_set">[docs]</a><span class="k">def</span> <span class="nf">get_bands_pro_set</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                       <span class="n">spin_set</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                       <span class="n">skipk</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                       <span class="n">bands_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -614,7 +599,7 @@
     <span class="k">return</span> <span class="n">Dict2Data</span><span class="p">({</span><span class="s1">&#39;labels&#39;</span><span class="p">:</span><span class="n">fields</span><span class="p">,</span><span class="s1">&#39;pros&#39;</span><span class="p">:</span><span class="n">data</span><span class="p">})</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="get_dos_pro_set"><a class="viewcode-back" href="../../vr.html#pivotpy.vr_parser.get_dos_pro_set">[docs]</a><span class="k">def</span> <span class="nf">get_dos_pro_set</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">spin_set</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">dos_range</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get_dos_pro_set"><a class="viewcode-back" href="../../api.html#pivotpy.vr_parser.get_dos_pro_set">[docs]</a><span class="k">def</span> <span class="nf">get_dos_pro_set</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">spin_set</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">dos_range</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Returns dos projection of a spin_set(default 1) as numpy array. If spin-polarized calculations, gives SpinUp and SpinDown keys as well.</span>
 <span class="sd">    - **Parameters**</span>
@@ -655,7 +640,7 @@
     <span class="k">return</span> <span class="n">Dict2Data</span><span class="p">({</span><span class="s1">&#39;labels&#39;</span><span class="p">:</span><span class="n">dos_fields</span><span class="p">,</span><span class="s1">&#39;pros&#39;</span><span class="p">:</span><span class="n">final_data</span><span class="p">})</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="get_structure"><a class="viewcode-back" href="../../vr.html#pivotpy.vr_parser.get_structure">[docs]</a><span class="k">def</span> <span class="nf">get_structure</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get_structure"><a class="viewcode-back" href="../../api.html#pivotpy.vr_parser.get_structure">[docs]</a><span class="k">def</span> <span class="nf">get_structure</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Returns structure&#39;s volume,basis,positions and rec-basis.</span>
 <span class="sd">    - **Parameters**</span>
@@ -682,7 +667,7 @@
     <span class="k">return</span> <span class="n">Dict2Data</span><span class="p">(</span><span class="n">st_dic</span><span class="p">)</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="export_vasprun"><a class="viewcode-back" href="../../vr.html#pivotpy.vr_parser.export_vasprun">[docs]</a><span class="k">def</span> <span class="nf">export_vasprun</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">skipk</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[],</span><span class="n">joinPathAt</span><span class="o">=</span><span class="p">[],</span><span class="n">shift_kpath</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="export_vasprun"><a class="viewcode-back" href="../../api.html#pivotpy.vr_parser.export_vasprun">[docs]</a><span class="k">def</span> <span class="nf">export_vasprun</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">skipk</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[],</span><span class="n">joinPathAt</span><span class="o">=</span><span class="p">[],</span><span class="n">shift_kpath</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Returns a full dictionary of all objects from `vasprun.xml` file. It first try to load the data exported by powershell&#39;s `Export-VR(Vasprun)`, which is very fast for large files. It is recommended to export large files in powershell first.</span>
 <span class="sd">    - **Parameters**</span>
@@ -764,7 +749,7 @@
     <span class="k">return</span> <span class="n">Dict2Data</span><span class="p">(</span><span class="n">full_dic</span><span class="p">)</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="load_export"><a class="viewcode-back" href="../../vr.html#pivotpy.vr_parser.load_export">[docs]</a><span class="k">def</span> <span class="nf">load_export</span><span class="p">(</span><span class="n">path</span><span class="o">=</span> <span class="s1">&#39;./vasprun.xml&#39;</span><span class="p">,</span>
+<div class="viewcode-block" id="load_export"><a class="viewcode-back" href="../../api.html#pivotpy.vr_parser.load_export">[docs]</a><span class="k">def</span> <span class="nf">load_export</span><span class="p">(</span><span class="n">path</span><span class="o">=</span> <span class="s1">&#39;./vasprun.xml&#39;</span><span class="p">,</span>
                 <span class="n">joinPathAt</span> <span class="o">=</span><span class="p">[],</span>
                 <span class="n">shift_kpath</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
                 <span class="n">path_to_ps</span><span class="o">=</span><span class="s1">&#39;pwsh&#39;</span><span class="p">,</span>
@@ -908,7 +893,7 @@
     <span class="k">return</span> <span class="n">Dict2Data</span><span class="p">(</span><span class="n">full_dic</span><span class="p">)</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="dump_dict"><a class="viewcode-back" href="../../vr.html#pivotpy.vr_parser.dump_dict">[docs]</a><span class="k">def</span> <span class="nf">dump_dict</span><span class="p">(</span><span class="n">dict_data</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dump_to</span> <span class="o">=</span> <span class="s1">&#39;pickle&#39;</span><span class="p">,</span><span class="n">outfile</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">indent</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="dump_dict"><a class="viewcode-back" href="../../api.html#pivotpy.vr_parser.dump_dict">[docs]</a><span class="k">def</span> <span class="nf">dump_dict</span><span class="p">(</span><span class="n">dict_data</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dump_to</span> <span class="o">=</span> <span class="s1">&#39;pickle&#39;</span><span class="p">,</span><span class="n">outfile</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">indent</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Dump an `export_vasprun` or `load_export`&#39;s `Data` object or any dictionary to json or pickle string/file. It convert `Dict2Data` to dictionary before serializing to json/pickle, so json/pickle.loads() of converted Data would be a simple dictionary, pass that to `Dict2Data` to again make accessible via dot notation.</span>
 <span class="sd">    - **Parameters**</span>
@@ -938,7 +923,7 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="load_from_dump"><a class="viewcode-back" href="../../vr.html#pivotpy.vr_parser.load_from_dump">[docs]</a><span class="k">def</span> <span class="nf">load_from_dump</span><span class="p">(</span><span class="n">file_or_str</span><span class="p">,</span><span class="n">keep_as_dict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="load_from_dump"><a class="viewcode-back" href="../../api.html#pivotpy.vr_parser.load_from_dump">[docs]</a><span class="k">def</span> <span class="nf">load_from_dump</span><span class="p">(</span><span class="n">file_or_str</span><span class="p">,</span><span class="n">keep_as_dict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Loads a json/pickle dumped file or string by auto detecting it.</span>
 <span class="sd">    - **Parameters**</span>
@@ -968,7 +953,7 @@
     <span class="k">return</span> <span class="n">out</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="islice2array"><a class="viewcode-back" href="../../vr.html#pivotpy.vr_parser.islice2array">[docs]</a><span class="k">def</span> <span class="nf">islice2array</span><span class="p">(</span><span class="n">path_or_islice</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span>
+<div class="viewcode-block" id="islice2array"><a class="viewcode-back" href="../../api.html#pivotpy.vr_parser.islice2array">[docs]</a><span class="k">def</span> <span class="nf">islice2array</span><span class="p">(</span><span class="n">path_or_islice</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span>
                 <span class="n">include</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">exclude</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">,</span><span class="n">raw</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">fix_format</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">nlines</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">count</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span><span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">new_shape</span><span class="o">=</span><span class="kc">None</span>
                 <span class="p">):</span>
@@ -1054,7 +1039,7 @@
     <span class="k">return</span> <span class="n">data</span></div>
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="slice_data"><a class="viewcode-back" href="../../vr.html#pivotpy.vr_parser.slice_data">[docs]</a><span class="k">def</span> <span class="nf">slice_data</span><span class="p">(</span><span class="n">dim_inds</span><span class="p">,</span><span class="n">old_shape</span><span class="p">):</span>
+<div class="viewcode-block" id="slice_data"><a class="viewcode-back" href="../../api.html#pivotpy.vr_parser.slice_data">[docs]</a><span class="k">def</span> <span class="nf">slice_data</span><span class="p">(</span><span class="n">dim_inds</span><span class="p">,</span><span class="n">old_shape</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Returns a dictionary that can be unpacked in arguments of isclice2array function. This function works only for regular txt/csv/tsv data files which have rectangular data written.</span>
 <span class="sd">    - **Parameters**</span>
@@ -1105,7 +1090,7 @@
 
 
 <span class="c1"># Cell</span>
-<div class="viewcode-block" id="split_vasprun"><a class="viewcode-back" href="../../vr.html#pivotpy.vr_parser.split_vasprun">[docs]</a><span class="k">def</span> <span class="nf">split_vasprun</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="split_vasprun"><a class="viewcode-back" href="../../api.html#pivotpy.vr_parser.split_vasprun">[docs]</a><span class="k">def</span> <span class="nf">split_vasprun</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    - Splits a given vasprun.xml file into a smaller _vasprun.xml file plus _set[1,2,3,4].txt files which contain projected data for each spin set.</span>
 <span class="sd">    - **Parameters**</span>
