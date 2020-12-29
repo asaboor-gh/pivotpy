@@ -492,13 +492,15 @@ Pickle:  b&#39;\x80\x03}q\x00(X\x01\x00\x00\x00Aq\x01K\x01X\x01\x00\x00\x00Bq\x0
 <h4 id="get_kpts" class="doc_header"><code>get_kpts</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L212" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_kpts</code>(<strong><code>xml_data</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>0</code></em>, <strong><code>joinPathAt</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>Returns kpoints and calculated kpath.</p>
-<h2 id="Parameters">Parameters<a class="anchor-link" href="#Parameters"> </a></h2><p>xml_data
+<p>Parameters:</p>
+<p>xml_data
     From <a href="/pivotpy/XmlElementTree.html#read_asxml"><code>read_asxml</code></a> function.</p>
 <p>skipk : int
     Number of initil kpoints to skip.</p>
 <p>joinPathAt : list
     List of indices of kpoints where path is broken.</p>
-<h2 id="Returns">Returns<a class="anchor-link" href="#Returns"> </a></h2><p>Data : pivotpy.Dict2Data
+<p>Returns:</p>
+<p>Data : pivotpy.Dict2Data
     with attibutes <code>kpath</code> and <code>kpoints</code>.</p>
 
 </div>

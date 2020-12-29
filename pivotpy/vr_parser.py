@@ -212,8 +212,8 @@ def get_summary(xml_data=None):
 def get_kpts(xml_data=None,skipk=0,joinPathAt=[]):
     r"""Returns kpoints and calculated kpath.
 
-    Parameters
-    ----------
+    Parameters:
+
     xml_data
         From `read_asxml` function.
 
@@ -223,8 +223,8 @@ def get_kpts(xml_data=None,skipk=0,joinPathAt=[]):
     joinPathAt : list
         List of indices of kpoints where path is broken.
 
-    Returns
-    -------
+    Returns:
+
     Data : pivotpy.Dict2Data
         with attibutes `kpath` and `kpoints`.
     """

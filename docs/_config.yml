@@ -21,6 +21,11 @@ exclude:
  
 exclude: [vendor]
 
+default_badges:
+  github: true
+  binder: true
+  colab: true
+
 highlighter: rouge
 markdown: kramdown
 kramdown:
@@ -56,7 +61,7 @@ defaults:
       tooltip: true
 
 sidebars: [home_sidebar]
-permalink: pretty
+#permalink: pretty
 baseurl: /pivotpy/
 theme: jekyll-theme-cayman
 
