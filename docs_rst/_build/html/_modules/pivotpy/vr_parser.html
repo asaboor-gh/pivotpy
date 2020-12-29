@@ -30,6 +30,7 @@
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -361,13 +362,35 @@
 <div class="viewcode-block" id="get_kpts"><a class="viewcode-back" href="../../vr.html#pivotpy.vr_parser.get_kpts">[docs]</a><span class="k">def</span> <span class="nf">get_kpts</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">skipk</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">joinPathAt</span><span class="o">=</span><span class="p">[]):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Returns kpoints and calculated kpath.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        xml_data: From `read_asxml` function.</span>
-<span class="sd">        skipk (int): Number of initil kpoints to skip.</span>
-<span class="sd">        joinPathAt (list): List of indices of kpoints where path is broken.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    xml_data</span>
+<span class="sd">        From `read_asxml` function.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        Data (pivotpy.Dict2Data): with attibutes `kpath` and `kpoints`.</span>
+<span class="sd">    skipk : int</span>
+<span class="sd">        Number of initil kpoints to skip.</span>
+
+<span class="sd">    joinPathAt : list</span>
+<span class="sd">        List of indices of kpoints where path is broken.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Data : pivotpy.Dict2Data</span>
+<span class="sd">        with attibutes `kpath` and `kpoints`.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    get_kpath</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Notes about the implementation algorithm (if needed).</span>
+<span class="sd">    This can have multiple paragraphs.</span>
+<span class="sd">    You may include some math:</span>
+
+<span class="sd">    .. math:: X(e^{j\omega } ) = x(n)e^{ - j\omega n}</span>
+
+<span class="sd">    And even use a greek symbol like :math:`omega` inline.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span><span class="p">(</span><span class="n">xml_data</span><span class="o">==</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">xml_data</span><span class="o">=</span><span class="n">read_asxml</span><span class="p">()</span>

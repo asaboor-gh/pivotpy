@@ -49,6 +49,9 @@ extensions = [
     #'jupyter_sphinx.embed_widgets',
     #'sphinx_gallery.load_style',
 	#'nbsphinx',
+    'matplotlib.sphinxext.plot_directive',
+    'IPython.sphinxext.ipython_console_highlighting',
+    'IPython.sphinxext.ipython_directive',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
