@@ -86,7 +86,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Pivotpy API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="vr.html">Vasprun Parser</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#static-plots">Static Plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pivotpy.s_plots">Static Plots</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pivotpy.i_plots">Interactive Plots</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pivotpy.g_utils">Utilities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pivotpy.widgets">Interactive Widgets</a></li>
@@ -165,137 +165,9 @@
 <li class="toctree-l1"><a class="reference internal" href="vr.html">Vasprun Parser</a></li>
 </ul>
 </div>
-<div class="section" id="static-plots">
-<h2>Static Plots<a class="headerlink" href="#static-plots" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-pivotpy.s_plots">
+<span id="static-plots"></span><h2>Static Plots<a class="headerlink" href="#module-pivotpy.s_plots" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt id="numpy.loadtxt">
-<code class="sig-prename descclassname">numpy.</code><code class="sig-name descname">loadtxt</code><span class="sig-paren">(</span><em class="sig-param">fname</em>, <em class="sig-param">dtype=&lt;class 'float'&gt;</em>, <em class="sig-param">comments='#'</em>, <em class="sig-param">delimiter=None</em>, <em class="sig-param">converters=None</em>, <em class="sig-param">skiprows=0</em>, <em class="sig-param">usecols=None</em>, <em class="sig-param">unpack=False</em>, <em class="sig-param">ndmin=0</em>, <em class="sig-param">encoding='bytes'</em>, <em class="sig-param">max_rows=None</em><span class="sig-paren">)</span><a class="headerlink" href="#numpy.loadtxt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load data from a text file.</p>
-<p>Each row in the text file must have the same number of values.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>fname</strong> (<em>file</em><em>, </em><em>str</em><em>, or </em><em>pathlib.Path</em>) – File, filename, or generator to read.  If the filename extension is
-<code class="docutils literal notranslate"><span class="pre">.gz</span></code> or <code class="docutils literal notranslate"><span class="pre">.bz2</span></code>, the file is first decompressed. Note that
-generators should return byte strings.</p></li>
-<li><p><strong>dtype</strong> (<em>data-type</em><em>, </em><em>optional</em>) – Data-type of the resulting array; default: float.  If this is a
-structured data-type, the resulting array will be 1-dimensional, and
-each row will be interpreted as an element of the array.  In this
-case, the number of columns used must match the number of fields in
-the data-type.</p></li>
-<li><p><strong>comments</strong> (<em>str</em><em> or </em><em>sequence of str</em><em>, </em><em>optional</em>) – The characters or list of characters used to indicate the start of a
-comment. None implies no comments. For backwards compatibility, byte
-strings will be decoded as ‘latin1’. The default is ‘#’.</p></li>
-<li><p><strong>delimiter</strong> (<em>str</em><em>, </em><em>optional</em>) – The string used to separate values. For backwards compatibility, byte
-strings will be decoded as ‘latin1’. The default is whitespace.</p></li>
-<li><p><strong>converters</strong> (<em>dict</em><em>, </em><em>optional</em>) – A dictionary mapping column number to a function that will parse the
-column string into the desired value.  E.g., if column 0 is a date
-string: <code class="docutils literal notranslate"><span class="pre">converters</span> <span class="pre">=</span> <span class="pre">{0:</span> <span class="pre">datestr2num}</span></code>.  Converters can also be
-used to provide a default value for missing data (but see also
-<cite>genfromtxt</cite>): <code class="docutils literal notranslate"><span class="pre">converters</span> <span class="pre">=</span> <span class="pre">{3:</span> <span class="pre">lambda</span> <span class="pre">s:</span> <span class="pre">float(s.strip()</span> <span class="pre">or</span> <span class="pre">0)}</span></code>.
-Default: None.</p></li>
-<li><p><strong>skiprows</strong> (<em>int</em><em>, </em><em>optional</em>) – Skip the first <cite>skiprows</cite> lines, including comments; default: 0.</p></li>
-<li><p><strong>usecols</strong> (<em>int</em><em> or </em><em>sequence</em><em>, </em><em>optional</em>) – <p>Which columns to read, with 0 being the first. For example,
-<code class="docutils literal notranslate"><span class="pre">usecols</span> <span class="pre">=</span> <span class="pre">(1,4,5)</span></code> will extract the 2nd, 5th and 6th columns.
-The default, None, results in all columns being read.</p>
-<div class="versionchanged">
-<p><span class="versionmodified changed">Changed in version 1.11.0: </span>When a single column has to be read it is possible to use
-an integer instead of a tuple. E.g <code class="docutils literal notranslate"><span class="pre">usecols</span> <span class="pre">=</span> <span class="pre">3</span></code> reads the
-fourth column the same way as <code class="docutils literal notranslate"><span class="pre">usecols</span> <span class="pre">=</span> <span class="pre">(3,)</span></code> would.</p>
-</div>
-</p></li>
-<li><p><strong>unpack</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the returned array is transposed, so that arguments may be
-unpacked using <code class="docutils literal notranslate"><span class="pre">x,</span> <span class="pre">y,</span> <span class="pre">z</span> <span class="pre">=</span> <span class="pre">loadtxt(...)</span></code>.  When used with a structured
-data-type, arrays are returned for each field.  Default is False.</p></li>
-<li><p><strong>ndmin</strong> (<em>int</em><em>, </em><em>optional</em>) – <p>The returned array will have at least <cite>ndmin</cite> dimensions.
-Otherwise mono-dimensional axes will be squeezed.
-Legal values: 0 (default), 1 or 2.</p>
-<div class="versionadded">
-<p><span class="versionmodified added">New in version 1.6.0.</span></p>
-</div>
-</p></li>
-<li><p><strong>encoding</strong> (<em>str</em><em>, </em><em>optional</em>) – <p>Encoding used to decode the inputfile. Does not apply to input streams.
-The special value ‘bytes’ enables backward compatibility workarounds
-that ensures you receive byte arrays as results if possible and passes
-‘latin1’ encoded strings to converters. Override this value to receive
-unicode arrays and pass strings as input to converters.  If set to None
-the system default is used. The default value is ‘bytes’.</p>
-<div class="versionadded">
-<p><span class="versionmodified added">New in version 1.14.0.</span></p>
-</div>
-</p></li>
-<li><p><strong>max_rows</strong> (<em>int</em><em>, </em><em>optional</em>) – <p>Read <cite>max_rows</cite> lines of content after <cite>skiprows</cite> lines. The default
-is to read all the lines.</p>
-<div class="versionadded">
-<p><span class="versionmodified added">New in version 1.16.0.</span></p>
-</div>
-</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>out</strong> – Data read from the text file.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>ndarray</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p><code class="xref py py-func docutils literal notranslate"><span class="pre">load()</span></code>, <code class="xref py py-func docutils literal notranslate"><span class="pre">fromstring()</span></code>, <code class="xref py py-func docutils literal notranslate"><span class="pre">fromregex()</span></code></p>
-<dl class="simple">
-<dt><code class="xref py py-func docutils literal notranslate"><span class="pre">genfromtxt()</span></code></dt><dd><p>Load data with missing values handled as specified.</p>
-</dd>
-<dt><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.io.loadmat()</span></code></dt><dd><p>reads MATLAB data files</p>
-</dd>
-</dl>
-</div>
-<p class="rubric">Notes</p>
-<p>This function aims to be a fast reader for simply formatted files.  The
-<cite>genfromtxt</cite> function provides more sophisticated handling of, e.g.,
-lines with missing values.</p>
-<div class="versionadded">
-<p><span class="versionmodified added">New in version 1.10.0.</span></p>
-</div>
-<p>The strings produced by the Python float.hex method can be used as
-input for floats.</p>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>   <span class="c1"># StringIO behaves like a file object</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="s2">&quot;0 1</span><span class="se">\n</span><span class="s2">2 3&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-<span class="go">array([[0., 1.],</span>
-<span class="go">       [2., 3.]])</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="s2">&quot;M 21 72</span><span class="se">\n</span><span class="s2">F 35 58&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;names&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">),</span>
-<span class="gp">... </span>                     <span class="s1">&#39;formats&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;S1&#39;</span><span class="p">,</span> <span class="s1">&#39;i4&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">)})</span>
-<span class="go">array([(b&#39;M&#39;, 21, 72.), (b&#39;F&#39;, 35, 58.)],</span>
-<span class="go">      dtype=[(&#39;gender&#39;, &#39;S1&#39;), (&#39;age&#39;, &#39;&lt;i4&#39;), (&#39;weight&#39;, &#39;&lt;f4&#39;)])</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="s2">&quot;1,0,2</span><span class="se">\n</span><span class="s2">3,0,4&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">unpack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span>
-<span class="go">array([1., 3.])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span>
-<span class="go">array([2., 4.])</span>
-</pre></div>
-</div>
-<p>This example shows how <cite>converters</cite> can be used to convert a field
-with a trailing minus sign into a negative number.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="s1">&#39;10.01 31.25-</span><span class="se">\n</span><span class="s1">19.22 64.31</span><span class="se">\n</span><span class="s1">17.57- 63.94&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">conv</span><span class="p">(</span><span class="n">fld</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="k">return</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="n">fld</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="n">fld</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;-&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">fld</span><span class="p">)</span>
-<span class="gp">...</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">converters</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="n">conv</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="n">conv</span><span class="p">})</span>
-<span class="go">array([[ 10.01, -31.25],</span>
-<span class="go">       [ 19.22,  64.31],</span>
-<span class="go">       [-17.57,  63.94]])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<span class="target" id="module-pivotpy.s_plots"></span><dl class="py function">
 <dt id="pivotpy.s_plots.init_figure">
 <code class="sig-prename descclassname">pivotpy.s_plots.</code><code class="sig-name descname">init_figure</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">3.4, 2.6</span></em>, <em class="sig-param"><span class="n">nrows</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">ncols</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">widths</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">heights</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">axes_off</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">sharex</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">sharey</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">subplots_adjust_kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/s_plots.html#init_figure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.s_plots.init_figure" title="Permalink to this definition">¶</a></dt>
 <dd><ul class="simple">
