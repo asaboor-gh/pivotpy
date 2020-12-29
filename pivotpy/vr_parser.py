@@ -213,13 +213,13 @@ def get_kpts(xml_data=None,skipk=0,joinPathAt=[]):
     r"""Returns kpoints and calculated kpath.
 
     Args:
-    
+
         xml_data: From `read_asxml` function.
         skipk : int: Number of initil kpoints to skip.
         joinPathAt : list: List of indices of kpoints where path is broken.
 
     Returns:
-    
+
         Data : pivotpy.Dict2Data: with attibutes `kpath` and `kpoints`.
     """
     if(xml_data==None):
