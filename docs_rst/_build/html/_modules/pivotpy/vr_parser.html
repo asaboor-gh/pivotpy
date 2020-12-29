@@ -362,14 +362,12 @@
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Returns kpoints and calculated kpath.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">    </span>
 <span class="sd">        xml_data: From `read_asxml` function.</span>
-<span class="sd">        skipk : int: Number of initil kpoints to skip.</span>
-<span class="sd">        joinPathAt : list: List of indices of kpoints where path is broken.</span>
+<span class="sd">        skipk (int): Number of initil kpoints to skip.</span>
+<span class="sd">        joinPathAt (list): List of indices of kpoints where path is broken.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">    </span>
-<span class="sd">        Data : pivotpy.Dict2Data: with attibutes `kpath` and `kpoints`.</span>
+<span class="sd">        Data (pivotpy.Dict2Data): with attibutes `kpath` and `kpoints`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span><span class="p">(</span><span class="n">xml_data</span><span class="o">==</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">xml_data</span><span class="o">=</span><span class="n">read_asxml</span><span class="p">()</span>
