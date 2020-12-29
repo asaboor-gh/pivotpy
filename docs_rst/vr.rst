@@ -5,7 +5,7 @@ Vasprun Parser
 .. autofunction:: pivotpy.vr_parser.read_asxml
 .. autofunction:: pivotpy.vr_parser.get_summary
 .. autofunction:: pivotpy.vr_parser.get_kpts
-.. autofunction:: pivotpy.vr_parser.get_tdoscd
+.. autofunction:: pivotpy.vr_parser.get_tdos
 .. autofunction:: pivotpy.vr_parser.get_evals
 .. autofunction:: pivotpy.vr_parser.get_bands_pro_set
 .. autofunction:: pivotpy.vr_parser.get_dos_pro_set

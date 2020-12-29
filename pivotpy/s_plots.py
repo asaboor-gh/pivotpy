@@ -603,7 +603,6 @@ def quick_rgb_lines(path_evr    = None,
     - **Returns**
         - ax : matplotlib axes object with plotted projected bands.
         - Registers as colormap `RGB_m` to use in DOS to plot in same colors and `RGB_f` to display bands colorbar on another axes.
-        
     > Note: Two figures made by this function could be comapred quantitatively only if `scale_data=False, max_width=None, scale_color=False` as these parameters act internally on data.
     """
     # Fix orbitals, elements and labels lengths very early.
@@ -814,7 +813,6 @@ def quick_color_lines(path_evr      = None,
         - **subplots_adjust_kwargs : plt.subplots_adjust parameters.
     - **Returns**
         - ax : matplotlib axes object with plotted projected bands.
-        
     > Note: Two figures made by this function could be comapred quantitatively only if `scale_data=False, max_width=None` as these parameters act internally on data.
     """
     # Fix orbitals, elements and labels lengths very early.
