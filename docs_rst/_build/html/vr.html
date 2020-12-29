@@ -202,18 +202,23 @@
 <dl class="py function">
 <dt id="pivotpy.vr_parser.read_asxml">
 <code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">read_asxml</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#read_asxml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.read_asxml" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reads a big vasprun.xml file into memory once and then apply commands. If current folder contains <cite>vasprun.xml</cite> file, it automatically picks it.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path/To/vasprun.xml</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>xml_data</strong> – xml object to use in other functions</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>xml</p>
+<dd><ul class="simple">
+<li><p>Reads a big vasprun.xml file into memory once and then apply commands. If current folder contains <cite>vasprun.xml</cite> file, it automatically picks it.</p></li>
+<li><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul>
+<li><p>path : Path/To/vasprun.xml</p></li>
+</ul>
 </dd>
 </dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Returns</strong></dt><dd><ul>
+<li><p>xml_data : Xml object to use in other functions</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
 </dd></dl>
 
 <dl class="py function">
@@ -246,15 +251,15 @@
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>xml_data</strong> – From <cite>read_asxml</cite> function.</p></li>
-<li><p><strong>skipk</strong> (<em>int</em>) – Number of initil kpoints to skip.</p></li>
-<li><p><strong>joinPathAt</strong> (<em>list</em>) – List of indices of kpoints where path is broken.</p></li>
+<li><p><strong>skipk</strong> – int: Number of initil kpoints to skip.</p></li>
+<li><p><strong>joinPathAt</strong> – list: List of indices of kpoints where path is broken.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>Data</strong> – with attibutes <cite>kpath</cite> and <cite>kpoints</cite>.</p>
+<dd class="field-even"><p>pivotpy.Dict2Data: with attibutes <cite>kpath</cite> and <cite>kpoints</cite>.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>pivotpy.Dict2Data</p>
+<dd class="field-odd"><p>Data</p>
 </dd>
 </dl>
 </dd></dl>
@@ -499,22 +504,23 @@
 <dl class="py function">
 <dt id="pivotpy.vr_parser.islice2array">
 <code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">islice2array</code><span class="sig-paren">(</span><em class="sig-param">path_or_islice</em>, <em class="sig-param">dtype=&lt;class 'float'&gt;</em>, <em class="sig-param">delimiter='\\s+'</em>, <em class="sig-param">include=None</em>, <em class="sig-param">exclude='#'</em>, <em class="sig-param">raw=False</em>, <em class="sig-param">fix_format=True</em>, <em class="sig-param">start=0</em>, <em class="sig-param">nlines=None</em>, <em class="sig-param">count=-1</em>, <em class="sig-param">cols=None</em>, <em class="sig-param">new_shape=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#islice2array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.islice2array" title="Permalink to this definition">¶</a></dt>
-<dd><ul class="simple">
+<dd><ul>
 <li><p>Reads a sliced array from txt,csv type files and return to array. Also manages if columns lengths are not equal and return 1D array. It is faster than loading  whole file into memory. This single function could be used to parse EIGENVAL, PROCAR, DOCAR and similar files with just a combination of <cite>exclude, include,start,stop,step</cite> arguments.</p></li>
-<li><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul>
+<li><dl>
+<dt><strong>Parameters</strong></dt><dd><ul class="simple">
 <li><p>path_or_islice: Path/to/file or <cite>itertools.islice(file_object)</cite>. islice is interesting when you want to read different slices of an opened file and do not want to open it again and again. For reference on how to use it just execute <cite>pivotpy.export_potential??</cite> in a notebook cell or ipython terminal to see how islice is used extensively.</p></li>
 <li><p>dtype: float by default. Data type of output array, it is must have argument.</p></li>
 <li><p>start,nlines: The indices of lines to start reading from and number of lines after start respectively. Only work if <cite>path_or_islice</cite> is a file path. both could be None or int, while start could be a list to read slices from file provided that nlines is int. The spacing between adjacent indices in start should be equal to or greater than nlines as pointer in file do not go back on its own.  These parameters are in output of <cite>slice_data</cite></p></li>
-<li><p>count: <cite>np.size(output_array) = nrows x ncols</cite>, if it is known before execution, performance is increased. This parameter is in output of <cite>slice_data</cite>.</p></li>
-<li><p>delimiter:  Default is <cite>s+</cite>. Could be any kind of delimiter valid in numpy and in the file.</p></li>
-<li><p>cols: List of indices of columns to pick. Useful when reading a file like PROCAR which e.g. has text and numbers inline. This parameter is in output of <cite>slice_data</cite>.</p></li>
-<li><p>include: Default is None and includes everything. String of patterns separated by | to keep, could be a regular expression.</p></li>
-<li><p>exclude: Default is ‘#’ to remove comments. String of patterns separated by | to drop,could be a regular expression.</p></li>
-<li><p>raw    : Default is False, if True, returns list of raw strings. Useful to select <cite>cols</cite>.</p></li>
-<li><p>fix_format: Default is True, it sepearates numbers with poor formatting like 1.000-2.000 to 1.000 2.000 which is useful in PROCAR. Keep it False if want to read string literally.</p></li>
-<li><p>new_shape : Tuple of shape Default is None. Will try to reshape in this shape, if fails fallbacks to 2D or 1D. This parameter is in output of <cite>slice_data</cite>.</p></li>
 </ul>
+<p>&gt; Note: <cite>start</cite> should count comments if <cite>exclude</cite> is None. You can use <cite>slice_data</cite> function to get a dictionary of <cite>start,nlines, count, cols, new_shape</cite> and unpack in argument instead of thinking too much.
+- count: <cite>np.size(output_array) = nrows x ncols</cite>, if it is known before execution, performance is increased. This parameter is in output of <cite>slice_data</cite>.
+- delimiter:  Default is <cite>s+</cite>. Could be any kind of delimiter valid in numpy and in the file.
+- cols: List of indices of columns to pick. Useful when reading a file like PROCAR which e.g. has text and numbers inline. This parameter is in output of <cite>slice_data</cite>.
+- include: Default is None and includes everything. String of patterns separated by | to keep, could be a regular expression.
+- exclude: Default is ‘#’ to remove comments. String of patterns separated by | to drop,could be a regular expression.
+- raw    : Default is False, if True, returns list of raw strings. Useful to select <cite>cols</cite>.
+- fix_format: Default is True, it sepearates numbers with poor formatting like 1.000-2.000 to 1.000 2.000 which is useful in PROCAR. Keep it False if want to read string literally.
+- new_shape : Tuple of shape Default is None. Will try to reshape in this shape, if fails fallbacks to 2D or 1D. This parameter is in output of <cite>slice_data</cite>.</p>
 </dd>
 </dl>
 </li>
@@ -529,8 +535,7 @@
 </dl>
 </li>
 </ul>
-<p>&gt; Note: Slicing a dimension to 100% of its data is faster than let say 80% for inner dimensions, so if you have to slice more than 50% of an inner dimension, then just load full data and slice after it.
-&gt; Note: <cite>start</cite> should count comments if <cite>exclude</cite> is None. You can use <cite>slice_data</cite> function to get a dictionary of <cite>start,nlines, count, cols, new_shape</cite> and unpack in argument instead of thinking too much.</p>
+<p>&gt; Note: Slicing a dimension to 100% of its data is faster than let say 80% for inner dimensions, so if you have to slice more than 50% of an inner dimension, then just load full data and slice after it.</p>
 </dd></dl>
 
 <dl class="py function">
