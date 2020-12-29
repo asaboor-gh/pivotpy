@@ -97,14 +97,17 @@ class Dict2Data:
 
 # Cell
 def read_asxml(path=None):
-    """
-    - Reads a big vasprun.xml file into memory once and then apply commands. If current folder contains `vasprun.xml` file, it automatically picks it.
+    """Reads a big vasprun.xml file into memory once and then apply commands. If current folder contains `vasprun.xml` file, it automatically picks it.
 
-    - **Parameters**
-        - path : Path/To/vasprun.xml
+    Parameters
+    ----------
+    path : str
+        Path/To/vasprun.xml
 
-    - **Returns**
-        - xml_data : Xml object to use in other functions
+    Returns
+    -------
+    xml_data : xml
+        xml object to use in other functions
     """
     if(path==None):
         path='./vasprun.xml'
@@ -210,14 +213,23 @@ def get_summary(xml_data=None):
 
 # Cell
 def get_kpts(xml_data=None,skipk=0,joinPathAt=[]):
-    """
-    - Returns kpoints and calculated kpath.
-    - **Parameters**
-        - xml_data   : From `read_asxml` function
-        - skipk      : Number of initil kpoints to skip
-        - joinPathAt : List of indices of kpoints where path is broken
-    - **Returns**
-        - Data     : pivotpy.Dict2Data with attibutes `kpath` and `kpoints`
+    """Returns kpoints and calculated kpath.
+    
+    Parameters
+    ----------
+    xml_data
+        From `read_asxml` function.
+        
+    skipk : int
+        Number of initil kpoints to skip.
+        
+    joinPathAt : list
+        List of indices of kpoints where path is broken.
+        
+    Returns
+    -------
+    Data : pivotpy.Dict2Data
+        with attibutes `kpath` and `kpoints`.
     """
     if(xml_data==None):
         xml_data=read_asxml()
@@ -805,7 +817,6 @@ def islice2array(path_or_islice,dtype=float,delimiter='\s+',
         - path_or_islice: Path/to/file or `itertools.islice(file_object)`. islice is interesting when you want to read different slices of an opened file and do not want to open it again and again. For reference on how to use it just execute `pivotpy.export_potential??` in a notebook cell or ipython terminal to see how islice is used extensively.
         - dtype: float by default. Data type of output array, it is must have argument.
         - start,nlines: The indices of lines to start reading from and number of lines after start respectively. Only work if `path_or_islice` is a file path. both could be None or int, while start could be a list to read slices from file provided that nlines is int. The spacing between adjacent indices in start should be equal to or greater than nlines as pointer in file do not go back on its own.  These parameters are in output of `slice_data`
-        > Note: `start` should count comments if `exclude` is None. You can use `slice_data` function to get a dictionary of `start,nlines, count, cols, new_shape` and unpack in argument instead of thinking too much.
         - count: `np.size(output_array) = nrows x ncols`, if it is known before execution, performance is increased. This parameter is in output of `slice_data`.
         - delimiter:  Default is `\s+`. Could be any kind of delimiter valid in numpy and in the file.
         - cols: List of indices of columns to pick. Useful when reading a file like PROCAR which e.g. has text and numbers inline. This parameter is in output of `slice_data`.
@@ -821,7 +832,9 @@ def islice2array(path_or_islice,dtype=float,delimiter='\s+',
         > `islice2array('path/to/EIGENVAL',start=7,exclude='E',cols=[1,2])[:2]`
         > array([[-11.476913,   1.      ],
         >        [  0.283532,   1.      ]])
+    
     > Note: Slicing a dimension to 100% of its data is faster than let say 80% for inner dimensions, so if you have to slice more than 50% of an inner dimension, then just load full data and slice after it.
+    > Note: `start` should count comments if `exclude` is None. You can use `slice_data` function to get a dictionary of `start,nlines, count, cols, new_shape` and unpack in argument instead of thinking too much.
     """
     if nlines is None and isinstance(start,(list,np.ndarray)):
         print("`nlines = None` with `start = array/list` is useless combination.")

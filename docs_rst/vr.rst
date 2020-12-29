@@ -1,8 +1,19 @@
 Vasprun Parser
 ==========================
 
-.. automodule:: pivotpy.vr_parser
-    :members: Dict2Data, read_asxml,  get_summary, get_kpts, get_tdos, get_evals, get_bands_pro_set, get_dos_pro_set, get_structure, export_vasprun, load_export, dump_dict, load_from_dump, islice2array, slice_data, split_vasprun
-    :undoc-members:
-    :inherited-members:
-    :show-inheritance:
+.. autofunction:: pivotpy.vr_parser.Dict2Data
+.. autofunction:: pivotpy.vr_parser.read_asxml
+.. autofunction:: pivotpy.vr_parser.get_summary
+.. autofunction:: pivotpy.vr_parser.get_kpts
+.. autofunction:: pivotpy.vr_parser.get_tdos
+.. autofunction:: pivotpy.vr_parser.get_evals
+.. autofunction:: pivotpy.vr_parser.get_bands_pro_set
+.. autofunction:: pivotpy.vr_parser.get_dos_pro_set
+.. autofunction:: pivotpy.vr_parser.get_structure
+.. autofunction:: pivotpy.vr_parser.export_vasprun
+.. autofunction:: pivotpy.vr_parser.load_export
+.. autofunction:: pivotpy.vr_parser.dump_dict
+.. autofunction:: pivotpy.vr_parser.load_from_dump
+.. autofunction:: pivotpy.vr_parser.islice2array
+.. autofunction:: pivotpy.vr_parser.slice_data
+.. autofunction:: pivotpy.vr_parser.split_vasprun

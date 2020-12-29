@@ -159,13 +159,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-pivotpy.vr_parser">
-<span id="vasprun-parser"></span><h1>Vasprun Parser<a class="headerlink" href="#module-pivotpy.vr_parser" title="Permalink to this headline">¶</a></h1>
-<dl class="py class">
+  <div class="section" id="vasprun-parser">
+<h1>Vasprun Parser<a class="headerlink" href="#vasprun-parser" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
 <dt id="pivotpy.vr_parser.Dict2Data">
-<em class="property">class </em><code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">Dict2Data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">d</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#Dict2Data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.Dict2Data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<ul class="simple">
+<code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">Dict2Data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">d</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#Dict2Data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.Dict2Data" title="Permalink to this definition">¶</a></dt>
+<dd><ul class="simple">
 <li><p>Returns a Data object with dictionary keys as attributes of Data accessible by dot notation.</p></li>
 <li><dl class="simple">
 <dt><strong>Parmeters</strong></dt><dd><ul>
@@ -198,70 +197,30 @@
 </dl>
 </li>
 </ul>
-<dl class="py method">
-<dt id="pivotpy.vr_parser.Dict2Data.to_dict">
-<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#Dict2Data.to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.Dict2Data.to_dict" title="Permalink to this definition">¶</a></dt>
-<dd><ul class="simple">
-<li><p>Converts a <cite>Dict2Data</cite> object (root or nested level) to a dictionary.</p></li>
-</ul>
-</dd></dl>
-
-<dl class="py method">
-<dt id="pivotpy.vr_parser.Dict2Data.to_json">
-<code class="sig-name descname">to_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">outfile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">indent</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#Dict2Data.to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.Dict2Data.to_json" title="Permalink to this definition">¶</a></dt>
-<dd><ul class="simple">
-<li><p>Dumps a <cite>Dict2Data</cite> object (root or nested level) to json.</p></li>
-<li><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul>
-<li><p>outfile : Default is None and returns string. If given, writes to file.</p></li>
-<li><p>indent  : Json indent. Default is 1.</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</dd></dl>
-
-<dl class="py method">
-<dt id="pivotpy.vr_parser.Dict2Data.to_pickle">
-<code class="sig-name descname">to_pickle</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">outfile</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#Dict2Data.to_pickle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.Dict2Data.to_pickle" title="Permalink to this definition">¶</a></dt>
-<dd><ul class="simple">
-<li><p>Dumps a <cite>Dict2Data</cite> object (root or nested level) to pickle.</p></li>
-<li><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul>
-<li><p>outfile : Default is None and returns string. If given, writes to file.</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py function">
-<dt id="pivotpy.vr_parser.dump_dict">
-<code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">dump_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dict_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dump_to</span><span class="o">=</span><span class="default_value">'pickle'</span></em>, <em class="sig-param"><span class="n">outfile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">indent</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#dump_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.dump_dict" title="Permalink to this definition">¶</a></dt>
-<dd><ul class="simple">
-<li><p>Dump an <cite>export_vasprun</cite> or <cite>load_export</cite>’s <cite>Data</cite> object or any dictionary to json or pickle string/file. It convert <cite>Dict2Data</cite> to dictionary before serializing to json/pickle, so json/pickle.loads() of converted Data would be a simple dictionary, pass that to <cite>Dict2Data</cite> to again make accessible via dot notation.</p></li>
-<li><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul>
-<li><p>dict_data : Any dictionary/Dict2Data object containg numpy arrays, including <cite>export_vasprun</cite> or <cite>load_export</cite> output.</p></li>
-<li><p>dump_to  : Defualt is <cite>pickle</cite> or <cite>json</cite>.</p></li>
-<li><p>outfile  : Defualt is None and return string. File name does not require extension.</p></li>
-<li><p>indent   : Defualt is 1. Only works for json.</p></li>
-</ul>
+<dt id="pivotpy.vr_parser.read_asxml">
+<code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">read_asxml</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#read_asxml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.read_asxml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a big vasprun.xml file into memory once and then apply commands. If current folder contains <cite>vasprun.xml</cite> file, it automatically picks it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path/To/vasprun.xml</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>xml_data</strong> – xml object to use in other functions</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>xml</p>
 </dd>
 </dl>
-</li>
-</ul>
 </dd></dl>
 
 <dl class="py function">
-<dt id="pivotpy.vr_parser.exclude_kpts">
-<code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">exclude_kpts</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xml_data</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#exclude_kpts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.exclude_kpts" title="Permalink to this definition">¶</a></dt>
+<dt id="pivotpy.vr_parser.get_summary">
+<code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">get_summary</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xml_data</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#get_summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.get_summary" title="Permalink to this definition">¶</a></dt>
 <dd><ul class="simple">
-<li><p>Returns number of kpoints to exclude used from IBZKPT.</p></li>
+<li><p>Returns overview of system parameters.</p></li>
 <li><dl class="simple">
 <dt><strong>Parameters</strong></dt><dd><ul>
 <li><p>xml_data : From <cite>read_asxml</cite> function</p></li>
@@ -271,7 +230,7 @@
 </li>
 <li><dl class="simple">
 <dt><strong>Returns</strong></dt><dd><ul>
-<li><p>int      : Number of kpoints to exclude.</p></li>
+<li><p>Data     : pivotpy.Dict2Data with attibutes accessible via dot notation.</p></li>
 </ul>
 </dd>
 </dl>
@@ -280,38 +239,67 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="pivotpy.vr_parser.export_vasprun">
-<code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">export_vasprun</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">skipk</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">elim</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">joinPathAt</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">shift_kpath</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#export_vasprun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.export_vasprun" title="Permalink to this definition">¶</a></dt>
+<dt id="pivotpy.vr_parser.get_kpts">
+<code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">get_kpts</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xml_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">skipk</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">joinPathAt</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#get_kpts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.get_kpts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns kpoints and calculated kpath.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xml_data</strong> – From <cite>read_asxml</cite> function.</p></li>
+<li><p><strong>skipk</strong> (<em>int</em>) – Number of initil kpoints to skip.</p></li>
+<li><p><strong>joinPathAt</strong> (<em>list</em>) – List of indices of kpoints where path is broken.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>Data</strong> – with attibutes <cite>kpath</cite> and <cite>kpoints</cite>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pivotpy.Dict2Data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pivotpy.vr_parser.get_tdos">
+<code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">get_tdos</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xml_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">spin_set</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">elim</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#get_tdos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.get_tdos" title="Permalink to this definition">¶</a></dt>
 <dd><ul class="simple">
-<li><p>Returns a full dictionary of all objects from <cite>vasprun.xml</cite> file. It first try to load the data exported by powershell’s <cite>Export-VR(Vasprun)</cite>, which is very fast for large files. It is recommended to export large files in powershell first.</p></li>
+<li><p>Returns total dos for a spin_set (default 1) and energy limit. If spin-polarized calculations, gives SpinUp and SpinDown keys as well.</p></li>
 <li><dl class="simple">
 <dt><strong>Parameters</strong></dt><dd><ul>
-<li><p>path       : Path to <cite>vasprun.xml</cite> file. Default is <cite>‘./vasprun.xml’</cite>.</p></li>
-<li><p>skipk      : Default is None. Automatically detects kpoints to skip.</p></li>
-<li><p>elim       : List [min,max] of energy interval. Default is [], covers all bands.</p></li>
-<li><p>joinPathAt : List of indices of kpoints where path is broken.</p></li>
-<li><p>shift_kpath: Default 0. Can be used to merge multiple calculations on single axes side by side.</p></li>
+<li><p>xml_data : From <cite>read_asxml</cite> function</p></li>
+<li><p>spin_set : int, default is 1.and</p></li>
+<li><p>elim     : List [min,max] of energy, default empty.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
 <dt><strong>Returns</strong></dt><dd><ul>
-<li><dl class="simple">
-<dt>Data<span class="classifier">Data accessible via dot notation containing nested Data objects:</span></dt><dd><ul>
-<li><p>sys_info  : System Information</p></li>
-<li><p>dim_info  : Contains information about dimensions of returned objects.</p></li>
-<li><p>kpoints   : numpy array of kpoints with excluded IBZKPT points</p></li>
-<li><p>kpath     : 1D numpy array directly accessible for plot.</p></li>
-<li><p>bands     : Data containing bands.</p></li>
-<li><p>tdos      : Data containing total dos.</p></li>
-<li><p>pro_bands : Data containing bands projections.</p></li>
-<li><p>pro_dos   : Data containing dos projections.</p></li>
-<li><p>poscar    : Data containing basis,positions, rec_basis and volume.</p></li>
+<li><p>Data     : pivotpy.Dict2Data with attibutes E_Fermi, ISPIN,tdos.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pivotpy.vr_parser.get_evals">
+<code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">get_evals</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xml_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">skipk</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">elim</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#get_evals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.get_evals" title="Permalink to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><p>Returns eigenvalues as numpy array. If spin-polarized calculations, gives SpinUp and SpinDown keys as well.</p></li>
+<li><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul>
+<li><p>xml_data : From <cite>read_asxml</cite> function</p></li>
+<li><p>skipk    : Number of initil kpoints to skip.</p></li>
+<li><p>elim     : List [min,max] of energy, default empty.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Returns</strong></dt><dd><ul>
+<li><p>Data     : pivotpy.Dict2Data with attibutes evals and related parameters.</p></li>
 </ul>
 </dd>
 </dl>
@@ -370,76 +358,6 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="pivotpy.vr_parser.get_evals">
-<code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">get_evals</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xml_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">skipk</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">elim</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#get_evals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.get_evals" title="Permalink to this definition">¶</a></dt>
-<dd><ul class="simple">
-<li><p>Returns eigenvalues as numpy array. If spin-polarized calculations, gives SpinUp and SpinDown keys as well.</p></li>
-<li><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul>
-<li><p>xml_data : From <cite>read_asxml</cite> function</p></li>
-<li><p>skipk    : Number of initil kpoints to skip.</p></li>
-<li><p>elim     : List [min,max] of energy, default empty.</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><strong>Returns</strong></dt><dd><ul>
-<li><p>Data     : pivotpy.Dict2Data with attibutes evals and related parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pivotpy.vr_parser.get_ispin">
-<code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">get_ispin</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xml_data</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#get_ispin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.get_ispin" title="Permalink to this definition">¶</a></dt>
-<dd><ul class="simple">
-<li><p>Returns value of ISPIN.</p></li>
-<li><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul>
-<li><p>xml_data : From <cite>read_asxml</cite> function</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><strong>Returns</strong></dt><dd><ul>
-<li><p>int      : Value of ISPIN.</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pivotpy.vr_parser.get_kpts">
-<code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">get_kpts</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xml_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">skipk</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">joinPathAt</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#get_kpts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.get_kpts" title="Permalink to this definition">¶</a></dt>
-<dd><ul class="simple">
-<li><p>Returns kpoints and calculated kpath.</p></li>
-<li><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul>
-<li><p>xml_data   : From <cite>read_asxml</cite> function</p></li>
-<li><p>skipk      : Number of initil kpoints to skip</p></li>
-<li><p>joinPathAt : List of indices of kpoints where path is broken</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><strong>Returns</strong></dt><dd><ul>
-<li><p>Data     : pivotpy.Dict2Data with attibutes <cite>kpath</cite> and <cite>kpoints</cite></p></li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</dd></dl>
-
-<dl class="py function">
 <dt id="pivotpy.vr_parser.get_structure">
 <code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">get_structure</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xml_data</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#get_structure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.get_structure" title="Permalink to this definition">¶</a></dt>
 <dd><ul class="simple">
@@ -462,86 +380,43 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="pivotpy.vr_parser.get_summary">
-<code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">get_summary</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xml_data</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#get_summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.get_summary" title="Permalink to this definition">¶</a></dt>
+<dt id="pivotpy.vr_parser.export_vasprun">
+<code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">export_vasprun</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">skipk</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">elim</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">joinPathAt</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">shift_kpath</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#export_vasprun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.export_vasprun" title="Permalink to this definition">¶</a></dt>
 <dd><ul class="simple">
-<li><p>Returns overview of system parameters.</p></li>
+<li><p>Returns a full dictionary of all objects from <cite>vasprun.xml</cite> file. It first try to load the data exported by powershell’s <cite>Export-VR(Vasprun)</cite>, which is very fast for large files. It is recommended to export large files in powershell first.</p></li>
 <li><dl class="simple">
 <dt><strong>Parameters</strong></dt><dd><ul>
-<li><p>xml_data : From <cite>read_asxml</cite> function</p></li>
+<li><p>path       : Path to <cite>vasprun.xml</cite> file. Default is <cite>‘./vasprun.xml’</cite>.</p></li>
+<li><p>skipk      : Default is None. Automatically detects kpoints to skip.</p></li>
+<li><p>elim       : List [min,max] of energy interval. Default is [], covers all bands.</p></li>
+<li><p>joinPathAt : List of indices of kpoints where path is broken.</p></li>
+<li><p>shift_kpath: Default 0. Can be used to merge multiple calculations on single axes side by side.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
 <dt><strong>Returns</strong></dt><dd><ul>
-<li><p>Data     : pivotpy.Dict2Data with attibutes accessible via dot notation.</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pivotpy.vr_parser.get_tdos">
-<code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">get_tdos</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xml_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">spin_set</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">elim</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#get_tdos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.get_tdos" title="Permalink to this definition">¶</a></dt>
-<dd><ul class="simple">
-<li><p>Returns total dos for a spin_set (default 1) and energy limit. If spin-polarized calculations, gives SpinUp and SpinDown keys as well.</p></li>
 <li><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul>
-<li><p>xml_data : From <cite>read_asxml</cite> function</p></li>
-<li><p>spin_set : int, default is 1.and</p></li>
-<li><p>elim     : List [min,max] of energy, default empty.</p></li>
+<dt>Data<span class="classifier">Data accessible via dot notation containing nested Data objects:</span></dt><dd><ul>
+<li><p>sys_info  : System Information</p></li>
+<li><p>dim_info  : Contains information about dimensions of returned objects.</p></li>
+<li><p>kpoints   : numpy array of kpoints with excluded IBZKPT points</p></li>
+<li><p>kpath     : 1D numpy array directly accessible for plot.</p></li>
+<li><p>bands     : Data containing bands.</p></li>
+<li><p>tdos      : Data containing total dos.</p></li>
+<li><p>pro_bands : Data containing bands projections.</p></li>
+<li><p>pro_dos   : Data containing dos projections.</p></li>
+<li><p>poscar    : Data containing basis,positions, rec_basis and volume.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
-<li><dl class="simple">
-<dt><strong>Returns</strong></dt><dd><ul>
-<li><p>Data     : pivotpy.Dict2Data with attibutes E_Fermi, ISPIN,tdos.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
 </ul>
-</dd></dl>
-
-<dl class="py function">
-<dt id="pivotpy.vr_parser.islice2array">
-<code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">islice2array</code><span class="sig-paren">(</span><em class="sig-param">path_or_islice</em>, <em class="sig-param">dtype=&lt;class 'float'&gt;</em>, <em class="sig-param">delimiter='\\s+'</em>, <em class="sig-param">include=None</em>, <em class="sig-param">exclude='#'</em>, <em class="sig-param">raw=False</em>, <em class="sig-param">fix_format=True</em>, <em class="sig-param">start=0</em>, <em class="sig-param">nlines=None</em>, <em class="sig-param">count=-1</em>, <em class="sig-param">cols=None</em>, <em class="sig-param">new_shape=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#islice2array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.islice2array" title="Permalink to this definition">¶</a></dt>
-<dd><ul>
-<li><p>Reads a sliced array from txt,csv type files and return to array. Also manages if columns lengths are not equal and return 1D array. It is faster than loading  whole file into memory. This single function could be used to parse EIGENVAL, PROCAR, DOCAR and similar files with just a combination of <cite>exclude, include,start,stop,step</cite> arguments.</p></li>
-<li><dl>
-<dt><strong>Parameters</strong></dt><dd><ul class="simple">
-<li><p>path_or_islice: Path/to/file or <cite>itertools.islice(file_object)</cite>. islice is interesting when you want to read different slices of an opened file and do not want to open it again and again. For reference on how to use it just execute <cite>pivotpy.export_potential??</cite> in a notebook cell or ipython terminal to see how islice is used extensively.</p></li>
-<li><p>dtype: float by default. Data type of output array, it is must have argument.</p></li>
-<li><p>start,nlines: The indices of lines to start reading from and number of lines after start respectively. Only work if <cite>path_or_islice</cite> is a file path. both could be None or int, while start could be a list to read slices from file provided that nlines is int. The spacing between adjacent indices in start should be equal to or greater than nlines as pointer in file do not go back on its own.  These parameters are in output of <cite>slice_data</cite></p></li>
-</ul>
-<p>&gt; Note: <cite>start</cite> should count comments if <cite>exclude</cite> is None. You can use <cite>slice_data</cite> function to get a dictionary of <cite>start,nlines, count, cols, new_shape</cite> and unpack in argument instead of thinking too much.
-- count: <cite>np.size(output_array) = nrows x ncols</cite>, if it is known before execution, performance is increased. This parameter is in output of <cite>slice_data</cite>.
-- delimiter:  Default is <cite>s+</cite>. Could be any kind of delimiter valid in numpy and in the file.
-- cols: List of indices of columns to pick. Useful when reading a file like PROCAR which e.g. has text and numbers inline. This parameter is in output of <cite>slice_data</cite>.
-- include: Default is None and includes everything. String of patterns separated by | to keep, could be a regular expression.
-- exclude: Default is ‘#’ to remove comments. String of patterns separated by | to drop,could be a regular expression.
-- raw    : Default is False, if True, returns list of raw strings. Useful to select <cite>cols</cite>.
-- fix_format: Default is True, it sepearates numbers with poor formatting like 1.000-2.000 to 1.000 2.000 which is useful in PROCAR. Keep it False if want to read string literally.
-- new_shape : Tuple of shape Default is None. Will try to reshape in this shape, if fails fallbacks to 2D or 1D. This parameter is in output of <cite>slice_data</cite>.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><strong>Examples</strong></dt><dd><p>&gt; <cite>islice2array(‘path/to/PROCAR’,start=3,include=’k-point’,cols=[3,4,5])[:2]</cite>
-&gt; array([[ 0.125,  0.125,  0.125],
-&gt;        [ 0.375,  0.125,  0.125]])
-&gt; <cite>islice2array(‘path/to/EIGENVAL’,start=7,exclude=’E’,cols=[1,2])[:2]</cite>
-&gt; array([[-11.476913,   1.      ],
-&gt;        [  0.283532,   1.      ]])</p>
-</dd>
-</dl>
-</li>
-</ul>
-<p>&gt; Note: Slicing a dimension to 100% of its data is faster than let say 80% for inner dimensions, so if you have to slice more than 50% of an inner dimension, then just load full data and slice after it.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -588,6 +463,24 @@
 </dd></dl>
 
 <dl class="py function">
+<dt id="pivotpy.vr_parser.dump_dict">
+<code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">dump_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dict_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dump_to</span><span class="o">=</span><span class="default_value">'pickle'</span></em>, <em class="sig-param"><span class="n">outfile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">indent</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#dump_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.dump_dict" title="Permalink to this definition">¶</a></dt>
+<dd><ul class="simple">
+<li><p>Dump an <cite>export_vasprun</cite> or <cite>load_export</cite>’s <cite>Data</cite> object or any dictionary to json or pickle string/file. It convert <cite>Dict2Data</cite> to dictionary before serializing to json/pickle, so json/pickle.loads() of converted Data would be a simple dictionary, pass that to <cite>Dict2Data</cite> to again make accessible via dot notation.</p></li>
+<li><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul>
+<li><p>dict_data : Any dictionary/Dict2Data object containg numpy arrays, including <cite>export_vasprun</cite> or <cite>load_export</cite> output.</p></li>
+<li><p>dump_to  : Defualt is <cite>pickle</cite> or <cite>json</cite>.</p></li>
+<li><p>outfile  : Defualt is None and return string. File name does not require extension.</p></li>
+<li><p>indent   : Defualt is 1. Only works for json.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
 <dt id="pivotpy.vr_parser.load_from_dump">
 <code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">load_from_dump</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_or_str</span></em>, <em class="sig-param"><span class="n">keep_as_dict</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#load_from_dump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.load_from_dump" title="Permalink to this definition">¶</a></dt>
 <dd><ul class="simple">
@@ -604,25 +497,40 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="pivotpy.vr_parser.read_asxml">
-<code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">read_asxml</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#read_asxml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.read_asxml" title="Permalink to this definition">¶</a></dt>
+<dt id="pivotpy.vr_parser.islice2array">
+<code class="sig-prename descclassname">pivotpy.vr_parser.</code><code class="sig-name descname">islice2array</code><span class="sig-paren">(</span><em class="sig-param">path_or_islice</em>, <em class="sig-param">dtype=&lt;class 'float'&gt;</em>, <em class="sig-param">delimiter='\\s+'</em>, <em class="sig-param">include=None</em>, <em class="sig-param">exclude='#'</em>, <em class="sig-param">raw=False</em>, <em class="sig-param">fix_format=True</em>, <em class="sig-param">start=0</em>, <em class="sig-param">nlines=None</em>, <em class="sig-param">count=-1</em>, <em class="sig-param">cols=None</em>, <em class="sig-param">new_shape=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pivotpy/vr_parser.html#islice2array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pivotpy.vr_parser.islice2array" title="Permalink to this definition">¶</a></dt>
 <dd><ul class="simple">
-<li><p>Reads a big vasprun.xml file into memory once and then apply commands. If current folder contains <cite>vasprun.xml</cite> file, it automatically picks it.</p></li>
+<li><p>Reads a sliced array from txt,csv type files and return to array. Also manages if columns lengths are not equal and return 1D array. It is faster than loading  whole file into memory. This single function could be used to parse EIGENVAL, PROCAR, DOCAR and similar files with just a combination of <cite>exclude, include,start,stop,step</cite> arguments.</p></li>
 <li><dl class="simple">
 <dt><strong>Parameters</strong></dt><dd><ul>
-<li><p>path : Path/To/vasprun.xml</p></li>
+<li><p>path_or_islice: Path/to/file or <cite>itertools.islice(file_object)</cite>. islice is interesting when you want to read different slices of an opened file and do not want to open it again and again. For reference on how to use it just execute <cite>pivotpy.export_potential??</cite> in a notebook cell or ipython terminal to see how islice is used extensively.</p></li>
+<li><p>dtype: float by default. Data type of output array, it is must have argument.</p></li>
+<li><p>start,nlines: The indices of lines to start reading from and number of lines after start respectively. Only work if <cite>path_or_islice</cite> is a file path. both could be None or int, while start could be a list to read slices from file provided that nlines is int. The spacing between adjacent indices in start should be equal to or greater than nlines as pointer in file do not go back on its own.  These parameters are in output of <cite>slice_data</cite></p></li>
+<li><p>count: <cite>np.size(output_array) = nrows x ncols</cite>, if it is known before execution, performance is increased. This parameter is in output of <cite>slice_data</cite>.</p></li>
+<li><p>delimiter:  Default is <cite>s+</cite>. Could be any kind of delimiter valid in numpy and in the file.</p></li>
+<li><p>cols: List of indices of columns to pick. Useful when reading a file like PROCAR which e.g. has text and numbers inline. This parameter is in output of <cite>slice_data</cite>.</p></li>
+<li><p>include: Default is None and includes everything. String of patterns separated by | to keep, could be a regular expression.</p></li>
+<li><p>exclude: Default is ‘#’ to remove comments. String of patterns separated by | to drop,could be a regular expression.</p></li>
+<li><p>raw    : Default is False, if True, returns list of raw strings. Useful to select <cite>cols</cite>.</p></li>
+<li><p>fix_format: Default is True, it sepearates numbers with poor formatting like 1.000-2.000 to 1.000 2.000 which is useful in PROCAR. Keep it False if want to read string literally.</p></li>
+<li><p>new_shape : Tuple of shape Default is None. Will try to reshape in this shape, if fails fallbacks to 2D or 1D. This parameter is in output of <cite>slice_data</cite>.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><strong>Returns</strong></dt><dd><ul>
-<li><p>xml_data : Xml object to use in other functions</p></li>
-</ul>
+<dt><strong>Examples</strong></dt><dd><p>&gt; <cite>islice2array(‘path/to/PROCAR’,start=3,include=’k-point’,cols=[3,4,5])[:2]</cite>
+&gt; array([[ 0.125,  0.125,  0.125],
+&gt;        [ 0.375,  0.125,  0.125]])
+&gt; <cite>islice2array(‘path/to/EIGENVAL’,start=7,exclude=’E’,cols=[1,2])[:2]</cite>
+&gt; array([[-11.476913,   1.      ],
+&gt;        [  0.283532,   1.      ]])</p>
 </dd>
 </dl>
 </li>
 </ul>
+<p>&gt; Note: Slicing a dimension to 100% of its data is faster than let say 80% for inner dimensions, so if you have to slice more than 50% of an inner dimension, then just load full data and slice after it.
+&gt; Note: <cite>start</cite> should count comments if <cite>exclude</cite> is None. You can use <cite>slice_data</cite> function to get a dictionary of <cite>start,nlines, count, cols, new_shape</cite> and unpack in argument instead of thinking too much.</p>
 </dd></dl>
 
 <dl class="py function">

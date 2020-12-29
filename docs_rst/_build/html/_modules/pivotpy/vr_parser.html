@@ -246,14 +246,17 @@
 
 <span class="c1"># Cell</span>
 <div class="viewcode-block" id="read_asxml"><a class="viewcode-back" href="../../vr.html#pivotpy.vr_parser.read_asxml">[docs]</a><span class="k">def</span> <span class="nf">read_asxml</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    - Reads a big vasprun.xml file into memory once and then apply commands. If current folder contains `vasprun.xml` file, it automatically picks it.</span>
+    <span class="sd">&quot;&quot;&quot;Reads a big vasprun.xml file into memory once and then apply commands. If current folder contains `vasprun.xml` file, it automatically picks it.</span>
 
-<span class="sd">    - **Parameters**</span>
-<span class="sd">        - path : Path/To/vasprun.xml</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path : str</span>
+<span class="sd">        Path/To/vasprun.xml</span>
 
-<span class="sd">    - **Returns**</span>
-<span class="sd">        - xml_data : Xml object to use in other functions</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    xml_data : xml</span>
+<span class="sd">        xml object to use in other functions</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span><span class="p">(</span><span class="n">path</span><span class="o">==</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">path</span><span class="o">=</span><span class="s1">&#39;./vasprun.xml&#39;</span>
@@ -359,14 +362,23 @@
 
 <span class="c1"># Cell</span>
 <div class="viewcode-block" id="get_kpts"><a class="viewcode-back" href="../../vr.html#pivotpy.vr_parser.get_kpts">[docs]</a><span class="k">def</span> <span class="nf">get_kpts</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">skipk</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">joinPathAt</span><span class="o">=</span><span class="p">[]):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    - Returns kpoints and calculated kpath.</span>
-<span class="sd">    - **Parameters**</span>
-<span class="sd">        - xml_data   : From `read_asxml` function</span>
-<span class="sd">        - skipk      : Number of initil kpoints to skip</span>
-<span class="sd">        - joinPathAt : List of indices of kpoints where path is broken</span>
-<span class="sd">    - **Returns**</span>
-<span class="sd">        - Data     : pivotpy.Dict2Data with attibutes `kpath` and `kpoints`</span>
+    <span class="sd">&quot;&quot;&quot;Returns kpoints and calculated kpath.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    xml_data</span>
+<span class="sd">        From `read_asxml` function.</span>
+<span class="sd">        </span>
+<span class="sd">    skipk : int</span>
+<span class="sd">        Number of initil kpoints to skip.</span>
+<span class="sd">        </span>
+<span class="sd">    joinPathAt : list</span>
+<span class="sd">        List of indices of kpoints where path is broken.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Data : pivotpy.Dict2Data</span>
+<span class="sd">        with attibutes `kpath` and `kpoints`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span><span class="p">(</span><span class="n">xml_data</span><span class="o">==</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">xml_data</span><span class="o">=</span><span class="n">read_asxml</span><span class="p">()</span>
@@ -954,7 +966,6 @@
 <span class="sd">        - path_or_islice: Path/to/file or `itertools.islice(file_object)`. islice is interesting when you want to read different slices of an opened file and do not want to open it again and again. For reference on how to use it just execute `pivotpy.export_potential??` in a notebook cell or ipython terminal to see how islice is used extensively.</span>
 <span class="sd">        - dtype: float by default. Data type of output array, it is must have argument.</span>
 <span class="sd">        - start,nlines: The indices of lines to start reading from and number of lines after start respectively. Only work if `path_or_islice` is a file path. both could be None or int, while start could be a list to read slices from file provided that nlines is int. The spacing between adjacent indices in start should be equal to or greater than nlines as pointer in file do not go back on its own.  These parameters are in output of `slice_data`</span>
-<span class="sd">        &gt; Note: `start` should count comments if `exclude` is None. You can use `slice_data` function to get a dictionary of `start,nlines, count, cols, new_shape` and unpack in argument instead of thinking too much.</span>
 <span class="sd">        - count: `np.size(output_array) = nrows x ncols`, if it is known before execution, performance is increased. This parameter is in output of `slice_data`.</span>
 <span class="sd">        - delimiter:  Default is `\s+`. Could be any kind of delimiter valid in numpy and in the file.</span>
 <span class="sd">        - cols: List of indices of columns to pick. Useful when reading a file like PROCAR which e.g. has text and numbers inline. This parameter is in output of `slice_data`.</span>
@@ -970,7 +981,9 @@
 <span class="sd">        &gt; `islice2array(&#39;path/to/EIGENVAL&#39;,start=7,exclude=&#39;E&#39;,cols=[1,2])[:2]`</span>
 <span class="sd">        &gt; array([[-11.476913,   1.      ],</span>
 <span class="sd">        &gt;        [  0.283532,   1.      ]])</span>
+<span class="sd">    </span>
 <span class="sd">    &gt; Note: Slicing a dimension to 100% of its data is faster than let say 80% for inner dimensions, so if you have to slice more than 50% of an inner dimension, then just load full data and slice after it.</span>
+<span class="sd">    &gt; Note: `start` should count comments if `exclude` is None. You can use `slice_data` function to get a dictionary of `start,nlines, count, cols, new_shape` and unpack in argument instead of thinking too much.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">nlines</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">start</span><span class="p">,(</span><span class="nb">list</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;`nlines = None` with `start = array/list` is useless combination.&quot;</span><span class="p">)</span>
