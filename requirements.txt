@@ -1,8 +1,5 @@
-pivotpy==0.9.9
-Sphinx==3.0.3
-sphinx-rtd-theme==0.4.3
-sphinx_markdown_tables==0.0.12
 plotly
 ipywidgets
 numpy
 matplotlib
+scipy
