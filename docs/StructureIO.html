@@ -447,12 +447,11 @@ Direct
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="KPOINTS-Mesh-for-Fermi-Surface-Calculations">KPOINTS Mesh for Fermi Surface Calculations<a class="anchor-link" href="#KPOINTS-Mesh-for-Fermi-Surface-Calculations"> </a></h2><ul>
-<li>The command <a href="/pivotpy/StructureIO.html#get_kmesh"><code>get_kmesh</code></a> generates a uniform grid in first Brillouin zone by using ConvexHull, including gamma point by default, however you can select <code>gamma = False</code> and even grid to remove gamma point.</li>
-<li>The POSCAR is used to filter points only in first BZ. Use relaxed and same POSCAR you will use in actual calculations. If you use Vasp's auto generated mesh, use ISYM = -1 to list all points and points inside BZ will be filtered later on while plotting Fermi Surface.</li>
-<li>You can visually see mesh by setting <code>get_kmesh(*args,plot=True,**kwargs)</code>.</li>
-<li>KPOINTS are written on <code>outfile</code> provided, if <code>plot = False</code>, then points are output as array and written on file as well.</li>
+<li>The command <a href="/pivotpy/StructureIO.html#get_kmesh"><code>get_kmesh</code></a> generates a uniform grid in first (primitive) Brillouin zone.</li>
+<li>The POSCAR is used to get ratios of side lengths in first BZ. Use relaxed and same POSCAR you will use in actual calculations. If you use Vasp's auto generated mesh, use ISYM = -1 to list all points and points inside BZ will be filtered later on while plotting Fermi Surface.</li>
+<li>KPOINTS are written on <code>outfile</code> provided, if <code>outfile = None</code>, thn BZ data object is returned. </li>
 <li>IBZKPT file path could be given to argument <code>ibzkpt</code> to include it automatically, this is important to include for HSE calculations with <code>weight = 0</code>. If <code>weight = None</code>, weights are distributed uniformly.</li>
-<li>If you provide <code>n_xyz = integer</code>,(recommended for auto uniform mesh) then this is chosen for smallest axes and other axes are scaled according to given POSCAR. </li>
+<li>If you provide <code>n_xyz = integer</code>,(recommended for auto uniform mesh), all sides have same number of points unless you provide <code>poscar</code> too, in that case <code>n_xyz</code> is chosen for smallest side in reciprocal space and other sides are scaled based on their lengths according to given POSCAR. </li>
 </ul>
 
 </div>
@@ -548,8 +547,7 @@ Direct
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pivotpy</span> <span class="k">as</span> <span class="nn">pp</span> 
-<span class="n">get_kmesh</span><span class="p">(</span><span class="n">n_xyz</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">poscar</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">]])</span><span class="o">.</span><span class="n">nkpts</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">get_kmesh</span><span class="p">(</span><span class="n">n_xyz</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="n">poscar</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">]])</span><span class="o">.</span><span class="n">nkpts</span>
 </pre></div>
 
     </div>
@@ -564,7 +562,7 @@ Direct
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>1</pre>
+<pre>27</pre>
 </div>
 
 </div>
