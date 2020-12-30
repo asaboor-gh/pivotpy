@@ -96,11 +96,20 @@ def init_figure(figsize   = (3.4,2.6),
         - axes_off  : Turn off axes visibility, If `nrows = ncols = 1, set True/False`, If anyone of `nrows or ncols > 1`, provide list of axes indices to turn off. If both `nrows and ncols > 1`, provide list of tuples (x_index,y_index) of axes.
         - **subplots_adjust_kwargs : These are same as `plt.subplots_adjust()`'s arguements.
     """
+    # SVG and rcParams are must in init_figure to bring to other files, not just here.
+    # print SVG in ipython
+    try:
+        shell = get_ipython().__class__.__name__
+        if shell == 'ZMQInteractiveShell' or shell == 'Shell': # Shell for colab.
+            set_matplotlib_formats('svg')
+    except: pass # Not in terminal
+
     # Gloabal settings matplotlib, inside figure as well
     mpl.rcParams['axes.linewidth'] = 0.4 #set the value globally
     mpl.rcParams['font.serif'] = "STIXGeneral"
     mpl.rcParams['font.family'] = "serif"
     mpl.rcParams['mathtext.fontset'] = "stix"
+
     if(figsize[0] <=2.38):
         mpl.rc('font', size=8)
     gs_kw=dict({}) # Define Empty Dictionary.
