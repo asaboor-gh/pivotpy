@@ -444,6 +444,44 @@ Direct
 </div>
 </div>
 </div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="get_basis" class="doc_header"><code>get_basis</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L245" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_basis</code>(<strong><code>poscar</code></strong>=<em><code>None</code></em>)</p>
+</blockquote>
+<p>Returns poscar and basis in form of namedtuple.</p>
+<ul>
+<li><strong>Parameters</strong><ul>
+<li>poscar: path/to/POSCAR or 3 given vectors as rows of a mtrix.</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="KPOINTS-Mesh-for-Fermi-Surface-Calculations">KPOINTS Mesh for Fermi Surface Calculations<a class="anchor-link" href="#KPOINTS-Mesh-for-Fermi-Surface-Calculations"> </a></h2><ul>
@@ -468,39 +506,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_basis" class="doc_header"><code>get_basis</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L245" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_basis</code>(<strong><code>poscar</code></strong>=<em><code>None</code></em>)</p>
-</blockquote>
-<p>Reads basis and rec_basis from poscar or 3 given vectors as rows of a mtrix.</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_kmesh" class="doc_header"><code>get_kmesh</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L275" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_kmesh</code>(<strong><code>n_xyz</code></strong>=<em><code>[5, 5, 5]</code></em>, <strong><code>weight</code></strong>=<em><code>None</code></em>, <strong><code>ibzkpt</code></strong>=<em><code>None</code></em>, <strong><code>poscar</code></strong>=<em><code>None</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_kmesh" class="doc_header"><code>get_kmesh</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L277" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_kmesh</code>(<strong><code>n_xyz</code></strong>=<em><code>[5, 5, 5]</code></em>, <strong><code>weight</code></strong>=<em><code>None</code></em>, <strong><code>ibzkpt</code></strong>=<em><code>None</code></em>, <strong><code>poscar</code></strong>=<em><code>None</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Generates uniform mesh of kpoints. Options are write to file, or return KPOINTS list.</li>
@@ -584,7 +590,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="intersect_3p_p_3v" class="doc_header"><code>intersect_3p_p_3v</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L337" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>intersect_3p_p_3v</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>, <strong><code>c</code></strong>)</p>
+<h4 id="intersect_3p_p_3v" class="doc_header"><code>intersect_3p_p_3v</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L339" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>intersect_3p_p_3v</code>(<strong><code>a</code></strong>, <strong><code>b</code></strong>, <strong><code>c</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns intersection point of 3 planes in 3D.</li>
@@ -615,7 +621,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="centroid" class="doc_header"><code>centroid</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L349" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>centroid</code>(<strong><code>points</code></strong>)</p>
+<h4 id="centroid" class="doc_header"><code>centroid</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L351" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>centroid</code>(<strong><code>points</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns centroid of a list of 3D points.</li>
@@ -646,7 +652,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="order" class="doc_header"><code>order</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L365" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>order</code>(<strong><code>points</code></strong>)</p>
+<h4 id="order" class="doc_header"><code>order</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L367" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>order</code>(<strong><code>points</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns counterclockwise ordered vertices of a plane in 3D. Append first vertex at end to make loop.</li>
@@ -677,7 +683,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="in_vol_sector" class="doc_header"><code>in_vol_sector</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L412" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>in_vol_sector</code>(<strong><code>test_point</code></strong>, <strong><code>p1</code></strong>, <strong><code>p2</code></strong>, <strong><code>p3</code></strong>)</p>
+<h4 id="in_vol_sector" class="doc_header"><code>in_vol_sector</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L414" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>in_vol_sector</code>(<strong><code>test_point</code></strong>, <strong><code>p1</code></strong>, <strong><code>p2</code></strong>, <strong><code>p3</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns True if test_point lies inside/on the overlapping planes of three vectors.</li>
@@ -708,7 +714,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="out_bz_plane" class="doc_header"><code>out_bz_plane</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L432" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>out_bz_plane</code>(<strong><code>test_point</code></strong>, <strong><code>plane</code></strong>)</p>
+<h4 id="out_bz_plane" class="doc_header"><code>out_bz_plane</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L434" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>out_bz_plane</code>(<strong><code>test_point</code></strong>, <strong><code>plane</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns True if test_point is between plane and origin. Could be used to sample BZ mesh in place of ConvexHull.</li>
@@ -740,7 +746,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="to_xy" class="doc_header"><code>to_xy</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L449" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>to_xy</code>(<strong><code>v</code></strong>)</p>
+<h4 id="to_xy" class="doc_header"><code>to_xy</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L451" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>to_xy</code>(<strong><code>v</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Rotate a 3D vector v in xy-plane.</li>
@@ -771,7 +777,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="rad_angle" class="doc_header"><code>rad_angle</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L464" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>rad_angle</code>(<strong><code>v1</code></strong>, <strong><code>v2</code></strong>)</p>
+<h4 id="rad_angle" class="doc_header"><code>rad_angle</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L466" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>rad_angle</code>(<strong><code>v1</code></strong>, <strong><code>v2</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns interier angle between two vectors.</li>
@@ -802,7 +808,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="arctan_full" class="doc_header"><code>arctan_full</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L477" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>arctan_full</code>(<strong><code>perp</code></strong>, <strong><code>base</code></strong>)</p>
+<h4 id="arctan_full" class="doc_header"><code>arctan_full</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L479" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>arctan_full</code>(<strong><code>perp</code></strong>, <strong><code>base</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns full angle from x-axis counter clockwise.</li>
@@ -890,7 +896,7 @@ Rotate to XY [0.8660254  1.11803399 0.        ]
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_bz" class="doc_header"><code>get_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L508" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_bz</code>(<strong><code>poscar</code></strong>=<em><code>None</code></em>, <strong><code>loop</code></strong>=<em><code>True</code></em>, <strong><code>digits</code></strong>=<em><code>8</code></em>, <strong><code>primitive</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="get_bz" class="doc_header"><code>get_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L510" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_bz</code>(<strong><code>poscar</code></strong>=<em><code>None</code></em>, <strong><code>loop</code></strong>=<em><code>True</code></em>, <strong><code>digits</code></strong>=<em><code>8</code></em>, <strong><code>primitive</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <ul>
 <li>Return required information to construct first Brillouin zone in form of tuple (basis, normals, vertices, faces).</li>
@@ -988,42 +994,66 @@ Rotate to XY [0.8660254  1.11803399 0.        ]
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="splot_bz" class="doc_header"><code>splot_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L590" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>splot_bz</code>(<strong><code>poscar_or_bz</code></strong>=<em><code>None</code></em>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>plane</code></strong>=<em><code>None</code></em>, <strong><code>color</code></strong>=<em><code>'blue'</code></em>, <strong><code>fill</code></strong>=<em><code>True</code></em>, <strong><code>vectors</code></strong>=<em><code>True</code></em>, <strong><code>v3</code></strong>=<em><code>False</code></em>)</p>
+</blockquote>
+<ul>
+<li>Plots matplotlib's static figure.</li>
+<li><strong>Parameters</strong><ul>
+<li>pocar_or_bz: POSCAR or 3 basis vectors' list forming POSCAR. Auto picks in working directory. Plot conventional BZ if poscar is given. If you want to plot primitive BZ, first create it using <code>get_bz(primitive=True)</code>.</li>
+<li>fill       : True by defult, determines whether to fill surface of BZ or not.</li>
+<li>color      : color to fill surface and stroke color.</li>
+<li>vectors    : Plots basis vectors, default is True.</li>
+<li>v3         : Plots 3rd vector as well. Only works in 2D and when <code>vectors=True</code>.</li>
+<li>plane      : Default is None and plots 3D surface. Can take 'xy','yz','zx' to plot in 2D.</li>
+<li>ax         : Auto generated by default, 2D axes is required, auto converts in 3D on demand.</li>
+</ul>
+</li>
+<li><strong>Returns</strong><ul>
+<li>ax   : Matplotlib's 2D axes if <code>plane=None</code>.</li>
+<li>ax3d : Matplotlib's 2D axes if <code>plane</code> is given.</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span> 
-<span class="kn">from</span> <span class="nn">mpl_toolkits</span> <span class="kn">import</span> <span class="n">mplot3d</span>
-<span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d.art3d</span> <span class="kn">import</span> <span class="n">Poly3DCollection</span>
 <span class="kn">import</span> <span class="nn">pivotpy.s_plots</span> <span class="k">as</span> <span class="nn">sp</span>
-<span class="n">axs</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">init_figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mf">2.5</span><span class="p">),</span><span class="n">left</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">bottom</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">right</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">pos</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">normals</span><span class="p">:</span>
-    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]],[</span><span class="mi">0</span><span class="p">,</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
-<span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">:</span>
-    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]],[</span><span class="mi">0</span><span class="p">,</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
-<span class="c1"># 3D</span>
-<span class="n">ax3d</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">add_axes</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">,</span><span class="n">azim</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">elev</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
-<span class="n">colors</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">]</span>
-<span class="n">ax3d</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">Poly3DCollection</span><span class="p">(</span><span class="n">faces</span><span class="p">,</span><span class="n">edgecolors</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;w&#39;</span><span class="p">],</span><span class="n">facecolors</span><span class="o">=</span><span class="n">colors</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">faces</span><span class="p">)],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">))</span>
-<span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">basis</span><span class="p">:</span>
-    <span class="n">ax3d</span><span class="o">.</span><span class="n">plot3D</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]],[</span><span class="mi">0</span><span class="p">,</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]],[</span><span class="mi">0</span><span class="p">,</span><span class="n">y</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">axs</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">init_figure</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mf">3.4</span><span class="p">))</span>
+<span class="n">ax2d</span> <span class="o">=</span> <span class="n">splot_bz</span><span class="p">(</span><span class="n">hexa</span><span class="p">,</span><span class="n">plane</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">vectors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span><span class="n">v3</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax3d</span> <span class="o">=</span> <span class="n">splot_bz</span><span class="p">(</span><span class="n">hexa</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">108</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span><span class="mi">204</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span><span class="mi">215</span><span class="o">/</span><span class="mi">255</span><span class="p">),</span><span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">vectors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">ax3d</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
-<span class="c1">#for f in x.faces:</span>
-<span class="c1">#    ax3d.plot3D(f[:,0],f[:,1],f[:,2],color=&#39;r&#39;)</span>
-<span class="c1">#h2=ConvexHull(x.vertices)</span>
-<span class="c1">#for simplex in h2.simplices:</span>
-<span class="c1">#    simplex = np.append(simplex, simplex[0])</span>
-<span class="c1">#    ax.plot3D(vs[simplex, 0], vs[simplex, 1],vs[simplex, 2], &#39;r&#39;,lw=1)</span>
-<span class="c1">#ax.autoscale_view()</span>
-<span class="c1">#ax3d.set_xlim([-0.6,0.6])</span>
-<span class="c1">#ax3d.set_ylim([-0.6,0.6])</span>
-<span class="c1">#ax3d.set_zlim([-0.6,0.6])</span>
-<span class="n">sp</span><span class="o">.</span><span class="n">add_text</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.9</span><span class="p">,</span><span class="s1">&#39;normals&#39;</span><span class="p">)</span>
-<span class="n">sp</span><span class="o">.</span><span class="n">add_text</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.9</span><span class="p">,</span><span class="s1">&#39;vertices&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;faces+basis&#39;</span><span class="p">)</span>
-<span class="c1">#plt.show()</span>
+<span class="n">ax2d</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
 <span class="n">sp</span><span class="o">.</span><span class="n">plt_to_html</span><span class="p">()</span>
 </pre></div>
 
@@ -1038,7 +1068,7 @@ Rotate to XY [0.8660254  1.11803399 0.        ]
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
-<svg height="180pt" version="1.1" viewBox="0 0 576 180" width="576pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg height="244.8pt" version="1.1" viewBox="0 0 504 244.8" width="504pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
  <defs>
   <style type="text/css">
 *{stroke-linecap:butt;stroke-linejoin:round;}
@@ -1046,54 +1076,196 @@ Rotate to XY [0.8660254  1.11803399 0.        ]
  </defs>
  <g id="figure_1">
   <g id="patch_1">
-   <path d="M 0 180 
-L 576 180 
-L 576 0 
+   <path d="M 0 244.8 
+L 504 244.8 
+L 504 0 
 L 0 0 
 z
 " style="fill:none;"/>
   </g>
   <g id="axes_1">
    <g id="patch_2">
-    <path d="M 0 180 
-L 169.411765 180 
-L 169.411765 0 
-L 0 0 
+    <path clip-path="url(#p53a79cc2d1)" d="M 236.249288 207.981576 
+L 231.748884 207.059073 
+L 232.450996 205.840914 
+L 135.608021 149.833642 
+L 135.656442 149.749631 
+L 232.499417 205.756904 
+L 233.201529 204.538745 
 z
-" style="fill:none;"/>
+" style="stroke:#000000;stroke-linejoin:miter;stroke-width:0.8;"/>
    </g>
-   <g id="matplotlib.axis_1">
-    <g id="xtick_1">
-     <g id="line2d_1">
-      <defs>
-       <path d="M 0 0 
-L 0 -4 
-" id="m221ca864fa" style="stroke:#000000;stroke-width:0.3;"/>
-      </defs>
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="7.391276" xlink:href="#m221ca864fa" y="180"/>
-      </g>
-     </g>
-     <g id="line2d_2">
-      <defs>
-       <path d="M 0 0 
-L 0 4 
-" id="m23b2034402" style="stroke:#000000;stroke-width:0.3;"/>
-      </defs>
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="7.391276" xlink:href="#m23b2034402" y="0"/>
-      </g>
-     </g>
-     <g id="text_1">
-      <!-- −2 -->
-      <defs>
-       <path d="M 62.09375 22 
-L 6.40625 22 
-L 6.40625 28.59375 
-L 62.09375 28.59375 
+   <g id="patch_3">
+    <path clip-path="url(#p53a79cc2d1)" d="M 135.632232 33.411756 
+L 137.084876 37.777091 
+L 135.680653 37.777091 
+L 135.680653 149.791636 
+L 135.58381 149.791636 
+L 135.58381 37.777091 
+L 134.179587 37.777091 
 z
-" id="STIXGeneral-Regular-8722"/>
-       <path d="M 47.40625 13.703125 
+" style="stroke:#000000;stroke-linejoin:miter;stroke-width:0.8;"/>
+   </g>
+   <g id="line2d_1">
+    <path clip-path="url(#p53a79cc2d1)" d="M 167.913223 93.784364 
+L 103.35124 93.784364 
+L 71.070248 149.791636 
+L 103.35124 205.798909 
+L 167.913223 205.798909 
+L 200.194215 149.791636 
+L 167.913223 93.784364 
+" style="fill:none;stroke:#b20080;stroke-linecap:square;"/>
+   </g>
+   <g id="line2d_2">
+    <path clip-path="url(#p53a79cc2d1)" d="M 103.35124 205.798909 
+L 71.070248 149.791636 
+L 103.35124 93.784364 
+L 167.913223 93.784364 
+L 200.194215 149.791636 
+L 167.913223 205.798909 
+L 103.35124 205.798909 
+" style="fill:none;stroke:#b20080;stroke-linecap:square;"/>
+   </g>
+   <g id="line2d_3">
+    <path clip-path="url(#p53a79cc2d1)" d="M 167.913223 205.798909 
+L 103.35124 205.798909 
+L 103.35124 205.798909 
+L 167.913223 205.798909 
+L 167.913223 205.798909 
+" style="fill:none;stroke:#b20080;stroke-linecap:square;"/>
+   </g>
+   <g id="line2d_4">
+    <path clip-path="url(#p53a79cc2d1)" d="M 167.913223 205.798909 
+L 200.194215 149.791636 
+L 200.194215 149.791636 
+L 167.913223 205.798909 
+L 167.913223 205.798909 
+" style="fill:none;stroke:#b20080;stroke-linecap:square;"/>
+   </g>
+   <g id="line2d_5">
+    <path clip-path="url(#p53a79cc2d1)" d="M 167.913223 93.784364 
+L 167.913223 93.784364 
+L 103.35124 93.784364 
+L 103.35124 93.784364 
+L 167.913223 93.784364 
+" style="fill:none;stroke:#b20080;stroke-linecap:square;"/>
+   </g>
+   <g id="line2d_6">
+    <path clip-path="url(#p53a79cc2d1)" d="M 200.194215 149.791636 
+L 200.194215 149.791636 
+L 167.913223 93.784364 
+L 167.913223 93.784364 
+L 200.194215 149.791636 
+" style="fill:none;stroke:#b20080;stroke-linecap:square;"/>
+   </g>
+   <g id="line2d_7">
+    <path clip-path="url(#p53a79cc2d1)" d="M 103.35124 93.784364 
+L 71.070248 149.791636 
+L 71.070248 149.791636 
+L 103.35124 93.784364 
+L 103.35124 93.784364 
+" style="fill:none;stroke:#b20080;stroke-linecap:square;"/>
+   </g>
+   <g id="line2d_8">
+    <path clip-path="url(#p53a79cc2d1)" d="M 71.070248 149.791636 
+L 71.070248 149.791636 
+L 103.35124 205.798909 
+L 103.35124 205.798909 
+L 71.070248 149.791636 
+" style="fill:none;stroke:#b20080;stroke-linecap:square;"/>
+   </g>
+   <g id="line2d_9">
+    <path clip-path="url(#p53a79cc2d1)" d="M 135.632232 149.791636 
+L 232.475207 205.798909 
+" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.8;"/>
+   </g>
+   <g id="line2d_10">
+    <path clip-path="url(#p53a79cc2d1)" d="M 135.632232 149.791636 
+L 135.632232 37.777091 
+" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.8;"/>
+   </g>
+   <g id="text_1">
+    <!--  $\vec{b}_1$ -->
+    <defs>
+     <path id="STIXGeneral-Regular-32"/>
+     <path d="M -1.703125 65.40625 
+L -14.90625 54.796875 
+L -16.703125 55.59375 
+Q -11.796875 59.703125 -11.796875 61.203125 
+Q -11.796875 62.703125 -16.703125 62.703125 
+L -45.296875 62.703125 
+L -45.296875 68.09375 
+L -16.703125 68.09375 
+Q -11.796875 68.09375 -11.796875 69.59375 
+Q -11.796875 69.90625 -12 70.25 
+Q -12.203125 70.59375 -12.75 71.140625 
+Q -13.296875 71.703125 -13.75 72.203125 
+Q -14.203125 72.703125 -15.203125 73.640625 
+Q -16.203125 74.59375 -16.796875 75.203125 
+L -15 76 
+z
+" id="STIXGeneral-Regular-8407"/>
+     <path d="M 16.296875 29 
+L 16.40625 29 
+Q 21.40625 37.296875 25.84375 40.6875 
+Q 30.296875 44.09375 35.703125 44.09375 
+Q 40.90625 44.09375 44.09375 40.890625 
+Q 47.296875 37.703125 47.296875 32.09375 
+Q 47.296875 24.40625 42.59375 16.59375 
+Q 37.90625 8.796875 30.34375 3.84375 
+Q 22.796875 -1.09375 15.296875 -1.09375 
+Q 10.703125 -1.09375 6.5 0.5 
+Q 2.296875 2.09375 2.296875 4.203125 
+L 2.296875 4.796875 
+L 16.5 57.09375 
+Q 17.40625 60.703125 17.40625 61.796875 
+Q 17.40625 63.40625 16.453125 63.75 
+Q 15.5 64.09375 11 64.296875 
+L 11 66 
+Q 18.5 66.90625 26.296875 68.296875 
+L 26.796875 67.796875 
+L 24.703125 59.59375 
+z
+M 38.796875 30.59375 
+Q 38.796875 39.203125 31.796875 39.203125 
+Q 24.90625 39.203125 18.09375 27.703125 
+Q 14.90625 22.296875 12.90625 15.75 
+Q 10.90625 9.203125 10.90625 4.59375 
+Q 10.90625 1.203125 15.5 1.203125 
+Q 22.09375 1.203125 27.796875 7.09375 
+Q 32.40625 11.90625 35.59375 18.546875 
+Q 38.796875 25.203125 38.796875 30.59375 
+z
+" id="STIXGeneral-Italic-98"/>
+     <path d="M 39.40625 0 
+L 11.796875 0 
+L 11.796875 1.5 
+Q 17.296875 1.796875 19.296875 3.546875 
+Q 21.296875 5.296875 21.296875 9.5 
+L 21.296875 54.40625 
+Q 21.296875 59.296875 18.296875 59.296875 
+Q 16.90625 59.296875 13.796875 58.09375 
+L 11.09375 57.09375 
+L 11.09375 58.5 
+L 29 67.59375 
+L 29.90625 67.296875 
+L 29.90625 7.59375 
+Q 29.90625 4.296875 31.90625 2.890625 
+Q 33.90625 1.5 39.40625 1.5 
+z
+" id="STIXGeneral-Regular-49"/>
+    </defs>
+    <g transform="translate(213.106612 192.427142)scale(0.1 -0.1)">
+     <use xlink:href="#STIXGeneral-Regular-32"/>
+     <use transform="translate(79.796856 26)" xlink:href="#STIXGeneral-Regular-8407"/>
+     <use transform="translate(24.999985 0)" xlink:href="#STIXGeneral-Italic-98"/>
+     <use transform="translate(76.543251 -13.228125)scale(0.7)" xlink:href="#STIXGeneral-Regular-49"/>
+    </g>
+   </g>
+   <g id="text_2">
+    <!--  $\vec{b}_2$ -->
+    <defs>
+     <path d="M 47.40625 13.703125 
 L 42 0 
 L 2.90625 0 
 L 2.90625 1.203125 
@@ -1116,1562 +1288,178 @@ Q 39.703125 7.59375 41.640625 8.890625
 Q 43.59375 10.203125 46 14.296875 
 z
 " id="STIXGeneral-Regular-50"/>
-      </defs>
-      <g transform="translate(1.466276 190.329688)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-8722"/>
-       <use x="68.499985" xlink:href="#STIXGeneral-Regular-50"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_2">
-     <g id="line2d_3">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="46.048579" xlink:href="#m221ca864fa" y="180"/>
-      </g>
-     </g>
-     <g id="line2d_4">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="46.048579" xlink:href="#m23b2034402" y="0"/>
-      </g>
-     </g>
-     <g id="text_2">
-      <!-- −1 -->
-      <defs>
-       <path d="M 39.40625 0 
-L 11.796875 0 
-L 11.796875 1.5 
-Q 17.296875 1.796875 19.296875 3.546875 
-Q 21.296875 5.296875 21.296875 9.5 
-L 21.296875 54.40625 
-Q 21.296875 59.296875 18.296875 59.296875 
-Q 16.90625 59.296875 13.796875 58.09375 
-L 11.09375 57.09375 
-L 11.09375 58.5 
-L 29 67.59375 
-L 29.90625 67.296875 
-L 29.90625 7.59375 
-Q 29.90625 4.296875 31.90625 2.890625 
-Q 33.90625 1.5 39.40625 1.5 
-z
-" id="STIXGeneral-Regular-49"/>
-      </defs>
-      <g transform="translate(40.123579 190.329688)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-8722"/>
-       <use x="68.499985" xlink:href="#STIXGeneral-Regular-49"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_3">
-     <g id="line2d_5">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="84.705882" xlink:href="#m221ca864fa" y="180"/>
-      </g>
-     </g>
-     <g id="line2d_6">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="84.705882" xlink:href="#m23b2034402" y="0"/>
-      </g>
-     </g>
-     <g id="text_3">
-      <!-- 0 -->
-      <defs>
-       <path d="M 47.59375 33 
-Q 47.59375 26.296875 46.296875 20.34375 
-Q 45 14.40625 42.453125 9.40625 
-Q 39.90625 4.40625 35.40625 1.5 
-Q 30.90625 -1.40625 25 -1.40625 
-Q 18.90625 -1.40625 14.296875 1.6875 
-Q 9.703125 4.796875 7.203125 10 
-Q 4.703125 15.203125 3.546875 21.09375 
-Q 2.40625 27 2.40625 33.59375 
-Q 2.40625 42.90625 4.703125 50.34375 
-Q 7 57.796875 12.34375 62.6875 
-Q 17.703125 67.59375 25.40625 67.59375 
-Q 35.203125 67.59375 41.390625 58 
-Q 47.59375 48.40625 47.59375 33 
-z
-M 38 32.5 
-Q 38 48.296875 34.640625 56.640625 
-Q 31.296875 65 24.796875 65 
-Q 18.59375 65 15.296875 56.59375 
-Q 12 48.203125 12 32.90625 
-Q 12 17.5 15.296875 9.34375 
-Q 18.59375 1.203125 25 1.203125 
-Q 31.296875 1.203125 34.640625 9.34375 
-Q 38 17.5 38 32.5 
-z
-" id="STIXGeneral-Regular-48"/>
-      </defs>
-      <g transform="translate(82.205882 190.329688)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-48"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_4">
-     <g id="line2d_7">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="123.363185" xlink:href="#m221ca864fa" y="180"/>
-      </g>
-     </g>
-     <g id="line2d_8">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="123.363185" xlink:href="#m23b2034402" y="0"/>
-      </g>
-     </g>
-     <g id="text_4">
-      <!-- 1 -->
-      <g transform="translate(120.863185 190.329688)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-49"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_5">
-     <g id="line2d_9">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="162.020488" xlink:href="#m221ca864fa" y="180"/>
-      </g>
-     </g>
-     <g id="line2d_10">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="162.020488" xlink:href="#m23b2034402" y="0"/>
-      </g>
-     </g>
-     <g id="text_5">
-      <!-- 2 -->
-      <g transform="translate(159.520488 190.329688)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-50"/>
-      </g>
-     </g>
-    </g>
-   </g>
-   <g id="matplotlib.axis_2">
-    <g id="ytick_1">
-     <g id="line2d_11">
-      <defs>
-       <path d="M 0 0 
-L 4 0 
-" id="med6b3aa507" style="stroke:#000000;stroke-width:0.3;"/>
-      </defs>
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="0" xlink:href="#med6b3aa507" y="172.146769"/>
-      </g>
-     </g>
-     <g id="line2d_12">
-      <defs>
-       <path d="M 0 0 
-L -4 0 
-" id="m7bc12f43f0" style="stroke:#000000;stroke-width:0.3;"/>
-      </defs>
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="169.411765" xlink:href="#m7bc12f43f0" y="172.146769"/>
-      </g>
-     </g>
-     <g id="text_6">
-      <!-- −2.0 -->
-      <defs>
-       <path d="M 18.09375 4.296875 
-Q 18.09375 2.09375 16.4375 0.5 
-Q 14.796875 -1.09375 12.5 -1.09375 
-Q 10.203125 -1.09375 8.59375 0.5 
-Q 7 2.09375 7 4.390625 
-Q 7 6.703125 8.640625 8.34375 
-Q 10.296875 10 12.59375 10 
-Q 14.796875 10 16.4375 8.296875 
-Q 18.09375 6.59375 18.09375 4.296875 
-z
-" id="STIXGeneral-Regular-46"/>
-      </defs>
-      <g transform="translate(-22.85 175.561613)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-8722"/>
-       <use x="68.499985" xlink:href="#STIXGeneral-Regular-50"/>
-       <use x="118.499969" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="143.499954" xlink:href="#STIXGeneral-Regular-48"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_2">
-     <g id="line2d_13">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="0" xlink:href="#med6b3aa507" y="151.610077"/>
-      </g>
-     </g>
-     <g id="line2d_14">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="169.411765" xlink:href="#m7bc12f43f0" y="151.610077"/>
-      </g>
-     </g>
-     <g id="text_7">
-      <!-- −1.5 -->
-      <defs>
-       <path d="M 43.796875 68.09375 
-L 40.203125 59.59375 
-Q 39.59375 58.296875 37.5 58.296875 
-L 18.09375 58.296875 
-L 14.09375 49.796875 
-Q 25.09375 47.703125 30 45.25 
-Q 34.90625 42.796875 39.09375 37 
-Q 42.59375 32.203125 42.59375 24.296875 
-Q 42.59375 17.09375 40.25 12.1875 
-Q 37.90625 7.296875 32.796875 3.5 
-Q 26 -1.40625 15.796875 -1.40625 
-Q 10.09375 -1.40625 6.59375 0.296875 
-Q 3.09375 2 3.09375 4.796875 
-Q 3.09375 8.59375 7.59375 8.59375 
-Q 11.203125 8.59375 15 5.5 
-Q 18.90625 2.296875 22.09375 2.296875 
-Q 27.296875 2.296875 31.4375 7.5 
-Q 35.59375 12.703125 35.59375 19.203125 
-Q 35.59375 28.796875 28.90625 34.203125 
-Q 20.203125 41.203125 7.59375 41.203125 
-Q 6.40625 41.203125 6.40625 42 
-L 6.5 42.5 
-L 17.40625 66.203125 
-L 38.09375 66.203125 
-Q 39.796875 66.203125 40.75 66.703125 
-Q 41.703125 67.203125 42.90625 68.796875 
-z
-" id="STIXGeneral-Regular-53"/>
-      </defs>
-      <g transform="translate(-22.85 155.02492)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-8722"/>
-       <use x="68.499985" xlink:href="#STIXGeneral-Regular-49"/>
-       <use x="118.499969" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="143.499954" xlink:href="#STIXGeneral-Regular-53"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_3">
-     <g id="line2d_15">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="0" xlink:href="#med6b3aa507" y="131.073384"/>
-      </g>
-     </g>
-     <g id="line2d_16">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="169.411765" xlink:href="#m7bc12f43f0" y="131.073384"/>
-      </g>
-     </g>
-     <g id="text_8">
-      <!-- −1.0 -->
-      <g transform="translate(-22.85 134.488228)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-8722"/>
-       <use x="68.499985" xlink:href="#STIXGeneral-Regular-49"/>
-       <use x="118.499969" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="143.499954" xlink:href="#STIXGeneral-Regular-48"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_4">
-     <g id="line2d_17">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="0" xlink:href="#med6b3aa507" y="110.536692"/>
-      </g>
-     </g>
-     <g id="line2d_18">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="169.411765" xlink:href="#m7bc12f43f0" y="110.536692"/>
-      </g>
-     </g>
-     <g id="text_9">
-      <!-- −0.5 -->
-      <g transform="translate(-22.85 113.951536)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-8722"/>
-       <use x="68.499985" xlink:href="#STIXGeneral-Regular-48"/>
-       <use x="118.499969" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="143.499954" xlink:href="#STIXGeneral-Regular-53"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_5">
-     <g id="line2d_19">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="0" xlink:href="#med6b3aa507" y="90"/>
-      </g>
-     </g>
-     <g id="line2d_20">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="169.411765" xlink:href="#m7bc12f43f0" y="90"/>
-      </g>
-     </g>
-     <g id="text_10">
-      <!-- 0.0 -->
-      <g transform="translate(-16 93.414844)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-48"/>
-       <use x="49.999985" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="74.999969" xlink:href="#STIXGeneral-Regular-48"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_6">
-     <g id="line2d_21">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="0" xlink:href="#med6b3aa507" y="69.463308"/>
-      </g>
-     </g>
-     <g id="line2d_22">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="169.411765" xlink:href="#m7bc12f43f0" y="69.463308"/>
-      </g>
-     </g>
-     <g id="text_11">
-      <!-- 0.5 -->
-      <g transform="translate(-16 72.878152)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-48"/>
-       <use x="49.999985" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="74.999969" xlink:href="#STIXGeneral-Regular-53"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_7">
-     <g id="line2d_23">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="0" xlink:href="#med6b3aa507" y="48.926616"/>
-      </g>
-     </g>
-     <g id="line2d_24">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="169.411765" xlink:href="#m7bc12f43f0" y="48.926616"/>
-      </g>
-     </g>
-     <g id="text_12">
-      <!-- 1.0 -->
-      <g transform="translate(-16 52.341459)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-49"/>
-       <use x="49.999985" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="74.999969" xlink:href="#STIXGeneral-Regular-48"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_8">
-     <g id="line2d_25">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="0" xlink:href="#med6b3aa507" y="28.389923"/>
-      </g>
-     </g>
-     <g id="line2d_26">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="169.411765" xlink:href="#m7bc12f43f0" y="28.389923"/>
-      </g>
-     </g>
-     <g id="text_13">
-      <!-- 1.5 -->
-      <g transform="translate(-16 31.804767)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-49"/>
-       <use x="49.999985" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="74.999969" xlink:href="#STIXGeneral-Regular-53"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_9">
-     <g id="line2d_27">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="0" xlink:href="#med6b3aa507" y="7.853231"/>
-      </g>
-     </g>
-     <g id="line2d_28">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="169.411765" xlink:href="#m7bc12f43f0" y="7.853231"/>
-      </g>
-     </g>
-     <g id="text_14">
-      <!-- 2.0 -->
-      <g transform="translate(-16 11.268075)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-50"/>
-       <use x="49.999985" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="74.999969" xlink:href="#STIXGeneral-Regular-48"/>
-      </g>
-     </g>
-    </g>
-   </g>
-   <g id="line2d_29">
-    <path clip-path="url(#pa547510725)" d="M 84.705882 90 
-L 84.705882 8.181818 
-" style="fill:none;stroke:#1f77b4;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_30">
-    <path clip-path="url(#pa547510725)" d="M 84.705882 90 
-L 46.203209 49.090909 
-" style="fill:none;stroke:#ff7f0e;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_31">
-    <path clip-path="url(#pa547510725)" d="M 84.705882 90 
-L 84.705882 90 
-" style="fill:none;stroke:#2ca02c;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_32">
-    <path clip-path="url(#pa547510725)" d="M 84.705882 90 
-L 161.71123 90 
-" style="fill:none;stroke:#d62728;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_33">
-    <path clip-path="url(#pa547510725)" d="M 84.705882 90 
-L 123.208556 49.090909 
-" style="fill:none;stroke:#9467bd;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_34">
-    <path clip-path="url(#pa547510725)" d="M 84.705882 90 
-L 46.203209 49.090909 
-" style="fill:none;stroke:#8c564b;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_35">
-    <path clip-path="url(#pa547510725)" d="M 84.705882 90 
-L 123.208556 49.090909 
-" style="fill:none;stroke:#e377c2;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_36">
-    <path clip-path="url(#pa547510725)" d="M 84.705882 90 
-L 84.705882 171.818182 
-" style="fill:none;stroke:#7f7f7f;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_37">
-    <path clip-path="url(#pa547510725)" d="M 84.705882 90 
-L 46.203209 130.909091 
-" style="fill:none;stroke:#bcbd22;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_38">
-    <path clip-path="url(#pa547510725)" d="M 84.705882 90 
-L 123.208556 130.909091 
-" style="fill:none;stroke:#17becf;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_39">
-    <path clip-path="url(#pa547510725)" d="M 84.705882 90 
-L 46.203209 130.909091 
-" style="fill:none;stroke:#1f77b4;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_40">
-    <path clip-path="url(#pa547510725)" d="M 84.705882 90 
-L 7.700535 90 
-" style="fill:none;stroke:#ff7f0e;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_41">
-    <path clip-path="url(#pa547510725)" d="M 84.705882 90 
-L 123.208556 130.909091 
-" style="fill:none;stroke:#2ca02c;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_42">
-    <path clip-path="url(#pa547510725)" d="M 84.705882 90 
-L 84.705882 90 
-" style="fill:none;stroke:#d62728;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="patch_3">
-    <path d="M 0 180 
-L 0 0 
-" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;stroke-width:0.4;"/>
-   </g>
-   <g id="patch_4">
-    <path d="M 169.411765 180 
-L 169.411765 0 
-" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;stroke-width:0.4;"/>
-   </g>
-   <g id="patch_5">
-    <path d="M 0 180 
-L 169.411765 180 
-" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;stroke-width:0.4;"/>
-   </g>
-   <g id="patch_6">
-    <path d="M 0 0 
-L 169.411765 0 
-" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;stroke-width:0.4;"/>
-   </g>
-   <g id="text_15">
-    <g id="patch_7">
-     <path d="M 12.941176 24.170312 
-L 53.161489 24.170312 
-L 53.161489 7.170312 
-L 12.941176 7.170312 
-z
-" style="fill:#ffffff;opacity:0.9;stroke:#ffffff;stroke-linejoin:miter;"/>
-    </g>
-    <!-- normals -->
-    <defs>
-     <path d="M 48.5 0 
-L 27.703125 0 
-L 27.796875 1.5 
-Q 31.5 1.796875 32.75 3.640625 
-Q 34 5.5 34 10.5 
-L 34 30.40625 
-Q 34 40.5 26.703125 40.5 
-Q 24.203125 40.5 22 39.296875 
-Q 19.796875 38.09375 16.40625 34.796875 
-L 16.40625 7.203125 
-Q 16.40625 4.203125 17.75 3 
-Q 19.09375 1.796875 22.90625 1.5 
-L 22.90625 0 
-L 1.796875 0 
-L 1.796875 1.5 
-Q 5.59375 1.796875 6.796875 3.34375 
-Q 8 4.90625 8 9.40625 
-L 8 33.703125 
-Q 8 37.40625 7.296875 38.796875 
-Q 6.59375 40.203125 4.5 40.203125 
-Q 2.5 40.203125 1.59375 39.796875 
-L 1.59375 41.5 
-Q 8.59375 43.5 15.296875 46 
-L 16.09375 45.703125 
-L 16.09375 37.90625 
-L 16.203125 37.90625 
-Q 23.296875 46 30.59375 46 
-Q 36.296875 46 39.34375 42 
-Q 42.40625 38 42.40625 30.59375 
-L 42.40625 8.5 
-Q 42.40625 4.5 43.59375 3.203125 
-Q 44.796875 1.90625 48.5 1.5 
-z
-" id="STIXGeneral-Regular-110"/>
-     <path d="M 47 23.09375 
-Q 47 12.59375 40.75 5.796875 
-Q 34.5 -1 24.5 -1 
-Q 15.296875 -1 9.09375 5.75 
-Q 2.90625 12.5 2.90625 22.796875 
-Q 2.90625 33.203125 9.09375 39.59375 
-Q 15.296875 46 25.40625 46 
-Q 34.703125 46 40.84375 39.640625 
-Q 47 33.296875 47 23.09375 
-z
-M 38 20.40625 
-Q 38 31.796875 33 38.203125 
-Q 29 43.203125 23.5 43.203125 
-Q 18.296875 43.203125 15.09375 38.953125 
-Q 11.90625 34.703125 11.90625 27.296875 
-Q 11.90625 14.5 17.203125 6.796875 
-Q 20.59375 1.796875 26.203125 1.796875 
-Q 31.703125 1.796875 34.84375 6.75 
-Q 38 11.703125 38 20.40625 
-z
-" id="STIXGeneral-Regular-111"/>
-     <path d="M 16 45.796875 
-L 16 36.59375 
-Q 19.796875 42 22.34375 44 
-Q 24.90625 46 28 46 
-Q 30.59375 46 32.046875 44.59375 
-Q 33.5 43.203125 33.5 40.703125 
-Q 33.5 38.59375 32.453125 37.390625 
-Q 31.40625 36.203125 29.59375 36.203125 
-Q 27.703125 36.203125 25.59375 38.203125 
-Q 24 39.703125 23 39.703125 
-Q 20.90625 39.703125 18.453125 36.796875 
-Q 16 33.90625 16 31.5 
-L 16 9 
-Q 16 4.703125 17.703125 3.203125 
-Q 19.40625 1.703125 24.5 1.5 
-L 24.5 0 
-L 0.5 0 
-L 0.5 1.5 
-Q 5.296875 2.40625 6.4375 3.5 
-Q 7.59375 4.59375 7.59375 8.40625 
-L 7.59375 33.40625 
-Q 7.59375 36.703125 6.84375 38.046875 
-Q 6.09375 39.40625 4.203125 39.40625 
-Q 2.59375 39.40625 0.703125 39 
-L 0.703125 40.59375 
-Q 7 42.59375 15.5 46 
-z
-" id="STIXGeneral-Regular-114"/>
-     <path d="M 77.5 0 
-L 55.703125 0 
-L 55.703125 1.5 
-Q 59.90625 1.90625 61.046875 3.25 
-Q 62.203125 4.59375 62.203125 9 
-L 62.203125 29.59375 
-Q 62.203125 35.59375 60.453125 38.1875 
-Q 58.703125 40.796875 54.5 40.796875 
-Q 51 40.796875 48.546875 39.390625 
-Q 46.09375 38 43.796875 34.703125 
-L 43.796875 9.5 
-Q 43.796875 4.703125 45.25 3.140625 
-Q 46.703125 1.59375 51 1.5 
-L 51 0 
-L 28.59375 0 
-L 28.59375 1.5 
-Q 33 1.796875 34.203125 2.9375 
-Q 35.40625 4.09375 35.40625 8.59375 
-L 35.40625 29.703125 
-Q 35.40625 40.796875 28.90625 40.796875 
-Q 26.09375 40.796875 22.9375 39.546875 
-Q 19.796875 38.296875 18.296875 36.5 
-Q 17 35 17 34.796875 
-L 17 7 
-Q 17 3.796875 18.390625 2.75 
-Q 19.796875 1.703125 23.796875 1.5 
-L 23.796875 0 
-L 1.59375 0 
-L 1.59375 1.5 
-Q 5.796875 1.59375 7.1875 3.046875 
-Q 8.59375 4.5 8.59375 8.796875 
-L 8.59375 33.59375 
-Q 8.59375 37.296875 7.796875 38.75 
-Q 7 40.203125 5.09375 40.203125 
-Q 3.59375 40.203125 1.90625 39.796875 
-L 1.90625 41.5 
-Q 8.703125 43.40625 15.796875 46 
-L 16.59375 45.703125 
-L 16.59375 38.296875 
-L 16.796875 38.296875 
-Q 21.296875 43 24.75 44.5 
-Q 28.203125 46 32.09375 46 
-Q 40 46 42.703125 37.59375 
-Q 50.5 46 59 46 
-Q 70.59375 46 70.59375 28 
-L 70.59375 7.703125 
-Q 70.59375 4.40625 71.59375 3.15625 
-Q 72.59375 1.90625 74.90625 1.703125 
-L 77.5 1.5 
-z
-" id="STIXGeneral-Regular-109"/>
-     <path d="M 44.203125 6.59375 
-L 44.203125 3.796875 
-Q 40.40625 -1 35.203125 -1 
-Q 29.5 -1 28.796875 6.296875 
-L 28.703125 6.296875 
-Q 22.296875 -1 14.203125 -1 
-Q 9.5 -1 6.59375 1.75 
-Q 3.703125 4.5 3.703125 9.40625 
-Q 3.703125 16.40625 10.703125 21.09375 
-Q 15.5 24.296875 28.703125 29.203125 
-L 28.703125 34.59375 
-Q 28.703125 39.09375 26.546875 41.34375 
-Q 24.40625 43.59375 20.90625 43.59375 
-Q 17.90625 43.59375 15.90625 42.140625 
-Q 13.90625 40.703125 13.90625 38.703125 
-Q 13.90625 37.796875 14.203125 36.6875 
-Q 14.5 35.59375 14.5 34.5 
-Q 14.5 33 13.140625 31.703125 
-Q 11.796875 30.40625 9.90625 30.40625 
-Q 8.203125 30.40625 6.890625 31.703125 
-Q 5.59375 33 5.59375 35 
-Q 5.59375 39.796875 10.703125 43 
-Q 15.40625 46 22.203125 46 
-Q 30.296875 46 34 41.5 
-Q 35.796875 39.40625 36.296875 37.25 
-Q 36.796875 35.09375 36.796875 30.40625 
-L 36.796875 11.296875 
-Q 36.796875 4.703125 39.90625 4.703125 
-Q 41.90625 4.703125 44.203125 6.59375 
-z
-M 28.703125 12.703125 
-L 28.703125 26.796875 
-Q 19.5 23.59375 15.90625 20.203125 
-Q 12.5 17.09375 12.5 12.5 
-Q 12.5 8.703125 14.390625 6.75 
-Q 16.296875 4.796875 19.40625 4.796875 
-Q 22.703125 4.796875 25.203125 6.40625 
-Q 27.296875 7.90625 28 9.203125 
-Q 28.703125 10.5 28.703125 12.703125 
-z
-" id="STIXGeneral-Regular-97"/>
-     <path d="M 25.703125 0 
-L 2.09375 0 
-L 2.09375 1.5 
-Q 6.796875 1.90625 8.296875 3.453125 
-Q 9.796875 5 9.796875 9.203125 
-L 9.796875 56.09375 
-Q 9.796875 59.703125 8.890625 61.09375 
-Q 8 62.5 5.59375 62.5 
-Q 3.5 62.5 1.90625 62.296875 
-L 1.90625 63.90625 
-Q 11.40625 66.203125 17.703125 68.296875 
-L 18.203125 67.90625 
-L 18.203125 8.703125 
-Q 18.203125 4.5 19.59375 3.140625 
-Q 21 1.796875 25.703125 1.5 
-z
-" id="STIXGeneral-Regular-108"/>
-     <path d="M 15.59375 30.09375 
-L 26 23.796875 
-Q 31 20.796875 32.890625 18.1875 
-Q 34.796875 15.59375 34.796875 11.5 
-Q 34.796875 6.5 30.640625 2.75 
-Q 26.5 -1 20.796875 -1 
-Q 16.09375 -1 13.5 -0.09375 
-Q 10.796875 0.796875 8.90625 0.796875 
-Q 7.203125 0.796875 6.5 -0.40625 
-L 5.203125 -0.40625 
-L 5.203125 15.296875 
-L 6.796875 15.296875 
-Q 8.40625 8 11.40625 4.59375 
-Q 14.40625 1.203125 19.5 1.203125 
-Q 23.203125 1.203125 25.5 3.296875 
-Q 27.796875 5.40625 27.796875 8.59375 
-Q 27.796875 13.203125 22.5 16.09375 
-L 17.09375 19.09375 
-Q 5.09375 25.796875 5.09375 33.59375 
-Q 5.09375 39.40625 8.84375 42.65625 
-Q 12.59375 45.90625 18.90625 45.90625 
-Q 23.296875 45.90625 25.59375 44.796875 
-Q 27.40625 44 28.40625 44 
-Q 29.09375 44 30 45 
-L 31.09375 45 
-L 31.59375 31.40625 
-L 30.09375 31.40625 
-Q 28.40625 38.203125 25.84375 40.953125 
-Q 23.296875 43.703125 18.796875 43.703125 
-Q 15.40625 43.703125 13.34375 42 
-Q 11.296875 40.296875 11.296875 36.90625 
-Q 11.296875 35.203125 12.4375 33.25 
-Q 13.59375 31.296875 15.59375 30.09375 
-z
-" id="STIXGeneral-Regular-115"/>
     </defs>
-    <g style="fill:#ff0000;" transform="translate(16.941176 18)scale(0.1 -0.1)">
-     <use xlink:href="#STIXGeneral-Regular-110"/>
-     <use x="49.999985" xlink:href="#STIXGeneral-Regular-111"/>
-     <use x="99.999969" xlink:href="#STIXGeneral-Regular-114"/>
-     <use x="133.299957" xlink:href="#STIXGeneral-Regular-109"/>
-     <use x="211.099945" xlink:href="#STIXGeneral-Regular-97"/>
-     <use x="255.499939" xlink:href="#STIXGeneral-Regular-108"/>
-     <use x="283.299927" xlink:href="#STIXGeneral-Regular-115"/>
+    <g transform="translate(135.632232 58.009687)scale(0.1 -0.1)">
+     <use xlink:href="#STIXGeneral-Regular-32"/>
+     <use transform="translate(79.796856 26)" xlink:href="#STIXGeneral-Regular-8407"/>
+     <use transform="translate(24.999985 0)" xlink:href="#STIXGeneral-Italic-98"/>
+     <use transform="translate(76.543251 -13.228125)scale(0.7)" xlink:href="#STIXGeneral-Regular-50"/>
     </g>
    </g>
+  </g>
+  <g id="patch_4">
+   <path d="M 276.054545 214.2 
+L 453.6 214.2 
+L 453.6 29.376 
+L 276.054545 29.376 
+z
+" style="fill:none;"/>
   </g>
   <g id="axes_2">
-   <g id="patch_8">
-    <path d="M 203.294118 180 
-L 372.705882 180 
-L 372.705882 0 
-L 203.294118 0 
-z
-" style="fill:none;"/>
+   <g id="Line3DCollection_1">
+    <path clip-path="url(#p9882904c5c)" d="M 354.354729 125.990124 
+L 367.226536 119.290378 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p9882904c5c)" d="M 391.750975 124.340958 
+L 367.226536 119.290378 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p9882904c5c)" d="M 367.226536 97.386543 
+L 367.226536 119.290378 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p9882904c5c)" d="M 354.354729 125.990124 
+L 357.498278 125.764626 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p9882904c5c)" d="M 354.354729 125.990124 
+L 357.48239 122.949168 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p9882904c5c)" d="M 391.750975 124.340958 
+L 385.770036 124.926137 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p9882904c5c)" d="M 391.750975 124.340958 
+L 385.809059 121.296554 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p9882904c5c)" d="M 367.226536 97.386543 
+L 368.057098 102.306653 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p9882904c5c)" d="M 367.226536 97.386543 
+L 366.394727 103.147066 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
    </g>
-   <g id="matplotlib.axis_3">
-    <g id="xtick_6">
-     <g id="line2d_43">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="210.685394" xlink:href="#m221ca864fa" y="180"/>
-      </g>
-     </g>
-     <g id="line2d_44">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="210.685394" xlink:href="#m23b2034402" y="0"/>
-      </g>
-     </g>
-     <g id="text_16">
-      <!-- −1.0 -->
-      <g transform="translate(201.010394 190.329688)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-8722"/>
-       <use x="68.499985" xlink:href="#STIXGeneral-Regular-49"/>
-       <use x="118.499969" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="143.499954" xlink:href="#STIXGeneral-Regular-48"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_7">
-     <g id="line2d_45">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="249.342697" xlink:href="#m221ca864fa" y="180"/>
-      </g>
-     </g>
-     <g id="line2d_46">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="249.342697" xlink:href="#m23b2034402" y="0"/>
-      </g>
-     </g>
-     <g id="text_17">
-      <!-- −0.5 -->
-      <g transform="translate(239.667697 190.329688)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-8722"/>
-       <use x="68.499985" xlink:href="#STIXGeneral-Regular-48"/>
-       <use x="118.499969" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="143.499954" xlink:href="#STIXGeneral-Regular-53"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_8">
-     <g id="line2d_47">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="288" xlink:href="#m221ca864fa" y="180"/>
-      </g>
-     </g>
-     <g id="line2d_48">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="288" xlink:href="#m23b2034402" y="0"/>
-      </g>
-     </g>
-     <g id="text_18">
-      <!-- 0.0 -->
-      <g transform="translate(281.75 190.329688)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-48"/>
-       <use x="49.999985" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="74.999969" xlink:href="#STIXGeneral-Regular-48"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_9">
-     <g id="line2d_49">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="326.657303" xlink:href="#m221ca864fa" y="180"/>
-      </g>
-     </g>
-     <g id="line2d_50">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="326.657303" xlink:href="#m23b2034402" y="0"/>
-      </g>
-     </g>
-     <g id="text_19">
-      <!-- 0.5 -->
-      <g transform="translate(320.407303 190.329688)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-48"/>
-       <use x="49.999985" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="74.999969" xlink:href="#STIXGeneral-Regular-53"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_10">
-     <g id="line2d_51">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="365.314606" xlink:href="#m221ca864fa" y="180"/>
-      </g>
-     </g>
-     <g id="line2d_52">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="365.314606" xlink:href="#m23b2034402" y="0"/>
-      </g>
-     </g>
-     <g id="text_20">
-      <!-- 1.0 -->
-      <g transform="translate(359.064606 190.329688)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-49"/>
-       <use x="49.999985" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="74.999969" xlink:href="#STIXGeneral-Regular-48"/>
-      </g>
-     </g>
+   <g id="text_3">
+    <!-- $\vec{b}_1$ -->
+    <g transform="translate(332.827232 126.027365)scale(0.1 -0.1)">
+     <use transform="translate(54.796871 26)" xlink:href="#STIXGeneral-Regular-8407"/>
+     <use xlink:href="#STIXGeneral-Italic-98"/>
+     <use transform="translate(51.543266 -13.228125)scale(0.7)" xlink:href="#STIXGeneral-Regular-49"/>
     </g>
    </g>
-   <g id="matplotlib.axis_4">
-    <g id="ytick_10">
-     <g id="line2d_53">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="203.294118" xlink:href="#med6b3aa507" y="172.146769"/>
-      </g>
-     </g>
-     <g id="line2d_54">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="372.705882" xlink:href="#m7bc12f43f0" y="172.146769"/>
-      </g>
-     </g>
-     <g id="text_21">
-      <!-- −1.00 -->
-      <g transform="translate(175.444118 175.561613)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-8722"/>
-       <use x="68.499985" xlink:href="#STIXGeneral-Regular-49"/>
-       <use x="118.499969" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="143.499954" xlink:href="#STIXGeneral-Regular-48"/>
-       <use x="193.499939" xlink:href="#STIXGeneral-Regular-48"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_11">
-     <g id="line2d_55">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="203.294118" xlink:href="#med6b3aa507" y="151.610077"/>
-      </g>
-     </g>
-     <g id="line2d_56">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="372.705882" xlink:href="#m7bc12f43f0" y="151.610077"/>
-      </g>
-     </g>
-     <g id="text_22">
-      <!-- −0.75 -->
-      <defs>
-       <path d="M 44.90625 64.59375 
-L 23.703125 -0.796875 
-L 17.203125 -0.796875 
-L 37 58.796875 
-L 15.5 58.796875 
-Q 11.203125 58.796875 9.09375 57.296875 
-Q 7 55.796875 3.796875 50.59375 
-L 2 51.5 
-L 8 66.203125 
-L 44.90625 66.203125 
-z
-" id="STIXGeneral-Regular-55"/>
-      </defs>
-      <g transform="translate(175.444118 155.02492)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-8722"/>
-       <use x="68.499985" xlink:href="#STIXGeneral-Regular-48"/>
-       <use x="118.499969" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="143.499954" xlink:href="#STIXGeneral-Regular-55"/>
-       <use x="193.499939" xlink:href="#STIXGeneral-Regular-53"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_12">
-     <g id="line2d_57">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="203.294118" xlink:href="#med6b3aa507" y="131.073384"/>
-      </g>
-     </g>
-     <g id="line2d_58">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="372.705882" xlink:href="#m7bc12f43f0" y="131.073384"/>
-      </g>
-     </g>
-     <g id="text_23">
-      <!-- −0.50 -->
-      <g transform="translate(175.444118 134.488228)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-8722"/>
-       <use x="68.499985" xlink:href="#STIXGeneral-Regular-48"/>
-       <use x="118.499969" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="143.499954" xlink:href="#STIXGeneral-Regular-53"/>
-       <use x="193.499939" xlink:href="#STIXGeneral-Regular-48"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_13">
-     <g id="line2d_59">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="203.294118" xlink:href="#med6b3aa507" y="110.536692"/>
-      </g>
-     </g>
-     <g id="line2d_60">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="372.705882" xlink:href="#m7bc12f43f0" y="110.536692"/>
-      </g>
-     </g>
-     <g id="text_24">
-      <!-- −0.25 -->
-      <g transform="translate(175.444118 113.951536)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-8722"/>
-       <use x="68.499985" xlink:href="#STIXGeneral-Regular-48"/>
-       <use x="118.499969" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="143.499954" xlink:href="#STIXGeneral-Regular-50"/>
-       <use x="193.499939" xlink:href="#STIXGeneral-Regular-53"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_14">
-     <g id="line2d_61">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="203.294118" xlink:href="#med6b3aa507" y="90"/>
-      </g>
-     </g>
-     <g id="line2d_62">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="372.705882" xlink:href="#m7bc12f43f0" y="90"/>
-      </g>
-     </g>
-     <g id="text_25">
-      <!-- 0.00 -->
-      <g transform="translate(182.294118 93.414844)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-48"/>
-       <use x="49.999985" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="74.999969" xlink:href="#STIXGeneral-Regular-48"/>
-       <use x="124.999954" xlink:href="#STIXGeneral-Regular-48"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_15">
-     <g id="line2d_63">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="203.294118" xlink:href="#med6b3aa507" y="69.463308"/>
-      </g>
-     </g>
-     <g id="line2d_64">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="372.705882" xlink:href="#m7bc12f43f0" y="69.463308"/>
-      </g>
-     </g>
-     <g id="text_26">
-      <!-- 0.25 -->
-      <g transform="translate(182.294118 72.878152)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-48"/>
-       <use x="49.999985" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="74.999969" xlink:href="#STIXGeneral-Regular-50"/>
-       <use x="124.999954" xlink:href="#STIXGeneral-Regular-53"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_16">
-     <g id="line2d_65">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="203.294118" xlink:href="#med6b3aa507" y="48.926616"/>
-      </g>
-     </g>
-     <g id="line2d_66">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="372.705882" xlink:href="#m7bc12f43f0" y="48.926616"/>
-      </g>
-     </g>
-     <g id="text_27">
-      <!-- 0.50 -->
-      <g transform="translate(182.294118 52.341459)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-48"/>
-       <use x="49.999985" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="74.999969" xlink:href="#STIXGeneral-Regular-53"/>
-       <use x="124.999954" xlink:href="#STIXGeneral-Regular-48"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_17">
-     <g id="line2d_67">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="203.294118" xlink:href="#med6b3aa507" y="28.389923"/>
-      </g>
-     </g>
-     <g id="line2d_68">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="372.705882" xlink:href="#m7bc12f43f0" y="28.389923"/>
-      </g>
-     </g>
-     <g id="text_28">
-      <!-- 0.75 -->
-      <g transform="translate(182.294118 31.804767)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-48"/>
-       <use x="49.999985" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="74.999969" xlink:href="#STIXGeneral-Regular-55"/>
-       <use x="124.999954" xlink:href="#STIXGeneral-Regular-53"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_18">
-     <g id="line2d_69">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="203.294118" xlink:href="#med6b3aa507" y="7.853231"/>
-      </g>
-     </g>
-     <g id="line2d_70">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.3;" x="372.705882" xlink:href="#m7bc12f43f0" y="7.853231"/>
-      </g>
-     </g>
-     <g id="text_29">
-      <!-- 1.00 -->
-      <g transform="translate(182.294118 11.268075)scale(0.1 -0.1)">
-       <use xlink:href="#STIXGeneral-Regular-49"/>
-       <use x="49.999985" xlink:href="#STIXGeneral-Regular-46"/>
-       <use x="74.999969" xlink:href="#STIXGeneral-Regular-48"/>
-       <use x="124.999954" xlink:href="#STIXGeneral-Regular-48"/>
-      </g>
-     </g>
+   <g id="text_4">
+    <!-- $\vec{b}_2$ -->
+    <g transform="translate(386.948243 135.553434)scale(0.1 -0.1)">
+     <use transform="translate(54.796871 26)" xlink:href="#STIXGeneral-Regular-8407"/>
+     <use xlink:href="#STIXGeneral-Italic-98"/>
+     <use transform="translate(51.543266 -13.228125)scale(0.7)" xlink:href="#STIXGeneral-Regular-50"/>
     </g>
    </g>
-   <g id="line2d_71">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 210.994652 130.909091 
-" style="fill:none;stroke:#1f77b4;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_72">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 210.994652 90 
-" style="fill:none;stroke:#ff7f0e;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_73">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 210.994652 90 
-" style="fill:none;stroke:#2ca02c;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_74">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 210.994652 49.090909 
-" style="fill:none;stroke:#d62728;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_75">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 249.497326 171.818182 
-" style="fill:none;stroke:#9467bd;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_76">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 249.497326 90 
-" style="fill:none;stroke:#8c564b;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_77">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 249.497326 90 
-" style="fill:none;stroke:#e377c2;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_78">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 249.497326 8.181818 
-" style="fill:none;stroke:#7f7f7f;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_79">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 288 130.909091 
-" style="fill:none;stroke:#bcbd22;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_80">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 288 171.818182 
-" style="fill:none;stroke:#17becf;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_81">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 288 171.818182 
-" style="fill:none;stroke:#1f77b4;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_82">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 288 8.181818 
-" style="fill:none;stroke:#ff7f0e;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_83">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 288 8.181818 
-" style="fill:none;stroke:#2ca02c;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_84">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 288 130.909091 
-" style="fill:none;stroke:#d62728;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_85">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 288 49.090909 
-" style="fill:none;stroke:#9467bd;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_86">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 288 49.090909 
-" style="fill:none;stroke:#8c564b;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_87">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 326.502674 171.818182 
-" style="fill:none;stroke:#e377c2;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_88">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 326.502674 90 
-" style="fill:none;stroke:#7f7f7f;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_89">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 326.502674 8.181818 
-" style="fill:none;stroke:#bcbd22;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_90">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 326.502674 90 
-" style="fill:none;stroke:#17becf;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_91">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 365.005348 130.909091 
-" style="fill:none;stroke:#1f77b4;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_92">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 365.005348 90 
-" style="fill:none;stroke:#ff7f0e;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_93">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 365.005348 90 
-" style="fill:none;stroke:#2ca02c;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_94">
-    <path clip-path="url(#p9555be4a98)" d="M 288 90 
-L 365.005348 49.090909 
-" style="fill:none;stroke:#d62728;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="patch_9">
-    <path d="M 203.294118 180 
-L 203.294118 0 
-" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;stroke-width:0.4;"/>
-   </g>
-   <g id="patch_10">
-    <path d="M 372.705882 180 
-L 372.705882 0 
-" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;stroke-width:0.4;"/>
-   </g>
-   <g id="patch_11">
-    <path d="M 203.294118 180 
-L 372.705882 180 
-" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;stroke-width:0.4;"/>
-   </g>
-   <g id="patch_12">
-    <path d="M 203.294118 0 
-L 372.705882 0 
-" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;stroke-width:0.4;"/>
-   </g>
-   <g id="text_30">
-    <g id="patch_13">
-     <path d="M 216.235294 24.170312 
-L 255.336857 24.170312 
-L 255.336857 7.170312 
-L 216.235294 7.170312 
-z
-" style="fill:#ffffff;opacity:0.9;stroke:#ffffff;stroke-linejoin:miter;"/>
-    </g>
-    <!-- vertices -->
+   <g id="text_5">
+    <!-- $\vec{b}_3$ -->
     <defs>
-     <path d="M 47.703125 45 
-L 47.703125 43.5 
-Q 45.40625 43.296875 44.296875 42 
-Q 43.203125 40.703125 41.203125 35.703125 
-L 28.40625 3.59375 
-Q 26.40625 -1.40625 25.59375 -1.40625 
-Q 24.796875 -1.40625 23.796875 1.203125 
-Q 23.59375 1.5 23.390625 2.203125 
-Q 23.203125 2.90625 23 3.296875 
-L 11 32 
-Q 7.796875 39.59375 6.296875 41.4375 
-Q 4.796875 43.296875 1.90625 43.5 
-L 1.90625 45 
-L 21.5 45 
-L 21.5 43.5 
-Q 18.90625 43.296875 17.90625 42.6875 
-Q 16.90625 42.09375 16.90625 40.796875 
-Q 16.90625 39.203125 17.796875 37 
-L 28 11.40625 
-L 37.90625 37.296875 
-Q 38.5 38.796875 38.5 40.296875 
-Q 38.5 43.09375 33.796875 43.5 
-L 33.796875 45 
+     <path d="M 6.09375 51 
+L 4.5 51.40625 
+Q 6.796875 58.90625 11.6875 63.25 
+Q 16.59375 67.59375 24.09375 67.59375 
+Q 31.09375 67.59375 35.390625 63.796875 
+Q 39.703125 60 39.703125 53.90625 
+Q 39.703125 45.703125 30.40625 40.09375 
+Q 35.90625 37.703125 38.703125 34.796875 
+Q 43.09375 29.90625 43.09375 21.90625 
+Q 43.09375 13.90625 38.5 7.90625 
+Q 35.09375 3.296875 28.75 0.9375 
+Q 22.40625 -1.40625 15.296875 -1.40625 
+Q 4.09375 -1.40625 4.09375 4.296875 
+Q 4.09375 5.90625 5.296875 6.90625 
+Q 6.5 7.90625 8.203125 7.90625 
+Q 10.703125 7.90625 14.296875 5.296875 
+Q 18.703125 2.203125 22.90625 2.203125 
+Q 28.40625 2.203125 32.15625 6.640625 
+Q 35.90625 11.09375 35.90625 17.5 
+Q 35.90625 29 25.5 32 
+Q 22.40625 33 15.296875 33 
+L 15.296875 34.40625 
+Q 20.90625 36.296875 23.703125 38 
+Q 31.796875 42.59375 31.796875 51.40625 
+Q 31.796875 56.40625 28.9375 59 
+Q 26.09375 61.59375 21 61.59375 
+Q 12 61.59375 6.09375 51 
 z
-" id="STIXGeneral-Regular-118"/>
-     <path d="M 40.796875 16.40625 
-L 42.40625 15.703125 
-Q 36.40625 -1 21.5 -1 
-Q 12.703125 -1 7.59375 5.140625 
-Q 2.5 11.296875 2.5 21.703125 
-Q 2.5 32.40625 8.203125 39.203125 
-Q 13.90625 46 23.203125 46 
-Q 32.203125 46 37.09375 39.09375 
-Q 40 35.09375 40.5 27.703125 
-L 9.703125 27.703125 
-Q 10.09375 21.40625 10.9375 18.09375 
-Q 11.796875 14.796875 14.296875 11.40625 
-Q 18.5 5.90625 25.40625 5.90625 
-Q 30.296875 5.90625 33.640625 8.296875 
-Q 37 10.703125 40.796875 16.40625 
-z
-M 9.90625 30.90625 
-L 30.296875 30.90625 
-Q 29.40625 37.203125 27.34375 39.796875 
-Q 25.296875 42.40625 20.5 42.40625 
-Q 16.296875 42.40625 13.5 39.453125 
-Q 10.703125 36.5 9.90625 30.90625 
-z
-" id="STIXGeneral-Regular-101"/>
-     <path d="M 26.59375 7.703125 
-L 27.90625 6.59375 
-Q 23.09375 -1 15.796875 -1 
-Q 7 -1 7 11.703125 
-L 7 41.796875 
-L 1.703125 41.796875 
-Q 1.296875 42.09375 1.296875 42.5 
-Q 1.296875 43.296875 3 44.40625 
-Q 6.796875 46.59375 12.703125 55.09375 
-Q 12.90625 55.40625 13.65625 56.34375 
-Q 14.40625 57.296875 14.703125 57.90625 
-Q 15.40625 57.90625 15.40625 56.59375 
-L 15.40625 45 
-L 25.5 45 
-L 25.5 41.796875 
-L 15.40625 41.796875 
-L 15.40625 13.203125 
-Q 15.40625 8.40625 16.59375 6.296875 
-Q 17.796875 4.203125 20.59375 4.203125 
-Q 23.59375 4.203125 26.59375 7.703125 
-z
-" id="STIXGeneral-Regular-116"/>
-     <path d="M 18 63.203125 
-Q 18 61 16.5 59.546875 
-Q 15 58.09375 12.796875 58.09375 
-Q 10.703125 58.09375 9.25 59.546875 
-Q 7.796875 61 7.796875 63.203125 
-Q 7.796875 65.296875 9.296875 66.796875 
-Q 10.796875 68.296875 12.90625 68.296875 
-Q 15.09375 68.296875 16.546875 66.796875 
-Q 18 65.296875 18 63.203125 
-z
-M 25.296875 0 
-L 1.59375 0 
-L 1.59375 1.5 
-Q 6.796875 1.796875 8.140625 3.296875 
-Q 9.5 4.796875 9.5 10.40625 
-L 9.5 33.09375 
-Q 9.5 36.59375 8.796875 38 
-Q 8.09375 39.40625 6.203125 39.40625 
-Q 3.796875 39.40625 2 38.90625 
-L 2 40.5 
-L 17.5 46 
-L 17.90625 45.59375 
-L 17.90625 10.5 
-Q 17.90625 4.90625 19.15625 3.40625 
-Q 20.40625 1.90625 25.296875 1.5 
-z
-" id="STIXGeneral-Regular-105"/>
-     <path d="M 39.796875 15.59375 
-L 41.203125 14.703125 
-Q 36.90625 6.296875 33 3.203125 
-Q 27.90625 -1 21.5 -1 
-Q 13.203125 -1 7.84375 5.25 
-Q 2.5 11.5 2.5 21.203125 
-Q 2.5 33.90625 10.90625 40.90625 
-Q 17.09375 46 24.40625 46 
-Q 30.703125 46 35.25 42.953125 
-Q 39.796875 39.90625 39.796875 35.703125 
-Q 39.796875 34 38.390625 32.75 
-Q 37 31.5 35.09375 31.5 
-Q 31.59375 31.5 30.296875 36.09375 
-L 29.703125 38.296875 
-Q 28.90625 41.09375 27.703125 42.09375 
-Q 26.5 43.09375 23.796875 43.09375 
-Q 17.703125 43.09375 13.953125 38.296875 
-Q 10.203125 33.5 10.203125 25.703125 
-Q 10.203125 17.09375 14.5 11.640625 
-Q 18.796875 6.203125 25.703125 6.203125 
-Q 30 6.203125 33.09375 8.25 
-Q 36.203125 10.296875 39.796875 15.59375 
-z
-" id="STIXGeneral-Regular-99"/>
+" id="STIXGeneral-Regular-51"/>
     </defs>
-    <g style="fill:#ff0000;" transform="translate(220.235294 18)scale(0.1 -0.1)">
-     <use xlink:href="#STIXGeneral-Regular-118"/>
-     <use x="49.999985" xlink:href="#STIXGeneral-Regular-101"/>
-     <use x="94.399979" xlink:href="#STIXGeneral-Regular-114"/>
-     <use x="127.699966" xlink:href="#STIXGeneral-Regular-116"/>
-     <use x="155.499954" xlink:href="#STIXGeneral-Regular-105"/>
-     <use x="183.299942" xlink:href="#STIXGeneral-Regular-99"/>
-     <use x="227.699936" xlink:href="#STIXGeneral-Regular-101"/>
-     <use x="272.09993" xlink:href="#STIXGeneral-Regular-115"/>
+    <g transform="translate(362.676536 92.148638)scale(0.1 -0.1)">
+     <use transform="translate(54.796871 26)" xlink:href="#STIXGeneral-Regular-8407"/>
+     <use xlink:href="#STIXGeneral-Italic-98"/>
+     <use transform="translate(51.543266 -13.228125)scale(0.7)" xlink:href="#STIXGeneral-Regular-51"/>
     </g>
-   </g>
-  </g>
-  <g id="patch_14">
-   <path d="M 406.588235 180 
-L 576 180 
-L 576 0 
-L 406.588235 0 
-z
-" style="fill:none;"/>
-  </g>
-  <g id="axes_3">
-   <g id="line2d_95">
-    <path clip-path="url(#pa997345c77)" d="M 493.680423 87.616214 
-L 529.933752 69.892022 
-" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_96">
-    <path clip-path="url(#pa997345c77)" d="M 493.680423 87.616214 
-L 460.664817 21.373128 
-" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:1.5;"/>
-   </g>
-   <g id="line2d_97">
-    <path clip-path="url(#pa997345c77)" d="M 493.680423 87.616214 
-L 445.228292 147.974512 
-" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:1.5;"/>
    </g>
    <g id="Poly3DCollection_1">
-    <path clip-path="url(#pa997345c77)" d="M 480.971301 64.922484 
-L 500.706479 45.954835 
-L 520.400043 68.474502 
-L 500.537428 86.938315 
-L 480.971301 64.922484 
+    <path clip-path="url(#p9882904c5c)" d="M 400.967658 58.70983 
+L 399.36949 143.540826 
+L 351.384806 134.948573 
+L 350.608956 50.968854 
+L 400.967658 58.70983 
 z
-" style="fill:#bfbf00;fill-opacity:0.9;stroke:#ffffff;"/>
-    <path clip-path="url(#pa997345c77)" d="M 453.547318 104.479136 
-L 457.329738 73.292378 
-L 480.971301 64.922484 
-L 500.537428 86.938315 
-L 497.129739 117.468381 
-L 473.788955 126.634485 
-L 453.547318 104.479136 
+" style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
+    <path clip-path="url(#p9882904c5c)" d="M 351.384806 134.948573 
+L 399.36949 143.540826 
+L 417.634103 170.880932 
+L 384.554526 190.532686 
+L 333.104113 180.555531 
+L 318.302575 152.385967 
+L 351.384806 134.948573 
 z
-" style="fill:#0000ff;fill-opacity:0.9;stroke:#ffffff;"/>
-    <path clip-path="url(#pa997345c77)" d="M 497.129739 117.468381 
-L 513.699978 130.646345 
-L 490.093602 140.228622 
-L 473.788955 126.634485 
-L 497.129739 117.468381 
+" style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
+    <path clip-path="url(#p9882904c5c)" d="M 315.83244 66.690144 
+L 350.608956 50.968854 
+L 351.384806 134.948573 
+L 318.302575 152.385967 
+L 315.83244 66.690144 
 z
-" style="fill:#ff0000;fill-opacity:0.9;stroke:#ffffff;"/>
-    <path clip-path="url(#pa997345c77)" d="M 534.355555 112.329037 
-L 513.699978 130.646345 
-L 497.129739 117.468381 
-L 500.537428 86.938315 
-L 520.400043 68.474502 
-L 537.640743 80.668825 
-L 534.355555 112.329037 
+" style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
+    <path clip-path="url(#p9882904c5c)" d="M 417.634103 170.880932 
+L 399.36949 143.540826 
+L 400.967658 58.70983 
+L 420.260344 83.414601 
+L 417.634103 170.880932 
 z
-" style="fill:#008000;fill-opacity:0.9;stroke:#ffffff;"/>
-    <path clip-path="url(#pa997345c77)" d="M 472.77958 42.691841 
-L 497.307676 34.410722 
-L 500.706479 45.954835 
-L 480.971301 64.922484 
-L 457.329738 73.292378 
-L 452.54285 62.622429 
-L 472.77958 42.691841 
+" style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
+    <path clip-path="url(#p9882904c5c)" d="M 318.302575 152.385967 
+L 333.104113 180.555531 
+L 331.297512 92.183508 
+L 315.83244 66.690144 
+L 318.302575 152.385967 
 z
-" style="fill:#bfbf00;fill-opacity:0.9;stroke:#ffffff;"/>
-    <path clip-path="url(#pa997345c77)" d="M 452.54285 62.622429 
-L 457.329738 73.292378 
-L 453.547318 104.479136 
-L 448.605265 94.739789 
-L 452.54285 62.622429 
+" style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
+    <path clip-path="url(#p9882904c5c)" d="M 385.487068 101.241404 
+L 420.260344 83.414601 
+L 400.967658 58.70983 
+L 350.608956 50.968854 
+L 315.83244 66.690144 
+L 331.297512 92.183508 
+L 385.487068 101.241404 
 z
-" style="fill:#bfbf00;fill-opacity:0.9;stroke:#ffffff;"/>
-    <path clip-path="url(#pa997345c77)" d="M 535.392717 70.089756 
-L 537.640743 80.668825 
-L 520.400043 68.474502 
-L 500.706479 45.954835 
-L 497.307676 34.410722 
-L 514.732973 46.320412 
-L 535.392717 70.089756 
+" style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
+    <path clip-path="url(#p9882904c5c)" d="M 385.487068 101.241404 
+L 384.554526 190.532686 
+L 417.634103 170.880932 
+L 420.260344 83.414601 
+L 385.487068 101.241404 
 z
-" style="fill:#008000;fill-opacity:0.9;stroke:#ffffff;"/>
-    <path clip-path="url(#pa997345c77)" d="M 448.605265 94.739789 
-L 453.547318 104.479136 
-L 473.788955 126.634485 
-L 490.093602 140.228622 
-L 486.276128 131.520377 
-L 465.006845 108.157725 
-L 448.605265 94.739789 
+" style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
+    <path clip-path="url(#p9882904c5c)" d="M 331.297512 92.183508 
+L 333.104113 180.555531 
+L 384.554526 190.532686 
+L 385.487068 101.241404 
+L 331.297512 92.183508 
 z
-" style="fill:#ff0000;fill-opacity:0.9;stroke:#ffffff;"/>
-    <path clip-path="url(#pa997345c77)" d="M 531.984343 102.709715 
-L 534.355555 112.329037 
-L 537.640743 80.668825 
-L 535.392717 70.089756 
-L 531.984343 102.709715 
-z
-" style="fill:#bf00bf;fill-opacity:0.9;stroke:#ffffff;"/>
-    <path clip-path="url(#pa997345c77)" d="M 507.506559 112.304514 
-L 486.276128 131.520377 
-L 490.093602 140.228622 
-L 513.699978 130.646345 
-L 534.355555 112.329037 
-L 531.984343 102.709715 
-L 507.506559 112.304514 
-z
-" style="fill:#bf00bf;fill-opacity:0.9;stroke:#ffffff;"/>
-    <path clip-path="url(#pa997345c77)" d="M 514.732973 46.320412 
-L 497.307676 34.410722 
-L 472.77958 42.691841 
-L 489.911408 54.99722 
-L 514.732973 46.320412 
-z
-" style="fill:#0000ff;fill-opacity:0.9;stroke:#ffffff;"/>
-    <path clip-path="url(#pa997345c77)" d="M 465.006845 108.157725 
-L 486.084001 88.367213 
-L 489.911408 54.99722 
-L 472.77958 42.691841 
-L 452.54285 62.622429 
-L 448.605265 94.739789 
-L 465.006845 108.157725 
-z
-" style="fill:#00bfbf;fill-opacity:0.9;stroke:#ffffff;"/>
-    <path clip-path="url(#pa997345c77)" d="M 531.984343 102.709715 
-L 535.392717 70.089756 
-L 514.732973 46.320412 
-L 489.911408 54.99722 
-L 486.084001 88.367213 
-L 507.506559 112.304514 
-L 531.984343 102.709715 
-z
-" style="fill:#008000;fill-opacity:0.9;stroke:#ffffff;"/>
-    <path clip-path="url(#pa997345c77)" d="M 486.084001 88.367213 
-L 465.006845 108.157725 
-L 486.276128 131.520377 
-L 507.506559 112.304514 
-L 486.084001 88.367213 
-z
-" style="fill:#bf00bf;fill-opacity:0.9;stroke:#ffffff;"/>
-   </g>
-   <g id="text_31">
-    <!-- faces+basis -->
-    <defs>
-     <path d="M 2.09375 45 
-L 10.296875 45 
-Q 10.40625 51 11.09375 54.34375 
-Q 11.796875 57.703125 13.796875 61.09375 
-Q 18 68.296875 27.90625 68.296875 
-Q 32.40625 68.296875 35.34375 66.546875 
-Q 38.296875 64.796875 38.296875 62.09375 
-Q 38.296875 60.40625 37.09375 59.203125 
-Q 35.90625 58 34.09375 58 
-Q 31.703125 58 29.59375 61.59375 
-Q 27.203125 65.5 24.296875 65.5 
-Q 18.703125 65.5 18.703125 56.59375 
-L 18.703125 45 
-L 30.90625 45 
-L 30.90625 41.796875 
-L 18.703125 41.796875 
-L 18.703125 10.40625 
-Q 18.703125 4.796875 20.296875 3.25 
-Q 21.90625 1.703125 28 1.5 
-L 28 0 
-L 2 0 
-L 2 1.5 
-Q 7.40625 1.796875 8.84375 3.34375 
-Q 10.296875 4.90625 10.296875 10.40625 
-L 10.296875 41.796875 
-L 2.09375 41.796875 
-z
-" id="STIXGeneral-Regular-102"/>
-     <path d="M 63.59375 22 
-L 37.5 22 
-L 37.5 -4.09375 
-L 30.90625 -4.09375 
-L 30.90625 22 
-L 4.796875 22 
-L 4.796875 28.59375 
-L 30.90625 28.59375 
-L 30.90625 54.703125 
-L 37.5 54.703125 
-L 37.5 28.59375 
-L 63.59375 28.59375 
-z
-" id="STIXGeneral-Regular-43"/>
-     <path d="M 15.296875 68.09375 
-L 15.296875 37.59375 
-Q 16.90625 41.40625 20.546875 43.703125 
-Q 24.203125 46 28.796875 46 
-Q 36.703125 46 41.75 39.703125 
-Q 46.796875 33.40625 46.796875 24 
-Q 46.796875 13 40.09375 6 
-Q 33.40625 -1 23.40625 -1 
-Q 17.296875 -1 12.09375 1.046875 
-Q 6.90625 3.09375 6.90625 5.59375 
-L 6.90625 56.59375 
-Q 6.90625 60.296875 6 61.34375 
-Q 5.09375 62.40625 2 62.40625 
-Q 1.296875 62.40625 0.296875 62.203125 
-L 0.296875 63.90625 
-L 3.296875 64.796875 
-Q 13.5 67.90625 14.796875 68.296875 
-z
-M 15.296875 31.796875 
-L 15.296875 7.40625 
-Q 15.296875 5.09375 18.140625 3.640625 
-Q 21 2.203125 25 2.203125 
-Q 30.90625 2.203125 34.296875 6.5 
-Q 38 11.09375 38 19.703125 
-Q 38 29.5 34.09375 35 
-Q 30.796875 39.703125 25.203125 39.703125 
-Q 21.203125 39.703125 18.25 37.34375 
-Q 15.296875 35 15.296875 31.796875 
-z
-" id="STIXGeneral-Regular-98"/>
-    </defs>
-    <g transform="translate(462.857868 8.4)scale(0.12 -0.12)">
-     <use xlink:href="#STIXGeneral-Regular-102"/>
-     <use x="33.299988" xlink:href="#STIXGeneral-Regular-97"/>
-     <use x="77.699982" xlink:href="#STIXGeneral-Regular-99"/>
-     <use x="122.099976" xlink:href="#STIXGeneral-Regular-101"/>
-     <use x="166.499969" xlink:href="#STIXGeneral-Regular-115"/>
-     <use x="205.399963" xlink:href="#STIXGeneral-Regular-43"/>
-     <use x="273.899948" xlink:href="#STIXGeneral-Regular-98"/>
-     <use x="323.899933" xlink:href="#STIXGeneral-Regular-97"/>
-     <use x="368.299927" xlink:href="#STIXGeneral-Regular-115"/>
-     <use x="407.199921" xlink:href="#STIXGeneral-Regular-105"/>
-     <use x="434.999908" xlink:href="#STIXGeneral-Regular-115"/>
-    </g>
+" style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
    </g>
   </g>
  </g>
  <defs>
-  <clipPath id="pa547510725">
-   <rect height="180" width="169.411765" x="0" y="0"/>
+  <clipPath id="p53a79cc2d1">
+   <rect height="184.824" width="177.545455" x="63" y="29.376"/>
   </clipPath>
-  <clipPath id="p9555be4a98">
-   <rect height="180" width="169.411765" x="203.294118" y="0"/>
-  </clipPath>
-  <clipPath id="pa997345c77">
-   <rect height="180" width="169.411765" x="406.588235" y="0"/>
+  <clipPath id="p9882904c5c">
+   <rect height="184.824" width="177.545455" x="276.054545" y="29.376"/>
   </clipPath>
  </defs>
 </svg>
@@ -2685,7 +1473,7 @@ z
 
 
 <div class="output_text output_subarea ">
-<pre>&lt;Figure size 576x180 with 0 Axes&gt;</pre>
+<pre>&lt;Figure size 504x244.8 with 0 Axes&gt;</pre>
 </div>
 
 </div>
@@ -2707,7 +1495,7 @@ z
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="plot_bz" class="doc_header"><code>plot_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L588" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>plot_bz</code>(<strong><code>poscar_or_bz</code></strong>=<em><code>None</code></em>, <strong><code>fill</code></strong>=<em><code>True</code></em>, <strong><code>color</code></strong>=<em><code>'rgba(168,204,216,0.4)'</code></em>, <strong><code>background</code></strong>=<em><code>'rgb(255,255,255)'</code></em>)</p>
+<h4 id="iplot_bz" class="doc_header"><code>iplot_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L673" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>iplot_bz</code>(<strong><code>poscar_or_bz</code></strong>=<em><code>None</code></em>, <strong><code>fill</code></strong>=<em><code>True</code></em>, <strong><code>color</code></strong>=<em><code>'rgba(168,204,216,0.4)'</code></em>, <strong><code>background</code></strong>=<em><code>'rgb(255,255,255)'</code></em>)</p>
 </blockquote>
 <ul>
 <li>Plots interactive figure showing axes,BZ surface, special points and basis, each of which could be hidden or shown.</li>
@@ -2744,7 +1532,7 @@ z
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <ul>
-<li>Below is a BZ plot using command <code>plot_bz()</code>. Same color points lie on a sphere, with radius decreasing as red to blue and gamma point in gold color. These color help distinguishing points but the points not always be equivalent, for example in FCC, there are two points on mid of edges connecting square-hexagon and hexagon-hexagon at equal distance from center but not the same points.</li>
+<li>Below is a BZ plot using command <code>iplot_bz()</code>. Same color points lie on a sphere, with radius decreasing as red to blue and gamma point in gold color. These color help distinguishing points but the points not always be equivalent, for example in FCC, there are two points on mid of edges connecting square-hexagon and hexagon-hexagon at equal distance from center but not the same points.</li>
 </ul>
 
 </div>
@@ -2758,7 +1546,7 @@ z
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pivotpy</span> <span class="k">as</span> <span class="nn">pp</span>
-<span class="n">pp</span><span class="o">.</span><span class="n">plotly_to_html</span><span class="p">(</span><span class="n">plot_bz</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]]),</span><span class="n">modebar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">pp</span><span class="o">.</span><span class="n">plotly_to_html</span><span class="p">(</span><span class="n">iplot_bz</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]]),</span><span class="n">modebar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -2774,11 +1562,11 @@ z
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
         <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
-            <div id='graph-8fa3aea8-4ad7-11eb-ab79-44032c5fd2c2'><!-- Plotly chart DIV --></div>
+            <div id='graph-0fcafd66-4ae0-11eb-b557-44032c5fd2c2'><!-- Plotly chart DIV --></div>
             <script>
                 var data = {"data":[{"legendgroup":"Axes","line":{"color":"green"},"mode":"lines+text","name":"Axes","text":["<b>k</b><sub>x</sub>","","<b>k</b><sub>y</sub>","","<b>k</b><sub>z</sub>"],"type":"scatter3d","x":[0.25,0,0,0,0],"y":[0,0,0.25,0,0],"z":[0,0,0,0,0.25]},{"colorscale":[[0.0,"rgb(247,252,245)"],[0.125,"rgb(229,245,224)"],[0.25,"rgb(199,233,192)"],[0.375,"rgb(161,217,155)"],[0.5,"rgb(116,196,118)"],[0.625,"rgb(65,171,93)"],[0.75,"rgb(35,139,69)"],[0.875,"rgb(0,109,44)"],[1.0,"rgb(0,68,27)"]],"legendgroup":"Axes","name":"Axes","showscale":false,"type":"cone","u":[1e-05,0,0],"v":[0,1e-05,0],"w":[0,0,1e-05],"x":[0.18,0,0],"y":[0,0.18,0],"z":[0,0,0.18]},{"legendgroup":"b<sub>1</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>1</sub>","text":["","<b>b</b><sub>1</sub>"],"type":"scatter3d","x":[0,1.0],"y":[0,0.0],"z":[0,0.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>1</sub>","name":"<b>b</b><sub>1</sub>","showscale":false,"type":"cone","u":[0.2],"v":[0.0],"w":[0.0],"x":[0.95],"y":[0.0],"z":[0.0]},{"legendgroup":"b<sub>2</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>2</sub>","text":["","<b>b</b><sub>2</sub>"],"type":"scatter3d","x":[0,0.0],"y":[0,1.0],"z":[0,0.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>2</sub>","name":"<b>b</b><sub>2</sub>","showscale":false,"type":"cone","u":[0.0],"v":[0.2],"w":[0.0],"x":[0.0],"y":[0.95],"z":[0.0]},{"legendgroup":"b<sub>3</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>3</sub>","text":["","<b>b</b><sub>3</sub>"],"type":"scatter3d","x":[0,0.0],"y":[0,0.0],"z":[0,1.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>3</sub>","name":"<b>b</b><sub>3</sub>","showscale":false,"type":"cone","u":[0.0],"v":[0.0],"w":[0.2],"x":[0.0],"y":[0.0],"z":[0.95]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":true,"surfaceaxis":1,"type":"scatter3d","x":[0.5,0.5,-0.5,-0.5,0.5],"y":[0.5,0.5,0.5,0.5,0.5],"z":[0.5,-0.5,-0.5,0.5,0.5]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":2,"type":"scatter3d","x":[-0.5,0.5,0.5,-0.5,-0.5],"y":[-0.5,-0.5,0.5,0.5,-0.5],"z":[0.5,0.5,0.5,0.5,0.5]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":2,"type":"scatter3d","x":[0.5,-0.5,-0.5,0.5,0.5],"y":[-0.5,-0.5,0.5,0.5,-0.5],"z":[-0.5,-0.5,-0.5,-0.5,-0.5]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":1,"type":"scatter3d","x":[-0.5,0.5,0.5,-0.5,-0.5],"y":[-0.5,-0.5,-0.5,-0.5,-0.5],"z":[-0.5,-0.5,0.5,0.5,-0.5]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":0,"type":"scatter3d","x":[-0.5,-0.5,-0.5,-0.5,-0.5],"y":[0.5,-0.5,-0.5,0.5,0.5],"z":[-0.5,-0.5,0.5,0.5,-0.5]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":0,"type":"scatter3d","x":[0.5,0.5,0.5,0.5,0.5],"y":[-0.5,-0.5,0.5,0.5,-0.5],"z":[0.5,-0.5,-0.5,0.5,0.5]},{"hovertext":["P(0.0, 0.0, 0.0)</br>d = 0.0","P(0.0, 0.5, 0.0)</br>d = 0.5","P(0.0, 0.0, 0.5)</br>d = 0.5","P(0.0, 0.0, -0.5)</br>d = 0.5","P(0.0, -0.5, 0.0)</br>d = 0.5","P(-0.5, 0.0, 0.0)</br>d = 0.5","P(0.5, 0.0, 0.0)</br>d = 0.5","P(-0.5, -0.5, 0.0)</br>d = 0.70711","P(-0.5, 0.0, -0.5)</br>d = 0.70711","P(-0.5, 0.0, 0.5)</br>d = 0.70711","P(-0.5, 0.5, 0.0)</br>d = 0.70711","P(0.0, -0.5, -0.5)</br>d = 0.70711","P(0.0, -0.5, 0.5)</br>d = 0.70711","P(0.0, 0.5, -0.5)</br>d = 0.70711","P(0.0, 0.5, 0.5)</br>d = 0.70711","P(0.5, -0.5, 0.0)</br>d = 0.70711","P(0.5, 0.0, -0.5)</br>d = 0.70711","P(0.5, 0.0, 0.5)</br>d = 0.70711","P(0.5, 0.5, 0.0)</br>d = 0.70711","P(-0.5, -0.5, -0.5)</br>d = 0.86603","P(-0.5, -0.5, 0.5)</br>d = 0.86603","P(-0.5, 0.5, -0.5)</br>d = 0.86603","P(-0.5, 0.5, 0.5)</br>d = 0.86603","P(0.5, -0.5, -0.5)</br>d = 0.86603","P(0.5, -0.5, 0.5)</br>d = 0.86603","P(0.5, 0.5, -0.5)</br>d = 0.86603","P(0.5, 0.5, 0.5)</br>d = 0.86603"],"marker":{"color":["rgb(255,215,0)","rgb(0.0,0,255.0)","rgb(0.0,0,255.0)","rgb(0.0,0,255.0)","rgb(0.0,0,255.0)","rgb(0.0,0,255.0)","rgb(0.0,0,255.0)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(255.0,0,0.0)","rgb(255.0,0,0.0)","rgb(255.0,0,0.0)","rgb(255.0,0,0.0)","rgb(255.0,0,0.0)","rgb(255.0,0,0.0)","rgb(255.0,0,0.0)","rgb(255.0,0,0.0)"]},"mode":"markers","name":"HSK","type":"scatter3d","x":[0.0,0.0,0.0,0.0,0.0,-0.5,0.5,-0.5,-0.5,-0.5,-0.5,0.0,0.0,0.0,0.0,0.5,0.5,0.5,0.5,-0.5,-0.5,-0.5,-0.5,0.5,0.5,0.5,0.5],"y":[0.0,0.5,0.0,0.0,-0.5,0.0,0.0,-0.5,0.0,0.0,0.5,-0.5,-0.5,0.5,0.5,-0.5,0.0,0.0,0.5,-0.5,-0.5,0.5,0.5,-0.5,-0.5,0.5,0.5],"z":[0.0,0.0,0.5,-0.5,0.0,0.0,0.0,0.0,-0.5,0.5,0.0,-0.5,0.5,-0.5,0.5,0.0,-0.5,0.5,0.0,-0.5,0.5,-0.5,0.5,-0.5,0.5,-0.5,0.5]}],"layout":{"font":{"family":"Times New Roman","size":14},"margin":{"b":10,"l":10,"r":10,"t":30},"paper_bgcolor":"rgb(255,255,255)","scene":{"aspectmode":"data","camera":{"center":{"x":0.1,"y":0.1,"z":0.1}},"xaxis":{"showbackground":false,"visible":false},"yaxis":{"showbackground":false,"visible":false},"zaxis":{"showbackground":false,"visible":false}},"template":{"data":{"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5}},"type":"bar"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5}},"type":"barpolar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"histogram":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"histogram"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"#E5ECF6","showlakes":true,"showland":true,"subunitcolor":"white"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2}}}}};
                 var config = {displayModeBar: false,scrollZoom: true};
-                Plotly.newPlot('graph-8fa3aea8-4ad7-11eb-ab79-44032c5fd2c2', data.data,data.layout,config);
+                Plotly.newPlot('graph-0fcafd66-4ae0-11eb-b557-44032c5fd2c2', data.data,data.layout,config);
             </script>
         </div>
 </div>
@@ -2802,7 +1590,7 @@ z
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="kpoints2coords" class="doc_header"><code>kpoints2coords</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L681" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>kpoints2coords</code>(<strong><code>kpoints</code></strong>, <strong><code>poscar</code></strong>, <strong><code>primitive</code></strong>=<em><code>True</code></em>)</p>
+<h4 id="kpoints2coords" class="doc_header"><code>kpoints2coords</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L766" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>kpoints2coords</code>(<strong><code>kpoints</code></strong>, <strong><code>poscar</code></strong>, <strong><code>primitive</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 
 </div>
@@ -2864,7 +1652,7 @@ z
 
 <span class="n">kpoints</span> <span class="o">=</span> <span class="n">get_kmesh</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">kpoints</span> 
 <span class="n">coords</span> <span class="o">=</span> <span class="n">kpoints2coords</span><span class="p">(</span><span class="n">kpoints</span><span class="p">,</span><span class="n">hexa</span><span class="p">)</span>
-<span class="n">fig</span> <span class="o">=</span> <span class="n">plot_bz</span><span class="p">(</span><span class="n">get_bz</span><span class="p">(</span><span class="n">hexa</span><span class="p">,</span><span class="n">primitive</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">iplot_bz</span><span class="p">(</span><span class="n">get_bz</span><span class="p">(</span><span class="n">hexa</span><span class="p">,</span><span class="n">primitive</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Scatter3d</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">z</span><span class="o">=</span><span class="n">coords</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span>
             <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;markers&#39;</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;KPOINTS&#39;</span><span class="p">))</span>
 <span class="n">pp</span><span class="o">.</span><span class="n">plotly_to_html</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span><span class="n">modebar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -2883,11 +1671,11 @@ z
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
         <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
-            <div id='graph-a5f1abd4-4ad7-11eb-8d44-44032c5fd2c2'><!-- Plotly chart DIV --></div>
+            <div id='graph-142b099c-4ae0-11eb-bfaf-44032c5fd2c2'><!-- Plotly chart DIV --></div>
             <script>
                 var data = {"data":[{"legendgroup":"Axes","line":{"color":"green"},"mode":"lines+text","name":"Axes","text":["<b>k</b><sub>x</sub>","","<b>k</b><sub>y</sub>","","<b>k</b><sub>z</sub>"],"type":"scatter3d","x":[0.25,0,0,0,0],"y":[0,0,0.25,0,0],"z":[0,0,0,0,0.25]},{"colorscale":[[0.0,"rgb(247,252,245)"],[0.125,"rgb(229,245,224)"],[0.25,"rgb(199,233,192)"],[0.375,"rgb(161,217,155)"],[0.5,"rgb(116,196,118)"],[0.625,"rgb(65,171,93)"],[0.75,"rgb(35,139,69)"],[0.875,"rgb(0,109,44)"],[1.0,"rgb(0,68,27)"]],"legendgroup":"Axes","name":"Axes","showscale":false,"type":"cone","u":[1e-05,0,0],"v":[0,1e-05,0],"w":[0,0,1e-05],"x":[0.18,0,0],"y":[0,0.18,0],"z":[0,0,0.18]},{"legendgroup":"b<sub>1</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>1</sub>","text":["","<b>b</b><sub>1</sub>"],"type":"scatter3d","x":[0,1.0],"y":[0,-0.5773502691896258],"z":[0,0.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>1</sub>","name":"<b>b</b><sub>1</sub>","showscale":false,"type":"cone","u":[0.2],"v":[-0.11547005383792518],"w":[0.0],"x":[0.95],"y":[-0.5484827557301445],"z":[0.0]},{"legendgroup":"b<sub>2</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>2</sub>","text":["","<b>b</b><sub>2</sub>"],"type":"scatter3d","x":[0,0.0],"y":[0,1.1547005383792517],"z":[0,0.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>2</sub>","name":"<b>b</b><sub>2</sub>","showscale":false,"type":"cone","u":[0.0],"v":[0.23094010767585035],"w":[0.0],"x":[0.0],"y":[1.096965511460289],"z":[0.0]},{"legendgroup":"b<sub>3</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>3</sub>","text":["","<b>b</b><sub>3</sub>"],"type":"scatter3d","x":[0,0.0],"y":[0,0.0],"z":[0,1.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>3</sub>","name":"<b>b</b><sub>3</sub>","showscale":false,"type":"cone","u":[0.0],"v":[0.0],"w":[0.2],"x":[0.0],"y":[0.0],"z":[0.95]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":true,"surfaceaxis":0,"type":"scatter3d","x":[0.0,1.0,0.0,1.0,0.0],"y":[0.0,-0.57735027,1.15470054,0.57735027,0.0],"z":[0.0,0.0,0.0,0.0,0.0]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":1,"type":"scatter3d","x":[0.0,0.0,0.0,0.0,0.0],"y":[0.0,1.15470054,0.0,1.15470054,0.0],"z":[0.0,0.0,1.0,1.0,0.0]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":0,"type":"scatter3d","x":[0.0,0.0,1.0,1.0,0.0],"y":[0.0,0.0,-0.57735027,-0.57735027,0.0],"z":[0.0,1.0,0.0,1.0,0.0]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":0,"type":"scatter3d","x":[1.0,1.0,1.0,1.0,1.0],"y":[0.57735027,0.57735027,-0.57735027,-0.57735027,0.57735027],"z":[0.0,1.0,1.0,0.0,0.0]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":1,"type":"scatter3d","x":[0.0,1.0,1.0,0.0,0.0],"y":[1.15470054,0.57735027,0.57735027,1.15470054,1.15470054],"z":[1.0,1.0,0.0,0.0,1.0]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":2,"type":"scatter3d","x":[1.0,1.0,0.0,0.0,1.0],"y":[-0.57735027,0.57735027,1.15470054,0.0,-0.57735027],"z":[1.0,1.0,1.0,1.0,1.0]},{"hovertext":["P(0.0, 0.0, 0.0)</br>d = 0.0","P(0.5, 0.5, 0.0)</br>d = 0.57735","P(0.0, 0.5, 0.5)</br>d = 0.76376","P(0.5, 0.0, 0.5)</br>d = 0.76376","P(1.0, 0.5, 0.5)</br>d = 1.11803","P(0.5, 1.0, 0.5)</br>d = 1.11803","P(0.5, 0.5, 1.0)</br>d = 1.1547","P(0.5, 1.0, 0.0)</br>d = 1.0","P(0.5, 1.0, 1.0)</br>d = 1.41421","P(1.0, 0.5, 0.0)</br>d = 1.0","P(1.0, 0.5, 1.0)</br>d = 1.41421","P(0.0, 0.0, 1.0)</br>d = 1.0","P(0.0, 1.0, 0.0)</br>d = 1.1547","P(0.0, 1.0, 1.0)</br>d = 1.52753","P(1.0, 0.0, 0.0)</br>d = 1.1547","P(1.0, 0.0, 1.0)</br>d = 1.52753","P(1.0, 1.0, 0.0)</br>d = 1.1547","P(1.0, 1.0, 1.0)</br>d = 1.52753"],"marker":{"color":["rgb(255,215,0)","rgb(0.0,0,255.0)","rgb(42.5,0,212.5)","rgb(42.5,0,212.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(170.0,0,85.0)","rgb(85.0,0,170.0)","rgb(212.5,0,42.5)","rgb(85.0,0,170.0)","rgb(212.5,0,42.5)","rgb(85.0,0,170.0)","rgb(170.0,0,85.0)","rgb(255.0,0,0.0)","rgb(170.0,0,85.0)","rgb(255.0,0,0.0)","rgb(170.0,0,85.0)","rgb(255.0,0,0.0)"]},"mode":"markers","name":"HSK","type":"scatter3d","x":[0.0,0.5,0.0,0.5,1.0,0.5,0.5,0.5,0.5,1.0,1.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0],"y":[0.0,0.28867513,0.57735027,-0.28867513,0.0,0.8660254,0.28867513,0.8660254,0.8660254,0.0,0.0,0.0,1.15470054,1.15470054,-0.57735027,-0.57735027,0.57735027,0.57735027],"z":[0.0,0.0,0.5,0.5,0.5,0.5,1.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0,0.0,1.0,0.0,1.0]},{"mode":"markers","name":"KPOINTS","type":"scatter3d","x":[0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0],"y":[0.0,-0.14433756729740646,-0.2886751345948129,-0.4330127018922194,-0.5773502691896258,0.2886751345948129,0.14433756729740646,0.0,-0.1443375672974065,-0.2886751345948129,0.5773502691896258,0.4330127018922194,0.2886751345948129,0.14433756729740643,0.0,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.43301270189221935,0.2886751345948129,1.1547005383792517,1.0103629710818451,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.0,-0.14433756729740646,-0.2886751345948129,-0.4330127018922194,-0.5773502691896258,0.2886751345948129,0.14433756729740646,0.0,-0.1443375672974065,-0.2886751345948129,0.5773502691896258,0.4330127018922194,0.2886751345948129,0.14433756729740643,0.0,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.43301270189221935,0.2886751345948129,1.1547005383792517,1.0103629710818451,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.0,-0.14433756729740646,-0.2886751345948129,-0.4330127018922194,-0.5773502691896258,0.2886751345948129,0.14433756729740646,0.0,-0.1443375672974065,-0.2886751345948129,0.5773502691896258,0.4330127018922194,0.2886751345948129,0.14433756729740643,0.0,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.43301270189221935,0.2886751345948129,1.1547005383792517,1.0103629710818451,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.0,-0.14433756729740646,-0.2886751345948129,-0.4330127018922194,-0.5773502691896258,0.2886751345948129,0.14433756729740646,0.0,-0.1443375672974065,-0.2886751345948129,0.5773502691896258,0.4330127018922194,0.2886751345948129,0.14433756729740643,0.0,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.43301270189221935,0.2886751345948129,1.1547005383792517,1.0103629710818451,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.0,-0.14433756729740646,-0.2886751345948129,-0.4330127018922194,-0.5773502691896258,0.2886751345948129,0.14433756729740646,0.0,-0.1443375672974065,-0.2886751345948129,0.5773502691896258,0.4330127018922194,0.2886751345948129,0.14433756729740643,0.0,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.43301270189221935,0.2886751345948129,1.1547005383792517,1.0103629710818451,0.8660254037844388,0.7216878364870323,0.5773502691896258],"z":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0]}],"layout":{"font":{"family":"Times New Roman","size":14},"margin":{"b":10,"l":10,"r":10,"t":30},"paper_bgcolor":"rgb(255,255,255)","scene":{"aspectmode":"data","camera":{"center":{"x":0.1,"y":0.1,"z":0.1}},"xaxis":{"showbackground":false,"visible":false},"yaxis":{"showbackground":false,"visible":false},"zaxis":{"showbackground":false,"visible":false}},"template":{"data":{"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5}},"type":"bar"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5}},"type":"barpolar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"histogram":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"histogram"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"#E5ECF6","showlakes":true,"showland":true,"subunitcolor":"white"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2}}}}};
                 var config = {displayModeBar: false,scrollZoom: true};
-                Plotly.newPlot('graph-a5f1abd4-4ad7-11eb-8d44-44032c5fd2c2', data.data,data.layout,config);
+                Plotly.newPlot('graph-142b099c-4ae0-11eb-bfaf-44032c5fd2c2', data.data,data.layout,config);
             </script>
         </div>
 </div>
