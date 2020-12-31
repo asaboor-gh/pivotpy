@@ -41188,7 +41188,9 @@ z
 <h2 id="Brillouin-Zone-(BZ)-Processing">Brillouin Zone (BZ) Processing<a class="anchor-link" href="#Brillouin-Zone-(BZ)-Processing"> </a></h2><ul>
 <li>Look in <code>pivotpy.sio</code> module for details on generating mesh and path of KPOINTS as well as using Materials Projects' API to get POSCAR right in the working folder with command <a href="/pivotpy/StructureIO.html#get_poscar"><code>get_poscar</code></a>. Below is a screenshot of interactive BZ plot. You can <code>double click</code> on blue points and hit <code>Ctrl + C</code> to copy the high symmetry points relative to reciprocal lattice basis vectors. (You will be able to draw kpath in <code>Pivotpy-Dash</code> application and generate KPOINTS automatically from a web interface later on!). </li>
 <li>Same color points lie on a sphere, with radius decreasing as red to blue and  gamma point in gold color. These color help distinguishing points but the points not always be equivalent, for example in FCC, there are two points on mid of edges connecting square-hexagon and hexagon-hexagon at equal distance from center but not the same points. </li>
-<li>Any colored point's hover text is in gold background.</li>
+<li>Any colored point's hover text is in gold background.<br>
+#### Look the output of <code>pivotpy.sio.splot_bz</code>.
+<img src="/pivotpy/docs/images/3bz.jpg" alt="BZ"></li>
 </ul>
 
 </div>
