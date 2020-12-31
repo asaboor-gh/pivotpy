@@ -2,7 +2,7 @@
 
 __all__ = ['save_mp_API', 'load_mp_data', 'get_crystal', 'get_poscar', 'get_kpath', 'get_basis', 'get_kmesh',
            'centroid', 'order', 'out_bz_plane', 'rad_angle', 'arctan_full', 'get_bz', 'splot_bz', 'iplot_bz',
-           'kpoints2coords']
+           'kpoints2coords', 'to_bz']
 
 # Cell
 import os
@@ -728,3 +728,37 @@ def kpoints2coords(basis,kpoints):
     #            = [n1, n2, n3].dot(rec_basis)
     coords = kpoints.dot(rec_basis)
     return coords
+
+# Cell
+def to_bz(bz,kpoints):
+    """
+    - Returns True if test_point is between plane and origin. Could be used to sample BZ mesh in place of ConvexHull.
+    - **Parameters**
+        - test_points: 3D point.
+        - plane      : List of at least three coplanar points.
+    """
+    cent_planes = [centroid(np.unique(face,axis=0)) for face in bz.faces]
+
+    out_coords = np.empty(np.shape(kpoints)) # To store back
+
+    def inside(coord,cent_planes):
+        _dots_ = np.max([np.dot(coord-c, c) for c in cent_planes]) #max in all planes
+        #print(_dots_)
+        if np.max(_dots_) > 1e-5: # Outside
+            return np.array([]) # empty for comparison
+        else: # Inside
+            return coord
+
+    from itertools import product
+    for i,p in enumerate(kpoints):
+        for q in product([0,1,-1],[0,1,-1],[0,1,-1]):
+            # First translate, then make coords, then feed it back
+            #print(q)
+            pos = kpoints2coords(bz.basis,p + np.array(q))
+            r = inside(pos,cent_planes)
+            if r.any():
+                #print(p,'-->',r)
+                out_coords[i] = r
+                StopIteration
+
+    return out_coords
