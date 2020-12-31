@@ -20,6 +20,7 @@ from scipy.spatial import Voronoi
 import plotly.graph_objects as go
 
 import pivotpy.vr_parser as vp
+import pivotpy.s_plots as sp
 
 # Cell
 def save_mp_API(api_key):
@@ -409,7 +410,7 @@ def out_bz_plane(test_point,plane):
     """
     outside = True
     p_test = np.array(test_point)
-    plane = np.array(plane)
+    plane = np.unique(plane,axis=0) #Avoid looped shape.
     c = np.array(centroid(plane))
     _dot_ = np.dot(p_test-c,c)
     if _dot_ < -1e-5:
@@ -718,14 +719,12 @@ def iplot_bz(poscar_or_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',bac
     return fig
 
 # Cell
-def kpoints2coords(kpoints,poscar,primitive=True):
-    rec_basis = get_basis(poscar).basis
+def kpoints2coords(basis,kpoints):
+    """Returns coordinates of kpoints (relative to basis before) in orthogonal space."""
+    rec_basis = np.array(basis)
     kpoints = np.array(kpoints)
     # Formula to make coordinates from relative kpoints.
     # kx, ky, kz = n1*b1 + n2*b2 +n3*b3
     #            = [n1, n2, n3].dot(rec_basis)
     coords = kpoints.dot(rec_basis)
-    if primitive:
-        return coords
-    else:
-        print("Not impelemented yet for Wigner-Seitz cell!")
+    return coords
