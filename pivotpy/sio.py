@@ -18,6 +18,8 @@ from itertools import product
 from scipy.spatial import ConvexHull
 from scipy.spatial import Voronoi
 import plotly.graph_objects as go
+from mpl_toolkits import mplot3d
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 import pivotpy.vr_parser as vp
 import pivotpy.s_plots as sp
@@ -247,26 +249,19 @@ def get_basis(poscar=None):
     """Returns poscar and basis in form of namedtuple.
     - **Parameters**
         - poscar: path/to/POSCAR or 3 given vectors as rows of a mtrix."""
-    if None in poscar and os.path.isfile('./POSCAR'):
+    if isinstance(poscar,type(None)) and os.path.isfile('./POSCAR'):
         poscar = './POSCAR'
-    elif None in poscar and not os.path.isfile('./POSCAR'):
-        raise ValueError("Argument 'poscar' expects file 'POSCAR' or 3 basis vectors.")
-    lines = []
+    elif isinstance(poscar,str) and not os.path.isfile(poscar):
+        raise ValueError("Argument 'poscar' expects path to 'POSCAR' or 3 basis vectors.")
+
     a1,a2,a3=[],[],[]
     if np.ndim(poscar) ==2:
-        a1,a2,a3 = poscar[0],poscar[1],poscar[2]
+        a1, a2, a3 = poscar[0],poscar[1],poscar[2]
     elif os.path.isfile(poscar):
-        with open(poscar,'r') as f:
-            lines = f.readlines()
-            f.close()
-        if lines != []:
-            a1 = [float(i) for i in lines[2].split()]
-            a2 = [float(i) for i in lines[3].split()]
-            a3 = [float(i) for i in lines[4].split()]
+        a1, a2, a3 = vp.islice2array(poscar,start=2,nlines=3).reshape((-1,3))
     else:
-        raise FileNotFoundError("'{}' does not exist or not 3 by 3 list.".format(poscar))
+        raise FileNotFoundError("{!r} does not exist or not 3 by 3 list.".format(poscar))
     # Process
-    #a1, a2, a3 = np.array(a1), np.array(a2), np.array(a2) # Must
     V  = np.dot(a1,np.cross(a2,a3))
     b1 = np.cross(a2,a3)/V
     b2 = np.cross(a3,a1)/V
@@ -598,14 +593,12 @@ def splot_bz(poscar_or_bz = None, ax = None, plane=None,color='blue',fill=True,v
         if ax and ax.name == "3d":
             ax3d = ax
         else:
-            from mpl_toolkits import mplot3d
             pos = ax.get_position()
             fig = ax.get_figure()
             ax.remove()
             ax3d = fig.add_axes(pos,projection='3d',azim=45,elev=30)
 
         if fill:
-            from mpl_toolkits.mplot3d.art3d import Poly3DCollection
             poly = Poly3DCollection(bz.faces,edgecolors=[color,],facecolors=[color,], alpha=0.3)
             ax3d.add_collection3d(poly)
             ax3d.autoscale_view()
@@ -641,7 +634,7 @@ def iplot_bz(poscar_or_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',
     - **Parameters**
         - pocar_or_bz: POSCAR or 3 basis vectors' list forming POSCAR. Auto picks in working directory. Plot conventional BZ if poscar is given. If you want to plot primitive BZ, first create it using `get_bz(primitive=True)`.
         - fill       : True by defult, determines whether to fill surface of BZ or not.
-        - color      : color to fill surface 'rgba((168,204,216,0.4)` by default.
+        - color      : color to fill surface 'rgba(168,204,216,0.4)` by default.
         - background : Plot background color, default is 'rgb(255,255,255)'.
         - vname      : Default is `b` for reciprocal space, can set `a` for plotting cell as after `get_bz(get_bz().basis)` you get real space lattice back if `primitive=True` both times.
         - fig        : (Optional) Plotly's `go.Figure`. If you want to plot on another plotly's figure, provide that.
@@ -686,33 +679,20 @@ def iplot_bz(poscar_or_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',
             legendgroup="{}<sub>{}</sub>".format(vname,i+1),name="<b>{}</b><sub>{}</sub>".format(vname,i+1)))
 
     # Faces
-    face_ind = 0
-    fill_axis = None # Placeholder
     legend = True
-    for k,pts in enumerate(bz.faces):
-        if fill == False:
-            color = 'black'
-            fill_axis = None
-        elif fill == True:
-            face_dir = np.abs(centroid(np.unique(pts,axis=0))) # same fill axis in negative axes too
-            if np.max(face_dir) == face_dir[0]:
-                fill_axis = 0
-            elif np.max(face_dir) == face_dir[1]:
-                fill_axis = 1
-            elif np.max(face_dir) == face_dir[2]:
-                fill_axis = 2
-        if k != 0:
-            legend = False
+    for pts in bz.faces:
         fig.add_trace(go.Scatter3d(x=pts[:,0], y=pts[:,1],z=pts[:,2],
-            mode='lines',line_color=color,    legendgroup=s_name,name=s_name,
-            showlegend=legend,surfaceaxis=fill_axis))
+            mode='lines',line_color=color, legendgroup=s_name,name=s_name,
+            showlegend=legend))
+        legend = False # Only first legend to show for all
+
     if fill:
-        from scipy.spatial import ConvexHull
         xc = bz.vertices[ConvexHull(bz.vertices).vertices]
         fig.add_trace(go.Mesh3d(x=xc[:, 0], y=xc[:, 1], z=xc[:, 2],
-                        color="blue",
+                        color=color,
                         opacity=.2,
-                        alphahull=0))
+                        alphahull=0,
+                        legendgroup=s_name,name=s_name))
 
     # Special Points only if in reciprocal space.
     if vname == 'b':
