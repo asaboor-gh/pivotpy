@@ -679,11 +679,11 @@ def iplot_bz(poscar_or_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',
     # Basis
     for i,b in enumerate(bz.basis):
         fig.add_trace(go.Scatter3d(x=[0,b[0]], y=[0,b[1]],z=[0,b[2]],
-            mode='lines+text',legendgroup="b<sub>{}</sub>".format(i+1), line_color='red',
-            name="<b>b</b><sub>{}</sub>".format(i+1),text=["","<b>{}</b><sub>{}</sub>".format(vname,i+1)]))
+            mode='lines+text',legendgroup="{}<sub>{}</sub>".format(vname,i+1), line_color='red',
+            name="<b>{}</b><sub>{}</sub>".format(vname,i+1),text=["","<b>{}</b><sub>{}</sub>".format(vname,i+1)]))
         fig.add_trace(go.Cone(x=[0.95*b[0]],y=[0.95*b[1]],z=[0.95*b[2]],
             u=[0.2*b[0]],v=[0.2*b[1]],w=[0.2*b  [2]],showscale=False,colorscale='Reds',
-            legendgroup="b<sub>{}</sub>".format(i+1),name="<b>{}</b><sub>{}</sub>".format(vname,i+1)))
+            legendgroup="{}<sub>{}</sub>".format(vname,i+1),name="<b>{}</b><sub>{}</sub>".format(vname,i+1)))
 
     # Faces
     face_ind = 0
