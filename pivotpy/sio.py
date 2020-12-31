@@ -659,20 +659,23 @@ def iplot_bz(poscar_or_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',
 
     if not fig:
         fig = go.Figure()
-    # Axes
+    # Name fixing
     axes_text = ["<b>k</b><sub>x</sub>","","<b>k</b><sub>y</sub>","","<b>k</b><sub>z</sub>"]
     s_name = 'BZ'
+    a_name = 'Axes'
     if vname == 'a':
         axes_text = ["<b>x</b>","","<b>y</b>","","<b>z</b>"] # Real space
         s_name = 'Lattice'
+        a_name = 'RealAxes'
 
+    # Axes
     fig.add_trace(go.Scatter3d(x=[0.25,0,0,0,0],y=[0,0,0.25,0,0],z=[0,0,0,0,0.25],
         mode='lines+text',
         text= axes_text,
-        line_color='green', legendgroup='Axes',name='Axes'))
+        line_color='green', legendgroup=a_name,name=a_name))
     fig.add_trace(go.Cone(x=[0.18,0,0],y=[0,0.18,0],z=[0,0,0.18],
         u=[0.00001,0,0],v=[0,0.00001,0],w=[0,0,    0.00001],showscale=False,
-        colorscale='Greens',legendgroup='Axes',name='Axes'))
+        colorscale='Greens',legendgroup=a_name,name=a_name))
     # Basis
     for i,b in enumerate(bz.basis):
         fig.add_trace(go.Scatter3d(x=[0,b[0]], y=[0,b[1]],z=[0,b[2]],
