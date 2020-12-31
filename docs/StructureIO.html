@@ -804,7 +804,7 @@ Angle with x-axis: 1.5707963267948966
 <li>normals : get_bz().normals, all vertors that are perpendicular BZ faces/planes.</li>
 <li>vertices: get_bz().vertices, all vertices of BZ, could be input into ConvexHull for constructing 3D BZ.</li>
 <li>faces   : get_bz().faces, vertices arranged into faces, could be input to Poly3DCollection of matplotlib for creating BZ from faces' patches.</li>
-<li>specials : get_bz().specials, Dictionary of high symmetry KPOINTS with keys as points relative to basis and values are corresponding positions in recirprocal coordinates space.</li>
+<li>specials : get_bz().specials, Data with attributes <code>coords</code> and <code>kpoints</code> in on-one correspondence for high symmetry KPOINTS in recirprocal coordinates space.</li>
 </ul>
 </li>
 </ul>
@@ -852,9 +852,8 @@ Angle with x-axis: 1.5707963267948966
 
 <span class="n">basis</span><span class="p">,</span><span class="n">normals</span><span class="p">,</span><span class="n">vertices</span><span class="p">,</span><span class="n">faces</span><span class="p">,</span><span class="n">specials</span> <span class="o">=</span> <span class="n">get_bz</span><span class="p">(</span><span class="n">fcc</span><span class="p">,</span><span class="n">digits</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">basis</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">i</span><span class="p">,(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">specials</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-    <span class="k">if</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">specials</span><span class="o">.</span><span class="n">coords</span><span class="p">[:</span><span class="mi">10</span><span class="p">],</span><span class="n">specials</span><span class="o">.</span><span class="n">kpoints</span><span class="p">[:</span><span class="mi">10</span><span class="p">]):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="s1">&#39;--&gt;&#39;</span><span class="p">,</span><span class="n">k</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -870,9 +869,16 @@ Angle with x-axis: 1.5707963267948966
 <pre>[[-0.99598619  0.99598619  0.99598619]
  [ 0.99598619 -0.99598619  0.99598619]
  [ 0.99598619  0.99598619 -0.99598619]]
-(-0.0, 0.0, 0.0) (0.0, 0.0, 0.0)
-(0.5, -0.0, 0.5) (0.0, 0.996, -0.0)
-(0.5, 0.0, 0.0) (-0.498, 0.498, 0.498)
+[-0.  0.  0.] --&gt; [0. 0. 0.]
+[ 0.5 -0.   0.5] --&gt; [ 0.     0.996 -0.   ]
+[0.5 0.  0. ] --&gt; [-0.498  0.498  0.498]
+[0.5 0.5 0. ] --&gt; [ 0.    -0.     0.996]
+[-0.   0.5  0.5] --&gt; [ 0.996 -0.    -0.   ]
+[0.5 0.5 0.5] --&gt; [0.498 0.498 0.498]
+[-0.  -0.5  0. ] --&gt; [-0.498  0.498 -0.498]
+[-0.   0.   0.5] --&gt; [ 0.498  0.498 -0.498]
+[-0.5  0.  -0.5] --&gt; [ 0.    -0.996  0.   ]
+[-0.5 -0.5 -0.5] --&gt; [-0.498 -0.498 -0.498]
 </pre>
 </div>
 </div>
@@ -894,7 +900,7 @@ Angle with x-axis: 1.5707963267948966
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="splot_bz" class="doc_header"><code>splot_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L545" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>splot_bz</code>(<strong><code>poscar_or_bz</code></strong>=<em><code>None</code></em>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>plane</code></strong>=<em><code>None</code></em>, <strong><code>color</code></strong>=<em><code>'blue'</code></em>, <strong><code>fill</code></strong>=<em><code>True</code></em>, <strong><code>vectors</code></strong>=<em><code>True</code></em>, <strong><code>v3</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="splot_bz" class="doc_header"><code>splot_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L546" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>splot_bz</code>(<strong><code>poscar_or_bz</code></strong>=<em><code>None</code></em>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>plane</code></strong>=<em><code>None</code></em>, <strong><code>color</code></strong>=<em><code>'blue'</code></em>, <strong><code>fill</code></strong>=<em><code>True</code></em>, <strong><code>vectors</code></strong>=<em><code>True</code></em>, <strong><code>v3</code></strong>=<em><code>False</code></em>, <strong><code>vname</code></strong>=<em><code>'b'</code></em>)</p>
 </blockquote>
 <ul>
 <li>Plots matplotlib's static figure.</li>
@@ -905,7 +911,8 @@ Angle with x-axis: 1.5707963267948966
 <li>vectors    : Plots basis vectors, default is True.</li>
 <li>v3         : Plots 3rd vector as well. Only works in 2D and when <code>vectors=True</code>.</li>
 <li>plane      : Default is None and plots 3D surface. Can take 'xy','yz','zx' to plot in 2D.</li>
-<li>ax         : Auto generated by default, 2D axes is required, auto converts in 3D on demand.</li>
+<li>ax         : Auto generated by default, 2D/3D axes, auto converts in 3D on demand as well.</li>
+<li>vname      : Default is <code>b</code> for reciprocal space, can set <code>a</code> for plotting cell as after <code>get_bz(get_bz().basis)</code> you get real space lattice back if <code>primitive=True</code> both times.</li>
 </ul>
 </li>
 <li><strong>Returns</strong><ul>
@@ -942,15 +949,19 @@ Angle with x-axis: 1.5707963267948966
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pivotpy.s_plots</span> <span class="k">as</span> <span class="nn">sp</span>
 <span class="n">lat</span> <span class="o">=</span> <span class="n">hexa</span>
 <span class="n">bz</span> <span class="o">=</span> <span class="n">get_bz</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span><span class="n">primitive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">loop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">axs</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">init_figure</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mf">2.6</span><span class="p">))</span>
+<span class="n">axs</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">init_figure</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
 <span class="n">ax2d</span> <span class="o">=</span> <span class="n">splot_bz</span><span class="p">(</span><span class="n">bz</span><span class="p">,</span><span class="n">plane</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">vectors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">))</span>
 <span class="n">ax3d</span> <span class="o">=</span> <span class="n">splot_bz</span><span class="p">(</span><span class="n">bz</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">108</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span><span class="mi">204</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span><span class="mi">215</span><span class="o">/</span><span class="mi">255</span><span class="p">),</span><span class="n">vectors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">ax3d_</span> <span class="o">=</span> <span class="n">splot_bz</span><span class="p">(</span><span class="n">get_bz</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span><span class="n">primitive</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">212</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span><span class="mi">175</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span><span class="mi">55</span><span class="o">/</span><span class="mi">255</span><span class="p">),</span><span class="n">vectors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">prim_bz</span> <span class="o">=</span> <span class="n">get_bz</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span><span class="n">primitive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ax3d_</span> <span class="o">=</span> <span class="n">splot_bz</span><span class="p">(</span><span class="n">prim_bz</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">212</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span><span class="mi">175</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span><span class="mi">55</span><span class="o">/</span><span class="mi">255</span><span class="p">),</span><span class="n">vectors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">_ax3d</span> <span class="o">=</span> <span class="n">splot_bz</span><span class="p">(</span><span class="n">get_bz</span><span class="p">(</span><span class="n">prim_bz</span><span class="o">.</span><span class="n">basis</span><span class="p">,</span><span class="n">primitive</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">212</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span><span class="mi">175</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span><span class="mi">55</span><span class="o">/</span><span class="mi">255</span><span class="p">),</span><span class="n">vectors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">vname</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
 <span class="n">ax3d</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
 <span class="n">ax3d</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Regular BZ&#39;</span><span class="p">)</span>
 <span class="n">ax3d_</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
 <span class="n">ax3d_</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Primitive BZ&#39;</span><span class="p">)</span>
 <span class="n">ax2d</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+<span class="n">_ax3d</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Real lattice&#39;</span><span class="p">)</span>
+<span class="n">_ax3d</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
 <span class="n">ax2d</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;XY Projection of Regular BZ&#39;</span><span class="p">)</span>
 <span class="n">sp</span><span class="o">.</span><span class="n">plt_to_html</span><span class="p">()</span>
 </pre></div>
@@ -966,7 +977,7 @@ Angle with x-axis: 1.5707963267948966
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
-<svg height="187.2pt" version="1.1" viewBox="0 0 648 187.2" width="648pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg height="144pt" version="1.1" viewBox="0 0 648 144" width="648pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
  <defs>
   <style type="text/css">
 *{stroke-linecap:butt;stroke-linejoin:round;}
@@ -974,8 +985,8 @@ Angle with x-axis: 1.5707963267948966
  </defs>
  <g id="figure_1">
   <g id="patch_1">
-   <path d="M 0 187.2 
-L 648 187.2 
+   <path d="M 0 144 
+L 648 144 
 L 648 0 
 L 0 0 
 z
@@ -983,107 +994,107 @@ z
   </g>
   <g id="axes_1">
    <g id="patch_2">
-    <path clip-path="url(#pb47ce7e896)" d="M 225.131761 159.044735 
-L 221.387727 158.339291 
-L 221.971837 157.407758 
-L 141.404992 114.578667 
-L 141.445276 114.514424 
-L 222.01212 157.343514 
-L 222.59623 156.411982 
+    <path clip-path="url(#p9ae717bce5)" d="M 187.532171 122.342104 
+L 184.764842 121.799454 
+L 185.196575 121.082891 
+L 125.647168 88.137436 
+L 125.676943 88.088018 
+L 185.22635 121.033473 
+L 185.658083 120.316909 
 z
 " style="stroke:#000000;stroke-linejoin:miter;stroke-width:0.8;"/>
    </g>
    <g id="patch_3">
-    <path clip-path="url(#pb47ce7e896)" d="M 141.425134 25.550166 
-L 142.633637 28.888364 
-L 141.465417 28.888364 
-L 141.465417 114.546545 
-L 141.38485 114.546545 
-L 141.38485 28.888364 
-L 140.216631 28.888364 
+    <path clip-path="url(#p9ae717bce5)" d="M 125.662055 19.653974 
+L 126.555297 22.221818 
+L 125.69183 22.221818 
+L 125.69183 88.112727 
+L 125.632281 88.112727 
+L 125.632281 22.221818 
+L 124.768814 22.221818 
 z
 " style="stroke:#000000;stroke-linejoin:miter;stroke-width:0.8;"/>
    </g>
    <g id="line2d_1">
-    <path clip-path="url(#pb47ce7e896)" d="M 168.280749 71.717454 
-L 114.569519 71.717454 
-L 87.713904 114.546545 
-L 114.569519 157.375636 
-L 168.280749 157.375636 
-L 195.136364 114.546545 
-L 168.280749 71.717454 
+    <path clip-path="url(#p9ae717bce5)" d="M 145.511858 55.167273 
+L 105.812253 55.167273 
+L 85.962451 88.112727 
+L 105.812253 121.058182 
+L 145.511858 121.058182 
+L 165.36166 88.112727 
+L 145.511858 55.167273 
 " style="fill:none;stroke:#b20080;stroke-linecap:square;"/>
    </g>
    <g id="line2d_2">
-    <path clip-path="url(#pb47ce7e896)" d="M 114.569519 157.375636 
-L 87.713904 114.546545 
-L 114.569519 71.717454 
-L 168.280749 71.717454 
-L 195.136364 114.546545 
-L 168.280749 157.375636 
-L 114.569519 157.375636 
+    <path clip-path="url(#p9ae717bce5)" d="M 105.812253 121.058182 
+L 85.962451 88.112727 
+L 105.812253 55.167273 
+L 145.511858 55.167273 
+L 165.36166 88.112727 
+L 145.511858 121.058182 
+L 105.812253 121.058182 
 " style="fill:none;stroke:#b20080;stroke-linecap:square;"/>
    </g>
    <g id="line2d_3">
-    <path clip-path="url(#pb47ce7e896)" d="M 168.280749 157.375636 
-L 114.569519 157.375636 
-L 114.569519 157.375636 
-L 168.280749 157.375636 
-L 168.280749 157.375636 
+    <path clip-path="url(#p9ae717bce5)" d="M 145.511858 121.058182 
+L 105.812253 121.058182 
+L 105.812253 121.058182 
+L 145.511858 121.058182 
+L 145.511858 121.058182 
 " style="fill:none;stroke:#b20080;stroke-linecap:square;"/>
    </g>
    <g id="line2d_4">
-    <path clip-path="url(#pb47ce7e896)" d="M 168.280749 157.375636 
-L 195.136364 114.546545 
-L 195.136364 114.546545 
-L 168.280749 157.375636 
-L 168.280749 157.375636 
+    <path clip-path="url(#p9ae717bce5)" d="M 145.511858 121.058182 
+L 165.36166 88.112727 
+L 165.36166 88.112727 
+L 145.511858 121.058182 
+L 145.511858 121.058182 
 " style="fill:none;stroke:#b20080;stroke-linecap:square;"/>
    </g>
    <g id="line2d_5">
-    <path clip-path="url(#pb47ce7e896)" d="M 168.280749 71.717454 
-L 168.280749 71.717454 
-L 114.569519 71.717454 
-L 114.569519 71.717454 
-L 168.280749 71.717454 
+    <path clip-path="url(#p9ae717bce5)" d="M 145.511858 55.167273 
+L 145.511858 55.167273 
+L 105.812253 55.167273 
+L 105.812253 55.167273 
+L 145.511858 55.167273 
 " style="fill:none;stroke:#b20080;stroke-linecap:square;"/>
    </g>
    <g id="line2d_6">
-    <path clip-path="url(#pb47ce7e896)" d="M 195.136364 114.546545 
-L 195.136364 114.546545 
-L 168.280749 71.717454 
-L 168.280749 71.717454 
-L 195.136364 114.546545 
+    <path clip-path="url(#p9ae717bce5)" d="M 165.36166 88.112727 
+L 165.36166 88.112727 
+L 145.511858 55.167273 
+L 145.511858 55.167273 
+L 165.36166 88.112727 
 " style="fill:none;stroke:#b20080;stroke-linecap:square;"/>
    </g>
    <g id="line2d_7">
-    <path clip-path="url(#pb47ce7e896)" d="M 114.569519 71.717454 
-L 87.713904 114.546545 
-L 87.713904 114.546545 
-L 114.569519 71.717454 
-L 114.569519 71.717454 
+    <path clip-path="url(#p9ae717bce5)" d="M 105.812253 55.167273 
+L 85.962451 88.112727 
+L 85.962451 88.112727 
+L 105.812253 55.167273 
+L 105.812253 55.167273 
 " style="fill:none;stroke:#b20080;stroke-linecap:square;"/>
    </g>
    <g id="line2d_8">
-    <path clip-path="url(#pb47ce7e896)" d="M 87.713904 114.546545 
-L 87.713904 114.546545 
-L 114.569519 157.375636 
-L 114.569519 157.375636 
-L 87.713904 114.546545 
+    <path clip-path="url(#p9ae717bce5)" d="M 85.962451 88.112727 
+L 85.962451 88.112727 
+L 105.812253 121.058182 
+L 105.812253 121.058182 
+L 85.962451 88.112727 
 " style="fill:none;stroke:#b20080;stroke-linecap:square;"/>
    </g>
    <g id="line2d_9">
-    <path clip-path="url(#pb47ce7e896)" d="M 141.425134 114.546545 
-L 221.991979 157.375636 
+    <path clip-path="url(#p9ae717bce5)" d="M 125.662055 88.112727 
+L 185.211462 121.058182 
 " style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.8;"/>
    </g>
    <g id="line2d_10">
-    <path clip-path="url(#pb47ce7e896)" d="M 141.425134 114.546545 
-L 141.425134 28.888364 
+    <path clip-path="url(#p9ae717bce5)" d="M 125.662055 88.112727 
+L 125.662055 22.221818 
 " style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.8;"/>
    </g>
    <g id="text_1">
-    <!--  $\vec{b}_1$ -->
+    <!--  $\vecb_1$ -->
     <defs>
      <path id="STIXGeneral-Regular-32"/>
      <path d="M -1.703125 65.40625 
@@ -1153,15 +1164,15 @@ Q 33.90625 1.5 39.40625 1.5
 z
 " id="STIXGeneral-Regular-49"/>
     </defs>
-    <g transform="translate(205.87861 146.639506)scale(0.1 -0.1)">
+    <g transform="translate(173.301581 112.298778)scale(0.1 -0.1)">
      <use xlink:href="#STIXGeneral-Regular-32"/>
-     <use transform="translate(79.796856 26)" xlink:href="#STIXGeneral-Regular-8407"/>
+     <use transform="translate(76.54686 26)" xlink:href="#STIXGeneral-Regular-8407"/>
      <use transform="translate(24.999985 0)" xlink:href="#STIXGeneral-Italic-98"/>
      <use transform="translate(76.543251 -13.228125)scale(0.7)" xlink:href="#STIXGeneral-Regular-49"/>
     </g>
    </g>
    <g id="text_2">
-    <!--  $\vec{b}_2$ -->
+    <!--  $\vecb_2$ -->
     <defs>
      <path d="M 47.40625 13.703125 
 L 42 0 
@@ -1187,9 +1198,9 @@ Q 43.59375 10.203125 46 14.296875
 z
 " id="STIXGeneral-Regular-50"/>
     </defs>
-    <g transform="translate(141.425134 43.849687)scale(0.1 -0.1)">
+    <g transform="translate(125.662055 33.229687)scale(0.1 -0.1)">
      <use xlink:href="#STIXGeneral-Regular-32"/>
-     <use transform="translate(79.796856 26)" xlink:href="#STIXGeneral-Regular-8407"/>
+     <use transform="translate(76.54686 26)" xlink:href="#STIXGeneral-Regular-8407"/>
      <use transform="translate(24.999985 0)" xlink:href="#STIXGeneral-Italic-98"/>
      <use transform="translate(76.543251 -13.228125)scale(0.7)" xlink:href="#STIXGeneral-Regular-50"/>
     </g>
@@ -1790,7 +1801,7 @@ Q 56 12.5 57.5 17.59375
 z
 " id="STIXGeneral-Regular-90"/>
     </defs>
-    <g transform="translate(83.847629 16.464)scale(0.12 -0.12)">
+    <g transform="translate(64.581644 11.28)scale(0.12 -0.12)">
      <use xlink:href="#STIXGeneral-Regular-88"/>
      <use x="72.199982" xlink:href="#STIXGeneral-Regular-89"/>
      <use x="144.399963" xlink:href="#STIXGeneral-Regular-32"/>
@@ -1822,61 +1833,61 @@ z
    </g>
   </g>
   <g id="patch_4">
-   <path d="M 258.247059 163.8 
-L 405.952941 163.8 
-L 405.952941 22.464 
-L 258.247059 22.464 
+   <path d="M 212.008696 126 
+L 321.182609 126 
+L 321.182609 17.28 
+L 212.008696 17.28 
 z
 " style="fill:none;"/>
   </g>
   <g id="axes_2">
    <g id="Line3DCollection_1">
-    <path clip-path="url(#p5fd517a500)" d="M 316.385703 92.91671 
-L 334.096025 91.222054 
+    <path clip-path="url(#p11f05cb5e2)" d="M 254.980737 71.474392 
+L 268.070975 70.170811 
 " style="fill:none;stroke:#000000;stroke-width:0.8;"/>
-    <path clip-path="url(#p5fd517a500)" d="M 348.429492 98.079719 
-L 334.096025 91.222054 
+    <path clip-path="url(#p11f05cb5e2)" d="M 278.665277 75.445938 
+L 268.070975 70.170811 
 " style="fill:none;stroke:#000000;stroke-width:0.8;"/>
-    <path clip-path="url(#p5fd517a500)" d="M 334.096025 74.472062 
-L 334.096025 91.222054 
+    <path clip-path="url(#p11f05cb5e2)" d="M 268.070975 57.286202 
+L 268.070975 70.170811 
 " style="fill:none;stroke:#000000;stroke-width:0.8;"/>
-    <path clip-path="url(#p5fd517a500)" d="M 316.385703 92.91671 
-L 320.687429 93.743353 
+    <path clip-path="url(#p11f05cb5e2)" d="M 254.980737 71.474392 
+L 258.160273 72.110271 
 " style="fill:none;stroke:#000000;stroke-width:0.8;"/>
-    <path clip-path="url(#p5fd517a500)" d="M 316.385703 92.91671 
-L 320.662287 91.266908 
+    <path clip-path="url(#p11f05cb5e2)" d="M 254.980737 71.474392 
+L 258.14169 70.205314 
 " style="fill:none;stroke:#000000;stroke-width:0.8;"/>
-    <path clip-path="url(#p5fd517a500)" d="M 348.429492 98.079719 
-L 344.917335 97.648537 
+    <path clip-path="url(#p11f05cb5e2)" d="M 278.665277 75.445938 
+L 276.069334 75.114259 
 " style="fill:none;stroke:#000000;stroke-width:0.8;"/>
-    <path clip-path="url(#p5fd517a500)" d="M 348.429492 98.079719 
-L 344.937804 95.157637 
+    <path clip-path="url(#p11f05cb5e2)" d="M 278.665277 75.445938 
+L 276.084464 73.198182 
 " style="fill:none;stroke:#000000;stroke-width:0.8;"/>
-    <path clip-path="url(#p5fd517a500)" d="M 334.096025 74.472062 
-L 334.786997 78.234499 
+    <path clip-path="url(#p11f05cb5e2)" d="M 268.070975 57.286202 
+L 268.581694 60.180384 
 " style="fill:none;stroke:#000000;stroke-width:0.8;"/>
-    <path clip-path="url(#p5fd517a500)" d="M 334.096025 74.472062 
-L 333.404016 78.877168 
+    <path clip-path="url(#p11f05cb5e2)" d="M 268.070975 57.286202 
+L 267.55949 60.674744 
 " style="fill:none;stroke:#000000;stroke-width:0.8;"/>
    </g>
    <g id="text_4">
-    <!-- $\vec{b}_1$ -->
-    <g transform="translate(304.713411 97.227911)scale(0.1 -0.1)">
-     <use transform="translate(54.796871 26)" xlink:href="#STIXGeneral-Regular-8407"/>
+    <!-- $\vecb_1$ -->
+    <g transform="translate(245.166434 75.628321)scale(0.1 -0.1)">
+     <use transform="translate(51.546875 26)" xlink:href="#STIXGeneral-Regular-8407"/>
      <use xlink:href="#STIXGeneral-Italic-98"/>
      <use transform="translate(51.543266 -13.228125)scale(0.7)" xlink:href="#STIXGeneral-Regular-49"/>
     </g>
    </g>
    <g id="text_5">
-    <!-- $\vec{b}_2$ -->
-    <g transform="translate(349.738454 104.512552)scale(0.1 -0.1)">
-     <use transform="translate(54.796871 26)" xlink:href="#STIXGeneral-Regular-8407"/>
+    <!-- $\vecb_2$ -->
+    <g transform="translate(278.445814 81.231891)scale(0.1 -0.1)">
+     <use transform="translate(51.546875 26)" xlink:href="#STIXGeneral-Regular-8407"/>
      <use xlink:href="#STIXGeneral-Italic-98"/>
      <use transform="translate(51.543266 -13.228125)scale(0.7)" xlink:href="#STIXGeneral-Regular-50"/>
     </g>
    </g>
    <g id="text_6">
-    <!-- $\vec{b}_3$ -->
+    <!-- $\vecb_3$ -->
     <defs>
      <path d="M 6.09375 51 
 L 4.5 51.40625 
@@ -1908,15 +1919,15 @@ Q 12 61.59375 6.09375 51
 z
 " id="STIXGeneral-Regular-51"/>
     </defs>
-    <g transform="translate(329.546025 71.332414)scale(0.1 -0.1)">
-     <use transform="translate(54.796871 26)" xlink:href="#STIXGeneral-Regular-8407"/>
+    <g transform="translate(263.520975 55.720247)scale(0.1 -0.1)">
+     <use transform="translate(51.546875 26)" xlink:href="#STIXGeneral-Regular-8407"/>
      <use xlink:href="#STIXGeneral-Italic-98"/>
      <use transform="translate(51.543266 -13.228125)scale(0.7)" xlink:href="#STIXGeneral-Regular-51"/>
     </g>
    </g>
    <g id="text_7">
     <!-- Regular BZ -->
-    <g transform="translate(303.929063 27.77088)scale(0.12 -0.12)">
+    <g transform="translate(238.424715 19.9776)scale(0.12 -0.12)">
      <use xlink:href="#STIXGeneral-Regular-82"/>
      <use x="66.699997" xlink:href="#STIXGeneral-Regular-101"/>
      <use x="111.099991" xlink:href="#STIXGeneral-Regular-103"/>
@@ -1930,126 +1941,126 @@ z
     </g>
    </g>
    <g id="Poly3DCollection_1">
-    <path clip-path="url(#p5fd517a500)" d="M 362.166371 44.895753 
-L 360.836803 109.766514 
-L 320.916771 103.195967 
-L 320.271317 38.976182 
-L 362.166371 44.895753 
+    <path clip-path="url(#p11f05cb5e2)" d="M 288.818622 34.535194 
+L 287.835898 84.43578 
+L 258.329787 79.381513 
+L 257.852712 29.981679 
+L 288.818622 34.535194 
 z
 " style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
-    <path clip-path="url(#p5fd517a500)" d="M 320.916771 103.195967 
-L 360.836803 109.766514 
-L 376.031733 130.673654 
-L 348.511748 145.701466 
-L 305.708464 138.071877 
-L 293.394579 116.530446 
-L 320.916771 103.195967 
+    <path clip-path="url(#p11f05cb5e2)" d="M 258.329787 79.381513 
+L 287.835898 84.43578 
+L 299.066933 100.518195 
+L 278.726075 112.07805 
+L 247.088865 106.209136 
+L 237.987298 89.638804 
+L 258.329787 79.381513 
 z
 " style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
-    <path clip-path="url(#p5fd517a500)" d="M 291.339593 50.998346 
-L 320.271317 38.976182 
-L 320.916771 103.195967 
-L 293.394579 116.530446 
-L 291.339593 50.998346 
+    <path clip-path="url(#p11f05cb5e2)" d="M 236.468395 39.229497 
+L 257.852712 29.981679 
+L 258.329787 79.381513 
+L 237.987298 89.638804 
+L 236.468395 39.229497 
 z
 " style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
-    <path clip-path="url(#p5fd517a500)" d="M 376.031733 130.673654 
-L 360.836803 109.766514 
-L 362.166371 44.895753 
-L 378.216588 63.787636 
-L 376.031733 130.673654 
+    <path clip-path="url(#p11f05cb5e2)" d="M 299.066933 100.518195 
+L 287.835898 84.43578 
+L 288.818622 34.535194 
+L 300.681826 49.067412 
+L 299.066933 100.518195 
 z
 " style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
-    <path clip-path="url(#p5fd517a500)" d="M 293.394579 116.530446 
-L 305.708464 138.071877 
-L 304.205493 70.493271 
-L 291.339593 50.998346 
-L 293.394579 116.530446 
+    <path clip-path="url(#p11f05cb5e2)" d="M 237.987298 89.638804 
+L 247.088865 106.209136 
+L 245.977973 54.225593 
+L 236.468395 39.229497 
+L 237.987298 89.638804 
 z
 " style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
-    <path clip-path="url(#p5fd517a500)" d="M 349.287561 77.419897 
-L 378.216588 63.787636 
-L 362.166371 44.895753 
-L 320.271317 38.976182 
-L 291.339593 50.998346 
-L 304.205493 70.493271 
-L 349.287561 77.419897 
+    <path clip-path="url(#p11f05cb5e2)" d="M 279.299502 59.553767 
+L 300.681826 49.067412 
+L 288.818622 34.535194 
+L 257.852712 29.981679 
+L 236.468395 39.229497 
+L 245.977973 54.225593 
+L 279.299502 59.553767 
 z
 " style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
-    <path clip-path="url(#p5fd517a500)" d="M 349.287561 77.419897 
-L 348.511748 145.701466 
-L 376.031733 130.673654 
-L 378.216588 63.787636 
-L 349.287561 77.419897 
+    <path clip-path="url(#p11f05cb5e2)" d="M 279.299502 59.553767 
+L 278.726075 112.07805 
+L 299.066933 100.518195 
+L 300.681826 49.067412 
+L 279.299502 59.553767 
 z
 " style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
-    <path clip-path="url(#p5fd517a500)" d="M 304.205493 70.493271 
-L 305.708464 138.071877 
-L 348.511748 145.701466 
-L 349.287561 77.419897 
-L 304.205493 70.493271 
+    <path clip-path="url(#p11f05cb5e2)" d="M 245.977973 54.225593 
+L 247.088865 106.209136 
+L 278.726075 112.07805 
+L 279.299502 59.553767 
+L 245.977973 54.225593 
 z
 " style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
    </g>
   </g>
   <g id="patch_5">
-   <path d="M 435.494118 163.8 
-L 583.2 163.8 
-L 583.2 22.464 
-L 435.494118 22.464 
+   <path d="M 343.017391 126 
+L 452.191304 126 
+L 452.191304 17.28 
+L 343.017391 17.28 
 z
 " style="fill:none;"/>
   </g>
   <g id="axes_3">
    <g id="Line3DCollection_2">
-    <path clip-path="url(#p9f4b591a0d)" d="M 511.343084 109.766514 
-L 528.999558 105.365177 
+    <path clip-path="url(#pc70644ff7c)" d="M 399.079671 84.43578 
+L 412.130108 81.050136 
 " style="fill:none;stroke:#000000;stroke-width:0.8;"/>
-    <path clip-path="url(#p9f4b591a0d)" d="M 538.083862 109.766514 
-L 528.999558 105.365177 
+    <path clip-path="url(#pc70644ff7c)" d="M 418.844593 84.43578 
+L 412.130108 81.050136 
 " style="fill:none;stroke:#000000;stroke-width:0.8;"/>
-    <path clip-path="url(#p9f4b591a0d)" d="M 529.209091 89.829771 
-L 528.999558 105.365177 
+    <path clip-path="url(#pc70644ff7c)" d="M 412.28498 69.099824 
+L 412.130108 81.050136 
 " style="fill:none;stroke:#000000;stroke-width:0.8;"/>
-    <path clip-path="url(#p9f4b591a0d)" d="M 511.343084 109.766514 
-L 515.634204 109.847442 
+    <path clip-path="url(#pc70644ff7c)" d="M 399.079671 84.43578 
+L 402.251368 84.498032 
 " style="fill:none;stroke:#000000;stroke-width:0.8;"/>
-    <path clip-path="url(#p9f4b591a0d)" d="M 511.343084 109.766514 
-L 515.641786 107.542316 
+    <path clip-path="url(#pc70644ff7c)" d="M 399.079671 84.43578 
+L 402.256972 82.724858 
 " style="fill:none;stroke:#000000;stroke-width:0.8;"/>
-    <path clip-path="url(#p9f4b591a0d)" d="M 538.083862 109.766514 
-L 535.852487 109.847442 
+    <path clip-path="url(#pc70644ff7c)" d="M 418.844593 84.43578 
+L 417.195316 84.498032 
 " style="fill:none;stroke:#000000;stroke-width:0.8;"/>
-    <path clip-path="url(#p9f4b591a0d)" d="M 538.083862 109.766514 
-L 535.895792 107.542316 
+    <path clip-path="url(#pc70644ff7c)" d="M 418.844593 84.43578 
+L 417.227325 82.724858 
 " style="fill:none;stroke:#000000;stroke-width:0.8;"/>
-    <path clip-path="url(#p9f4b591a0d)" d="M 529.209091 89.829771 
-L 530.005072 93.199477 
+    <path clip-path="url(#pc70644ff7c)" d="M 412.28498 69.099824 
+L 412.873314 71.691905 
 " style="fill:none;stroke:#000000;stroke-width:0.8;"/>
-    <path clip-path="url(#p9f4b591a0d)" d="M 529.209091 89.829771 
-L 528.309414 94.031216 
+    <path clip-path="url(#pc70644ff7c)" d="M 412.28498 69.099824 
+L 411.620002 72.331705 
 " style="fill:none;stroke:#000000;stroke-width:0.8;"/>
    </g>
    <g id="text_8">
-    <!-- $\vec{b}_1$ -->
-    <g transform="translate(499.634525 115.180659)scale(0.1 -0.1)">
-     <use transform="translate(54.796871 26)" xlink:href="#STIXGeneral-Regular-8407"/>
+    <!-- $\vecb_1$ -->
+    <g transform="translate(389.238562 89.438127)scale(0.1 -0.1)">
+     <use transform="translate(51.546875 26)" xlink:href="#STIXGeneral-Regular-8407"/>
      <use xlink:href="#STIXGeneral-Italic-98"/>
      <use transform="translate(51.543266 -13.228125)scale(0.7)" xlink:href="#STIXGeneral-Regular-49"/>
     </g>
    </g>
    <g id="text_9">
-    <!-- $\vec{b}_2$ -->
-    <g transform="translate(537.216959 115.180659)scale(0.1 -0.1)">
-     <use transform="translate(54.796871 26)" xlink:href="#STIXGeneral-Regular-8407"/>
+    <!-- $\vecb_2$ -->
+    <g transform="translate(417.016883 89.438127)scale(0.1 -0.1)">
+     <use transform="translate(51.546875 26)" xlink:href="#STIXGeneral-Regular-8407"/>
      <use xlink:href="#STIXGeneral-Italic-98"/>
      <use transform="translate(51.543266 -13.228125)scale(0.7)" xlink:href="#STIXGeneral-Regular-50"/>
     </g>
    </g>
    <g id="text_10">
-    <!-- $\vec{b}_3$ -->
-    <g transform="translate(524.744303 87.191562)scale(0.1 -0.1)">
-     <use transform="translate(54.796871 26)" xlink:href="#STIXGeneral-Regular-8407"/>
+    <!-- $\vecb_3$ -->
+    <g transform="translate(407.797963 67.919591)scale(0.1 -0.1)">
+     <use transform="translate(51.546875 26)" xlink:href="#STIXGeneral-Regular-8407"/>
      <use xlink:href="#STIXGeneral-Italic-98"/>
      <use transform="translate(51.543266 -13.228125)scale(0.7)" xlink:href="#STIXGeneral-Regular-51"/>
     </g>
@@ -2134,7 +2145,7 @@ L 33.796875 45
 z
 " id="STIXGeneral-Regular-118"/>
     </defs>
-    <g transform="translate(477.829246 27.77088)scale(0.12 -0.12)">
+    <g transform="translate(366.086535 19.9776)scale(0.12 -0.12)">
      <use xlink:href="#STIXGeneral-Regular-80"/>
      <use x="55.699997" xlink:href="#STIXGeneral-Regular-114"/>
      <use x="88.999985" xlink:href="#STIXGeneral-Regular-105"/>
@@ -2150,60 +2161,223 @@ z
     </g>
    </g>
    <g id="Poly3DCollection_2">
-    <path clip-path="url(#p9f4b591a0d)" d="M 528.999558 105.365177 
-L 456.263938 123.496429 
-L 492.221785 143.131896 
-L 566.42223 123.496429 
-L 528.999558 105.365177 
+    <path clip-path="url(#pc70644ff7c)" d="M 412.130108 81.050136 
+L 358.368998 94.997253 
+L 384.946536 110.101458 
+L 439.790344 94.997253 
+L 412.130108 81.050136 
 z
 " style="fill:#d4af37;fill-opacity:0.3;stroke:#d4af37;"/>
-    <path clip-path="url(#p9f4b591a0d)" d="M 528.999558 105.365177 
-L 566.42223 123.496429 
-L 569.246802 57.292583 
-L 529.868629 40.929547 
-L 528.999558 105.365177 
+    <path clip-path="url(#pc70644ff7c)" d="M 412.130108 81.050136 
+L 439.790344 94.997253 
+L 441.878071 44.071218 
+L 412.772465 31.484267 
+L 412.130108 81.050136 
 z
 " style="fill:#d4af37;fill-opacity:0.3;stroke:#d4af37;"/>
-    <path clip-path="url(#p9f4b591a0d)" d="M 528.999558 105.365177 
-L 529.868629 40.929547 
-L 453.439366 57.292583 
-L 456.263938 123.496429 
-L 528.999558 105.365177 
+    <path clip-path="url(#pc70644ff7c)" d="M 412.130108 81.050136 
+L 412.772465 31.484267 
+L 356.281271 44.071218 
+L 358.368998 94.997253 
+L 412.130108 81.050136 
 z
 " style="fill:#d4af37;fill-opacity:0.3;stroke:#d4af37;"/>
-    <path clip-path="url(#p9f4b591a0d)" d="M 492.221785 143.131896 
-L 491.198352 75.085797 
-L 453.439366 57.292583 
-L 456.263938 123.496429 
-L 492.221785 143.131896 
+    <path clip-path="url(#pc70644ff7c)" d="M 384.946536 110.101458 
+L 384.190087 57.758305 
+L 356.281271 44.071218 
+L 358.368998 94.997253 
+L 384.946536 110.101458 
 z
 " style="fill:#d4af37;fill-opacity:0.3;stroke:#d4af37;"/>
-    <path clip-path="url(#p9f4b591a0d)" d="M 569.246802 57.292583 
-L 491.198352 75.085797 
-L 492.221785 143.131896 
-L 566.42223 123.496429 
-L 569.246802 57.292583 
+    <path clip-path="url(#pc70644ff7c)" d="M 441.878071 44.071218 
+L 384.190087 57.758305 
+L 384.946536 110.101458 
+L 439.790344 94.997253 
+L 441.878071 44.071218 
 z
 " style="fill:#d4af37;fill-opacity:0.3;stroke:#d4af37;"/>
-    <path clip-path="url(#p9f4b591a0d)" d="M 453.439366 57.292583 
-L 491.198352 75.085797 
-L 569.246802 57.292583 
-L 529.868629 40.929547 
-L 453.439366 57.292583 
+    <path clip-path="url(#pc70644ff7c)" d="M 356.281271 44.071218 
+L 384.190087 57.758305 
+L 441.878071 44.071218 
+L 412.772465 31.484267 
+L 356.281271 44.071218 
+z
+" style="fill:#d4af37;fill-opacity:0.3;stroke:#d4af37;"/>
+   </g>
+  </g>
+  <g id="patch_6">
+   <path d="M 474.026087 126 
+L 583.2 126 
+L 583.2 17.28 
+L 474.026087 17.28 
+z
+" style="fill:none;"/>
+  </g>
+  <g id="axes_4">
+   <g id="Line3DCollection_3">
+    <path clip-path="url(#p1ac709a6ac)" d="M 523.62504 77.728718 
+L 530.088367 74.469716 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p1ac709a6ac)" d="M 536.613585 81.050136 
+L 530.088367 74.469716 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p1ac709a6ac)" d="M 530.088367 62.66998 
+L 530.088367 74.469716 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p1ac709a6ac)" d="M 523.62504 77.728718 
+L 525.200682 77.693793 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p1ac709a6ac)" d="M 523.62504 77.728718 
+L 525.193346 76.17723 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p1ac709a6ac)" d="M 536.613585 81.050136 
+L 535.011362 80.199407 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p1ac709a6ac)" d="M 536.613585 81.050136 
+L 535.018805 78.675659 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p1ac709a6ac)" d="M 530.088367 62.66998 
+L 530.506037 65.339357 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p1ac709a6ac)" d="M 530.088367 62.66998 
+L 529.670184 65.749871 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+   </g>
+   <g id="text_12">
+    <!-- $\veca_1$ -->
+    <defs>
+     <path d="M 46.296875 11.09375 
+L 47.59375 10 
+Q 42 3.203125 39.34375 1.09375 
+Q 36.703125 -1 33.703125 -1 
+Q 29.703125 -1 29.703125 3.09375 
+Q 29.703125 5.59375 32 14.59375 
+Q 26.40625 6.203125 21.703125 2.546875 
+Q 17 -1.09375 11.703125 -1.09375 
+Q 7.296875 -1.09375 4.5 1.953125 
+Q 1.703125 5 1.703125 10.5 
+Q 1.703125 18.09375 6.046875 26 
+Q 10.40625 33.90625 17.09375 39 
+Q 23.796875 44.09375 30.296875 44.09375 
+Q 37 44.09375 38.296875 38.296875 
+L 39.40625 43.09375 
+L 39.703125 43.40625 
+L 45.796875 44.09375 
+L 46.5 43.796875 
+Q 46.40625 43.40625 45.90625 41.703125 
+Q 37 9.296875 37 5.40625 
+Q 37 4.09375 38.40625 4.09375 
+Q 39.90625 4.09375 43.59375 8.203125 
+z
+M 36.5 36.09375 
+Q 36.5 38.703125 35 40.296875 
+Q 33.5 41.90625 30.90625 41.90625 
+Q 24.09375 41.90625 17.796875 32.703125 
+Q 14.5 27.796875 12.296875 21.796875 
+Q 10.09375 15.796875 10.09375 11.203125 
+Q 10.09375 3.796875 16.09375 3.796875 
+Q 22 3.796875 28.796875 13.59375 
+Q 36.5 24.703125 36.5 36.09375 
+z
+" id="STIXGeneral-Italic-97"/>
+    </defs>
+    <g transform="translate(516.405248 81.479383)scale(0.1 -0.1)">
+     <use transform="translate(51.769531 2)" xlink:href="#STIXGeneral-Regular-8407"/>
+     <use transform="translate(0 0.203125)" xlink:href="#STIXGeneral-Italic-97"/>
+     <use transform="translate(51.643272 -13.025)scale(0.7)" xlink:href="#STIXGeneral-Regular-49"/>
+    </g>
+   </g>
+   <g id="text_13">
+    <!-- $\veca_2$ -->
+    <g transform="translate(534.694196 86.183111)scale(0.1 -0.1)">
+     <use transform="translate(51.769531 2)" xlink:href="#STIXGeneral-Regular-8407"/>
+     <use transform="translate(0 0.203125)" xlink:href="#STIXGeneral-Italic-97"/>
+     <use transform="translate(51.643272 -13.025)scale(0.7)" xlink:href="#STIXGeneral-Regular-50"/>
+    </g>
+   </g>
+   <g id="text_14">
+    <!-- $\veca_3$ -->
+    <g transform="translate(525.488367 60.352488)scale(0.1 -0.1)">
+     <use transform="translate(51.769531 2)" xlink:href="#STIXGeneral-Regular-8407"/>
+     <use transform="translate(0 0.203125)" xlink:href="#STIXGeneral-Italic-97"/>
+     <use transform="translate(51.643272 -13.025)scale(0.7)" xlink:href="#STIXGeneral-Regular-51"/>
+    </g>
+   </g>
+   <g id="text_15">
+    <!-- Real lattice -->
+    <g transform="translate(501.449918 19.9776)scale(0.12 -0.12)">
+     <use xlink:href="#STIXGeneral-Regular-82"/>
+     <use x="66.699997" xlink:href="#STIXGeneral-Regular-101"/>
+     <use x="111.099991" xlink:href="#STIXGeneral-Regular-97"/>
+     <use x="155.499985" xlink:href="#STIXGeneral-Regular-108"/>
+     <use x="183.299973" xlink:href="#STIXGeneral-Regular-32"/>
+     <use x="208.299957" xlink:href="#STIXGeneral-Regular-108"/>
+     <use x="236.099945" xlink:href="#STIXGeneral-Regular-97"/>
+     <use x="280.499939" xlink:href="#STIXGeneral-Regular-116"/>
+     <use x="308.299927" xlink:href="#STIXGeneral-Regular-116"/>
+     <use x="336.099915" xlink:href="#STIXGeneral-Regular-105"/>
+     <use x="363.899902" xlink:href="#STIXGeneral-Regular-99"/>
+     <use x="408.299896" xlink:href="#STIXGeneral-Regular-101"/>
+    </g>
+   </g>
+   <g id="Poly3DCollection_3">
+    <path clip-path="url(#p1ac709a6ac)" d="M 530.088367 74.469716 
+L 530.088367 25.562709 
+L 502.141197 37.648685 
+L 503.477854 87.887531 
+L 530.088367 74.469716 
+z
+" style="fill:#d4af37;fill-opacity:0.3;stroke:#d4af37;"/>
+    <path clip-path="url(#p1ac709a6ac)" d="M 530.088367 74.469716 
+L 503.477854 87.887531 
+L 530.088367 118.13342 
+L 557.780288 102.395903 
+L 530.088367 74.469716 
+z
+" style="fill:#d4af37;fill-opacity:0.3;stroke:#d4af37;"/>
+    <path clip-path="url(#p1ac709a6ac)" d="M 530.088367 74.469716 
+L 557.780288 102.395903 
+L 559.230753 50.768423 
+L 530.088367 25.562709 
+L 530.088367 74.469716 
+z
+" style="fill:#d4af37;fill-opacity:0.3;stroke:#d4af37;"/>
+    <path clip-path="url(#p1ac709a6ac)" d="M 503.477854 87.887531 
+L 530.088367 118.13342 
+L 530.088367 65.060479 
+L 502.141197 37.648685 
+L 503.477854 87.887531 
+z
+" style="fill:#d4af37;fill-opacity:0.3;stroke:#d4af37;"/>
+    <path clip-path="url(#p1ac709a6ac)" d="M 502.141197 37.648685 
+L 530.088367 65.060479 
+L 559.230753 50.768423 
+L 530.088367 25.562709 
+L 502.141197 37.648685 
+z
+" style="fill:#d4af37;fill-opacity:0.3;stroke:#d4af37;"/>
+    <path clip-path="url(#p1ac709a6ac)" d="M 559.230753 50.768423 
+L 530.088367 65.060479 
+L 530.088367 118.13342 
+L 557.780288 102.395903 
+L 559.230753 50.768423 
 z
 " style="fill:#d4af37;fill-opacity:0.3;stroke:#d4af37;"/>
    </g>
   </g>
  </g>
  <defs>
-  <clipPath id="pb47ce7e896">
-   <rect height="141.336" width="147.705882" x="81" y="22.464"/>
+  <clipPath id="p9ae717bce5">
+   <rect height="108.72" width="109.173913" x="81" y="17.28"/>
   </clipPath>
-  <clipPath id="p5fd517a500">
-   <rect height="141.336" width="147.705882" x="258.247059" y="22.464"/>
+  <clipPath id="p11f05cb5e2">
+   <rect height="108.72" width="109.173913" x="212.008696" y="17.28"/>
   </clipPath>
-  <clipPath id="p9f4b591a0d">
-   <rect height="141.336" width="147.705882" x="435.494118" y="22.464"/>
+  <clipPath id="pc70644ff7c">
+   <rect height="108.72" width="109.173913" x="343.017391" y="17.28"/>
+  </clipPath>
+  <clipPath id="p1ac709a6ac">
+   <rect height="108.72" width="109.173913" x="474.026087" y="17.28"/>
   </clipPath>
  </defs>
 </svg>
@@ -2217,7 +2391,7 @@ z
 
 
 <div class="output_text output_subarea ">
-<pre>&lt;Figure size 648x187.2 with 0 Axes&gt;</pre>
+<pre>&lt;Figure size 648x144 with 0 Axes&gt;</pre>
 </div>
 
 </div>
@@ -2239,7 +2413,7 @@ z
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="iplot_bz" class="doc_header"><code>iplot_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L629" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>iplot_bz</code>(<strong><code>poscar_or_bz</code></strong>=<em><code>None</code></em>, <strong><code>fill</code></strong>=<em><code>True</code></em>, <strong><code>color</code></strong>=<em><code>'rgba(168,204,216,0.4)'</code></em>, <strong><code>background</code></strong>=<em><code>'rgb(255,255,255)'</code></em>)</p>
+<h4 id="iplot_bz" class="doc_header"><code>iplot_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L637" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>iplot_bz</code>(<strong><code>poscar_or_bz</code></strong>=<em><code>None</code></em>, <strong><code>fill</code></strong>=<em><code>True</code></em>, <strong><code>color</code></strong>=<em><code>'rgba(168,204,216,0.4)'</code></em>, <strong><code>background</code></strong>=<em><code>'rgb(255,255,255)'</code></em>, <strong><code>vname</code></strong>=<em><code>'b'</code></em>, <strong><code>fig</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Plots interactive figure showing axes,BZ surface, special points and basis, each of which could be hidden or shown.</li>
@@ -2248,6 +2422,8 @@ z
 <li>fill       : True by defult, determines whether to fill surface of BZ or not.</li>
 <li>color      : color to fill surface 'rgba((168,204,216,0.4)` by default.</li>
 <li>background : Plot background color, default is 'rgb(255,255,255)'.</li>
+<li>vname      : Default is <code>b</code> for reciprocal space, can set <code>a</code> for plotting cell as after <code>get_bz(get_bz().basis)</code> you get real space lattice back if <code>primitive=True</code> both times.</li>
+<li>fig        : (Optional) Plotly's <code>go.Figure</code>. If you want to plot on another plotly's figure, provide that.</li>
 </ul>
 </li>
 <li><strong>Returns</strong><ul>
@@ -2290,7 +2466,8 @@ z
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pivotpy</span> <span class="k">as</span> <span class="nn">pp</span>
-<span class="n">pp</span><span class="o">.</span><span class="n">plotly_to_html</span><span class="p">(</span><span class="n">iplot_bz</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]]),</span><span class="n">modebar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">iplot_bz</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
+<span class="n">pp</span><span class="o">.</span><span class="n">plotly_to_html</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span><span class="n">modebar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -2306,11 +2483,11 @@ z
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
         <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
-            <div id='graph-63148d9c-4b23-11eb-b2d8-44032c5fd2c2'><!-- Plotly chart DIV --></div>
+            <div id='graph-2beb5200-4b9f-11eb-8ba5-44032c5fd2c2'><!-- Plotly chart DIV --></div>
             <script>
-                var data = {"data":[{"legendgroup":"Axes","line":{"color":"green"},"mode":"lines+text","name":"Axes","text":["<b>k</b><sub>x</sub>","","<b>k</b><sub>y</sub>","","<b>k</b><sub>z</sub>"],"type":"scatter3d","x":[0.25,0,0,0,0],"y":[0,0,0.25,0,0],"z":[0,0,0,0,0.25]},{"colorscale":[[0.0,"rgb(247,252,245)"],[0.125,"rgb(229,245,224)"],[0.25,"rgb(199,233,192)"],[0.375,"rgb(161,217,155)"],[0.5,"rgb(116,196,118)"],[0.625,"rgb(65,171,93)"],[0.75,"rgb(35,139,69)"],[0.875,"rgb(0,109,44)"],[1.0,"rgb(0,68,27)"]],"legendgroup":"Axes","name":"Axes","showscale":false,"type":"cone","u":[1e-05,0,0],"v":[0,1e-05,0],"w":[0,0,1e-05],"x":[0.18,0,0],"y":[0,0.18,0],"z":[0,0,0.18]},{"legendgroup":"b<sub>1</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>1</sub>","text":["","<b>b</b><sub>1</sub>"],"type":"scatter3d","x":[0,1.0],"y":[0,0.0],"z":[0,0.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>1</sub>","name":"<b>b</b><sub>1</sub>","showscale":false,"type":"cone","u":[0.2],"v":[0.0],"w":[0.0],"x":[0.95],"y":[0.0],"z":[0.0]},{"legendgroup":"b<sub>2</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>2</sub>","text":["","<b>b</b><sub>2</sub>"],"type":"scatter3d","x":[0,0.0],"y":[0,1.0],"z":[0,0.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>2</sub>","name":"<b>b</b><sub>2</sub>","showscale":false,"type":"cone","u":[0.0],"v":[0.2],"w":[0.0],"x":[0.0],"y":[0.95],"z":[0.0]},{"legendgroup":"b<sub>3</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>3</sub>","text":["","<b>b</b><sub>3</sub>"],"type":"scatter3d","x":[0,0.0],"y":[0,0.0],"z":[0,1.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>3</sub>","name":"<b>b</b><sub>3</sub>","showscale":false,"type":"cone","u":[0.0],"v":[0.0],"w":[0.2],"x":[0.0],"y":[0.0],"z":[0.95]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":true,"surfaceaxis":1,"type":"scatter3d","x":[0.5,0.5,-0.5,-0.5,0.5],"y":[0.5,0.5,0.5,0.5,0.5],"z":[0.5,-0.5,-0.5,0.5,0.5]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":2,"type":"scatter3d","x":[-0.5,0.5,0.5,-0.5,-0.5],"y":[-0.5,-0.5,0.5,0.5,-0.5],"z":[0.5,0.5,0.5,0.5,0.5]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":2,"type":"scatter3d","x":[0.5,-0.5,-0.5,0.5,0.5],"y":[-0.5,-0.5,0.5,0.5,-0.5],"z":[-0.5,-0.5,-0.5,-0.5,-0.5]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":1,"type":"scatter3d","x":[-0.5,0.5,0.5,-0.5,-0.5],"y":[-0.5,-0.5,-0.5,-0.5,-0.5],"z":[-0.5,-0.5,0.5,0.5,-0.5]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":0,"type":"scatter3d","x":[-0.5,-0.5,-0.5,-0.5,-0.5],"y":[0.5,-0.5,-0.5,0.5,0.5],"z":[-0.5,-0.5,0.5,0.5,-0.5]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":0,"type":"scatter3d","x":[0.5,0.5,0.5,0.5,0.5],"y":[-0.5,-0.5,0.5,0.5,-0.5],"z":[0.5,-0.5,-0.5,0.5,0.5]},{"hovertext":["P(0.0, 0.0, 0.0)</br>d = 0.0","P(0.0, 0.5, 0.0)</br>d = 0.5","P(0.0, 0.0, 0.5)</br>d = 0.5","P(0.0, 0.0, -0.5)</br>d = 0.5","P(0.0, -0.5, 0.0)</br>d = 0.5","P(-0.5, 0.0, 0.0)</br>d = 0.5","P(0.5, 0.0, 0.0)</br>d = 0.5","P(-0.5, -0.5, 0.0)</br>d = 0.70711","P(-0.5, 0.0, -0.5)</br>d = 0.70711","P(-0.5, 0.0, 0.5)</br>d = 0.70711","P(-0.5, 0.5, 0.0)</br>d = 0.70711","P(0.0, -0.5, -0.5)</br>d = 0.70711","P(0.0, -0.5, 0.5)</br>d = 0.70711","P(0.0, 0.5, -0.5)</br>d = 0.70711","P(0.0, 0.5, 0.5)</br>d = 0.70711","P(0.5, -0.5, 0.0)</br>d = 0.70711","P(0.5, 0.0, -0.5)</br>d = 0.70711","P(0.5, 0.0, 0.5)</br>d = 0.70711","P(0.5, 0.5, 0.0)</br>d = 0.70711","P(-0.5, -0.5, -0.5)</br>d = 0.86603","P(-0.5, -0.5, 0.5)</br>d = 0.86603","P(-0.5, 0.5, -0.5)</br>d = 0.86603","P(-0.5, 0.5, 0.5)</br>d = 0.86603","P(0.5, -0.5, -0.5)</br>d = 0.86603","P(0.5, -0.5, 0.5)</br>d = 0.86603","P(0.5, 0.5, -0.5)</br>d = 0.86603","P(0.5, 0.5, 0.5)</br>d = 0.86603"],"marker":{"color":["rgb(255,215,0)","rgb(0.0,0,255.0)","rgb(0.0,0,255.0)","rgb(0.0,0,255.0)","rgb(0.0,0,255.0)","rgb(0.0,0,255.0)","rgb(0.0,0,255.0)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(255.0,0,0.0)","rgb(255.0,0,0.0)","rgb(255.0,0,0.0)","rgb(255.0,0,0.0)","rgb(255.0,0,0.0)","rgb(255.0,0,0.0)","rgb(255.0,0,0.0)","rgb(255.0,0,0.0)"]},"mode":"markers","name":"HSK","type":"scatter3d","x":[0.0,0.0,0.0,0.0,0.0,-0.5,0.5,-0.5,-0.5,-0.5,-0.5,0.0,0.0,0.0,0.0,0.5,0.5,0.5,0.5,-0.5,-0.5,-0.5,-0.5,0.5,0.5,0.5,0.5],"y":[0.0,0.5,0.0,0.0,-0.5,0.0,0.0,-0.5,0.0,0.0,0.5,-0.5,-0.5,0.5,0.5,-0.5,0.0,0.0,0.5,-0.5,-0.5,0.5,0.5,-0.5,-0.5,0.5,0.5],"z":[0.0,0.0,0.5,-0.5,0.0,0.0,0.0,0.0,-0.5,0.5,0.0,-0.5,0.5,-0.5,0.5,0.0,-0.5,0.5,0.0,-0.5,0.5,-0.5,0.5,-0.5,0.5,-0.5,0.5]}],"layout":{"font":{"family":"Times New Roman","size":14},"margin":{"b":10,"l":10,"r":10,"t":30},"paper_bgcolor":"rgb(255,255,255)","scene":{"aspectmode":"data","camera":{"center":{"x":0.1,"y":0.1,"z":0.1}},"xaxis":{"showbackground":false,"visible":false},"yaxis":{"showbackground":false,"visible":false},"zaxis":{"showbackground":false,"visible":false}},"template":{"data":{"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5}},"type":"bar"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5}},"type":"barpolar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"histogram":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"histogram"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"#E5ECF6","showlakes":true,"showland":true,"subunitcolor":"white"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2}}}}};
+                var data = {"data":[{"legendgroup":"Axes","line":{"color":"green"},"mode":"lines+text","name":"Axes","text":["<b>k</b><sub>x</sub>","","<b>k</b><sub>y</sub>","","<b>k</b><sub>z</sub>"],"type":"scatter3d","x":[0.25,0,0,0,0],"y":[0,0,0.25,0,0],"z":[0,0,0,0,0.25]},{"colorscale":[[0.0,"rgb(247,252,245)"],[0.125,"rgb(229,245,224)"],[0.25,"rgb(199,233,192)"],[0.375,"rgb(161,217,155)"],[0.5,"rgb(116,196,118)"],[0.625,"rgb(65,171,93)"],[0.75,"rgb(35,139,69)"],[0.875,"rgb(0,109,44)"],[1.0,"rgb(0,68,27)"]],"legendgroup":"Axes","name":"Axes","showscale":false,"type":"cone","u":[1e-05,0,0],"v":[0,1e-05,0],"w":[0,0,1e-05],"x":[0.18,0,0],"y":[0,0.18,0],"z":[0,0,0.18]},{"legendgroup":"b<sub>1</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>1</sub>","text":["","<b>b</b><sub>1</sub>"],"type":"scatter3d","x":[0,1.0],"y":[0,0.0],"z":[0,0.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>1</sub>","name":"<b>b</b><sub>1</sub>","showscale":false,"type":"cone","u":[0.2],"v":[0.0],"w":[0.0],"x":[0.95],"y":[0.0],"z":[0.0]},{"legendgroup":"b<sub>2</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>2</sub>","text":["","<b>b</b><sub>2</sub>"],"type":"scatter3d","x":[0,0.0],"y":[0,1.0],"z":[0,0.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>2</sub>","name":"<b>b</b><sub>2</sub>","showscale":false,"type":"cone","u":[0.0],"v":[0.2],"w":[0.0],"x":[0.0],"y":[0.95],"z":[0.0]},{"legendgroup":"b<sub>3</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>3</sub>","text":["","<b>b</b><sub>3</sub>"],"type":"scatter3d","x":[0,0.0],"y":[0,0.0],"z":[0,1.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>3</sub>","name":"<b>b</b><sub>3</sub>","showscale":false,"type":"cone","u":[0.0],"v":[0.0],"w":[0.2],"x":[0.0],"y":[0.0],"z":[0.95]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":true,"surfaceaxis":1,"type":"scatter3d","x":[0.5,0.5,-0.5,-0.5,0.5],"y":[0.5,0.5,0.5,0.5,0.5],"z":[0.5,-0.5,-0.5,0.5,0.5]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":2,"type":"scatter3d","x":[-0.5,0.5,0.5,-0.5,-0.5],"y":[-0.5,-0.5,0.5,0.5,-0.5],"z":[0.5,0.5,0.5,0.5,0.5]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":2,"type":"scatter3d","x":[0.5,-0.5,-0.5,0.5,0.5],"y":[-0.5,-0.5,0.5,0.5,-0.5],"z":[-0.5,-0.5,-0.5,-0.5,-0.5]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":1,"type":"scatter3d","x":[-0.5,0.5,0.5,-0.5,-0.5],"y":[-0.5,-0.5,-0.5,-0.5,-0.5],"z":[-0.5,-0.5,0.5,0.5,-0.5]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":0,"type":"scatter3d","x":[-0.5,-0.5,-0.5,-0.5,-0.5],"y":[0.5,-0.5,-0.5,0.5,0.5],"z":[-0.5,-0.5,0.5,0.5,-0.5]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":0,"type":"scatter3d","x":[0.5,0.5,0.5,0.5,0.5],"y":[-0.5,-0.5,0.5,0.5,-0.5],"z":[0.5,-0.5,-0.5,0.5,0.5]},{"hovertext":["P[0. 0. 0.]</br>d = 0.0","P[0.  0.5 0. ]</br>d = 0.5","P[0.  0.  0.5]</br>d = 0.5","P[ 0.   0.  -0.5]</br>d = 0.5","P[ 0.  -0.5  0. ]</br>d = 0.5","P[-0.5  0.   0. ]</br>d = 0.5","P[0.5 0.  0. ]</br>d = 0.5","P[-0.5 -0.5  0. ]</br>d = 0.70711","P[-0.5  0.  -0.5]</br>d = 0.70711","P[-0.5  0.   0.5]</br>d = 0.70711","P[-0.5  0.5  0. ]</br>d = 0.70711","P[ 0.  -0.5 -0.5]</br>d = 0.70711","P[ 0.  -0.5  0.5]</br>d = 0.70711","P[ 0.   0.5 -0.5]</br>d = 0.70711","P[0.  0.5 0.5]</br>d = 0.70711","P[ 0.5 -0.5  0. ]</br>d = 0.70711","P[ 0.5  0.  -0.5]</br>d = 0.70711","P[0.5 0.  0.5]</br>d = 0.70711","P[0.5 0.5 0. ]</br>d = 0.70711","P[-0.5 -0.5 -0.5]</br>d = 0.86603","P[-0.5 -0.5  0.5]</br>d = 0.86603","P[-0.5  0.5 -0.5]</br>d = 0.86603","P[-0.5  0.5  0.5]</br>d = 0.86603","P[ 0.5 -0.5 -0.5]</br>d = 0.86603","P[ 0.5 -0.5  0.5]</br>d = 0.86603","P[ 0.5  0.5 -0.5]</br>d = 0.86603","P[0.5 0.5 0.5]</br>d = 0.86603"],"marker":{"color":["rgb(255,215,0)","rgb(0.0,0,255.0)","rgb(0.0,0,255.0)","rgb(0.0,0,255.0)","rgb(0.0,0,255.0)","rgb(0.0,0,255.0)","rgb(0.0,0,255.0)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(255.0,0,0.0)","rgb(255.0,0,0.0)","rgb(255.0,0,0.0)","rgb(255.0,0,0.0)","rgb(255.0,0,0.0)","rgb(255.0,0,0.0)","rgb(255.0,0,0.0)","rgb(255.0,0,0.0)"]},"mode":"markers","name":"HSK","type":"scatter3d","x":[0.0,0.0,0.0,0.0,0.0,-0.5,0.5,-0.5,-0.5,-0.5,-0.5,0.0,0.0,0.0,0.0,0.5,0.5,0.5,0.5,-0.5,-0.5,-0.5,-0.5,0.5,0.5,0.5,0.5],"y":[0.0,0.5,0.0,0.0,-0.5,0.0,0.0,-0.5,0.0,0.0,0.5,-0.5,-0.5,0.5,0.5,-0.5,0.0,0.0,0.5,-0.5,-0.5,0.5,0.5,-0.5,-0.5,0.5,0.5],"z":[0.0,0.0,0.5,-0.5,0.0,0.0,0.0,0.0,-0.5,0.5,0.0,-0.5,0.5,-0.5,0.5,0.0,-0.5,0.5,0.0,-0.5,0.5,-0.5,0.5,-0.5,0.5,-0.5,0.5]}],"layout":{"font":{"family":"Times New Roman","size":14},"margin":{"b":10,"l":10,"r":10,"t":30},"paper_bgcolor":"rgb(255,255,255)","scene":{"aspectmode":"data","camera":{"center":{"x":0.1,"y":0.1,"z":0.1}},"xaxis":{"showbackground":false,"visible":false},"yaxis":{"showbackground":false,"visible":false},"zaxis":{"showbackground":false,"visible":false}},"template":{"data":{"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5}},"type":"bar"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5}},"type":"barpolar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"histogram":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"histogram"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"#E5ECF6","showlakes":true,"showland":true,"subunitcolor":"white"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2}}}}};
                 var config = {displayModeBar: false,scrollZoom: true};
-                Plotly.newPlot('graph-63148d9c-4b23-11eb-b2d8-44032c5fd2c2', data.data,data.layout,config);
+                Plotly.newPlot('graph-2beb5200-4b9f-11eb-8ba5-44032c5fd2c2', data.data,data.layout,config);
             </script>
         </div>
 </div>
@@ -2334,7 +2511,7 @@ z
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="kpoints2coords" class="doc_header"><code>kpoints2coords</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L722" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>kpoints2coords</code>(<strong><code>basis</code></strong>, <strong><code>kpoints</code></strong>)</p>
+<h4 id="kpoints2coords" class="doc_header"><code>kpoints2coords</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L741" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>kpoints2coords</code>(<strong><code>basis</code></strong>, <strong><code>kpoints</code></strong>)</p>
 </blockquote>
 <p>Returns coordinates of kpoints (relative to basis before) in orthogonal space.</p>
 
@@ -2400,9 +2577,11 @@ z
 
 <span class="n">kpoints</span> <span class="o">=</span> <span class="n">get_kmesh</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">kpoints</span> 
 <span class="n">coords</span> <span class="o">=</span> <span class="n">kpoints2coords</span><span class="p">(</span><span class="n">get_bz</span><span class="p">(</span><span class="n">hexa</span><span class="p">)</span><span class="o">.</span><span class="n">basis</span><span class="p">,</span><span class="n">kpoints</span><span class="p">)</span>
-<span class="n">fig</span> <span class="o">=</span> <span class="n">iplot_bz</span><span class="p">(</span><span class="n">get_bz</span><span class="p">(</span><span class="n">hexa</span><span class="p">,</span><span class="n">primitive</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="n">prim_bz</span> <span class="o">=</span> <span class="n">get_bz</span><span class="p">(</span><span class="n">hexa</span><span class="p">,</span><span class="n">primitive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">iplot_bz</span><span class="p">(</span><span class="n">prim_bz</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Scatter3d</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">coords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">coords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">z</span><span class="o">=</span><span class="n">coords</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span>
             <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;markers&#39;</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;KPOINTS&#39;</span><span class="p">))</span>
+<span class="n">iplot_bz</span><span class="p">(</span><span class="n">get_bz</span><span class="p">(</span><span class="n">prim_bz</span><span class="o">.</span><span class="n">basis</span><span class="p">,</span><span class="n">primitive</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span><span class="n">vname</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;rgba(200,220,10,0.4)&quot;</span><span class="p">)</span>
 <span class="n">pp</span><span class="o">.</span><span class="n">plotly_to_html</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span><span class="n">modebar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
@@ -2419,11 +2598,11 @@ z
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
         <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
-            <div id='graph-6358fb30-4b23-11eb-9c99-44032c5fd2c2'><!-- Plotly chart DIV --></div>
+            <div id='graph-dddfa5b0-4b9f-11eb-a076-44032c5fd2c2'><!-- Plotly chart DIV --></div>
             <script>
-                var data = {"data":[{"legendgroup":"Axes","line":{"color":"green"},"mode":"lines+text","name":"Axes","text":["<b>k</b><sub>x</sub>","","<b>k</b><sub>y</sub>","","<b>k</b><sub>z</sub>"],"type":"scatter3d","x":[0.25,0,0,0,0],"y":[0,0,0.25,0,0],"z":[0,0,0,0,0.25]},{"colorscale":[[0.0,"rgb(247,252,245)"],[0.125,"rgb(229,245,224)"],[0.25,"rgb(199,233,192)"],[0.375,"rgb(161,217,155)"],[0.5,"rgb(116,196,118)"],[0.625,"rgb(65,171,93)"],[0.75,"rgb(35,139,69)"],[0.875,"rgb(0,109,44)"],[1.0,"rgb(0,68,27)"]],"legendgroup":"Axes","name":"Axes","showscale":false,"type":"cone","u":[1e-05,0,0],"v":[0,1e-05,0],"w":[0,0,1e-05],"x":[0.18,0,0],"y":[0,0.18,0],"z":[0,0,0.18]},{"legendgroup":"b<sub>1</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>1</sub>","text":["","<b>b</b><sub>1</sub>"],"type":"scatter3d","x":[0,1.0],"y":[0,-0.5773502691896258],"z":[0,0.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>1</sub>","name":"<b>b</b><sub>1</sub>","showscale":false,"type":"cone","u":[0.2],"v":[-0.11547005383792518],"w":[0.0],"x":[0.95],"y":[-0.5484827557301445],"z":[0.0]},{"legendgroup":"b<sub>2</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>2</sub>","text":["","<b>b</b><sub>2</sub>"],"type":"scatter3d","x":[0,0.0],"y":[0,1.1547005383792517],"z":[0,0.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>2</sub>","name":"<b>b</b><sub>2</sub>","showscale":false,"type":"cone","u":[0.0],"v":[0.23094010767585035],"w":[0.0],"x":[0.0],"y":[1.096965511460289],"z":[0.0]},{"legendgroup":"b<sub>3</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>3</sub>","text":["","<b>b</b><sub>3</sub>"],"type":"scatter3d","x":[0,0.0],"y":[0,0.0],"z":[0,1.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>3</sub>","name":"<b>b</b><sub>3</sub>","showscale":false,"type":"cone","u":[0.0],"v":[0.0],"w":[0.2],"x":[0.0],"y":[0.0],"z":[0.95]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":true,"surfaceaxis":0,"type":"scatter3d","x":[0.0,1.0,1.0,0.0,0.0],"y":[0.0,-0.57735027,0.57735027,1.15470054,0.0],"z":[0.0,0.0,0.0,0.0,0.0]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":1,"type":"scatter3d","x":[0.0,0.0,0.0,0.0,0.0],"y":[0.0,1.15470054,1.15470054,0.0,0.0],"z":[0.0,0.0,1.0,1.0,0.0]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":0,"type":"scatter3d","x":[0.0,0.0,1.0,1.0,0.0],"y":[0.0,0.0,-0.57735027,-0.57735027,0.0],"z":[0.0,1.0,1.0,0.0,0.0]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":0,"type":"scatter3d","x":[1.0,1.0,1.0,1.0,1.0],"y":[0.57735027,0.57735027,-0.57735027,-0.57735027,0.57735027],"z":[0.0,1.0,1.0,0.0,0.0]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":1,"type":"scatter3d","x":[0.0,1.0,1.0,0.0,0.0],"y":[1.15470054,0.57735027,0.57735027,1.15470054,1.15470054],"z":[1.0,1.0,0.0,0.0,1.0]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":2,"type":"scatter3d","x":[1.0,1.0,0.0,0.0,1.0],"y":[-0.57735027,0.57735027,1.15470054,0.0,-0.57735027],"z":[1.0,1.0,1.0,1.0,1.0]},{"hovertext":["P(0.0, 0.0, 0.0)</br>d = 0.0","P(0.5, 0.5, 0.0)</br>d = 0.57735","P(0.0, 0.5, 0.5)</br>d = 0.76376","P(0.5, 0.0, 0.5)</br>d = 0.76376","P(1.0, 0.5, 0.5)</br>d = 1.11803","P(0.5, 1.0, 0.5)</br>d = 1.11803","P(0.5, 0.5, 1.0)</br>d = 1.1547","P(0.5, 1.0, 0.0)</br>d = 1.0","P(0.5, 1.0, 1.0)</br>d = 1.41421","P(1.0, 0.5, 0.0)</br>d = 1.0","P(1.0, 0.5, 1.0)</br>d = 1.41421","P(0.0, 0.0, 1.0)</br>d = 1.0","P(0.0, 1.0, 0.0)</br>d = 1.1547","P(0.0, 1.0, 1.0)</br>d = 1.52753","P(1.0, 0.0, 0.0)</br>d = 1.1547","P(1.0, 0.0, 1.0)</br>d = 1.52753","P(1.0, 1.0, 0.0)</br>d = 1.1547","P(1.0, 1.0, 1.0)</br>d = 1.52753"],"marker":{"color":["rgb(255,215,0)","rgb(0.0,0,255.0)","rgb(42.5,0,212.5)","rgb(42.5,0,212.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(170.0,0,85.0)","rgb(85.0,0,170.0)","rgb(212.5,0,42.5)","rgb(85.0,0,170.0)","rgb(212.5,0,42.5)","rgb(85.0,0,170.0)","rgb(170.0,0,85.0)","rgb(255.0,0,0.0)","rgb(170.0,0,85.0)","rgb(255.0,0,0.0)","rgb(170.0,0,85.0)","rgb(255.0,0,0.0)"]},"mode":"markers","name":"HSK","type":"scatter3d","x":[0.0,0.5,0.0,0.5,1.0,0.5,0.5,0.5,0.5,1.0,1.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0],"y":[0.0,0.28867513,0.57735027,-0.28867513,0.0,0.8660254,0.28867513,0.8660254,0.8660254,0.0,0.0,0.0,1.15470054,1.15470054,-0.57735027,-0.57735027,0.57735027,0.57735027],"z":[0.0,0.0,0.5,0.5,0.5,0.5,1.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0,0.0,1.0,0.0,1.0]},{"mode":"markers","name":"KPOINTS","type":"scatter3d","x":[0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0],"y":[0.0,-0.14433756729740646,-0.2886751345948129,-0.4330127018922194,-0.5773502691896258,0.2886751345948129,0.14433756729740646,0.0,-0.1443375672974065,-0.2886751345948129,0.5773502691896258,0.4330127018922194,0.2886751345948129,0.14433756729740643,0.0,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.43301270189221935,0.2886751345948129,1.1547005383792517,1.0103629710818451,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.0,-0.14433756729740646,-0.2886751345948129,-0.4330127018922194,-0.5773502691896258,0.2886751345948129,0.14433756729740646,0.0,-0.1443375672974065,-0.2886751345948129,0.5773502691896258,0.4330127018922194,0.2886751345948129,0.14433756729740643,0.0,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.43301270189221935,0.2886751345948129,1.1547005383792517,1.0103629710818451,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.0,-0.14433756729740646,-0.2886751345948129,-0.4330127018922194,-0.5773502691896258,0.2886751345948129,0.14433756729740646,0.0,-0.1443375672974065,-0.2886751345948129,0.5773502691896258,0.4330127018922194,0.2886751345948129,0.14433756729740643,0.0,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.43301270189221935,0.2886751345948129,1.1547005383792517,1.0103629710818451,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.0,-0.14433756729740646,-0.2886751345948129,-0.4330127018922194,-0.5773502691896258,0.2886751345948129,0.14433756729740646,0.0,-0.1443375672974065,-0.2886751345948129,0.5773502691896258,0.4330127018922194,0.2886751345948129,0.14433756729740643,0.0,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.43301270189221935,0.2886751345948129,1.1547005383792517,1.0103629710818451,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.0,-0.14433756729740646,-0.2886751345948129,-0.4330127018922194,-0.5773502691896258,0.2886751345948129,0.14433756729740646,0.0,-0.1443375672974065,-0.2886751345948129,0.5773502691896258,0.4330127018922194,0.2886751345948129,0.14433756729740643,0.0,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.43301270189221935,0.2886751345948129,1.1547005383792517,1.0103629710818451,0.8660254037844388,0.7216878364870323,0.5773502691896258],"z":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0]}],"layout":{"font":{"family":"Times New Roman","size":14},"margin":{"b":10,"l":10,"r":10,"t":30},"paper_bgcolor":"rgb(255,255,255)","scene":{"aspectmode":"data","camera":{"center":{"x":0.1,"y":0.1,"z":0.1}},"xaxis":{"showbackground":false,"visible":false},"yaxis":{"showbackground":false,"visible":false},"zaxis":{"showbackground":false,"visible":false}},"template":{"data":{"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5}},"type":"bar"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5}},"type":"barpolar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"histogram":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"histogram"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"#E5ECF6","showlakes":true,"showland":true,"subunitcolor":"white"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2}}}}};
+                var data = {"data":[{"legendgroup":"Axes","line":{"color":"green"},"mode":"lines+text","name":"Axes","text":["<b>k</b><sub>x</sub>","","<b>k</b><sub>y</sub>","","<b>k</b><sub>z</sub>"],"type":"scatter3d","x":[0.25,0,0,0,0],"y":[0,0,0.25,0,0],"z":[0,0,0,0,0.25]},{"colorscale":[[0.0,"rgb(247,252,245)"],[0.125,"rgb(229,245,224)"],[0.25,"rgb(199,233,192)"],[0.375,"rgb(161,217,155)"],[0.5,"rgb(116,196,118)"],[0.625,"rgb(65,171,93)"],[0.75,"rgb(35,139,69)"],[0.875,"rgb(0,109,44)"],[1.0,"rgb(0,68,27)"]],"legendgroup":"Axes","name":"Axes","showscale":false,"type":"cone","u":[1e-05,0,0],"v":[0,1e-05,0],"w":[0,0,1e-05],"x":[0.18,0,0],"y":[0,0.18,0],"z":[0,0,0.18]},{"legendgroup":"b<sub>1</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>1</sub>","text":["","<b>b</b><sub>1</sub>"],"type":"scatter3d","x":[0,1.0],"y":[0,-0.5773502691896258],"z":[0,0.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>1</sub>","name":"<b>b</b><sub>1</sub>","showscale":false,"type":"cone","u":[0.2],"v":[-0.11547005383792518],"w":[0.0],"x":[0.95],"y":[-0.5484827557301445],"z":[0.0]},{"legendgroup":"b<sub>2</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>2</sub>","text":["","<b>b</b><sub>2</sub>"],"type":"scatter3d","x":[0,0.0],"y":[0,1.1547005383792517],"z":[0,0.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>2</sub>","name":"<b>b</b><sub>2</sub>","showscale":false,"type":"cone","u":[0.0],"v":[0.23094010767585035],"w":[0.0],"x":[0.0],"y":[1.096965511460289],"z":[0.0]},{"legendgroup":"b<sub>3</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>3</sub>","text":["","<b>b</b><sub>3</sub>"],"type":"scatter3d","x":[0,0.0],"y":[0,0.0],"z":[0,1.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>3</sub>","name":"<b>b</b><sub>3</sub>","showscale":false,"type":"cone","u":[0.0],"v":[0.0],"w":[0.2],"x":[0.0],"y":[0.0],"z":[0.95]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":true,"surfaceaxis":0,"type":"scatter3d","x":[0.0,1.0,1.0,0.0,0.0],"y":[0.0,-0.57735027,0.57735027,1.15470054,0.0],"z":[0.0,0.0,0.0,0.0,0.0]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":1,"type":"scatter3d","x":[0.0,0.0,0.0,0.0,0.0],"y":[0.0,1.15470054,1.15470054,0.0,0.0],"z":[0.0,0.0,1.0,1.0,0.0]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":0,"type":"scatter3d","x":[0.0,0.0,1.0,1.0,0.0],"y":[0.0,0.0,-0.57735027,-0.57735027,0.0],"z":[0.0,1.0,1.0,0.0,0.0]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":0,"type":"scatter3d","x":[1.0,1.0,1.0,1.0,1.0],"y":[0.57735027,0.57735027,-0.57735027,-0.57735027,0.57735027],"z":[0.0,1.0,1.0,0.0,0.0]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":1,"type":"scatter3d","x":[0.0,1.0,1.0,0.0,0.0],"y":[1.15470054,0.57735027,0.57735027,1.15470054,1.15470054],"z":[1.0,1.0,0.0,0.0,1.0]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":2,"type":"scatter3d","x":[1.0,1.0,0.0,0.0,1.0],"y":[-0.57735027,0.57735027,1.15470054,0.0,-0.57735027],"z":[1.0,1.0,1.0,1.0,1.0]},{"hovertext":["P[0. 0. 0.]</br>d = 0.0","P[0.5 0.5 0. ]</br>d = 0.57735","P[0.  0.5 0.5]</br>d = 0.76376","P[0.5 0.  0.5]</br>d = 0.76376","P[1.  0.5 0.5]</br>d = 1.11803","P[0.5 1.  0.5]</br>d = 1.11803","P[0.5 0.5 1. ]</br>d = 1.1547","P[0.5 1.  0. ]</br>d = 1.0","P[0.5 1.  1. ]</br>d = 1.41421","P[1.  0.5 0. ]</br>d = 1.0","P[1.  0.5 1. ]</br>d = 1.41421","P[0. 0. 0.]</br>d = 0.0","P[0. 0. 1.]</br>d = 1.0","P[0. 1. 0.]</br>d = 1.1547","P[0. 1. 1.]</br>d = 1.52753","P[1. 0. 0.]</br>d = 1.1547","P[1. 0. 1.]</br>d = 1.52753","P[1. 1. 0.]</br>d = 1.1547","P[1. 1. 1.]</br>d = 1.52753"],"marker":{"color":["rgb(255,215,0)","rgb(0.0,0,255.0)","rgb(42.5,0,212.5)","rgb(42.5,0,212.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(170.0,0,85.0)","rgb(85.0,0,170.0)","rgb(212.5,0,42.5)","rgb(85.0,0,170.0)","rgb(212.5,0,42.5)",0,"rgb(85.0,0,170.0)","rgb(170.0,0,85.0)","rgb(255.0,0,0.0)","rgb(170.0,0,85.0)","rgb(255.0,0,0.0)","rgb(170.0,0,85.0)","rgb(255.0,0,0.0)"]},"mode":"markers","name":"HSK","type":"scatter3d","x":[0.0,0.5,0.0,0.5,1.0,0.5,0.5,0.5,0.5,1.0,1.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0],"y":[0.0,0.28867513,0.57735027,-0.28867513,0.0,0.8660254,0.28867513,0.8660254,0.8660254,0.0,0.0,0.0,0.0,1.15470054,1.15470054,-0.57735027,-0.57735027,0.57735027,0.57735027],"z":[0.0,0.0,0.5,0.5,0.5,0.5,1.0,0.0,1.0,0.0,1.0,0.0,1.0,0.0,1.0,0.0,1.0,0.0,1.0]},{"mode":"markers","name":"KPOINTS","type":"scatter3d","x":[0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0,0.0,0.25,0.5,0.75,1.0],"y":[0.0,-0.14433756729740646,-0.2886751345948129,-0.4330127018922194,-0.5773502691896258,0.2886751345948129,0.14433756729740646,0.0,-0.1443375672974065,-0.2886751345948129,0.5773502691896258,0.4330127018922194,0.2886751345948129,0.14433756729740643,0.0,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.43301270189221935,0.2886751345948129,1.1547005383792517,1.0103629710818451,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.0,-0.14433756729740646,-0.2886751345948129,-0.4330127018922194,-0.5773502691896258,0.2886751345948129,0.14433756729740646,0.0,-0.1443375672974065,-0.2886751345948129,0.5773502691896258,0.4330127018922194,0.2886751345948129,0.14433756729740643,0.0,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.43301270189221935,0.2886751345948129,1.1547005383792517,1.0103629710818451,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.0,-0.14433756729740646,-0.2886751345948129,-0.4330127018922194,-0.5773502691896258,0.2886751345948129,0.14433756729740646,0.0,-0.1443375672974065,-0.2886751345948129,0.5773502691896258,0.4330127018922194,0.2886751345948129,0.14433756729740643,0.0,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.43301270189221935,0.2886751345948129,1.1547005383792517,1.0103629710818451,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.0,-0.14433756729740646,-0.2886751345948129,-0.4330127018922194,-0.5773502691896258,0.2886751345948129,0.14433756729740646,0.0,-0.1443375672974065,-0.2886751345948129,0.5773502691896258,0.4330127018922194,0.2886751345948129,0.14433756729740643,0.0,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.43301270189221935,0.2886751345948129,1.1547005383792517,1.0103629710818451,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.0,-0.14433756729740646,-0.2886751345948129,-0.4330127018922194,-0.5773502691896258,0.2886751345948129,0.14433756729740646,0.0,-0.1443375672974065,-0.2886751345948129,0.5773502691896258,0.4330127018922194,0.2886751345948129,0.14433756729740643,0.0,0.8660254037844388,0.7216878364870323,0.5773502691896258,0.43301270189221935,0.2886751345948129,1.1547005383792517,1.0103629710818451,0.8660254037844388,0.7216878364870323,0.5773502691896258],"z":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0]},{"legendgroup":"Axes","line":{"color":"green"},"mode":"lines+text","name":"Axes","text":["<b>x</b>","","<b>y</b>","","<b>z</b>"],"type":"scatter3d","x":[0.25,0,0,0,0],"y":[0,0,0.25,0,0],"z":[0,0,0,0,0.25]},{"colorscale":[[0.0,"rgb(247,252,245)"],[0.125,"rgb(229,245,224)"],[0.25,"rgb(199,233,192)"],[0.375,"rgb(161,217,155)"],[0.5,"rgb(116,196,118)"],[0.625,"rgb(65,171,93)"],[0.75,"rgb(35,139,69)"],[0.875,"rgb(0,109,44)"],[1.0,"rgb(0,68,27)"]],"legendgroup":"Axes","name":"Axes","showscale":false,"type":"cone","u":[1e-05,0,0],"v":[0,1e-05,0],"w":[0,0,1e-05],"x":[0.18,0,0],"y":[0,0.18,0],"z":[0,0,0.18]},{"legendgroup":"b<sub>1</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>1</sub>","text":["","<b>a</b><sub>1</sub>"],"type":"scatter3d","x":[0,1.0],"y":[0,0.0],"z":[0,0.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>1</sub>","name":"<b>a</b><sub>1</sub>","showscale":false,"type":"cone","u":[0.2],"v":[0.0],"w":[0.0],"x":[0.95],"y":[0.0],"z":[0.0]},{"legendgroup":"b<sub>2</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>2</sub>","text":["","<b>a</b><sub>2</sub>"],"type":"scatter3d","x":[0,0.5],"y":[0,0.8660254037844385],"z":[0,-0.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>2</sub>","name":"<b>a</b><sub>2</sub>","showscale":false,"type":"cone","u":[0.1],"v":[0.1732050807568877],"w":[-0.0],"x":[0.475],"y":[0.8227241335952166],"z":[-0.0]},{"legendgroup":"b<sub>3</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>3</sub>","text":["","<b>a</b><sub>3</sub>"],"type":"scatter3d","x":[0,-0.0],"y":[0,0.0],"z":[0,1.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>3</sub>","name":"<b>a</b><sub>3</sub>","showscale":false,"type":"cone","u":[-0.0],"v":[0.0],"w":[0.2],"x":[-0.0],"y":[0.0],"z":[0.95]},{"legendgroup":"Lattice","line":{"color":"rgba(200,220,10,0.4)"},"mode":"lines","name":"Lattice","showlegend":true,"surfaceaxis":0,"type":"scatter3d","x":[0.0,1.0,1.5,0.5,0.0],"y":[0.0,0.0,0.8660254,0.8660254,0.0],"z":[0.0,0.0,0.0,-0.0,0.0]},{"legendgroup":"Lattice","line":{"color":"rgba(200,220,10,0.4)"},"mode":"lines","name":"Lattice","showlegend":false,"surfaceaxis":2,"type":"scatter3d","x":[0.0,0.5,0.5,-0.0,0.0],"y":[0.0,0.8660254,0.8660254,0.0,0.0],"z":[0.0,-0.0,1.0,1.0,0.0]},{"legendgroup":"Lattice","line":{"color":"rgba(200,220,10,0.4)"},"mode":"lines","name":"Lattice","showlegend":false,"surfaceaxis":0,"type":"scatter3d","x":[0.0,-0.0,1.0,1.0,0.0],"y":[0.0,0.0,0.0,0.0,0.0],"z":[0.0,1.0,1.0,0.0,0.0]},{"legendgroup":"Lattice","line":{"color":"rgba(200,220,10,0.4)"},"mode":"lines","name":"Lattice","showlegend":false,"surfaceaxis":0,"type":"scatter3d","x":[1.0,1.5,1.5,1.0,1.0],"y":[0.0,0.8660254,0.8660254,0.0,0.0],"z":[0.0,0.0,1.0,1.0,0.0]},{"legendgroup":"Lattice","line":{"color":"rgba(200,220,10,0.4)"},"mode":"lines","name":"Lattice","showlegend":false,"surfaceaxis":0,"type":"scatter3d","x":[0.5,1.5,1.5,0.5,0.5],"y":[0.8660254,0.8660254,0.8660254,0.8660254,0.8660254],"z":[1.0,1.0,0.0,-0.0,1.0]},{"legendgroup":"Lattice","line":{"color":"rgba(200,220,10,0.4)"},"mode":"lines","name":"Lattice","showlegend":false,"surfaceaxis":2,"type":"scatter3d","x":[1.0,1.5,0.5,-0.0,1.0],"y":[0.0,0.8660254,0.8660254,0.0,0.0],"z":[1.0,1.0,1.0,1.0,1.0]}],"layout":{"font":{"family":"Times New Roman","size":14},"margin":{"b":10,"l":10,"r":10,"t":30},"paper_bgcolor":"rgb(255,255,255)","scene":{"aspectmode":"data","camera":{"center":{"x":0.1,"y":0.1,"z":0.1}},"xaxis":{"showbackground":false,"visible":false},"yaxis":{"showbackground":false,"visible":false},"zaxis":{"showbackground":false,"visible":false}},"template":{"data":{"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5}},"type":"bar"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5}},"type":"barpolar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"histogram":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"histogram"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"#E5ECF6","showlakes":true,"showland":true,"subunitcolor":"white"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2}}}}};
                 var config = {displayModeBar: false,scrollZoom: true};
-                Plotly.newPlot('graph-6358fb30-4b23-11eb-9c99-44032c5fd2c2', data.data,data.layout,config);
+                Plotly.newPlot('graph-dddfa5b0-4b9f-11eb-a076-44032c5fd2c2', data.data,data.layout,config);
             </script>
         </div>
 </div>
@@ -2447,7 +2626,7 @@ z
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="to_bz" class="doc_header"><code>to_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L733" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>to_bz</code>(<strong><code>bz</code></strong>, <strong><code>kpoints</code></strong>)</p>
+<h4 id="kpoints2bz" class="doc_header"><code>kpoints2bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L752" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>kpoints2bz</code>(<strong><code>bz</code></strong>, <strong><code>kpoints</code></strong>, <strong><code>primitive</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns True if test_point is between plane and origin. Could be used to sample BZ mesh in place of ConvexHull.</li>
@@ -2482,7 +2661,7 @@ z
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="n">to_bz</span><span class="p">(</span><span class="n">get_bz</span><span class="p">(</span><span class="n">hexa</span><span class="p">),</span><span class="n">get_kmesh</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">poscar</span><span class="o">=</span><span class="n">hexa</span><span class="p">)</span><span class="o">.</span><span class="n">kpoints</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="n">kpoints2bz</span><span class="p">(</span><span class="n">get_bz</span><span class="p">(</span><span class="n">hexa</span><span class="p">,</span><span class="n">primitive</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span><span class="n">get_kmesh</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">poscar</span><span class="o">=</span><span class="n">hexa</span><span class="p">)</span><span class="o">.</span><span class="n">kpoints</span><span class="p">,</span><span class="n">primitive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -2499,17 +2678,12 @@ z
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">reg</span> <span class="o">=</span> <span class="n">get_bz</span><span class="p">(</span><span class="n">hexa</span><span class="p">)</span>
-<span class="n">fig</span> <span class="o">=</span> <span class="n">iplot_bz</span><span class="p">(</span><span class="n">get_bz</span><span class="p">(</span><span class="n">hexa</span><span class="p">,</span><span class="n">primitive</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">splot_bz</span><span class="p">(</span><span class="n">get_bz</span><span class="p">(</span><span class="n">hexa</span><span class="p">,</span><span class="n">primitive</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span><span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">108</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span><span class="mi">204</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span><span class="mi">215</span><span class="o">/</span><span class="mi">255</span><span class="p">),</span><span class="n">vectors</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">splot_bz</span><span class="p">(</span><span class="n">get_bz</span><span class="p">(</span><span class="n">hexa</span><span class="p">,</span><span class="n">primitive</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span><span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">212</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span><span class="mi">175</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span><span class="mi">55</span><span class="o">/</span><span class="mi">255</span><span class="p">))</span>
 <span class="c1">#out = get_kmesh(4,poscar=hexa).kpoints</span>
-<span class="n">out1</span> <span class="o">=</span> <span class="n">kpoints2coords</span><span class="p">(</span><span class="n">get_bz</span><span class="p">(</span><span class="n">hexa</span><span class="p">)</span><span class="o">.</span><span class="n">basis</span><span class="p">,</span><span class="n">get_kmesh</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">poscar</span><span class="o">=</span><span class="n">hexa</span><span class="p">)</span><span class="o">.</span><span class="n">kpoints</span><span class="p">)</span>
-<span class="c1">#ax.scatter(out[:,2], out[:,0])</span>
-<span class="c1">#for p1,p2 in zip(out,out1):</span>
-<span class="c1">#    fig.add_trace(go.Scatter3d(x=[p1[0],p2[0]],y=[p1[1],p2[1]],z=[p1[2],p2[2]],mode=&#39;markers+lines&#39;))</span>
-<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">reg</span><span class="o">.</span><span class="n">faces</span><span class="p">:</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Scatter3d</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">f</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">y</span><span class="o">=</span><span class="n">f</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">z</span><span class="o">=</span><span class="n">f</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;lines&#39;</span><span class="p">))</span>
-
-<span class="n">pp</span><span class="o">.</span><span class="n">plotly_to_html</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span><span class="n">modebar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1">#out1 = kpoints2coords(get_bz(hexa,primitive=True).basis,get_kmesh(5,poscar=hexa).kpoints)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">out</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">out</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">out</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span><span class="n">s</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -2522,16 +2696,882 @@ z
 <div class="output_area">
 
 
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-        <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
-            <div id='graph-63d0f7e2-4b23-11eb-8295-44032c5fd2c2'><!-- Plotly chart DIV --></div>
-            <script>
-                var data = {"data":[{"legendgroup":"Axes","line":{"color":"green"},"mode":"lines+text","name":"Axes","text":["<b>k</b><sub>x</sub>","","<b>k</b><sub>y</sub>","","<b>k</b><sub>z</sub>"],"type":"scatter3d","x":[0.25,0,0,0,0],"y":[0,0,0.25,0,0],"z":[0,0,0,0,0.25]},{"colorscale":[[0.0,"rgb(247,252,245)"],[0.125,"rgb(229,245,224)"],[0.25,"rgb(199,233,192)"],[0.375,"rgb(161,217,155)"],[0.5,"rgb(116,196,118)"],[0.625,"rgb(65,171,93)"],[0.75,"rgb(35,139,69)"],[0.875,"rgb(0,109,44)"],[1.0,"rgb(0,68,27)"]],"legendgroup":"Axes","name":"Axes","showscale":false,"type":"cone","u":[1e-05,0,0],"v":[0,1e-05,0],"w":[0,0,1e-05],"x":[0.18,0,0],"y":[0,0.18,0],"z":[0,0,0.18]},{"legendgroup":"b<sub>1</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>1</sub>","text":["","<b>b</b><sub>1</sub>"],"type":"scatter3d","x":[0,1.0],"y":[0,-0.5773502691896258],"z":[0,0.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>1</sub>","name":"<b>b</b><sub>1</sub>","showscale":false,"type":"cone","u":[0.2],"v":[-0.11547005383792518],"w":[0.0],"x":[0.95],"y":[-0.5484827557301445],"z":[0.0]},{"legendgroup":"b<sub>2</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>2</sub>","text":["","<b>b</b><sub>2</sub>"],"type":"scatter3d","x":[0,0.0],"y":[0,1.1547005383792517],"z":[0,0.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>2</sub>","name":"<b>b</b><sub>2</sub>","showscale":false,"type":"cone","u":[0.0],"v":[0.23094010767585035],"w":[0.0],"x":[0.0],"y":[1.096965511460289],"z":[0.0]},{"legendgroup":"b<sub>3</sub>","line":{"color":"red"},"mode":"lines+text","name":"<b>b</b><sub>3</sub>","text":["","<b>b</b><sub>3</sub>"],"type":"scatter3d","x":[0,0.0],"y":[0,0.0],"z":[0,1.0]},{"colorscale":[[0.0,"rgb(255,245,240)"],[0.125,"rgb(254,224,210)"],[0.25,"rgb(252,187,161)"],[0.375,"rgb(252,146,114)"],[0.5,"rgb(251,106,74)"],[0.625,"rgb(239,59,44)"],[0.75,"rgb(203,24,29)"],[0.875,"rgb(165,15,21)"],[1.0,"rgb(103,0,13)"]],"legendgroup":"b<sub>3</sub>","name":"<b>b</b><sub>3</sub>","showscale":false,"type":"cone","u":[0.0],"v":[0.0],"w":[0.2],"x":[0.0],"y":[0.0],"z":[0.95]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":true,"surfaceaxis":0,"type":"scatter3d","x":[0.0,1.0,1.0,0.0,0.0],"y":[0.0,-0.57735027,0.57735027,1.15470054,0.0],"z":[0.0,0.0,0.0,0.0,0.0]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":1,"type":"scatter3d","x":[0.0,0.0,0.0,0.0,0.0],"y":[0.0,1.15470054,1.15470054,0.0,0.0],"z":[0.0,0.0,1.0,1.0,0.0]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":0,"type":"scatter3d","x":[0.0,0.0,1.0,1.0,0.0],"y":[0.0,0.0,-0.57735027,-0.57735027,0.0],"z":[0.0,1.0,1.0,0.0,0.0]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":0,"type":"scatter3d","x":[1.0,1.0,1.0,1.0,1.0],"y":[0.57735027,0.57735027,-0.57735027,-0.57735027,0.57735027],"z":[0.0,1.0,1.0,0.0,0.0]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":1,"type":"scatter3d","x":[0.0,1.0,1.0,0.0,0.0],"y":[1.15470054,0.57735027,0.57735027,1.15470054,1.15470054],"z":[1.0,1.0,0.0,0.0,1.0]},{"legendgroup":"BZ","line":{"color":"rgba(168,204,216,0.4)"},"mode":"lines","name":"BZ","showlegend":false,"surfaceaxis":2,"type":"scatter3d","x":[1.0,1.0,0.0,0.0,1.0],"y":[-0.57735027,0.57735027,1.15470054,0.0,-0.57735027],"z":[1.0,1.0,1.0,1.0,1.0]},{"hovertext":["P(0.0, 0.0, 0.0)</br>d = 0.0","P(0.5, 0.5, 0.0)</br>d = 0.57735","P(0.0, 0.5, 0.5)</br>d = 0.76376","P(0.5, 0.0, 0.5)</br>d = 0.76376","P(1.0, 0.5, 0.5)</br>d = 1.11803","P(0.5, 1.0, 0.5)</br>d = 1.11803","P(0.5, 0.5, 1.0)</br>d = 1.1547","P(0.5, 1.0, 0.0)</br>d = 1.0","P(0.5, 1.0, 1.0)</br>d = 1.41421","P(1.0, 0.5, 0.0)</br>d = 1.0","P(1.0, 0.5, 1.0)</br>d = 1.41421","P(0.0, 0.0, 1.0)</br>d = 1.0","P(0.0, 1.0, 0.0)</br>d = 1.1547","P(0.0, 1.0, 1.0)</br>d = 1.52753","P(1.0, 0.0, 0.0)</br>d = 1.1547","P(1.0, 0.0, 1.0)</br>d = 1.52753","P(1.0, 1.0, 0.0)</br>d = 1.1547","P(1.0, 1.0, 1.0)</br>d = 1.52753"],"marker":{"color":["rgb(255,215,0)","rgb(0.0,0,255.0)","rgb(42.5,0,212.5)","rgb(42.5,0,212.5)","rgb(127.5,0,127.5)","rgb(127.5,0,127.5)","rgb(170.0,0,85.0)","rgb(85.0,0,170.0)","rgb(212.5,0,42.5)","rgb(85.0,0,170.0)","rgb(212.5,0,42.5)","rgb(85.0,0,170.0)","rgb(170.0,0,85.0)","rgb(255.0,0,0.0)","rgb(170.0,0,85.0)","rgb(255.0,0,0.0)","rgb(170.0,0,85.0)","rgb(255.0,0,0.0)"]},"mode":"markers","name":"HSK","type":"scatter3d","x":[0.0,0.5,0.0,0.5,1.0,0.5,0.5,0.5,0.5,1.0,1.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0],"y":[0.0,0.28867513,0.57735027,-0.28867513,0.0,0.8660254,0.28867513,0.8660254,0.8660254,0.0,0.0,0.0,1.15470054,1.15470054,-0.57735027,-0.57735027,0.57735027,0.57735027],"z":[0.0,0.0,0.5,0.5,0.5,0.5,1.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0,0.0,1.0,0.0,1.0]},{"mode":"lines","type":"scatter3d","x":[0.33333333,-0.33333333,-0.66666667,-0.33333333,0.33333333,0.66666667,0.33333333],"y":[0.57735027,0.57735027,0.0,-0.57735027,-0.57735027,0.0,0.57735027],"z":[0.5,0.5,0.5,0.5,0.5,0.5,0.5]},{"mode":"lines","type":"scatter3d","x":[-0.33333333,-0.66666667,-0.33333333,0.33333333,0.66666667,0.33333333,-0.33333333],"y":[-0.57735027,0.0,0.57735027,0.57735027,0.0,-0.57735027,-0.57735027],"z":[-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5]},{"mode":"lines","type":"scatter3d","x":[0.33333333,-0.33333333,-0.33333333,0.33333333,0.33333333],"y":[-0.57735027,-0.57735027,-0.57735027,-0.57735027,-0.57735027],"z":[0.5,0.5,-0.5,-0.5,0.5]},{"mode":"lines","type":"scatter3d","x":[0.33333333,0.66666667,0.66666667,0.33333333,0.33333333],"y":[-0.57735027,0.0,0.0,-0.57735027,-0.57735027],"z":[-0.5,-0.5,0.5,0.5,-0.5]},{"mode":"lines","type":"scatter3d","x":[0.33333333,0.33333333,-0.33333333,-0.33333333,0.33333333],"y":[0.57735027,0.57735027,0.57735027,0.57735027,0.57735027],"z":[0.5,-0.5,-0.5,0.5,0.5]},{"mode":"lines","type":"scatter3d","x":[0.66666667,0.66666667,0.33333333,0.33333333,0.66666667],"y":[0.0,0.0,0.57735027,0.57735027,0.0],"z":[0.5,-0.5,-0.5,0.5,0.5]},{"mode":"lines","type":"scatter3d","x":[-0.33333333,-0.66666667,-0.66666667,-0.33333333,-0.33333333],"y":[0.57735027,0.0,0.0,0.57735027,0.57735027],"z":[-0.5,-0.5,0.5,0.5,-0.5]},{"mode":"lines","type":"scatter3d","x":[-0.66666667,-0.66666667,-0.33333333,-0.33333333,-0.66666667],"y":[0.0,0.0,-0.57735027,-0.57735027,0.0],"z":[0.5,-0.5,-0.5,0.5,0.5]}],"layout":{"font":{"family":"Times New Roman","size":14},"margin":{"b":10,"l":10,"r":10,"t":30},"paper_bgcolor":"rgb(255,255,255)","scene":{"aspectmode":"data","camera":{"center":{"x":0.1,"y":0.1,"z":0.1}},"xaxis":{"showbackground":false,"visible":false},"yaxis":{"showbackground":false,"visible":false},"zaxis":{"showbackground":false,"visible":false}},"template":{"data":{"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5}},"type":"bar"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5}},"type":"barpolar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"histogram":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"histogram"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"#E5ECF6","showlakes":true,"showland":true,"subunitcolor":"white"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2}}}}};
-                var config = {displayModeBar: false,scrollZoom: true};
-                Plotly.newPlot('graph-63d0f7e2-4b23-11eb-8295-44032c5fd2c2', data.data,data.layout,config);
-            </script>
-        </div>
+<div class="output_svg output_subarea ">
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Created with matplotlib (https://matplotlib.org/) -->
+<svg height="199.224pt" version="1.1" viewBox="0 0 204.12 199.224" width="204.12pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <style type="text/css">
+*{stroke-linecap:butt;stroke-linejoin:round;}
+  </style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 199.224 
+L 204.12 199.224 
+L 204.12 0 
+L 0 0 
+z
+" style="fill:none;"/>
+  </g>
+  <g id="patch_2">
+   <path d="M 7.2 192.024 
+L 196.92 192.024 
+L 196.92 7.2 
+L 7.2 7.2 
+z
+" style="fill:#ffffff;"/>
+  </g>
+  <g id="axes_1">
+   <g id="Line3DCollection_1">
+    <path clip-path="url(#p89edfe4454)" d="M 104.623784 121.364826 
+L 127.302544 115.609231 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p89edfe4454)" d="M 138.970827 121.364826 
+L 127.302544 115.609231 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p89edfe4454)" d="M 127.571677 95.293701 
+L 127.302544 115.609231 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p89edfe4454)" d="M 104.623784 121.364826 
+L 110.135488 121.470654 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p89edfe4454)" d="M 104.623784 121.364826 
+L 110.145227 118.456259 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p89edfe4454)" d="M 138.970827 121.364826 
+L 136.10475 121.470654 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p89edfe4454)" d="M 138.970827 121.364826 
+L 136.160373 118.456259 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p89edfe4454)" d="M 127.571677 95.293701 
+L 128.594071 99.700239 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+    <path clip-path="url(#p89edfe4454)" d="M 127.571677 95.293701 
+L 126.416092 100.787898 
+" style="fill:none;stroke:#000000;stroke-width:0.8;"/>
+   </g>
+   <g id="text_1">
+    <!-- $\vec{b}_1$ -->
+    <defs>
+     <path d="M -1.703125 65.40625 
+L -14.90625 54.796875 
+L -16.703125 55.59375 
+Q -11.796875 59.703125 -11.796875 61.203125 
+Q -11.796875 62.703125 -16.703125 62.703125 
+L -45.296875 62.703125 
+L -45.296875 68.09375 
+L -16.703125 68.09375 
+Q -11.796875 68.09375 -11.796875 69.59375 
+Q -11.796875 69.90625 -12 70.25 
+Q -12.203125 70.59375 -12.75 71.140625 
+Q -13.296875 71.703125 -13.75 72.203125 
+Q -14.203125 72.703125 -15.203125 73.640625 
+Q -16.203125 74.59375 -16.796875 75.203125 
+L -15 76 
+z
+" id="STIXGeneral-Regular-8407"/>
+     <path d="M 16.296875 29 
+L 16.40625 29 
+Q 21.40625 37.296875 25.84375 40.6875 
+Q 30.296875 44.09375 35.703125 44.09375 
+Q 40.90625 44.09375 44.09375 40.890625 
+Q 47.296875 37.703125 47.296875 32.09375 
+Q 47.296875 24.40625 42.59375 16.59375 
+Q 37.90625 8.796875 30.34375 3.84375 
+Q 22.796875 -1.09375 15.296875 -1.09375 
+Q 10.703125 -1.09375 6.5 0.5 
+Q 2.296875 2.09375 2.296875 4.203125 
+L 2.296875 4.796875 
+L 16.5 57.09375 
+Q 17.40625 60.703125 17.40625 61.796875 
+Q 17.40625 63.40625 16.453125 63.75 
+Q 15.5 64.09375 11 64.296875 
+L 11 66 
+Q 18.5 66.90625 26.296875 68.296875 
+L 26.796875 67.796875 
+L 24.703125 59.59375 
+z
+M 38.796875 30.59375 
+Q 38.796875 39.203125 31.796875 39.203125 
+Q 24.90625 39.203125 18.09375 27.703125 
+Q 14.90625 22.296875 12.90625 15.75 
+Q 10.90625 9.203125 10.90625 4.59375 
+Q 10.90625 1.203125 15.5 1.203125 
+Q 22.09375 1.203125 27.796875 7.09375 
+Q 32.40625 11.90625 35.59375 18.546875 
+Q 38.796875 25.203125 38.796875 30.59375 
+z
+" id="STIXGeneral-Italic-98"/>
+     <path d="M 39.40625 0 
+L 11.796875 0 
+L 11.796875 1.5 
+Q 17.296875 1.796875 19.296875 3.546875 
+Q 21.296875 5.296875 21.296875 9.5 
+L 21.296875 54.40625 
+Q 21.296875 59.296875 18.296875 59.296875 
+Q 16.90625 59.296875 13.796875 58.09375 
+L 11.09375 57.09375 
+L 11.09375 58.5 
+L 29 67.59375 
+L 29.90625 67.296875 
+L 29.90625 7.59375 
+Q 29.90625 4.296875 31.90625 2.890625 
+Q 33.90625 1.5 39.40625 1.5 
+z
+" id="STIXGeneral-Regular-49"/>
+    </defs>
+    <g transform="translate(90.879013 127.328035)scale(0.1 -0.1)">
+     <use transform="translate(54.796871 26)" xlink:href="#STIXGeneral-Regular-8407"/>
+     <use xlink:href="#STIXGeneral-Italic-98"/>
+     <use transform="translate(51.543266 -13.228125)scale(0.7)" xlink:href="#STIXGeneral-Regular-49"/>
+    </g>
+   </g>
+   <g id="text_2">
+    <!-- $\vec{b}_2$ -->
+    <defs>
+     <path d="M 47.40625 13.703125 
+L 42 0 
+L 2.90625 0 
+L 2.90625 1.203125 
+L 20.703125 20.09375 
+Q 27.703125 27.40625 30.703125 33.5 
+Q 33.703125 39.59375 33.703125 46.09375 
+Q 33.703125 52.796875 30 56.5 
+Q 26.296875 60.203125 19.796875 60.203125 
+Q 14.40625 60.203125 11.25 57.390625 
+Q 8.09375 54.59375 5.09375 47.203125 
+L 3 47.703125 
+Q 4.703125 57 9.84375 62.296875 
+Q 15 67.59375 23.796875 67.59375 
+Q 32.09375 67.59375 37.1875 62.59375 
+Q 42.296875 57.59375 42.296875 50 
+Q 42.296875 38.703125 29.5 25.203125 
+L 13 7.59375 
+L 36.40625 7.59375 
+Q 39.703125 7.59375 41.640625 8.890625 
+Q 43.59375 10.203125 46 14.296875 
+z
+" id="STIXGeneral-Regular-50"/>
+    </defs>
+    <g transform="translate(139.151561 127.328035)scale(0.1 -0.1)">
+     <use transform="translate(54.796871 26)" xlink:href="#STIXGeneral-Regular-8407"/>
+     <use xlink:href="#STIXGeneral-Italic-98"/>
+     <use transform="translate(51.543266 -13.228125)scale(0.7)" xlink:href="#STIXGeneral-Regular-50"/>
+    </g>
+   </g>
+   <g id="text_3">
+    <!-- $\vec{b}_3$ -->
+    <defs>
+     <path d="M 6.09375 51 
+L 4.5 51.40625 
+Q 6.796875 58.90625 11.6875 63.25 
+Q 16.59375 67.59375 24.09375 67.59375 
+Q 31.09375 67.59375 35.390625 63.796875 
+Q 39.703125 60 39.703125 53.90625 
+Q 39.703125 45.703125 30.40625 40.09375 
+Q 35.90625 37.703125 38.703125 34.796875 
+Q 43.09375 29.90625 43.09375 21.90625 
+Q 43.09375 13.90625 38.5 7.90625 
+Q 35.09375 3.296875 28.75 0.9375 
+Q 22.40625 -1.40625 15.296875 -1.40625 
+Q 4.09375 -1.40625 4.09375 4.296875 
+Q 4.09375 5.90625 5.296875 6.90625 
+Q 6.5 7.90625 8.203125 7.90625 
+Q 10.703125 7.90625 14.296875 5.296875 
+Q 18.703125 2.203125 22.90625 2.203125 
+Q 28.40625 2.203125 32.15625 6.640625 
+Q 35.90625 11.09375 35.90625 17.5 
+Q 35.90625 29 25.5 32 
+Q 22.40625 33 15.296875 33 
+L 15.296875 34.40625 
+Q 20.90625 36.296875 23.703125 38 
+Q 31.796875 42.59375 31.796875 51.40625 
+Q 31.796875 56.40625 28.9375 59 
+Q 26.09375 61.59375 21 61.59375 
+Q 12 61.59375 6.09375 51 
+z
+" id="STIXGeneral-Regular-51"/>
+    </defs>
+    <g transform="translate(123.131127 90.711523)scale(0.1 -0.1)">
+     <use transform="translate(54.796871 26)" xlink:href="#STIXGeneral-Regular-8407"/>
+     <use xlink:href="#STIXGeneral-Italic-98"/>
+     <use transform="translate(51.543266 -13.228125)scale(0.7)" xlink:href="#STIXGeneral-Regular-51"/>
+    </g>
+   </g>
+   <g id="Path3DCollection_1">
+    <defs>
+     <path d="M 0 0.353553 
+C 0.093763 0.353553 0.183699 0.316301 0.25 0.25 
+C 0.316301 0.183699 0.353553 0.093763 0.353553 0 
+C 0.353553 -0.093763 0.316301 -0.183699 0.25 -0.25 
+C 0.183699 -0.316301 0.093763 -0.353553 0 -0.353553 
+C -0.093763 -0.353553 -0.183699 -0.316301 -0.25 -0.25 
+C -0.316301 -0.183699 -0.353553 -0.093763 -0.353553 0 
+C -0.353553 0.093763 -0.316301 0.183699 -0.25 0.25 
+C -0.183699 0.316301 -0.093763 0.353553 0 0.353553 
+z
+" id="C0_0_e7d47c5ebc"/>
+    </defs>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;stroke:#ff0000;" x="104.623784" xlink:href="#C0_0_e7d47c5ebc" y="97.114378"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.5881;stroke:#ff0000;stroke-opacity:0.5881;" x="131.644106" xlink:href="#C0_0_e7d47c5ebc" y="57.629843"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.631061;stroke:#ff0000;stroke-opacity:0.631061;" x="113.699589" xlink:href="#C0_0_e7d47c5ebc" y="61.748016"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.903319;stroke:#ff0000;stroke-opacity:0.903319;" x="142.676915" xlink:href="#C0_0_e7d47c5ebc" y="87.8466"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.951268;stroke:#ff0000;stroke-opacity:0.951268;" x="123.804443" xlink:href="#C0_0_e7d47c5ebc" y="92.44296"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.545789;stroke:#ff0000;stroke-opacity:0.545789;" x="149.317711" xlink:href="#C0_0_e7d47c5ebc" y="53.573843"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.5881;stroke:#ff0000;stroke-opacity:0.5881;" x="158.664428" xlink:href="#C0_0_e7d47c5ebc" y="57.629843"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.631061;stroke:#ff0000;stroke-opacity:0.631061;" x="140.927004" xlink:href="#C0_0_e7d47c5ebc" y="61.748016"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.674685;stroke:#ff0000;stroke-opacity:0.674685;" x="122.915588" xlink:href="#C0_0_e7d47c5ebc" y="65.929802"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.718988;stroke:#ff0000;stroke-opacity:0.718988;" x="104.623784" xlink:href="#C0_0_e7d47c5ebc" y="70.176687"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.763986;stroke:#ff0000;stroke-opacity:0.763986;" x="86.044992" xlink:href="#C0_0_e7d47c5ebc" y="74.490204"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.5881;stroke:#ff0000;stroke-opacity:0.5881;" x="158.664428" xlink:href="#C0_0_e7d47c5ebc" y="57.629843"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.631061;stroke:#ff0000;stroke-opacity:0.631061;" x="168.154419" xlink:href="#C0_0_e7d47c5ebc" y="61.748016"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.674685;stroke:#ff0000;stroke-opacity:0.674685;" x="150.353295" xlink:href="#C0_0_e7d47c5ebc" y="65.929802"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.718988;stroke:#ff0000;stroke-opacity:0.718988;" x="132.275056" xlink:href="#C0_0_e7d47c5ebc" y="70.176687"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.763986;stroke:#ff0000;stroke-opacity:0.763986;" x="113.91318" xlink:href="#C0_0_e7d47c5ebc" y="74.490204"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.809696;stroke:#ff0000;stroke-opacity:0.809696;" x="95.260939" xlink:href="#C0_0_e7d47c5ebc" y="78.871932"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.631061;stroke:#ff0000;stroke-opacity:0.631061;" x="168.154419" xlink:href="#C0_0_e7d47c5ebc" y="61.748016"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.903319;stroke:#ff0000;stroke-opacity:0.903319;" x="85.597218" xlink:href="#C0_0_e7d47c5ebc" y="87.8466"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.718988;stroke:#ff0000;stroke-opacity:0.718988;" x="159.926328" xlink:href="#C0_0_e7d47c5ebc" y="70.176687"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.763986;stroke:#ff0000;stroke-opacity:0.763986;" x="141.781368" xlink:href="#C0_0_e7d47c5ebc" y="74.490204"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.809696;stroke:#ff0000;stroke-opacity:0.809696;" x="123.349474" xlink:href="#C0_0_e7d47c5ebc" y="78.871932"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.856135;stroke:#ff0000;stroke-opacity:0.856135;" x="104.623784" xlink:href="#C0_0_e7d47c5ebc" y="83.323503"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.903319;stroke:#ff0000;stroke-opacity:0.903319;" x="85.597218" xlink:href="#C0_0_e7d47c5ebc" y="87.8466"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.951268;stroke:#ff0000;stroke-opacity:0.951268;" x="95.033454" xlink:href="#C0_0_e7d47c5ebc" y="92.44296"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.763986;stroke:#ff0000;stroke-opacity:0.763986;" x="169.649557" xlink:href="#C0_0_e7d47c5ebc" y="74.490204"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.809696;stroke:#ff0000;stroke-opacity:0.809696;" x="151.438008" xlink:href="#C0_0_e7d47c5ebc" y="78.871932"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.856135;stroke:#ff0000;stroke-opacity:0.856135;" x="132.936177" xlink:href="#C0_0_e7d47c5ebc" y="83.323503"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.903319;stroke:#ff0000;stroke-opacity:0.903319;" x="114.137067" xlink:href="#C0_0_e7d47c5ebc" y="87.8466"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.951268;stroke:#ff0000;stroke-opacity:0.951268;" x="95.033454" xlink:href="#C0_0_e7d47c5ebc" y="92.44296"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;stroke:#ff0000;" x="104.623784" xlink:href="#C0_0_e7d47c5ebc" y="97.114378"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.5881;stroke:#ff0000;stroke-opacity:0.5881;" x="131.644106" xlink:href="#C0_0_e7d47c5ebc" y="57.629843"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.631061;stroke:#ff0000;stroke-opacity:0.631061;" x="113.699589" xlink:href="#C0_0_e7d47c5ebc" y="61.748016"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.903319;stroke:#ff0000;stroke-opacity:0.903319;" x="142.676915" xlink:href="#C0_0_e7d47c5ebc" y="87.8466"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.951268;stroke:#ff0000;stroke-opacity:0.951268;" x="123.804443" xlink:href="#C0_0_e7d47c5ebc" y="92.44296"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.545789;stroke:#ff0000;stroke-opacity:0.545789;" x="149.317711" xlink:href="#C0_0_e7d47c5ebc" y="53.573843"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.782513;stroke:#ff0000;stroke-opacity:0.782513;" x="104.623784" xlink:href="#C0_0_e7d47c5ebc" y="159.659066"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.398902;stroke:#ff0000;stroke-opacity:0.398902;" x="130.732066" xlink:href="#C0_0_e7d47c5ebc" y="117.370345"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.439001;stroke:#ff0000;stroke-opacity:0.439001;" x="113.390977" xlink:href="#C0_0_e7d47c5ebc" y="121.790786"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.692643;stroke:#ff0000;stroke-opacity:0.692643;" x="141.322814" xlink:href="#C0_0_e7d47c5ebc" y="149.751897"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.737227;stroke:#ff0000;stroke-opacity:0.737227;" x="123.116579" xlink:href="#C0_0_e7d47c5ebc" y="154.666802"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.359388;stroke:#ff0000;stroke-opacity:0.359388;" x="147.820125" xlink:href="#C0_0_e7d47c5ebc" y="113.014404"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.398902;stroke:#ff0000;stroke-opacity:0.398902;" x="156.840349" xlink:href="#C0_0_e7d47c5ebc" y="117.370345"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.439001;stroke:#ff0000;stroke-opacity:0.439001;" x="139.692558" xlink:href="#C0_0_e7d47c5ebc" y="121.790786"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.479698;stroke:#ff0000;stroke-opacity:0.479698;" x="122.288959" xlink:href="#C0_0_e7d47c5ebc" y="126.277171"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.521007;stroke:#ff0000;stroke-opacity:0.521007;" x="104.623784" xlink:href="#C0_0_e7d47c5ebc" y="130.830986"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.562941;stroke:#ff0000;stroke-opacity:0.562941;" x="86.691091" xlink:href="#C0_0_e7d47c5ebc" y="135.453763"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.398902;stroke:#ff0000;stroke-opacity:0.398902;" x="156.840349" xlink:href="#C0_0_e7d47c5ebc" y="117.370345"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.439001;stroke:#ff0000;stroke-opacity:0.439001;" x="165.994139" xlink:href="#C0_0_e7d47c5ebc" y="121.790786"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.479698;stroke:#ff0000;stroke-opacity:0.479698;" x="148.786722" xlink:href="#C0_0_e7d47c5ebc" y="126.277171"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.521007;stroke:#ff0000;stroke-opacity:0.521007;" x="131.320677" xlink:href="#C0_0_e7d47c5ebc" y="130.830986"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.562941;stroke:#ff0000;stroke-opacity:0.562941;" x="113.59013" xlink:href="#C0_0_e7d47c5ebc" y="135.453763"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.605515;stroke:#ff0000;stroke-opacity:0.605515;" x="95.589027" xlink:href="#C0_0_e7d47c5ebc" y="140.147081"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.439001;stroke:#ff0000;stroke-opacity:0.439001;" x="165.994139" xlink:href="#C0_0_e7d47c5ebc" y="121.790786"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.692643;stroke:#ff0000;stroke-opacity:0.692643;" x="86.274269" xlink:href="#C0_0_e7d47c5ebc" y="149.751897"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.521007;stroke:#ff0000;stroke-opacity:0.521007;" x="158.017571" xlink:href="#C0_0_e7d47c5ebc" y="130.830986"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.562941;stroke:#ff0000;stroke-opacity:0.562941;" x="140.48917" xlink:href="#C0_0_e7d47c5ebc" y="135.453763"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.605515;stroke:#ff0000;stroke-opacity:0.605515;" x="122.693297" xlink:href="#C0_0_e7d47c5ebc" y="140.147081"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.648744;stroke:#ff0000;stroke-opacity:0.648744;" x="104.623784" xlink:href="#C0_0_e7d47c5ebc" y="144.912566"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.692643;stroke:#ff0000;stroke-opacity:0.692643;" x="86.274269" xlink:href="#C0_0_e7d47c5ebc" y="149.751897"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.737227;stroke:#ff0000;stroke-opacity:0.737227;" x="95.377386" xlink:href="#C0_0_e7d47c5ebc" y="154.666802"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.562941;stroke:#ff0000;stroke-opacity:0.562941;" x="167.38821" xlink:href="#C0_0_e7d47c5ebc" y="135.453763"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.605515;stroke:#ff0000;stroke-opacity:0.605515;" x="149.797568" xlink:href="#C0_0_e7d47c5ebc" y="140.147081"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.648744;stroke:#ff0000;stroke-opacity:0.648744;" x="131.936441" xlink:href="#C0_0_e7d47c5ebc" y="144.912566"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.692643;stroke:#ff0000;stroke-opacity:0.692643;" x="113.798541" xlink:href="#C0_0_e7d47c5ebc" y="149.751897"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.737227;stroke:#ff0000;stroke-opacity:0.737227;" x="95.377386" xlink:href="#C0_0_e7d47c5ebc" y="154.666802"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.782513;stroke:#ff0000;stroke-opacity:0.782513;" x="104.623784" xlink:href="#C0_0_e7d47c5ebc" y="159.659066"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.398902;stroke:#ff0000;stroke-opacity:0.398902;" x="130.732066" xlink:href="#C0_0_e7d47c5ebc" y="117.370345"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.439001;stroke:#ff0000;stroke-opacity:0.439001;" x="113.390977" xlink:href="#C0_0_e7d47c5ebc" y="121.790786"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.692643;stroke:#ff0000;stroke-opacity:0.692643;" x="141.322814" xlink:href="#C0_0_e7d47c5ebc" y="149.751897"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.737227;stroke:#ff0000;stroke-opacity:0.737227;" x="123.116579" xlink:href="#C0_0_e7d47c5ebc" y="154.666802"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.359388;stroke:#ff0000;stroke-opacity:0.359388;" x="147.820125" xlink:href="#C0_0_e7d47c5ebc" y="113.014404"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.85324;stroke:#ff0000;stroke-opacity:0.85324;" x="104.623784" xlink:href="#C0_0_e7d47c5ebc" y="139.31933"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.460533;stroke:#ff0000;stroke-opacity:0.460533;" x="131.029161" xlink:href="#C0_0_e7d47c5ebc" y="97.910048"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.501553;stroke:#ff0000;stroke-opacity:0.501553;" x="113.491489" xlink:href="#C0_0_e7d47c5ebc" y="102.235437"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.761182;stroke:#ff0000;stroke-opacity:0.761182;" x="141.763345" xlink:href="#C0_0_e7d47c5ebc" y="129.6122"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.806848;stroke:#ff0000;stroke-opacity:0.806848;" x="123.340319" xlink:href="#C0_0_e7d47c5ebc" y="134.427408"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.420118;stroke:#ff0000;stroke-opacity:0.420118;" x="148.308043" xlink:href="#C0_0_e7d47c5ebc" y="93.648485"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.460533;stroke:#ff0000;stroke-opacity:0.460533;" x="157.434538" xlink:href="#C0_0_e7d47c5ebc" y="97.910048"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.501553;stroke:#ff0000;stroke-opacity:0.501553;" x="140.094605" xlink:href="#C0_0_e7d47c5ebc" y="102.235437"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.543192;stroke:#ff0000;stroke-opacity:0.543192;" x="122.49301" xlink:href="#C0_0_e7d47c5ebc" y="106.626097"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.585464;stroke:#ff0000;stroke-opacity:0.585464;" x="104.623784" xlink:href="#C0_0_e7d47c5ebc" y="111.083517"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.628384;stroke:#ff0000;stroke-opacity:0.628384;" x="86.480776" xlink:href="#C0_0_e7d47c5ebc" y="115.609231"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.460533;stroke:#ff0000;stroke-opacity:0.460533;" x="157.434538" xlink:href="#C0_0_e7d47c5ebc" y="97.910048"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.501553;stroke:#ff0000;stroke-opacity:0.501553;" x="166.697722" xlink:href="#C0_0_e7d47c5ebc" y="102.235437"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.543192;stroke:#ff0000;stroke-opacity:0.543192;" x="149.296849" xlink:href="#C0_0_e7d47c5ebc" y="106.626097"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.585464;stroke:#ff0000;stroke-opacity:0.585464;" x="131.631398" xlink:href="#C0_0_e7d47c5ebc" y="111.083517"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.628384;stroke:#ff0000;stroke-opacity:0.628384;" x="113.695288" xlink:href="#C0_0_e7d47c5ebc" y="115.609231"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.671967;stroke:#ff0000;stroke-opacity:0.671967;" x="95.482249" xlink:href="#C0_0_e7d47c5ebc" y="120.20482"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.501553;stroke:#ff0000;stroke-opacity:0.501553;" x="166.697722" xlink:href="#C0_0_e7d47c5ebc" y="102.235437"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.761182;stroke:#ff0000;stroke-opacity:0.761182;" x="86.054003" xlink:href="#C0_0_e7d47c5ebc" y="129.6122"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.585464;stroke:#ff0000;stroke-opacity:0.585464;" x="158.639013" xlink:href="#C0_0_e7d47c5ebc" y="111.083517"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.628384;stroke:#ff0000;stroke-opacity:0.628384;" x="140.9098" xlink:href="#C0_0_e7d47c5ebc" y="115.609231"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.671967;stroke:#ff0000;stroke-opacity:0.671967;" x="122.906853" xlink:href="#C0_0_e7d47c5ebc" y="120.20482"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.716227;stroke:#ff0000;stroke-opacity:0.716227;" x="104.623784" xlink:href="#C0_0_e7d47c5ebc" y="124.871916"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.761182;stroke:#ff0000;stroke-opacity:0.761182;" x="86.054003" xlink:href="#C0_0_e7d47c5ebc" y="129.6122"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.806848;stroke:#ff0000;stroke-opacity:0.806848;" x="95.265516" xlink:href="#C0_0_e7d47c5ebc" y="134.427408"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.628384;stroke:#ff0000;stroke-opacity:0.628384;" x="168.124311" xlink:href="#C0_0_e7d47c5ebc" y="115.609231"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.671967;stroke:#ff0000;stroke-opacity:0.671967;" x="150.331456" xlink:href="#C0_0_e7d47c5ebc" y="120.20482"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.716227;stroke:#ff0000;stroke-opacity:0.716227;" x="132.261748" xlink:href="#C0_0_e7d47c5ebc" y="124.871916"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.761182;stroke:#ff0000;stroke-opacity:0.761182;" x="113.908674" xlink:href="#C0_0_e7d47c5ebc" y="129.6122"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.806848;stroke:#ff0000;stroke-opacity:0.806848;" x="95.265516" xlink:href="#C0_0_e7d47c5ebc" y="134.427408"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.85324;stroke:#ff0000;stroke-opacity:0.85324;" x="104.623784" xlink:href="#C0_0_e7d47c5ebc" y="139.31933"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.460533;stroke:#ff0000;stroke-opacity:0.460533;" x="131.029161" xlink:href="#C0_0_e7d47c5ebc" y="97.910048"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.501553;stroke:#ff0000;stroke-opacity:0.501553;" x="113.491489" xlink:href="#C0_0_e7d47c5ebc" y="102.235437"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.761182;stroke:#ff0000;stroke-opacity:0.761182;" x="141.763345" xlink:href="#C0_0_e7d47c5ebc" y="129.6122"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.806848;stroke:#ff0000;stroke-opacity:0.806848;" x="123.340319" xlink:href="#C0_0_e7d47c5ebc" y="134.427408"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.420118;stroke:#ff0000;stroke-opacity:0.420118;" x="148.308043" xlink:href="#C0_0_e7d47c5ebc" y="93.648485"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.925714;stroke:#ff0000;stroke-opacity:0.925714;" x="104.623784" xlink:href="#C0_0_e7d47c5ebc" y="118.477379"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.523582;stroke:#ff0000;stroke-opacity:0.523582;" x="131.333094" xlink:href="#C0_0_e7d47c5ebc" y="78.001764"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.565556;stroke:#ff0000;stroke-opacity:0.565556;" x="113.594332" xlink:href="#C0_0_e7d47c5ebc" y="82.226503"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.831387;stroke:#ff0000;stroke-opacity:0.831387;" x="142.21458" xlink:href="#C0_0_e7d47c5ebc" y="108.98312"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.878173;stroke:#ff0000;stroke-opacity:0.878173;" x="123.569539" xlink:href="#C0_0_e7d47c5ebc" y="113.692274"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.482235;stroke:#ff0000;stroke-opacity:0.482235;" x="148.807109" xlink:href="#C0_0_e7d47c5ebc" y="73.840079"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.523582;stroke:#ff0000;stroke-opacity:0.523582;" x="158.042405" xlink:href="#C0_0_e7d47c5ebc" y="78.001764"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.565556;stroke:#ff0000;stroke-opacity:0.565556;" x="140.505978" xlink:href="#C0_0_e7d47c5ebc" y="82.226503"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.60817;stroke:#ff0000;stroke-opacity:0.60817;" x="122.70183" xlink:href="#C0_0_e7d47c5ebc" y="86.515738"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.65144;stroke:#ff0000;stroke-opacity:0.65144;" x="104.623784" xlink:href="#C0_0_e7d47c5ebc" y="90.87096"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.695381;stroke:#ff0000;stroke-opacity:0.695381;" x="86.26547" xlink:href="#C0_0_e7d47c5ebc" y="95.293701"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.523582;stroke:#ff0000;stroke-opacity:0.523582;" x="158.042405" xlink:href="#C0_0_e7d47c5ebc" y="78.001764"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.565556;stroke:#ff0000;stroke-opacity:0.565556;" x="167.417623" xlink:href="#C0_0_e7d47c5ebc" y="82.226503"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.60817;stroke:#ff0000;stroke-opacity:0.60817;" x="149.818899" xlink:href="#C0_0_e7d47c5ebc" y="86.515738"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.65144;stroke:#ff0000;stroke-opacity:0.65144;" x="131.949437" xlink:href="#C0_0_e7d47c5ebc" y="90.87096"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.695381;stroke:#ff0000;stroke-opacity:0.695381;" x="113.802941" xlink:href="#C0_0_e7d47c5ebc" y="95.293701"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.740008;stroke:#ff0000;stroke-opacity:0.740008;" x="95.372918" xlink:href="#C0_0_e7d47c5ebc" y="99.785545"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.565556;stroke:#ff0000;stroke-opacity:0.565556;" x="167.417623" xlink:href="#C0_0_e7d47c5ebc" y="82.226503"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.831387;stroke:#ff0000;stroke-opacity:0.831387;" x="85.828386" xlink:href="#C0_0_e7d47c5ebc" y="108.98312"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.65144;stroke:#ff0000;stroke-opacity:0.65144;" x="159.275091" xlink:href="#C0_0_e7d47c5ebc" y="90.87096"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.695381;stroke:#ff0000;stroke-opacity:0.695381;" x="141.340412" xlink:href="#C0_0_e7d47c5ebc" y="95.293701"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.740008;stroke:#ff0000;stroke-opacity:0.740008;" x="123.125516" xlink:href="#C0_0_e7d47c5ebc" y="99.785545"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.785338;stroke:#ff0000;stroke-opacity:0.785338;" x="104.623784" xlink:href="#C0_0_e7d47c5ebc" y="104.348123"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.831387;stroke:#ff0000;stroke-opacity:0.831387;" x="85.828386" xlink:href="#C0_0_e7d47c5ebc" y="108.98312"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.878173;stroke:#ff0000;stroke-opacity:0.878173;" x="95.150906" xlink:href="#C0_0_e7d47c5ebc" y="113.692274"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.695381;stroke:#ff0000;stroke-opacity:0.695381;" x="168.877884" xlink:href="#C0_0_e7d47c5ebc" y="95.293701"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.740008;stroke:#ff0000;stroke-opacity:0.740008;" x="150.878115" xlink:href="#C0_0_e7d47c5ebc" y="99.785545"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.785338;stroke:#ff0000;stroke-opacity:0.785338;" x="132.594898" xlink:href="#C0_0_e7d47c5ebc" y="104.348123"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.831387;stroke:#ff0000;stroke-opacity:0.831387;" x="114.021483" xlink:href="#C0_0_e7d47c5ebc" y="108.98312"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.878173;stroke:#ff0000;stroke-opacity:0.878173;" x="95.150906" xlink:href="#C0_0_e7d47c5ebc" y="113.692274"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.925714;stroke:#ff0000;stroke-opacity:0.925714;" x="104.623784" xlink:href="#C0_0_e7d47c5ebc" y="118.477379"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.523582;stroke:#ff0000;stroke-opacity:0.523582;" x="131.333094" xlink:href="#C0_0_e7d47c5ebc" y="78.001764"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.565556;stroke:#ff0000;stroke-opacity:0.565556;" x="113.594332" xlink:href="#C0_0_e7d47c5ebc" y="82.226503"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.831387;stroke:#ff0000;stroke-opacity:0.831387;" x="142.21458" xlink:href="#C0_0_e7d47c5ebc" y="108.98312"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.878173;stroke:#ff0000;stroke-opacity:0.878173;" x="123.569539" xlink:href="#C0_0_e7d47c5ebc" y="113.692274"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.482235;stroke:#ff0000;stroke-opacity:0.482235;" x="148.807109" xlink:href="#C0_0_e7d47c5ebc" y="73.840079"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.713469;stroke:#ff0000;stroke-opacity:0.713469;" x="104.623784" xlink:href="#C0_0_e7d47c5ebc" y="179.514522"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.338643;stroke:#ff0000;stroke-opacity:0.338643;" x="130.441583" xlink:href="#C0_0_e7d47c5ebc" y="136.397607"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.377851;stroke:#ff0000;stroke-opacity:0.377851;" x="113.292719" xlink:href="#C0_0_e7d47c5ebc" y="140.9078"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.62571;stroke:#ff0000;stroke-opacity:0.62571;" x="140.892611" xlink:href="#C0_0_e7d47c5ebc" y="169.41942"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.669251;stroke:#ff0000;stroke-opacity:0.669251;" x="122.898126" xlink:href="#C0_0_e7d47c5ebc" y="174.428023"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.3;stroke:#ff0000;stroke-opacity:0.3;" x="147.342986" xlink:href="#C0_0_e7d47c5ebc" y="131.952498"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.338643;stroke:#ff0000;stroke-opacity:0.338643;" x="156.259383" xlink:href="#C0_0_e7d47c5ebc" y="136.397607"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.377851;stroke:#ff0000;stroke-opacity:0.377851;" x="139.299523" xlink:href="#C0_0_e7d47c5ebc" y="140.9078"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.417637;stroke:#ff0000;stroke-opacity:0.417637;" x="122.089516" xlink:href="#C0_0_e7d47c5ebc" y="145.484515"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.458015;stroke:#ff0000;stroke-opacity:0.458015;" x="104.623784" xlink:href="#C0_0_e7d47c5ebc" y="150.129236"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.498998;stroke:#ff0000;stroke-opacity:0.498998;" x="86.896585" xlink:href="#C0_0_e7d47c5ebc" y="154.84349"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.338643;stroke:#ff0000;stroke-opacity:0.338643;" x="156.259383" xlink:href="#C0_0_e7d47c5ebc" y="136.397607"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.377851;stroke:#ff0000;stroke-opacity:0.377851;" x="165.306328" xlink:href="#C0_0_e7d47c5ebc" y="140.9078"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.417637;stroke:#ff0000;stroke-opacity:0.417637;" x="148.288114" xlink:href="#C0_0_e7d47c5ebc" y="145.484515"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.458015;stroke:#ff0000;stroke-opacity:0.458015;" x="131.017025" xlink:href="#C0_0_e7d47c5ebc" y="150.129236"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.498998;stroke:#ff0000;stroke-opacity:0.498998;" x="113.487383" xlink:href="#C0_0_e7d47c5ebc" y="154.84349"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.540598;stroke:#ff0000;stroke-opacity:0.540598;" x="95.693339" xlink:href="#C0_0_e7d47c5ebc" y="159.62885"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.377851;stroke:#ff0000;stroke-opacity:0.377851;" x="165.306328" xlink:href="#C0_0_e7d47c5ebc" y="140.9078"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.62571;stroke:#ff0000;stroke-opacity:0.62571;" x="86.48937" xlink:href="#C0_0_e7d47c5ebc" y="169.41942"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.458015;stroke:#ff0000;stroke-opacity:0.458015;" x="157.410266" xlink:href="#C0_0_e7d47c5ebc" y="150.129236"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.498998;stroke:#ff0000;stroke-opacity:0.498998;" x="140.078181" xlink:href="#C0_0_e7d47c5ebc" y="154.84349"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.540598;stroke:#ff0000;stroke-opacity:0.540598;" x="122.484673" xlink:href="#C0_0_e7d47c5ebc" y="159.62885"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.582831;stroke:#ff0000;stroke-opacity:0.582831;" x="104.623784" xlink:href="#C0_0_e7d47c5ebc" y="164.486936"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.62571;stroke:#ff0000;stroke-opacity:0.62571;" x="86.48937" xlink:href="#C0_0_e7d47c5ebc" y="169.41942"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.669251;stroke:#ff0000;stroke-opacity:0.669251;" x="95.486613" xlink:href="#C0_0_e7d47c5ebc" y="174.428023"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.498998;stroke:#ff0000;stroke-opacity:0.498998;" x="166.668978" xlink:href="#C0_0_e7d47c5ebc" y="154.84349"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.540598;stroke:#ff0000;stroke-opacity:0.540598;" x="149.276008" xlink:href="#C0_0_e7d47c5ebc" y="159.62885"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.582831;stroke:#ff0000;stroke-opacity:0.582831;" x="131.618702" xlink:href="#C0_0_e7d47c5ebc" y="164.486936"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.62571;stroke:#ff0000;stroke-opacity:0.62571;" x="113.690991" xlink:href="#C0_0_e7d47c5ebc" y="169.41942"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.669251;stroke:#ff0000;stroke-opacity:0.669251;" x="95.486613" xlink:href="#C0_0_e7d47c5ebc" y="174.428023"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.713469;stroke:#ff0000;stroke-opacity:0.713469;" x="104.623784" xlink:href="#C0_0_e7d47c5ebc" y="179.514522"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.338643;stroke:#ff0000;stroke-opacity:0.338643;" x="130.441583" xlink:href="#C0_0_e7d47c5ebc" y="136.397607"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.377851;stroke:#ff0000;stroke-opacity:0.377851;" x="113.292719" xlink:href="#C0_0_e7d47c5ebc" y="140.9078"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.62571;stroke:#ff0000;stroke-opacity:0.62571;" x="140.892611" xlink:href="#C0_0_e7d47c5ebc" y="169.41942"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.669251;stroke:#ff0000;stroke-opacity:0.669251;" x="122.898126" xlink:href="#C0_0_e7d47c5ebc" y="174.428023"/>
+    </g>
+    <g clip-path="url(#p89edfe4454)">
+     <use style="fill:#ff0000;fill-opacity:0.3;stroke:#ff0000;stroke-opacity:0.3;" x="147.342986" xlink:href="#C0_0_e7d47c5ebc" y="131.952498"/>
+    </g>
+   </g>
+   <g id="Poly3DCollection_1">
+    <path clip-path="url(#p89edfe4454)" d="M 171.664674 53.573843 
+L 168.702587 131.952498 
+L 125.983385 131.952498 
+L 126.970747 53.573843 
+L 171.664674 53.573843 
+z
+" style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
+    <path clip-path="url(#p89edfe4454)" d="M 125.983385 131.952498 
+L 168.702587 131.952498 
+L 171.100778 154.84349 
+L 127.644341 179.514522 
+L 81.603226 179.514522 
+L 82.464786 154.84349 
+L 125.983385 131.952498 
+z
+" style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
+    <path clip-path="url(#p89edfe4454)" d="M 171.100778 154.84349 
+L 168.702587 131.952498 
+L 171.664674 53.573843 
+L 174.294254 74.490204 
+L 171.100778 154.84349 
+z
+" style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
+    <path clip-path="url(#p89edfe4454)" d="M 81.400294 74.490204 
+L 126.970747 53.573843 
+L 125.983385 131.952498 
+L 82.464786 154.84349 
+L 81.400294 74.490204 
+z
+" style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
+    <path clip-path="url(#p89edfe4454)" d="M 82.464786 154.84349 
+L 81.603226 179.514522 
+L 80.452198 97.114378 
+L 81.400294 74.490204 
+L 82.464786 154.84349 
+z
+" style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
+    <path clip-path="url(#p89edfe4454)" d="M 128.795369 97.114378 
+L 127.644341 179.514522 
+L 171.100778 154.84349 
+L 174.294254 74.490204 
+L 128.795369 97.114378 
+z
+" style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
+    <path clip-path="url(#p89edfe4454)" d="M 128.795369 97.114378 
+L 174.294254 74.490204 
+L 171.664674 53.573843 
+L 126.970747 53.573843 
+L 81.400294 74.490204 
+L 80.452198 97.114378 
+L 128.795369 97.114378 
+z
+" style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
+    <path clip-path="url(#p89edfe4454)" d="M 80.452198 97.114378 
+L 81.603226 179.514522 
+L 127.644341 179.514522 
+L 128.795369 97.114378 
+L 80.452198 97.114378 
+z
+" style="fill:#6cccd7;fill-opacity:0.3;stroke:#6cccd7;"/>
+   </g>
+   <g id="Poly3DCollection_2">
+    <path clip-path="url(#p89edfe4454)" d="M 127.302544 115.609231 
+L 33.87768 139.31933 
+L 80.063537 164.996479 
+L 175.369887 139.31933 
+L 127.302544 115.609231 
+z
+" style="fill:#d4af37;fill-opacity:0.3;stroke:#d4af37;"/>
+    <path clip-path="url(#p89edfe4454)" d="M 127.302544 115.609231 
+L 175.369887 139.31933 
+L 178.997892 52.74507 
+L 128.418817 31.347254 
+L 127.302544 115.609231 
+z
+" style="fill:#d4af37;fill-opacity:0.3;stroke:#d4af37;"/>
+    <path clip-path="url(#p89edfe4454)" d="M 127.302544 115.609231 
+L 128.418817 31.347254 
+L 30.249675 52.74507 
+L 33.87768 139.31933 
+L 127.302544 115.609231 
+z
+" style="fill:#d4af37;fill-opacity:0.3;stroke:#d4af37;"/>
+    <path clip-path="url(#p89edfe4454)" d="M 80.063537 164.996479 
+L 78.748995 76.013119 
+L 30.249675 52.74507 
+L 33.87768 139.31933 
+L 80.063537 164.996479 
+z
+" style="fill:#d4af37;fill-opacity:0.3;stroke:#d4af37;"/>
+    <path clip-path="url(#p89edfe4454)" d="M 178.997892 52.74507 
+L 78.748995 76.013119 
+L 80.063537 164.996479 
+L 175.369887 139.31933 
+L 178.997892 52.74507 
+z
+" style="fill:#d4af37;fill-opacity:0.3;stroke:#d4af37;"/>
+    <path clip-path="url(#p89edfe4454)" d="M 30.249675 52.74507 
+L 78.748995 76.013119 
+L 178.997892 52.74507 
+L 128.418817 31.347254 
+L 30.249675 52.74507 
+z
+" style="fill:#d4af37;fill-opacity:0.3;stroke:#d4af37;"/>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p89edfe4454">
+   <rect height="184.824" width="189.72" x="7.2" y="7.2"/>
+  </clipPath>
+ </defs>
+</svg>
+
 </div>
 
 </div>
