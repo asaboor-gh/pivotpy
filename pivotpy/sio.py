@@ -706,6 +706,13 @@ def iplot_bz(poscar_or_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',
         fig.add_trace(go.Scatter3d(x=pts[:,0], y=pts[:,1],z=pts[:,2],
             mode='lines',line_color=color,    legendgroup=s_name,name=s_name,
             showlegend=legend,surfaceaxis=fill_axis))
+    if fill:
+        from scipy.spatial import ConvexHull
+        xc = bz.vertices[ConvexHull(bz.vertices).vertices]
+        fig.add_trace(go.Mesh3d(x=xc[:, 0], y=xc[:, 1], z=xc[:, 2],
+                        color="blue",
+                        opacity=.2,
+                        alphahull=0))
 
     # Special Points only if in reciprocal space.
     if vname == 'b':
