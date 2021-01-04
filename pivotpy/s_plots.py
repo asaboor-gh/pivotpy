@@ -13,6 +13,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap as LSC
 from matplotlib.collections import LineCollection
+from mpl_toolkits.mplot3d import Axes3D
 
 import pivotpy.vr_parser as vp
 import pivotpy.g_utils as gu
@@ -80,6 +81,7 @@ def init_figure(figsize   = (3.4,2.6),
                 widths    = [],
                 heights   = [],
                 axes_off  = [],
+                axes_3d   = [],
                 sharex    = False,
                 sharey    = False,
                 **subplots_adjust_kwargs
@@ -94,6 +96,7 @@ def init_figure(figsize   = (3.4,2.6),
         - heights   : List with len(heights)==ncols, to set height ratios of subplots.
         - share(x,y): Share axes between plots, this removes shared ticks automatically.
         - axes_off  : Turn off axes visibility, If `nrows = ncols = 1, set True/False`, If anyone of `nrows or ncols > 1`, provide list of axes indices to turn off. If both `nrows and ncols > 1`, provide list of tuples (x_index,y_index) of axes.
+        - axes_3d   : Change axes to 3D. If `nrows = ncols = 1, set True/False`, If anyone of `nrows or ncols > 1`, provide list of axes indices to turn off. If both `nrows and ncols > 1`, provide list of tuples (x_index,y_index) of axes.
         - **subplots_adjust_kwargs : These are same as `plt.subplots_adjust()`'s arguements.
     """
     # SVG and rcParams are must in init_figure to bring to other files, not just here.
@@ -120,11 +123,21 @@ def init_figure(figsize   = (3.4,2.6),
     fig,axs=plt.subplots(nrows,ncols,figsize=figsize,gridspec_kw=gs_kw,sharex=sharex,sharey=sharey)
     if nrows*ncols==1:
         modify_axes(ax=axs)
-        if axes_off==True:
+        if axes_off == True:
             axs.set_axis_off()
+        if axes_3d == True:
+            pos = axs.get_position()
+            axs.remove()
+            axs = fig.add_axes(pos,projection='3d')
+
     else:
         _ = [modify_axes(ax=ax) for ax in axs.ravel()]
         _ = [axs[inds].set_axis_off() for inds in axes_off if axes_off!=[]]
+        if axes_3d != []:
+            for inds in axes_3d:
+                pos = axs[inds].get_position()
+                axs[inds].remove()
+                axs[inds] = fig.add_axes(pos,projection='3d')
 
     plt.subplots_adjust(**subplots_adjust_kwargs)
     return axs
