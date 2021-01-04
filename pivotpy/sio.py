@@ -43,14 +43,15 @@ def save_mp_API(api_key):
         fw.close()
 
 # Cell
-def load_mp_data(formula,api_key=None,mp_id=None,max_sites = None):
+def load_mp_data(formula,api_key=None,mp_id=None,max_sites = None, min_sites = None):
     """
     - Returns fetched data using request api of python form materials project website.
     - **Parameters**
         - formula  : Material formula such as 'NaCl'.
         - api_key  : API key for your account from material project site. Auto picks if you already used `save_mp_API` function.
-        - mp_id    : Optional, you can specify material ID to filter results.
-        -max_sites : Option, you can set maximum number of sites to load fastly as it will not fetch all large data sets.
+        - mp_id     : Optional, you can specify material ID to filter results.
+        - max_sites : Maximum number of sites. If None, sets `min_sites + 1`, if `min_sites = None`, gets all data.
+        - min_sites : Minimum number of sites. If None, sets `max_sites + 1`, if `max_sites = None`, gets all data.
     """
     if api_key is None:
         try:
@@ -64,15 +65,29 @@ def load_mp_data(formula,api_key=None,mp_id=None,max_sites = None):
         except:
             return print("api_key not given. provide in argument or generate in file using `save_mp_API(your_mp_api_key)")
 
-    url = "https://www.materialsproject.org/rest/v2/materials/_____/vasp?API_KEY=|||||"
-    url = url.replace('_____',formula).replace('|||||',api_key)
+    #url must be a raw string
+    url = r"https://www.materialsproject.org/rest/v2/materials/{}/vasp?API_KEY={}".format(formula,api_key)
     resp = req.request(method='GET',url=url)
     jl = json.loads(resp.text)
+
+    try: jl['response'] #check if response
+    except: return print("Either formula {!r} or API_KEY is incorrect.".format(formula))
+
     all_res = jl['response']
-    if max_sites != None:
+
+    if max_sites != None and min_sites != None:
+        lower, upper = min_sites, max_sites
+    elif max_sites == None and min_sites != None:
+        lower, upper = min_sites, min_sites + 1
+    elif max_sites != None and min_sites == None:
+        lower, upper = max_sites - 1, max_sites
+    else:
+        lower, upper = '-1', '-1' # Unknown
+
+    if lower != '-1' and upper != '-1':
         sel_res=[]
         for res in all_res:
-            if res['nsites'] <= max_sites:
+            if res['nsites'] <= upper and res['nsites'] >= lower:
                 sel_res.append(res)
         return sel_res
     # Filter to mp_id at last. more preferred
@@ -83,16 +98,17 @@ def load_mp_data(formula,api_key=None,mp_id=None,max_sites = None):
     return all_res
 
 # Cell
-def get_crystal(formula,api_key=None,mp_id=None,max_sites = None):
+def get_crystal(formula,api_key=None,mp_id=None,max_sites = None, min_sites=None):
     """
     - Returns crystal information dictionary including cif data format.
     - **Parameters**
         - formula  : Material formula such as 'NaCl'.
         - api_key  : API key for your account from material project site. Auto picks if you already used `save_mp_API` function.
         - mp_id    : Optional, you can specify material ID to filter results.
-        -max_sites : Option, you can set maximum number of sites to load fastly as it will not fetch all large data sets.
+        - max_sites : Maximum number of sites. If None, sets `min_sites + 1`, if `min_sites = None`, gets all data.
+        - min_sites : Minimum number of sites. If None, sets `max_sites + 1`, if `max_sites = None`, gets all data.
     """
-    all_res = load_mp_data(formula=formula,api_key = api_key, mp_id = mp_id, max_sites = max_sites)
+    all_res = load_mp_data(formula=formula,api_key = api_key, mp_id = mp_id, max_sites = max_sites, min_sites=min_sites)
     cifs = []
     for res in all_res:
         cif     = res['cif']
@@ -105,18 +121,19 @@ def get_crystal(formula,api_key=None,mp_id=None,max_sites = None):
     return cifs
 
 # Cell
-def get_poscar(formula ,api_key=None,mp_id=None,max_sites = None):
+def get_poscar(formula ,api_key=None,mp_id=None,max_sites = None,min_sites=None):
     """
     - Returns poscar information dictionary including cif data format.
     - **Parameters**
         - formula  : Material formula such as 'NaCl'.
         - api_key  : API key for your account from material project site. Auto picks if you already used `save_mp_API` function.
         - mp_id    : Optional, you can specify material ID to filter results.
-        -max_sites : Option, you can set maximum number of sites to load fastly as it will not fetch all large data sets.
+        - max_sites : Maximum number of sites. If None, sets `min_sites + 1`, if `min_sites = None`, gets all data.
+        - min_sites : Minimum number of sites. If None, sets `max_sites + 1`, if `max_sites = None`, gets all data.
     - **Usage**
         - `get_poscar('GaAs',api_key,**kwargs)`. Same result is returned from `Get-POSCAR` command in PowerShell terminal if Vasp2Visual module is installed.
     """
-    crys = get_crystal(formula = formula,api_key = api_key, mp_id = mp_id, max_sites = max_sites)
+    crys = get_crystal(formula = formula,api_key = api_key, mp_id = mp_id, max_sites = max_sites,min_sites=min_sites)
     poscars = []
     for cr in crys:
         cif = cr.cif
@@ -559,7 +576,7 @@ def splot_bz(poscar_or_bz = None, ax = None, plane=None,color='blue',fill=True,v
     elif plane and plane in valid_planes: #Project 2D
         faces = bz.faces
         i, j = ([0,1] if plane=='xy' else [1,2] if plane=='yz' else [2,0])
-        _ = [ax.plot(f[:,i],f[:,j],color=(color),lw=1) for f in faces]
+        _ = [ax.plot(f[:,i],f[:,j],color=(color),lw=0.7) for f in faces]
 
         if vectors:
             if v3:
@@ -569,8 +586,10 @@ def splot_bz(poscar_or_bz = None, ax = None, plane=None,color='blue',fill=True,v
             for k,y in enumerate(s_basis):
                 label = "\n" + r" ${}_{}$".format(_label,k+1)
                 ax.text(0.8*y[i],0.8*y[j], label, va='center',ha='left')
-                ax.plot([0,y[i]],[0,y[j]],color='k',lw=0.8) # Must be to scale below arrow.
-                ax.arrow(0,0,y[i],y[j],lw=0.8,capstyle='butt',head_width=0.03,color='k')
+                ax.scatter([y[i]],[y[j]],color='w',s=0.0005) # Must be to scale below arrow.
+
+            s_zero = [0 for s_b in s_basis] # either 3 or 2.
+            ax.quiver(s_zero,s_zero,s_basis[:,0],s_basis[:,1],lw=0.9,color='k',angles='xy', scale_units='xy', scale=1)
 
         ax.set_xlabel(r"$k_{}$".format(valid_planes[i]))
         ax.set_ylabel(r"$k_{}$".format(valid_planes[j]))
@@ -590,7 +609,7 @@ def splot_bz(poscar_or_bz = None, ax = None, plane=None,color='blue',fill=True,v
             ax3d.add_collection3d(poly)
             ax3d.autoscale_view()
         else:
-            _ = [ax3d.plot3D(f[:,0],f[:,1],f[:,2],color=(color),lw=0.8) for f in bz.faces]
+            _ = [ax3d.plot3D(f[:,0],f[:,1],f[:,2],color=(color),lw=0.7) for f in bz.faces]
 
         if vectors:
             orig, sv = [0,0,0],0.25*bz.basis
