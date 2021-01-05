@@ -52,16 +52,17 @@ def fancy_quiver3d(X,Y,Z,U,V,W,ax=None,C = 'r',L = 0.7,mutation_scale=10,**kwarg
         - C : 1D colors array mapping for arrows. Could be one color.
         - L : 1D linwidths array mapping for arrows. Could be one linewidth.
         - mutation_scale: Arrow head width/size scale. Default is 10.
-        - kwargs: FancyArrowPatch's keyword arguments excluding positions,color, lw and mutation_scale which are already used. An important keyword argument is `arrowstyle` which could be '->','-|>', their inverted forms and many more. See on matplotlib.
+        - kwargs: FancyArrowPatch's keyword arguments excluding positions,color, lw and mutation_scale, shrinkA, shrinkB which are already used. An important keyword argument is `arrowstyle` which could be '->','-|>', their inverted forms and many more. See on matplotlib.
     """
     if not ax:
-        ax = sp.init_figure(figsize=(3.4,3.4)) # Same aspect ratio.
+        ax = sp.init_figure(figsize=(3.4,3.4),axes_3d=True) # Same aspect ratio.
     if not isinstance(C,(list,np.ndarray)):
         C = [C for x in X]
     if not isinstance(L,(list,np.ndarray)):
         L = [L for x in X]
+    args_dict = dict(mutation_scale=mutation_scale,shrinkA=0, shrinkB=0)
     for x,y,z,u,v,w,c,l in zip(X,Y,Z,U,V,W,C,L):
-        Arrow3D(x, y, z, u, v, w, color=c,lw=l, mutation_scale=mutation_scale,**kwargs).on(ax)
+        Arrow3D(x, y, z, u, v, w, color=c,lw=l,**args_dict,**kwargs).on(ax)
 
     return ax
 
@@ -656,7 +657,7 @@ def splot_bz(poscar_or_bz = None, ax = None, plane=None,color='blue',fill=True,v
         if vectors:
             for k,v in enumerate(0.35*bz.basis):
                 ax3d.text(*v,r"${}_{}$".format(_label,k+1),va='center',ha='center')
-            ax3d.scatter(0,0,0,c='k',s=5) #At center of three vectors, they don't join.
+
             XYZ,UVW = [[0,0,0],[0,0,0],[0,0,0]], 0.3*bz.basis.T
             fancy_quiver3d(*XYZ,*UVW,C='k',L=0.7,ax=ax3d,arrowstyle="-|>",mutation_scale=7)
 
