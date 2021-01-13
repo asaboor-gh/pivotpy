@@ -497,7 +497,7 @@ def get_structure(xml_data=None):
     - **Parameters**
         - xml_data : From `read_asxml` function.
     - **Returns**
-        - Data     : pivotpy.Dict2Data with attibutes volume,basis,positions and rec_basis.
+        - Data     : pivotpy.Dict2Data with attibutes volume,basis,positions rec_basis and labels.
     """
     if(xml_data==None):
         xml_data=read_asxml()
@@ -514,7 +514,14 @@ def get_structure(xml_data=None):
                     rec_basis=[[float(a) for a in v.text.split()] for v in arr.iter('v')]
                 if(arr.attrib=={'name': 'positions'}):
                     positions=[[float(a) for a in v.text.split()] for v in arr.iter('v')]
-    st_dic={'volume': volume,'basis': np.array(basis),'rec_basis': np.array(rec_basis),'positions': np.array(positions)}
+    # element labels
+    types  = [int(_type.text) for _type in xml_data.iter('types')][0]
+    elems  = [info[0].text.strip() for info in xml_data.iter('rc')]
+    _inds  = np.array([int(a) for a in elems[-types:]])
+    _nums  = [k + 1 for i in _inds for k in range(i)]
+    labels = [f"{e} {i}" for i, e in zip(_nums,elems)]
+
+    st_dic={'volume': volume,'basis': np.array(basis),'rec_basis': np.array(rec_basis),'positions': np.array(positions),'labels':labels}
     return Dict2Data(st_dic)
 
 # Cell
@@ -672,6 +679,14 @@ def load_export(path= './vasprun.xml',
                         }
     fields            = _vars.fields
     incar             = _vars.INCAR
+
+    # Elements Labels
+    elem_labels = []
+    for i, name in enumerate(ElemName):
+        for ind in range(ElemIndex[i],ElemIndex[i+1]):
+            elem_labels.append(f"{name} {str(ind - ElemIndex[i] + 1)}")
+    poscar.update({'labels': elem_labels})
+
     # Load Data
     bands= np.loadtxt('Bands.txt').reshape((-1,NBANDS+4)) #Must be read in 2D even if one row only.
     pro_bands= np.loadtxt('Projection.txt').reshape((-1,NBANDS*nField_Projection))
