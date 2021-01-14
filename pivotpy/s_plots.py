@@ -247,7 +247,7 @@ def quick_bplot(path_evr=None,ax=None,skipk=None,joinPathAt=[],elim=[],xt_indice
         return ax
 
 # Cell
-def add_text(ax=None,xs=0.05,ys=0.9,txts='[List]',colors='r'):
+def add_text(ax=None,xs=0.05,ys=0.9,txts='[List]',colors='r',transform=True):
     """
     - Adds text entries on axes, given single string or list.
     - **Parameters**
@@ -255,16 +255,24 @@ def add_text(ax=None,xs=0.05,ys=0.9,txts='[List]',colors='r'):
         - ys    : List of y coordinates relative to axes or single coordinate.
         - txts  : List of strings or one string.
         - colors: List of x colors of txts or one color.
+        - transform: Dafault is True and positions are relative to axes, If False, positions are in data coordinates.
     """
     if ax==None:
         raise ValueError("Matplotlib axes (ax) is not given.")
     else:
-        if type(txts) == str:
-            ax.text(xs,ys,txts,bbox=dict(edgecolor='white',facecolor='white', alpha=0.9),transform=ax.transAxes,color=colors)
-        if(type(txts)==list):
-            for x,y,txt,color in zip(xs,ys,txts,colors):
-                ax.text(x,y,txt,bbox=dict(edgecolor='white',facecolor='white', alpha=0.9),transform=ax.transAxes,color=color)
-    return None
+        args_dict = dict(bbox=dict(edgecolor='white',facecolor='white', alpha=0.6),
+                         ha='center',va='center')
+        if transform:
+            args_dict.update({'transform':ax.transAxes})
+
+        if isinstance(txts,str):
+            ax.text(xs,ys,txts,color=colors, **args_dict)
+        elif isinstance(txts,(list,np.ndarray)):
+            for x,y,(i,txt) in zip(xs,ys,enumerate(txts)):
+                try:
+                    ax.text(x,y,txt,color=colors[i],**args_dict)
+                except:
+                    ax.text(x,y,txt,color=colors,**args_dict)
 
 # Cell
 def add_legend(ax=None,colors=[],labels=[],styles='solid',\
