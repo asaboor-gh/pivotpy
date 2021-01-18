@@ -653,8 +653,8 @@ def splot_bz(poscar_or_bz = None, ax = None, plane=None,color='blue',fill=True,v
         if fill:
             if color_map:
                 color_map = color_map if color_map in plt.colormaps() else 'viridis'
-                cz = [np.mean(f,axis=0)[2] for f in bz.faces]
-                levels = cz - min(cz)/np.ptp(cz) # at Z.
+                cz = [np.mean(np.unique(f,axis=0),axis=0)[2] for f in bz.faces]
+                levels = (cz - np.min(cz))/np.ptp(cz) # along Z.
                 colors = plt.cm.get_cmap(color_map)(levels)
             else:
                 colors = [color for f in bz.faces] # Single color.
@@ -872,9 +872,9 @@ class BZ:
         """Returns plotly's Figure of BZ plot."""
         return iplot_bz(self.bz,fill=fill,color=color,background=background,fig=fig)
 
-    def splot(self,ax=None, plane=None, color=(0.4,0.8,0.85), fill=True, vectors=True, v3=False):
+    def splot(self,ax=None, plane=None, color=(0.4,0.8,0.85), fill=True, vectors=True, v3=False,color_map='plasma'):
         """Returns Matplotlib's Axes of BZ plot."""
-        return splot_bz(self.bz,ax=ax,plane=plane,color=color,fill=fill,vectors=vectors,v3=v3)
+        return splot_bz(self.bz,ax=ax,plane=plane,color=color,fill=fill,vectors=vectors,v3=v3,color_map=color_map)
 
     def fetch(self,kpoints):
         """Brings KPOINTS inside BZ and returns their R3 coordinates."""
@@ -884,9 +884,9 @@ class BZ:
         """Returns plotly's Figure of Cell plot."""
         return iplot_bz(self.cell,fill=fill,color=color,background=background,fig=fig,vname='a')
 
-    def splotc(self,ax=None, plane=None, color=(0.4,0.8,0.85), fill=True, vectors=True, v3=False):
+    def splotc(self,ax=None, plane=None, color=(0.4,0.8,0.85), fill=True, vectors=True, v3=False,color_map='plasma'):
         """Returns Matplotlib's Axes of Cell plot."""
-        return splot_bz(self.cell,ax=ax,plane=plane,color=color,fill=fill,vectors=vectors,v3=v3,vname='a')
+        return splot_bz(self.cell,ax=ax,plane=plane,color=color,fill=fill,vectors=vectors,v3=v3,vname='a',color_map=color_map)
 
     def fetchc(self,points):
         """Brings atoms's positions inside Cell and returns their R3 coordinates."""
