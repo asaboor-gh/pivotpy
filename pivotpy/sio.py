@@ -763,8 +763,9 @@ def iplot_bz(poscar_or_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',
     if vname == 'b':
         texts,values =[],[]
         norms = np.round(np.linalg.norm(bz.specials.coords,axis=1),5)
-        for key,value, norm in zip(bz.specials.kpoints, bz.specials.coords, norms):
-            texts.append("P{}</br>d = {}".format(key,norm))
+        sps = bz.specials
+        for key,value, (i,norm) in zip(sps.kpoints, sps.coords, enumerate(norms)):
+            texts.append("P{}</br>d = {}</br> Index = {}".format(key,norm,i))
             values.append([[*value,norm]])
 
         values = np.array(values).reshape((-1,4))
