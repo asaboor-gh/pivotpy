@@ -658,7 +658,7 @@ def splot_bz(poscar_or_bz = None, ax = None, plane=None,color='blue',fill=True,v
                 colors = plt.cm.get_cmap(color_map)(levels)
             else:
                 colors = [color for f in bz.faces] # Single color.
-            poly = Poly3DCollection(bz.faces,edgecolors=colors,facecolors=colors, alpha=0.3)
+            poly = Poly3DCollection(bz.faces,edgecolors=[color,],facecolors=colors, alpha=0.3)
             ax3d.add_collection3d(poly)
             ax3d.autoscale_view()
         else:
