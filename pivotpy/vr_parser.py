@@ -503,6 +503,8 @@ def get_structure(xml_data=None):
         xml_data=read_asxml()
     if not xml_data:
         return
+
+    SYSTEM = [i.text for i in xml_data.iter('i') if i.attrib['name'] == 'SYSTEM'][0]
     for final in xml_data.iter('structure'):
         if(final.attrib=={'name': 'finalpos'}):
             for i in final.iter('i'):
@@ -521,7 +523,11 @@ def get_structure(xml_data=None):
     _nums  = [k + 1 for i in _inds for k in range(i)]
     labels = [f"{e} {i}" for i, e in zip(_nums,elems)]
 
-    st_dic={'volume': volume,'basis': np.array(basis),'rec_basis': np.array(rec_basis),'positions': np.array(positions),'labels':labels}
+    INDS = np.cumsum([0,*_inds]).astype(int)
+    Names = list(np.unique(elems[:-types]))
+    unique_d = {e:range(INDS[i],INDS[i+1]) for i,e in enumerate(Names)}
+
+    st_dic={'SYSTEM':SYSTEM,'volume': volume,'basis': np.array(basis),'rec_basis': np.array(rec_basis),'positions': np.array(positions),'labels':labels,'unique': unique_d}
     return Dict2Data(st_dic)
 
 # Cell
@@ -598,6 +604,7 @@ def export_vasprun(path=None,skipk=None,elim=[],joinPathAt=[],shift_kpath=0):
 
     #Structure
     poscar = get_structure(xml_data=xml_data)
+    poscar = {'SYSTEM':info_dic.SYSTEM,**poscar.to_dict()}
     #Dimensions dictionary.
     dim_dic={'⇅':'Each of SpinUp/SpinDown Arrays','kpoints':'(NKPTS,3)','kpath':'(NKPTS,1)','bands':'⇅(NKPTS,NBANDS)','dos':'⇅(grid_size,3)','pro_dos':'⇅(NION,grid_size,en+pro_fields)','pro_bands':'⇅(NION,NKPTS,NBANDS,pro_fields)'}
     #Writing everything to be accessible via dot notation
@@ -671,7 +678,7 @@ def load_export(path= './vasprun.xml',
     ISPIN             = _vars.ISPIN
     ElemIndex         = _vars.ElemIndex
     ElemName          = _vars.ElemName
-    poscar            = {
+    poscar            = {'SYSTEM': SYSTEM,
                         'volume':_vars.volume,
                         'basis' : np.array(_vars.basis),
                         'rec_basis': np.array(_vars.rec_basis),
@@ -686,6 +693,11 @@ def load_export(path= './vasprun.xml',
         for ind in range(ElemIndex[i],ElemIndex[i+1]):
             elem_labels.append(f"{name} {str(ind - ElemIndex[i] + 1)}")
     poscar.update({'labels': elem_labels})
+    # Unique Elements Ranges
+    unique_d = {}
+    for i,e in enumerate(ElemName):
+        unique_d.update({e:range(ElemIndex[i],ElemIndex[i+1])})
+    poscar.update({'unique': unique_d})
 
     # Load Data
     bands= np.loadtxt('Bands.txt').reshape((-1,NBANDS+4)) #Must be read in 2D even if one row only.

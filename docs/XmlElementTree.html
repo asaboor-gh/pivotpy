@@ -428,7 +428,7 @@ Pickle:  b&#39;\x80\x03}q\x00(X\x01\x00\x00\x00Aq\x01K\x01X\x01\x00\x00\x00Bq\x0
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pivotpy.vr_parser</span> <span class="k">as</span> <span class="nn">vp</span>
-<span class="n">xml_data</span><span class="o">=</span><span class="n">vp</span><span class="o">.</span><span class="n">read_asxml</span><span class="p">(</span><span class="n">path</span><span class="o">=</span> <span class="s1">&#39;../vasprun.xml&#39;</span><span class="p">)</span>
+<span class="n">xml_data</span><span class="o">=</span><span class="n">vp</span><span class="o">.</span><span class="n">read_asxml</span><span class="p">(</span><span class="n">path</span><span class="o">=</span> <span class="s1">&#39;vasprun.xml&#39;</span><span class="p">)</span>
 <span class="n">get_summary</span><span class="p">(</span><span class="n">xml_data</span><span class="o">=</span><span class="n">xml_data</span><span class="p">)</span>
 </pre></div>
 
@@ -445,27 +445,25 @@ Pickle:  b&#39;\x80\x03}q\x00(X\x01\x00\x00\x00Aq\x01K\x01X\x01\x00\x00\x00Bq\x0
 
 <div class="output_text output_subarea output_execute_result">
 <pre>Data(
-    SYSTEM = AlAs
+    SYSTEM = C2
     NION = 2
-    TypeION = 2
-    ElemName = [&#39;Al&#39;, &#39;As&#39;]
-    ElemIndex = [0, 1, 2]
-    E_Fermi = 3.72526782
+    TypeION = 1
+    ElemName = [&#39;C&#39;]
+    ElemIndex = [0, 2]
+    E_Fermi = -3.35005822
     ISPIN = 1
     fields = [&#39;s&#39;, &#39;py&#39;, &#39;pz&#39;, &#39;px&#39;, &#39;dxy&#39;, &#39;dyz&#39;, &#39;dz2&#39;, &#39;dxz&#39;, &#39;x2-y2&#39;]
     incar = Data(
-        SYSTEM = AlAs
+        SYSTEM = C2
         PREC = high
         ALGO = N
+        LSORBIT = T
         NELMIN = 7
-        EDIFF = 0.00000100
         ISMEAR = 0
         SIGMA = 0.10000000
         LORBIT = 11
         KPOINT_BSE = -1     0     0     0
-        LHFCALC = T
-        HFSCREEN = 0.20100000
-        PRECFOCK = fast
+        GGA = PS
     )
 )</pre>
 </div>
@@ -543,9 +541,9 @@ Pickle:  b&#39;\x80\x03}q\x00(X\x01\x00\x00\x00Aq\x01K\x01X\x01\x00\x00\x00Bq\x0
 
 <div class="output_text output_subarea output_execute_result">
 <pre>Data(
-    NKPTS = 126
-    kpoints = &lt;ndarray:shape=(126, 3)&gt;
-    kpath = &lt;list:len=126&gt;
+    NKPTS = 94
+    kpoints = &lt;ndarray:shape=(94, 3)&gt;
+    kpath = &lt;list:len=94&gt;
 )</pre>
 </div>
 
@@ -624,7 +622,7 @@ Pickle:  b&#39;\x80\x03}q\x00(X\x01\x00\x00\x00Aq\x01K\x01X\x01\x00\x00\x00Bq\x0
 
 <div class="output_text output_subarea output_execute_result">
 <pre>Data(
-    E_Fermi = 3.72526782
+    E_Fermi = -3.35005822
     ISPIN = 1
     tdos = &lt;ndarray:shape=(301, 3)&gt;
 )</pre>
@@ -705,11 +703,11 @@ Pickle:  b&#39;\x80\x03}q\x00(X\x01\x00\x00\x00Aq\x01K\x01X\x01\x00\x00\x00Bq\x0
 
 <div class="output_text output_subarea output_execute_result">
 <pre>Data(
-    E_Fermi = 3.72526782
+    E_Fermi = -3.35005822
     ISPIN = 1
-    NBANDS = 7
-    bands_range = range(1, 8)
-    evals = &lt;ndarray:shape=(126, 7)&gt;
+    NBANDS = 10
+    bands_range = range(4, 14)
+    evals = &lt;ndarray:shape=(94, 10)&gt;
 )</pre>
 </div>
 
@@ -786,10 +784,15 @@ Pickle:  b&#39;\x80\x03}q\x00(X\x01\x00\x00\x00Aq\x01K\x01X\x01\x00\x00\x00Bq\x0
 
 <div class="output_area">
 
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>File: &#39;./vasprun.xml&#39;&#39; does not exist!
-</pre>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Data(
+    labels = [&#39;s&#39;, &#39;py&#39;, &#39;pz&#39;, &#39;px&#39;, &#39;dxy&#39;, &#39;dyz&#39;, &#39;dz2&#39;, &#39;dxz&#39;, &#39;x2-y2&#39;]
+    pros = &lt;ndarray:shape=(2, 104, 1, 9)&gt;
+)</pre>
 </div>
+
 </div>
 
 </div>
@@ -907,10 +910,15 @@ Pickle:  b&#39;\x80\x03}q\x00(X\x01\x00\x00\x00Aq\x01K\x01X\x01\x00\x00\x00Bq\x0
 
 <div class="output_text output_subarea output_execute_result">
 <pre>Data(
-    volume = 45.73530449
+    SYSTEM = C2
+    volume = 105.49324928
     basis = &lt;ndarray:shape=(3, 3)&gt;
     rec_basis = &lt;ndarray:shape=(3, 3)&gt;
     positions = &lt;ndarray:shape=(2, 3)&gt;
+    labels = [&#39;C 1&#39;, &#39;C 2&#39;]
+    unique = Data(
+        C = range(0, 2)
+    )
 )</pre>
 </div>
 
@@ -940,7 +948,7 @@ Pickle:  b&#39;\x80\x03}q\x00(X\x01\x00\x00\x00Aq\x01K\x01X\x01\x00\x00\x00Bq\x0
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="export_vasprun" class="doc_header"><code>export_vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L528" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_vasprun</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>joinPathAt</code></strong>=<em><code>[]</code></em>, <strong><code>shift_kpath</code></strong>=<em><code>0</code></em>)</p>
+<h4 id="export_vasprun" class="doc_header"><code>export_vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L534" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_vasprun</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>joinPathAt</code></strong>=<em><code>[]</code></em>, <strong><code>shift_kpath</code></strong>=<em><code>0</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns a full dictionary of all objects from <code>vasprun.xml</code> file. It first try to load the data exported by powershell's <code>Export-VR(Vasprun)</code>, which is very fast for large files. It is recommended to export large files in powershell first.</li>
@@ -1069,10 +1077,15 @@ Pickle:  b&#39;\x80\x03}q\x00(X\x01\x00\x00\x00Aq\x01K\x01X\x01\x00\x00\x00Bq\x0
         pros = &lt;ndarray:shape=(2, 301, 10)&gt;
     )
     poscar = Data(
+        SYSTEM = C2
         volume = 105.49324928
         basis = &lt;ndarray:shape=(3, 3)&gt;
         rec_basis = &lt;ndarray:shape=(3, 3)&gt;
         positions = &lt;ndarray:shape=(2, 3)&gt;
+        labels = [&#39;C 1&#39;, &#39;C 2&#39;]
+        unique = Data(
+            C = range(0, 2)
+        )
     )
 )</pre>
 </div>
@@ -1113,7 +1126,7 @@ Pickle:  b&#39;\x80\x03}q\x00(X\x01\x00\x00\x00Aq\x01K\x01X\x01\x00\x00\x00Bq\x0
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="load_export" class="doc_header"><code>load_export</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L610" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_export</code>(<strong><code>path</code></strong>=<em><code>'./vasprun.xml'</code></em>, <strong><code>joinPathAt</code></strong>=<em><code>[]</code></em>, <strong><code>shift_kpath</code></strong>=<em><code>0</code></em>, <strong><code>path_to_ps</code></strong>=<em><code>'pwsh'</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>max_filled</code></strong>=<em><code>10</code></em>, <strong><code>max_empty</code></strong>=<em><code>10</code></em>, <strong><code>keep_files</code></strong>=<em><code>True</code></em>)</p>
+<h4 id="load_export" class="doc_header"><code>load_export</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L617" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_export</code>(<strong><code>path</code></strong>=<em><code>'./vasprun.xml'</code></em>, <strong><code>joinPathAt</code></strong>=<em><code>[]</code></em>, <strong><code>shift_kpath</code></strong>=<em><code>0</code></em>, <strong><code>path_to_ps</code></strong>=<em><code>'pwsh'</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>max_filled</code></strong>=<em><code>10</code></em>, <strong><code>max_empty</code></strong>=<em><code>10</code></em>, <strong><code>keep_files</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns a full dictionary of all objects from <code>vasprun.xml</code> file exported using powershell.</li>
@@ -1181,7 +1194,7 @@ Pickle:  b&#39;\x80\x03}q\x00(X\x01\x00\x00\x00Aq\x01K\x01X\x01\x00\x00\x00Bq\x0
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="dump_dict" class="doc_header"><code>dump_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L762" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>dump_dict</code>(<strong><code>dict_data</code></strong>=<em><code>None</code></em>, <strong><code>dump_to</code></strong>=<em><code>'pickle'</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>, <strong><code>indent</code></strong>=<em><code>1</code></em>)</p>
+<h4 id="dump_dict" class="doc_header"><code>dump_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L774" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>dump_dict</code>(<strong><code>dict_data</code></strong>=<em><code>None</code></em>, <strong><code>dump_to</code></strong>=<em><code>'pickle'</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>, <strong><code>indent</code></strong>=<em><code>1</code></em>)</p>
 </blockquote>
 <ul>
 <li>Dump an <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> or <a href="/pivotpy/XmlElementTree.html#load_export"><code>load_export</code></a>'s <code>Data</code> object or any dictionary to json or pickle string/file. It convert <a href="/pivotpy/XmlElementTree.html#Dict2Data"><code>Dict2Data</code></a> to dictionary before serializing to json/pickle, so json/pickle.loads() of converted Data would be a simple dictionary, pass that to <a href="/pivotpy/XmlElementTree.html#Dict2Data"><code>Dict2Data</code></a> to again make accessible via dot notation.</li>
@@ -1222,7 +1235,7 @@ Pickle:  b&#39;\x80\x03}q\x00(X\x01\x00\x00\x00Aq\x01K\x01X\x01\x00\x00\x00Bq\x0
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="load_from_dump" class="doc_header"><code>load_from_dump</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L792" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_from_dump</code>(<strong><code>file_or_str</code></strong>, <strong><code>keep_as_dict</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="load_from_dump" class="doc_header"><code>load_from_dump</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L804" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_from_dump</code>(<strong><code>file_or_str</code></strong>, <strong><code>keep_as_dict</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <ul>
 <li>Loads a json/pickle dumped file or string by auto detecting it.</li>
@@ -1329,7 +1342,7 @@ Pickle:  b&#39;\x80\x03}q\x00(X\x01\x00\x00\x00Aq\x01K\x01X\x01\x00\x00\x00Bq\x0
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="islice2array" class="doc_header"><code>islice2array</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L822" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>islice2array</code>(<strong><code>path_or_islice</code></strong>, <strong><code>dtype</code></strong>=<em><code>float</code></em>, <strong><code>delimiter</code></strong>=<em><code>'\\s+'</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>, <strong><code>exclude</code></strong>=<em><code>'#'</code></em>, <strong><code>raw</code></strong>=<em><code>False</code></em>, <strong><code>fix_format</code></strong>=<em><code>True</code></em>, <strong><code>start</code></strong>=<em><code>0</code></em>, <strong><code>nlines</code></strong>=<em><code>None</code></em>, <strong><code>count</code></strong>=<em><code>-1</code></em>, <strong><code>cols</code></strong>=<em><code>None</code></em>, <strong><code>new_shape</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="islice2array" class="doc_header"><code>islice2array</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L834" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>islice2array</code>(<strong><code>path_or_islice</code></strong>, <strong><code>dtype</code></strong>=<em><code>float</code></em>, <strong><code>delimiter</code></strong>=<em><code>'\\s+'</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>, <strong><code>exclude</code></strong>=<em><code>'#'</code></em>, <strong><code>raw</code></strong>=<em><code>False</code></em>, <strong><code>fix_format</code></strong>=<em><code>True</code></em>, <strong><code>start</code></strong>=<em><code>0</code></em>, <strong><code>nlines</code></strong>=<em><code>None</code></em>, <strong><code>count</code></strong>=<em><code>-1</code></em>, <strong><code>cols</code></strong>=<em><code>None</code></em>, <strong><code>new_shape</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Reads a sliced array from txt,csv type files and return to array. Also manages if columns lengths are not equal and return 1D array. It is faster than loading  whole file into memory. This single function could be used to parse EIGENVAL, PROCAR, DOCAR and similar files with just a combination of <code>exclude, include,start,stop,step</code> arguments.</li>
@@ -1388,7 +1401,7 @@ Note: Slicing a dimension to 100% of its data is faster than let say 80% for inn
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="slice_data" class="doc_header"><code>slice_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L908" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>slice_data</code>(<strong><code>dim_inds</code></strong>, <strong><code>old_shape</code></strong>)</p>
+<h4 id="slice_data" class="doc_header"><code>slice_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L920" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>slice_data</code>(<strong><code>dim_inds</code></strong>, <strong><code>old_shape</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns a dictionary that can be unpacked in arguments of isclice2array function. This function works only for regular txt/csv/tsv data files which have rectangular data written.</li>
@@ -1486,7 +1499,7 @@ Note: Slicing a dimension to 100% of its data is faster than let say 80% for inn
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="split_vasprun" class="doc_header"><code>split_vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L959" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>split_vasprun</code>(<strong><code>path</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="split_vasprun" class="doc_header"><code>split_vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L971" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>split_vasprun</code>(<strong><code>path</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Splits a given vasprun.xml file into a smaller _vasprun.xml file plus _set[1,2,3,4].txt files which contain projected data for each spin set.</li>

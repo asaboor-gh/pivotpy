@@ -2,7 +2,7 @@
 
 __all__ = ['Arrow3D', 'fancy_quiver3d', 'save_mp_API', 'load_mp_data', 'get_crystal', 'get_poscar', 'get_kpath',
            'get_basis', 'get_kmesh', 'tan_inv', 'order', 'out_bz_plane', 'rad_angle', 'get_bz', 'splot_bz', 'iplot_bz',
-           'to_R3', 'kpoints2bz', 'BZ']
+           'to_R3', 'kpoints2bz', 'BZ', 'export_poscar']
 
 # Cell
 import os
@@ -305,28 +305,25 @@ def get_kpath(hsk_list=[],labels=[], n = 5,weight= None ,ibzkpt = None,outfile=N
 
 # Cell
 def get_basis(poscar=None):
-    """Returns poscar(real space basis vectors) and basis in form of namedtuple.
+    """Returns given(computed) and inverted(without 2π) basis as tuple(given,inverted).
     - **Parameters**
-        - poscar: path/to/POSCAR or 3 given vectors as rows of a mtrix."""
+        - poscar: path/to/POSCAR or 3 given vectors as rows of a matrix."""
     if isinstance(poscar,type(None)) and os.path.isfile('./POSCAR'):
         poscar = './POSCAR'
     elif isinstance(poscar,str) and not os.path.isfile(poscar):
         raise ValueError("Argument 'poscar' expects path to 'POSCAR' or 3 basis vectors.")
 
-    a1,a2,a3=[],[],[]
     if np.ndim(poscar) ==2:
-        a1, a2, a3 = poscar[0],poscar[1],poscar[2]
+        basis = np.array(poscar)
     elif os.path.isfile(poscar):
-        a1, a2, a3 = vp.islice2array(poscar,start=2,nlines=3).reshape((-1,3))
+        scale = float(vp.islice2array(poscar,start=1,nlines=1,raw=True))
+        basis = scale*vp.islice2array(poscar,start=2,nlines=3).reshape((-1,3))
     else:
         raise FileNotFoundError("{!r} does not exist or not 3 by 3 list.".format(poscar))
-    # Process
-    V  = np.dot(a1,np.cross(a2,a3))
-    b1 = np.cross(a2,a3)/V
-    b2 = np.cross(a3,a1)/V
-    b3 = np.cross(a1,a2)/V
-    Basis = namedtuple('Basis', ['poscar', 'basis'])
-    return Basis(np.array([a1,a2,a3]),np.array([b1,b2,b3]))
+    # Process. 2π is not included in vasp code.
+    rec_basis = np.linalg.inv(basis).T # Compact Formula
+    Basis = namedtuple('Basis', ['given', 'inverted'])
+    return Basis(basis,rec_basis)
 
 # Cell
 def get_kmesh(n_xyz=[5,5,5],weight = None, ibzkpt= None,poscar=None,outfile=None):
@@ -351,7 +348,7 @@ def get_kmesh(n_xyz=[5,5,5],weight = None, ibzkpt= None,poscar=None,outfile=None
 
     if poscar and type(n_xyz) == int:
         Basis = get_basis(poscar)
-        weights = np.linalg.norm(Basis.basis,axis=1)
+        weights = np.linalg.norm(Basis.inverted,axis=1)
         weights = weights/np.min(weights) # For making smallest side at given n_xyz
         nx, ny, nz = np.rint(weights*n_xyz).astype(int)
 
@@ -513,11 +510,8 @@ def get_bz(poscar = None,loop = True,digits=8,primitive=False):
         - faces   : get_bz().faces, vertices arranged into faces, could be input to Poly3DCollection of matplotlib for creating BZ from faces' patches.
         - specials : get_bz().specials, Data with attributes `coords` and `kpoints` in on-one correspondence for high symmetry KPOINTS in recirprocal coordinates space.
     """
-    Basis = get_basis(poscar) # Reads
-    b1, b2, b3 = Basis.basis # basis are reciprocal basis
-    #s_f= np.sqrt(np.dot(b1,b1)) # Do not scale to 1, it makes difficult to compare to lattices
-    #b1,b2,b3 = b1/s_f,b2/s_f,b3/s_f # Normalize vectors
-    basis = np.array([b1,b2,b3])
+    basis = get_basis(poscar).inverted # Reads
+    b1, b2, b3 = basis # basis are reciprocal basis
     # Get all vectors for BZ
     if primitive:
         b0 = np.array([0,0,0])
@@ -587,7 +581,11 @@ def splot_bz(poscar_or_bz = None, ax = None, plane=None,color='blue',fill=True,v
     """
     - Plots matplotlib's static figure.
     - **Parameters**
-        - pocar_or_bz: POSCAR or 3 basis vectors' list forming POSCAR. Auto picks in working directory. Plot conventional BZ if poscar is given. If you want to plot primitive BZ, first create it using `get_bz(primitive=True)`.
+        - poscar_or_bz: Auto picks in CWD if POSCAR file found. This accept three kind of objects:
+            - List of 3 basis vectors in real space.
+            - Output of `get_bz` function.
+            - `export_vasprun().poscar` or output of `export_poscar` or their attribute `basis`.
+
         - fill       : True by defult, determines whether to fill surface of BZ or not.
         - color      : color to fill surface and stroke color.
         - vectors    : Plots basis vectors, default is True.
@@ -598,15 +596,18 @@ def splot_bz(poscar_or_bz = None, ax = None, plane=None,color='blue',fill=True,v
     - **Returns**
         - ax   : Matplotlib's 2D axes if `plane=None`.
         - ax3d : Matplotlib's 2D axes if `plane` is given.
+
+    > Tip: `splot_bz(rec_basis,primitive=True)` will plot cell in real space.
     """
-    if poscar_or_bz == None:
-        bz = get_bz(poscar_or_bz)
-    else:
+    try:
+        poscar_or_bz.faces #See if it is BZ
+        bz = poscar_or_bz
+    except AttributeError:
         try:
-            poscar_or_bz.basis
-            bz = poscar_or_bz
+            poscar_or_bz.basis # See if it is poscar Data object
+            bz = get_bz(poscar_or_bz.basis)
         except AttributeError:
-            bz = get_bz(poscar_or_bz)
+            bz = get_bz(poscar_or_bz) # If it is a Matrix or picks POSCAR from CWD.
 
     if not ax: #For both 3D and 2D, initialize 2D axis.
         ax = sp.init_figure(figsize=(3.4,3.4)) #For better display
@@ -680,7 +681,11 @@ def iplot_bz(poscar_or_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',
     """
     - Plots interactive figure showing axes,BZ surface, special points and basis, each of which could be hidden or shown.
     - **Parameters**
-        - pocar_or_bz: POSCAR or 3 basis vectors' list forming POSCAR. Auto picks in working directory. Plot conventional BZ if poscar is given. If you want to plot primitive BZ, first create it using `get_bz(primitive=True)`.
+        - poscar_or_bz: Auto picks in CWD if POSCAR file found. This accept three kind of objects:
+            - List of 3 basis vectors in real space.
+            - Output of `get_bz` function.
+            - `export_vasprun().poscar` or output of `export_poscar` or their attribute `basis`.
+
         - fill       : True by defult, determines whether to fill surface of BZ or not.
         - color      : color to fill surface 'rgba(168,204,216,0.4)` by default.
         - background : Plot background color, default is 'rgb(255,255,255)'.
@@ -688,15 +693,18 @@ def iplot_bz(poscar_or_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',
         - fig        : (Optional) Plotly's `go.Figure`. If you want to plot on another plotly's figure, provide that.
     - **Returns**
         - fig   : plotly.graph_object's Figure instance.
+
+    > Tip: `iplot_bz(rec_basis,primitive=True)` will plot cell in real space.
     """
-    if poscar_or_bz == None:
-        bz = get_bz(poscar_or_bz)
-    else:
+    try:
+        poscar_or_bz.faces #See if it is BZ object
+        bz = poscar_or_bz
+    except AttributeError:
         try:
-            poscar_or_bz.basis
-            bz = poscar_or_bz
+            poscar_or_bz.basis # See if it is poscar Data object
+            bz = get_bz(poscar_or_bz.basis)
         except AttributeError:
-            bz = get_bz(poscar_or_bz)
+            bz = get_bz(poscar_or_bz) # If it is a Matrix or picks POSCAR from CWD.
 
     if not fig:
         fig = go.Figure()
@@ -874,3 +882,36 @@ class BZ:
     def fetchc(self,points):
         """Brings atoms's positions inside Cell and returns their R3 coordinates."""
         return to_R3(self.cell.basis, kpoints= points)
+
+
+# Cell
+def export_poscar(path=None):
+    """Export POSCAR file to python objects.
+    - **Parameters**
+        - path: Path/to/POSCAR file. Auto picks in CWD.
+    """
+    if not path:
+        path = './POSCAR'
+    if not os.path.isfile(path):
+        raise FileNotFoundError
+    SYSTEM = vp.islice2array(path,start=0,nlines=1,raw=True,exclude=None).split()[0]
+    scale = vp.islice2array(path,start=1,nlines=1,exclude=None).squeeze()
+    basis = scale*vp.islice2array(path,start=2,nlines=3,exclude=None).reshape((-1,3))
+    volume = np.linalg.det(basis)
+    rec_basis = np.linalg.inv(basis).T # general formula
+    out_dict = {'volume':volume,'basis':basis,'rec_basis':rec_basis}
+
+    elems = vp.islice2array(path,raw=True,start=5,nlines=1,exclude=None).split()
+    inds = np.cumsum([0,*vp.islice2array(path,start=6,nlines=1,exclude=None)]).astype(int)
+    positions = vp.islice2array(path,start=8,exclude='s|S',cols=[0,1,2]).reshape((-1,3))
+
+    unique_d = {}
+    for i,e in enumerate(elems):
+        unique_d.update({e:range(inds[i],inds[i+1])})
+
+    elem_labels = []
+    for i, name in enumerate(elems):
+        for ind in range(inds[i],inds[i+1]):
+            elem_labels.append(f"{name} {str(ind - inds[i] + 1)}")
+    out_dict.update({'positions':positions,'labels':elem_labels,'unique':unique_d})
+    return vp.Dict2Data(out_dict)
