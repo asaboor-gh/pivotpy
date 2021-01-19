@@ -509,7 +509,7 @@ def get_bz(poscar = None,loop = True,digits=8,primitive=False):
         - normals : get_bz().normals, all vertors that are perpendicular BZ faces/planes.
         - vertices: get_bz().vertices, all vertices of BZ, could be input into ConvexHull for constructing 3D BZ.
         - faces   : get_bz().faces, vertices arranged into faces, could be input to Poly3DCollection of matplotlib for creating BZ from faces' patches.
-        - specials : get_bz().specials, Data with attributes `coords` and `kpoints` in on-one correspondence for high symmetry KPOINTS in recirprocal coordinates space.
+        - specials : get_bz().specials, Data with attributes `coords`,`kpoints` and `near` in on-one correspondence for high symmetry KPOINTS in recirprocal coordinates space. `near` gives indices of nearest special points around a vertex. All vertices with z > 0 are included.
     """
     basis = get_basis(poscar).inverted # Reads
     b1, b2, b3 = basis # basis are reciprocal basis
@@ -545,7 +545,9 @@ def get_bz(poscar = None,loop = True,digits=8,primitive=False):
 
     face_vectors = []
     for f in faces:
-        face_vectors.append(2*np.mean(f,axis=0))
+        face_vectors.append(np.mean(f,axis=0)) # In primitive point at face center
+    if primitive == False:
+        face_vectors = [2*f for f in face_vectors] # In regular, cross plane as well.
 
     # Order Faces.
     faces = [face[order(face,loop=loop)] for face in faces] # order based on given value of loop
@@ -572,8 +574,19 @@ def get_bz(poscar = None,loop = True,digits=8,primitive=False):
     face_vectors = np.round(face_vectors,digits)
     verts        = np.round(verts,digits)
     faces        = tuple([np.round(face,digits) for face in faces])
-    one_to_one   = vp.Dict2Data({'coords': mid_all_p ,'kpoints': mid_basis_p})
-    #one_to_one   = {tuple(x):tuple(y) for x,y in zip(mid_basis_p,mid_all_p)}
+
+    #Order special points near each vertex for z > 0.
+    _arrs = []
+    for v in verts[verts[:,2]>=0]: # Only upper hemisphere.
+        _arr = []
+        for i,c in enumerate(mid_all_p): # coordinates.
+            _arr.append([i, np.linalg.norm(v-c)])
+        _arr = np.array(_arr)
+        _arr = _arr[_arr[:,1].argsort()][:,0].astype(int)
+        upto = np.where(_arr == 0)[0][0]
+        _arrs.append([0,*_arr[:upto]])
+
+    one_to_one   = vp.Dict2Data({'coords': mid_all_p ,'kpoints': mid_basis_p,'near': _arrs})
     BZ = namedtuple('BZ', ['basis', 'normals','vertices','faces','specials'])
     return BZ(basis,face_vectors,verts,faces,one_to_one)
 
