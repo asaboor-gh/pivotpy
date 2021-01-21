@@ -2,7 +2,7 @@
 
 __all__ = ['Arrow3D', 'fancy_quiver3d', 'save_mp_API', 'load_mp_data', 'get_crystal', 'get_poscar', 'get_kpath',
            'get_basis', 'get_kmesh', 'tan_inv', 'order', 'out_bz_plane', 'rad_angle', 'get_bz', 'splot_bz', 'iplot_bz',
-           'to_R3', 'kpoints2bz', 'BZ', 'export_poscar']
+           'to_R3', 'kpoints2bz', 'BZ', 'export_poscar', 'fix_sites', 'get_pairs']
 
 # Cell
 import os
@@ -12,11 +12,9 @@ import numpy as np
 from pathlib import Path
 import requests as req
 from collections import namedtuple
-from itertools import permutations
-from itertools import product
+from itertools import product, permutations
 
-from scipy.spatial import ConvexHull
-from scipy.spatial import Voronoi
+from scipy.spatial import ConvexHull, Voronoi, KDTree
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
@@ -586,9 +584,10 @@ def get_bz(poscar = None,loop = True,digits=8,primitive=False):
         upto = np.where(_arr == 0)[0][0]
         _arrs.append([0,*_arr[:upto]])
 
-    one_to_one   = vp.Dict2Data({'coords': mid_all_p ,'kpoints': mid_basis_p,'near': _arrs})
-    BZ = namedtuple('BZ', ['basis', 'normals','vertices','faces','specials'])
-    return BZ(basis,face_vectors,verts,faces,one_to_one)
+    one2one  = {'coords': mid_all_p ,'kpoints': mid_basis_p,'near': _arrs}
+    out_dict = {'basis':basis, 'normals':face_vectors, 'vertices':verts,
+                'faces':faces,'specials':one2one}
+    return vp.dict2tuple('BZ',out_dict)
 
 # Cell
 def splot_bz(poscar_or_bz = None, ax = None, plane=None,color='blue',fill=True,vectors=True,v3=False,vname='b',color_map='plasma'):
@@ -938,3 +937,52 @@ def export_poscar(path=None):
             elem_labels.append(f"{name} {str(ind - inds[i] + 1)}")
     out_dict.update({'positions':positions,'labels':elem_labels,'unique':unique_d})
     return vp.Dict2Data(out_dict)
+
+# Cell
+def fix_sites(poscar_data,tol=1e-2):
+    """Add sites to make a full data shape of lattice. Returns same data after fixing.
+    - **Parameters**
+        - poscar_data: Output of `export_poscar` or `export_vasprun().poscar`.
+        - tol        : Tolerance value. Default is 10^-2.
+    """
+    sys,vol,basis,rec_basis,pos,labels,unique = poscar_data.to_tuple()
+
+    inds, new_pos = [],[]
+    for p in product([-1,0,1],[-1,0,1],[-1,0,1]):
+        t_pos = pos + [[*p]] # test position.
+        t_inds = [i for i,t_p in enumerate((t_pos > -tol) & (t_pos < tol+1)) if not False in t_p]
+        new_pos = [*new_pos, *t_pos[t_inds]]
+        inds = [*inds,*t_inds]
+
+    new_labs = [labels[i] for i in inds]
+    new_pos = np.array(new_pos)
+
+    # order things.
+    _ord = np.array([[i,l] for i,l in enumerate(new_labs)])
+    _ord = _ord[_ord[:,1].argsort()]
+
+    oinds, olabels = _ord[:,0].T.astype(int), _ord[:,1].T
+    new_pos = new_pos[oinds] # Order points too
+    new_labs = [new_labs[i] for i in oinds] # Order Labels
+
+    ul, ui = np.unique([ol.split()[0] for ol in olabels],return_counts=True)
+    eleminds = np.cumsum([0,*ui]) #Element ranges.
+    uelems = {l:range(eleminds[i],eleminds[i+1]) for i,l in enumerate(ul)} #Unique
+
+    out_dict = dict(SYSTEM=sys,volume=vol,basis=basis,rec_basis=rec_basis,
+                        positions=new_pos,labels=new_labs,unique=uelems)
+    return vp.Dict2Data(out_dict)
+
+def get_pairs(basis, positions, r, eps=1e-2):
+    """Returns a tuple of Lattice (coords,pairs), so coords[pairs] given nearest site bonds.
+    - **Parameters**
+        - basis: Real space lattice basis.
+        - positions: Array(N,3) of fractional positions of lattice sites.
+        - r        : Farctional distance between the pairs in range [0,1]. Auto fixed against largest coordinate.
+        - eps      : Tolerance value. Default is 10^-2.
+    """
+    coords = to_R3(basis,positions)
+    _r = r*np.max(coords)
+    tree = KDTree(coords)
+    inds = np.array([[*p] for p in tree.query_pairs(_r,eps=eps)])
+    return vp.dict2tuple('Lattice',{'coords':coords,'pairs':inds})
