@@ -128,7 +128,7 @@ def init_figure(figsize   = (3.4,2.6),
         if axes_3d == True:
             pos = axs.get_position()
             axs.remove()
-            axs = fig.add_axes(pos,projection='3d')
+            axs = fig.add_axes(pos,projection='3d',azim=45,elev=45)
 
     else:
         _ = [modify_axes(ax=ax) for ax in axs.ravel()]
@@ -137,7 +137,7 @@ def init_figure(figsize   = (3.4,2.6),
             for inds in axes_3d:
                 pos = axs[inds].get_position()
                 axs[inds].remove()
-                axs[inds] = fig.add_axes(pos,projection='3d')
+                axs[inds] = fig.add_axes(pos,projection='3d',azim=45,elev=45)
 
     plt.subplots_adjust(**subplots_adjust_kwargs)
     return axs
