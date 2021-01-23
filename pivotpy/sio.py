@@ -2,7 +2,7 @@
 
 __all__ = ['Arrow3D', 'fancy_quiver3d', 'save_mp_API', 'load_mp_data', 'get_crystal', 'get_poscar', 'get_kpath',
            'get_basis', 'get_kmesh', 'tan_inv', 'order', 'out_bz_plane', 'rad_angle', 'get_bz', 'splot_bz', 'iplot_bz',
-           'to_R3', 'kpoints2bz', 'BZ', 'export_poscar', 'fix_sites', 'get_pairs']
+           'to_R3', 'kpoints2bz', 'BZ', 'export_poscar', 'fix_sites', 'get_pairs', 'iplot_lat', 'splot_lat']
 
 # Cell
 import os
@@ -44,7 +44,7 @@ class Arrow3D(FancyArrowPatch):
         ax.add_artist(self)
 
 def fancy_quiver3d(X,Y,Z,U,V,W,ax=None,C = 'r',L = 0.7,mutation_scale=10,**kwargs):
-    """Plots 3D arrows on a given ax. See [FancyPatchArrow](https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.patches.FancyArrowPatch.html).
+    """Plots 3D arrows on a given ax. See [FancyArrowPatch](https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.patches.FancyArrowPatch.html).
     - **Parameters**
         - X, Y, Z : 1D arrays of coordinates of arrows' tail point.
         - U, V, W : 1D arrays of dx,dy,dz of arrows.
@@ -700,6 +700,9 @@ def splot_bz(poscar_or_bz = None, ax = None, plane=None,color='blue',fill=True,v
         ax3d.set_ylim([l_[1],h_[1]])
         ax3d.set_zlim([l_[2],h_[2]])
 
+        # Set aspect to same as data.
+        ax3d.set_box_aspect(np.ptp(bz.vertices,axis=0))
+
         ax3d.set_xlabel(r"$k_{}$".format('x'))
         ax3d.set_ylabel(r"$k_{}$".format('y'))
         ax3d.set_zlabel(r"$k_{}$".format('z'))
@@ -999,3 +1002,116 @@ def get_pairs(basis, positions, r, eps=1e-2):
     tree = KDTree(coords)
     inds = np.array([[*p] for p in tree.query_pairs(_r,eps=eps)])
     return vp.dict2tuple('Lattice',{'coords':coords,'pairs':inds})
+
+# Cell
+def iplot_lat(poscar_data,sizes=10,colors='blue',
+              bond_length=0.3,tol=1e-1,eps=1e-2,
+              line_color='red',line_width=4,
+              fill=False,alpha=0.4,fig=None):
+    """Interactive plot of lattice.
+    - **Main Parameters**
+        - poscar_data: Output of export_poscar or export_vasprun().poscar.
+        - sizes      : Size of sites. Either one int/float or list equal to type of ions.
+        - colors     : Colors of sites. Either one colors or list equal to type of ions.
+        - bond_length: Length of bond in fractional unit [0,1].
+    Other parameters just mean what they seem to be.
+    """
+    poscar = fix_sites(poscar_data=poscar_data,tol=tol)
+    coords, pairs = get_pairs(basis=poscar.basis,
+                        positions =poscar.positions,
+                        r=bond_length,eps=eps)
+    if not fig:
+        fig = go.Figure()
+
+    uelems = poscar.unique.to_dict()
+    if not isinstance(sizes,(list,np.ndarray)):
+        sizes = [sizes for elem in uelems.keys()]
+
+    if not isinstance(colors, str):
+        colors = np.array(colors)
+    else:
+        colors = [colors for elem in uelems.keys()]
+
+    h_text = np.array(poscar.labels)
+    if np.any(pairs):
+        coords_p = coords[pairs] #paired point
+        for i, cp in enumerate(coords_p):
+            showlegend = True if i==0 else False
+            fig.add_trace(go.Scatter3d(
+                x = cp[:,0].T,
+                y = cp[:,1].T,
+                z = cp[:,2].T,
+                mode='lines',line_color=line_color,
+                legendgroup='Bonds',showlegend=showlegend,
+                name='Bonds',line_width=line_width))
+
+    for (k,v),c,s in zip(uelems.items(),colors,sizes):
+        fig.add_trace(go.Scatter3d(
+            x = coords[v][:,0].T,
+            y = coords[v][:,1].T,
+            z = coords[v][:,2].T,
+            mode='markers',marker_color=c,
+            hovertext = h_text[v],
+            line_color='rgba(1,1,1,0)',line_width=0.001,
+            marker_size = s,opacity=1,name=k))
+    bz = get_bz(poscar=poscar.rec_basis, primitive=True)
+    _ = iplot_bz(bz,fig=fig,vname='a',color=line_color,
+                fill=fill,alpha=alpha)
+    return fig
+
+# Cell
+def splot_lat(poscar_data,sizes=50,color_map=None,
+              bond_length=0.3,tol=1e-1,eps=1e-2,
+              line_color='red',line_width=1,
+              vectors=True,v3=False,plane=None,
+              light_from=(1,1,1),
+              fill=False,alpha=0.4,ax=None):
+    """Static plot of lattice.
+    - **Main Parameters**
+        - poscar_data: Output of export_poscar or export_vasprun().poscar.
+        - sizes      : Size of sites. Either one int/float or list equal to type of ions.
+        - bond_length: Length of bond in fractional unit [0,1].
+    Other parameters just mean what they seem to be.
+    """
+    poscar = fix_sites(poscar_data=poscar_data,tol=tol)
+    coords, pairs = get_pairs(basis=poscar.basis,
+                        positions =poscar.positions,
+                        r=bond_length,eps=eps)
+    bz = get_bz(poscar=poscar.rec_basis, primitive=True)
+    ax = splot_bz(bz,ax=ax,vname='a',
+                color=line_color,color_map=color_map,
+                fill=fill,alpha=alpha,plane=plane,v3=v3,
+                vectors=vectors,light_from=light_from)
+
+    uelems = poscar.unique.to_dict()
+    if not isinstance(sizes,(list,np.ndarray)):
+        sizes = [sizes for elem in uelems.keys()]
+
+    if not color_map in plt.colormaps():
+        color_map = 'brg'
+    colors = plt.cm.get_cmap(color_map)(np.linspace(0,1,len(uelems)))
+
+    if np.any(pairs):
+        coords_p = coords[pairs] #paired point
+        if not plane:
+            _ = [ax.plot(c[:,0],c[:,1],c[:,2],c=line_color,lw=line_width) for c in coords_p]
+        elif 'xy' in plane:
+            _ = [ax.plot(c[:,0],c[:,1],c=line_color,lw=line_width) for c in coords_p]
+        elif 'yz' in plane:
+            _ = [ax.plot(c[:,1],c[:,2],c=line_color,lw=line_width) for c in coords_p]
+        elif 'zx' in plane:
+            _ = [ax.plot(c[:,2],c[:,0],c=line_color,lw=line_width) for c in coords_p]
+
+    for (k,v),c,s in zip(uelems.items(),colors,sizes):
+        if not plane:
+            ax.scatter(coords[v][:,0],coords[v][:,1],coords[v][:,2],color = c ,s =s,zorder=3,label=k,depthshade=False)
+        elif 'xy' in plane:
+            ax.scatter(coords[v][:,0],coords[v][:,1],color = c ,s =s,label=k,zorder=3)
+        elif 'yz' in plane:
+            ax.scatter(coords[v][:,1],coords[v][:,2],color = c ,s =s,label=k,zorder=3)
+        elif 'zx' in plane:
+            ax.scatter(coords[v][:,2],coords[v][:,0],color = c ,s =s,label=k,zorder=3)
+    ax.set_axis_off()
+    sp.add_legend(ax)
+    return ax
+

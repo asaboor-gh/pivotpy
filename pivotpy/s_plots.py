@@ -84,6 +84,8 @@ def init_figure(figsize   = (3.4,2.6),
                 axes_3d   = [],
                 sharex    = False,
                 sharey    = False,
+                azim      = 45,
+                elev      = 15,
                 **subplots_adjust_kwargs
                 ):
     """
@@ -97,6 +99,7 @@ def init_figure(figsize   = (3.4,2.6),
         - share(x,y): Share axes between plots, this removes shared ticks automatically.
         - axes_off  : Turn off axes visibility, If `nrows = ncols = 1, set True/False`, If anyone of `nrows or ncols > 1`, provide list of axes indices to turn off. If both `nrows and ncols > 1`, provide list of tuples (x_index,y_index) of axes.
         - axes_3d   : Change axes to 3D. If `nrows = ncols = 1, set True/False`, If anyone of `nrows or ncols > 1`, provide list of axes indices to turn off. If both `nrows and ncols > 1`, provide list of tuples (x_index,y_index) of axes.
+        azim,elev   : Matplotlib's 3D angles, defualt are 45,15.
         - **subplots_adjust_kwargs : These are same as `plt.subplots_adjust()`'s arguements.
     """
     # SVG and rcParams are must in init_figure to bring to other files, not just here.
@@ -128,7 +131,7 @@ def init_figure(figsize   = (3.4,2.6),
         if axes_3d == True:
             pos = axs.get_position()
             axs.remove()
-            axs = fig.add_axes(pos,projection='3d',azim=45,elev=45)
+            axs = fig.add_axes(pos,projection='3d',azim=azim,elev=elev)
 
     else:
         _ = [modify_axes(ax=ax) for ax in axs.ravel()]
@@ -137,7 +140,7 @@ def init_figure(figsize   = (3.4,2.6),
             for inds in axes_3d:
                 pos = axs[inds].get_position()
                 axs[inds].remove()
-                axs[inds] = fig.add_axes(pos,projection='3d',azim=45,elev=45)
+                axs[inds] = fig.add_axes(pos,projection='3d',azim=azim,elev=elev)
 
     plt.subplots_adjust(**subplots_adjust_kwargs)
     return axs
@@ -352,7 +355,8 @@ def add_colorbar(ax=None,cmap_or_clist=None,N=256,ticks=[1/6,1/2,5/6],\
             ax.imshow(c_vals,aspect='auto',cmap=_hsv_,origin='lower')
             ax.set_yticks([])
             ax.set_xticks([np.floor(N*t) for t in ticks])
-            ax.set_xticklabels(ticklabels,rotation=0)
+            if ticks:
+                ax.set_xticklabels(ticklabels,rotation=0)
             ticks_param.update({'left':False})
             ax.tick_params(**ticks_param)
         if(vertical==True):
@@ -360,7 +364,8 @@ def add_colorbar(ax=None,cmap_or_clist=None,N=256,ticks=[1/6,1/2,5/6],\
             ax.imshow(c_vals,aspect='auto',cmap=_hsv_,origin='lower')
             ax.set_xticks([])
             ax.set_yticks([np.floor(N*t) for t in ticks])
-            ax.set_yticklabels(ticklabels,rotation=90)
+            if ticks:
+                ax.set_yticklabels(ticklabels,rotation=90)
             ticks_param.update({'bottom':False})
             ax.tick_params(**ticks_param)
         for tick in ax.xaxis.get_major_ticks():
