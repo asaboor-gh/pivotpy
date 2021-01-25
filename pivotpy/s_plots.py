@@ -86,6 +86,7 @@ def init_figure(figsize   = (3.4,2.6),
                 sharey    = False,
                 azim      = 45,
                 elev      = 15,
+                ortho3d   = True,
                 **subplots_adjust_kwargs
                 ):
     """
@@ -100,6 +101,7 @@ def init_figure(figsize   = (3.4,2.6),
         - axes_off  : Turn off axes visibility, If `nrows = ncols = 1, set True/False`, If anyone of `nrows or ncols > 1`, provide list of axes indices to turn off. If both `nrows and ncols > 1`, provide list of tuples (x_index,y_index) of axes.
         - axes_3d   : Change axes to 3D. If `nrows = ncols = 1, set True/False`, If anyone of `nrows or ncols > 1`, provide list of axes indices to turn off. If both `nrows and ncols > 1`, provide list of tuples (x_index,y_index) of axes.
         azim,elev   : Matplotlib's 3D angles, defualt are 45,15.
+        ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise perspective.
         - **subplots_adjust_kwargs : These are same as `plt.subplots_adjust()`'s arguements.
     """
     # SVG and rcParams are must in init_figure to bring to other files, not just here.
@@ -124,6 +126,7 @@ def init_figure(figsize   = (3.4,2.6),
     if heights!=[] and len(heights)==nrows:
         gs_kw = dict({**gs_kw,'height_ratios':heights})
     fig,axs=plt.subplots(nrows,ncols,figsize=figsize,gridspec_kw=gs_kw,sharex=sharex,sharey=sharey)
+    proj = {'proj_type':'ortho'} if ortho3d else {} # For 3D only
     if nrows*ncols==1:
         modify_axes(ax=axs)
         if axes_off == True:
@@ -131,7 +134,7 @@ def init_figure(figsize   = (3.4,2.6),
         if axes_3d == True:
             pos = axs.get_position()
             axs.remove()
-            axs = fig.add_axes(pos,projection='3d',azim=azim,elev=elev)
+            axs = fig.add_axes(pos,projection='3d',azim=azim,elev=elev,**proj)
 
     else:
         _ = [modify_axes(ax=ax) for ax in axs.ravel()]
@@ -140,7 +143,7 @@ def init_figure(figsize   = (3.4,2.6),
             for inds in axes_3d:
                 pos = axs[inds].get_position()
                 axs[inds].remove()
-                axs[inds] = fig.add_axes(pos,projection='3d',azim=azim,elev=elev)
+                axs[inds] = fig.add_axes(pos,projection='3d',azim=azim,elev=elev,**proj)
 
     plt.subplots_adjust(**subplots_adjust_kwargs)
     return axs

@@ -737,8 +737,7 @@ def splot_bz(path_pos_bz = None, ax = None, plane=None,color='blue',fill=True,ve
 
 
 # Cell
-def iplot_bz(path_pos_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',
-                        background = 'rgb(255,255,255)',vname = 'b', alpha=0.4,fig=None):
+def iplot_bz(path_pos_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',background = 'rgb(255,255,255)',vname = 'b', alpha=0.4,ortho3d=True,fig=None):
     """
     - Plots interactive figure showing axes,BZ surface, special points and basis, each of which could be hidden or shown.
     - **Parameters**
@@ -752,6 +751,7 @@ def iplot_bz(path_pos_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',
         - background : Plot background color, default is 'rgb(255,255,255)'.
         - vname      : Default is `b` for reciprocal space, can set `a` for plotting cell as after `get_bz(get_bz().basis)` you get real space lattice back if `primitive=True` both times.
         - alpha      : Opacity of BZ planes.
+        - ortho3d    : Default is True, decides whether x,y,z are orthogonal or perspective.
         - fig        : (Optional) Plotly's `go.Figure`. If you want to plot on another plotly's figure, provide that.
     - **Returns**
         - fig   : plotly.graph_object's Figure instance.
@@ -833,8 +833,7 @@ def iplot_bz(path_pos_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',
         colors[0]= "rgb(255,215,0)" # Gold color at Gamma!.
         fig.add_trace(go.Scatter3d(x=values[:,0], y=values[:,1],z=values[:,2],
                 hovertext=texts,name="HSK",marker_color=colors,mode='markers'))
-
-    camera = dict(center=dict(x=0.1, y=0.1, z=0.1))
+    camera = dict(center=dict(x=0.1, y=0.1, z=0.1),projection=dict(type = "orthographic"))
     fig.update_layout(scene_camera=camera,paper_bgcolor=background,
         font_family="Times New Roman",font_size= 14,
         scene = dict(aspectmode='data',xaxis = dict(showbackground=False,visible=False),
@@ -919,9 +918,9 @@ class BZ:
         lat = get_bz(get_bz(path_pos,primitive = True).basis, primitive = True) # Double operation
         self.cell = vp.Dict2Data({'basis':lat.basis,'vertices':lat.vertices,'faces':lat.faces,'normals':lat.normals})
 
-    def iplot(self,fill=True, color='rgba(168,204,216,0.4)', background='rgb(255,255,255)', fig=None):
+    def iplot(self,fill=True, color='rgba(168,204,216,0.4)', background='rgb(255,255,255)', ortho3d=True,fig=None):
         """Returns plotly's Figure of BZ plot."""
-        return iplot_bz(self.bz,fill=fill,color=color,background=background,fig=fig)
+        return iplot_bz(self.bz,fill=fill,color=color,background=background,ortho3d=ortho3d,fig=fig)
 
     def splot(self,ax=None, plane=None, color=(0.4,0.8,0.85), fill=True, vectors=True, v3=False,color_map='plasma',light_from=(1,1,1),alpha=0.4):
         """Returns Matplotlib's Axes of BZ plot."""
@@ -931,9 +930,9 @@ class BZ:
         """Brings KPOINTS inside BZ and returns their R3 coordinates."""
         return kpoints2bz(self.bz, kpoints= kpoints,primitive=self.primitive)
 
-    def iplotc(self,fill=True, color='rgba(168,204,216,0.4)', background='rgb(255,255,255)', fig=None):
+    def iplotc(self,fill=True, color='rgba(168,204,216,0.4)', background='rgb(255,255,255)', ortho3d=True,fig=None):
         """Returns plotly's Figure of Cell plot."""
-        return iplot_bz(self.cell,fill=fill,color=color,background=background,fig=fig,vname='a')
+        return iplot_bz(self.cell,fill=fill,color=color,background=background,fig=fig,vname='a',ortho3d=ortho3d)
 
     def splotc(self,ax=None, plane=None, color=(0.4,0.8,0.85), fill=True, vectors=True, v3=False,color_map='plasma',light_from=(1,1,1),alpha=0.4):
         """Returns Matplotlib's Axes of Cell plot."""
@@ -997,7 +996,7 @@ def get_pairs(basis, positions, r, eps=1e-2):
 def iplot_lat(poscar,sizes=10,colors='blue',
               bond_length=0.3,tol=1e-1,eps=1e-2,
               line_color='red',line_width=4,edge_color = 'black',
-              fill=False,alpha=0.4,fig=None):
+              fill=False,alpha=0.4, ortho3d=True,fig=None):
     """Interactive plot of lattice.
     - **Main Parameters**
         - poscar     : Output of export_poscar or export_vasprun().poscar.
@@ -1046,7 +1045,7 @@ def iplot_lat(poscar,sizes=10,colors='blue',
             marker_size = s,opacity=1,name=k))
     bz = get_bz(path_pos=poscar.rec_basis, primitive=True)
     _ = iplot_bz(bz,fig=fig,vname='a',color=edge_color,
-                fill=fill,alpha=alpha)
+                fill=fill,alpha=alpha,ortho3d=ortho3d)
     return fig
 
 # Cell
