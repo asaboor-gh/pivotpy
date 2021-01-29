@@ -2,7 +2,8 @@
 
 __all__ = ['Arrow3D', 'fancy_quiver3d', 'save_mp_API', 'load_mp_data', 'get_crystal', 'get_poscar', 'get_kpath',
            'export_poscar', 'get_basis', 'get_kmesh', 'tan_inv', 'order', 'out_bz_plane', 'rad_angle', 'get_bz',
-           'splot_bz', 'iplot_bz', 'to_R3', 'kpoints2bz', 'BZ', 'fix_sites', 'get_pairs', 'iplot_lat', 'splot_lat']
+           'splot_bz', 'iplot_bz', 'to_R3', 'kpoints2bz', 'BZ', 'fix_sites', 'get_pairs', 'iplot_lat', 'splot_lat',
+           'join_poscars']
 
 # Cell
 import os
@@ -833,7 +834,8 @@ def iplot_bz(path_pos_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',back
         colors[0]= "rgb(255,215,0)" # Gold color at Gamma!.
         fig.add_trace(go.Scatter3d(x=values[:,0], y=values[:,1],z=values[:,2],
                 hovertext=texts,name="HSK",marker_color=colors,mode='markers'))
-    camera = dict(center=dict(x=0.1, y=0.1, z=0.1),projection=dict(type = "orthographic"))
+    proj = dict(projection=dict(type = "orthographic")) if ortho3d else {}
+    camera = dict(center=dict(x=0.1, y=0.1, z=0.1),**proj)
     fig.update_layout(scene_camera=camera,paper_bgcolor=background,
         font_family="Times New Roman",font_size= 14,
         scene = dict(aspectmode='data',xaxis = dict(showbackground=False,visible=False),
@@ -944,38 +946,53 @@ class BZ:
 
 
 # Cell
-def fix_sites(poscar,tol=1e-2):
-    """Add sites to make a full data shape of lattice. Returns same data after fixing.
+def fix_sites(poscar,tol=1e-2,eqv_sites=True):
+    """Add equivalent sites to make a full data shape of lattice. Returns same data after fixing.
     - **Parameters**
         - poscar: Output of `export_poscar` or `export_vasprun().poscar`.
-        - tol        : Tolerance value. Default is 10^-2.
+        - tol   : Tolerance value. Default is 0.01.
+        - eqv_sites: If True, add sites on edges and faces. If False, just fix coordinates, i.e. `pos > 1 - tol -> pos - 1`, useful for merging poscars to make slabs.
     """
     sys,vol,basis,rec_basis,pos,labels,unique = poscar.to_tuple()
+    pos = pos.copy() # Must to avoid chnaging outside.
+    out_dict = poscar.to_dict() # For output
+    if eqv_sites:
+        inds, new_pos = [],[]
+        for p in product([-1,0,1],[-1,0,1],[-1,0,1]):
+            t_pos = pos + [[*p]] # test position.
+            t_inds = [i for i,t_p in enumerate(
+                (t_pos > -tol) & (t_pos < tol+1)
+                ) if not False in t_p]
+            new_pos = [*new_pos, *t_pos[t_inds]]
+            inds = [*inds,*t_inds]
 
-    inds, new_pos = [],[]
-    for p in product([-1,0,1],[-1,0,1],[-1,0,1]):
-        t_pos = pos + [[*p]] # test position.
-        t_inds = [i for i,t_p in enumerate((t_pos > -tol) & (t_pos < tol+1)) if not False in t_p]
-        new_pos = [*new_pos, *t_pos[t_inds]]
-        inds = [*inds,*t_inds]
+        new_labs = [labels[i] for i in inds]
+        new_pos = np.array(new_pos)
 
-    new_labs = [labels[i] for i in inds]
-    new_pos = np.array(new_pos)
+        # order things.
+        _ord = np.array([[i,l] for i,l in enumerate(new_labs)])
+        _ord = _ord[_ord[:,1].argsort()]
 
-    # order things.
-    _ord = np.array([[i,l] for i,l in enumerate(new_labs)])
-    _ord = _ord[_ord[:,1].argsort()]
+        oinds, olabels = _ord[:,0].T.astype(int), _ord[:,1].T
+        new_pos = new_pos[oinds] # Order points too
+        new_labs = [new_labs[i] for i in oinds] # Order Labels
 
-    oinds, olabels = _ord[:,0].T.astype(int), _ord[:,1].T
-    new_pos = new_pos[oinds] # Order points too
-    new_labs = [new_labs[i] for i in oinds] # Order Labels
+        ul, ui = np.unique([ol.split()[0] for ol in olabels],
+                    return_counts=True)
+        eleminds = np.cumsum([0,*ui]) #Element ranges.
+        uelems = {l:range(eleminds[i],eleminds[i+1]) for i,l in enumerate(ul)}
+        # Update Things
+        out_dict['positions'] = new_pos
+        out_dict['labels'] = new_labs
+        out_dict['unique'] = uelems
+    else:
+        xinds,yinds = np.where(pos > 1-tol)
+        for i,j in zip(xinds,yinds):
+            pos[i,j] = pos[i,j] -1
 
-    ul, ui = np.unique([ol.split()[0] for ol in olabels],return_counts=True)
-    eleminds = np.cumsum([0,*ui]) #Element ranges.
-    uelems = {l:range(eleminds[i],eleminds[i+1]) for i,l in enumerate(ul)} #Unique
+        # Update Things
+        out_dict['positions'] = pos
 
-    out_dict = dict(SYSTEM=sys,volume=vol,basis=basis,rec_basis=rec_basis,
-                        positions=new_pos,labels=new_labs,unique=uelems)
     return vp.Dict2Data(out_dict)
 
 def get_pairs(basis, positions, r, eps=1e-2):
@@ -994,8 +1011,8 @@ def get_pairs(basis, positions, r, eps=1e-2):
 
 # Cell
 def iplot_lat(poscar,sizes=10,colors='blue',
-              bond_length=0.3,tol=1e-1,eps=1e-2,
-              line_color='red',line_width=4,edge_color = 'black',
+              bond_length=0.3,tol=1e-1,eps=1e-2,eqv_sites=True,
+              line_width=4,edge_color = 'black',
               fill=False,alpha=0.4, ortho3d=True,fig=None):
     """Interactive plot of lattice.
     - **Main Parameters**
@@ -1005,7 +1022,7 @@ def iplot_lat(poscar,sizes=10,colors='blue',
         - bond_length: Length of bond in fractional unit [0,1].
     Other parameters just mean what they seem to be.
     """
-    poscar = fix_sites(poscar=poscar,tol=tol)
+    poscar = fix_sites(poscar=poscar,tol=tol,eqv_sites=eqv_sites)
     coords, pairs = get_pairs(basis=poscar.basis,
                         positions =poscar.positions,
                         r=bond_length,eps=eps)
@@ -1022,15 +1039,34 @@ def iplot_lat(poscar,sizes=10,colors='blue',
         colors = [colors for elem in uelems.keys()]
 
     h_text = np.array(poscar.labels)
+
+    _colors = []
+    for i,vs in enumerate(uelems.values()):
+        for v in vs:
+            _colors.append(colors[i])
+    _colors = np.array(_colors)  # Full List
+
     if np.any(pairs):
-        coords_p = coords[pairs] #paired point
-        for i, cp in enumerate(coords_p):
+        coords_p = coords[pairs] #paired points
+        _colors = _colors[pairs] # Colors at pairs
+        coords_n = []
+        colors_n = []
+        for c_p, _c in zip(coords_p,_colors):
+            mid = np.mean(c_p,axis=0)
+            arr = np.concatenate([c_p[0],mid,mid,c_p[1]]).reshape((-1,2,3))
+            coords_n = [*coords_n,*arr] # Same shape
+            colors_n = [*colors_n,*_c] # same shape.
+
+        coords_n = np.array(coords_n)
+        colors_n = np.array(colors_n)
+
+        for (i, cp),c in zip(enumerate(coords_n),colors_n):
             showlegend = True if i==0 else False
             fig.add_trace(go.Scatter3d(
                 x = cp[:,0].T,
                 y = cp[:,1].T,
                 z = cp[:,2].T,
-                mode='lines',line_color=line_color,
+                mode='lines',line_color=c,
                 legendgroup='Bonds',showlegend=showlegend,
                 name='Bonds',line_width=line_width))
 
@@ -1050,8 +1086,8 @@ def iplot_lat(poscar,sizes=10,colors='blue',
 
 # Cell
 def splot_lat(poscar,sizes=50,color_map=None,
-              bond_length=0.3,tol=1e-1,eps=1e-2,
-              line_color='red',line_width=1,edge_color='k',
+              bond_length=0.3,tol=1e-1,eps=1e-2,eqv_sites=True,
+              line_width=1,edge_color=((1,0.5,0,0.4)),
               vectors=True,v3=False,plane=None,
               light_from=(1,1,1),
               fill=False,alpha=0.4,ax=None):
@@ -1064,7 +1100,7 @@ def splot_lat(poscar,sizes=50,color_map=None,
 
     > Tip: Use `plt.style.use('ggplot')` for better 3D perception.
     """
-    poscar = fix_sites(poscar=poscar,tol=tol)
+    poscar = fix_sites(poscar=poscar,tol=tol,eqv_sites=eqv_sites)
     coords, pairs = get_pairs(basis=poscar.basis,
                         positions =poscar.positions,
                         r=bond_length,eps=eps)
@@ -1082,21 +1118,38 @@ def splot_lat(poscar,sizes=50,color_map=None,
         color_map = 'brg'
     colors = plt.cm.get_cmap(color_map)(np.linspace(0.2,0.7,len(uelems)))
 
+    _colors = []
+    for i,vs in enumerate(uelems.values()):
+        for v in vs:
+            _colors.append(colors[i])
+    _colors = np.array(_colors)  # Full List
+
     if np.any(pairs):
-        coords_p = coords[pairs] #paired point
+        coords_p = coords[pairs] #paired points
+        _colors = _colors[pairs] # Colors at pairs
+        coords_n = []
+        colors_n = []
+        for c_p, _c in zip(coords_p,_colors):
+            mid = np.mean(c_p,axis=0)
+            arr = np.concatenate([c_p[0],mid,mid,c_p[1]]).reshape((-1,2,3))
+            coords_n = [*coords_n,*arr] # Same shape
+            colors_n = [*colors_n,*_c] # same shape.
+
+        coords_n = np.array(coords_n)
+        colors_n = np.array(colors_n)
+
         if not plane:
-            _ = [ax.plot(c[:,0],c[:,1],c[:,2],c=line_color,lw=line_width) for c in coords_p]
+            _ = [ax.plot(*c.T,c=_c,lw=line_width) for c,_c in zip(coords_n,colors_n)]
         elif 'xy' in plane:
-            _ = [ax.plot(c[:,0],c[:,1],c=line_color,lw=line_width) for c in coords_p]
+            _ = [ax.plot(c[:,0],c[:,1],c=_c,lw=line_width) for c,_c in zip(coords_n,colors_n)]
         elif 'yz' in plane:
-            _ = [ax.plot(c[:,1],c[:,2],c=line_color,lw=line_width) for c in coords_p]
+            _ = [ax.plot(c[:,1],c[:,2],c=_c,lw=line_width) for c,_c in zip(coords_n,colors_n)]
         elif 'zx' in plane:
-            _ = [ax.plot(c[:,2],c[:,0],c=line_color,lw=line_width) for c in coords_p]
+            _ = [ax.plot(c[:,2],c[:,0],c=_c,lw=line_width) for c,_c in zip(coords_n,colors_n)]
 
     for (k,v),c,s in zip(uelems.items(),colors,sizes):
         if not plane:
-            ax.scatter(coords[v][:,0],coords[v][:,1],coords[v][:,2],color = c ,s =s,zorder=4,label=k,depthshade=False)
-            ax.scatter(coords[v][:,0],coords[v][:,1],coords[v][:,2],color = c ,s = 0.2*s,depthshade=False) #extra shade
+            ax.scatter(coords[v][:,0],coords[v][:,1],coords[v][:,2],color = c ,s =s,label=k,depthshade=False)
         elif 'xy' in plane:
             ax.scatter(coords[v][:,0],coords[v][:,1],color = c ,s =s,label=k,zorder=3)
         elif 'yz' in plane:
@@ -1107,3 +1160,75 @@ def splot_lat(poscar,sizes=50,color_map=None,
     sp.add_legend(ax)
     return ax
 
+
+
+# Cell
+def join_poscars(poscar1,poscar2,direction='z',tol=1e-2,outfile=None):
+    """
+    out_str = '\\n'.join([\"{:>21.16f}{:>21.16f}{:>21.16f}\".format(*a) for a in arr])
+    out_str = ''.join(open(path,'r').readlines()[:skip]) + out_str
+    open(path.split('.')[0]+'_modified.vasp','w').write(out_str)"
+    """
+    _poscar1 = fix_sites(poscar1,tol=tol,eqv_sites=False)
+    _poscar2 = fix_sites(poscar2,tol=tol,eqv_sites=False)
+    pos1 = _poscar1.positions.copy()
+    pos2 = _poscar2.positions.copy()
+
+    s1,s2 = 0.5, 0.5 # Half length for each.
+    a1,b1,c1 = np.linalg.norm(_poscar1.basis,axis=1)
+    a2,b2,c2 = np.linalg.norm(_poscar2.basis,axis=1)
+    basis = _poscar1.basis.copy() # Must be copied, otherwise change outside.
+
+    # Processing in orthogonal space
+    if direction in ['z','c']:
+        c2 = (a2*b2)/(a1*b1)*c2
+        netc = c1+c2
+        s1, s2 = c1/netc, c2/netc
+        pos1[:,2] = s1*pos1[:,2]
+        pos2[:,2] = s2*pos2[:,2] + s1
+        basis[2] = netc*basis[2]/np.linalg.norm(basis[2]) #Update 3rd vector
+
+    elif direction in ['y','b']:
+        b2 = (a2*c2)/(a1*c1)*b2
+        netb = b1+b2
+        s1, s2 = b1/netb, b2/netb
+        pos1[:,1] = s1*pos1[:,1]
+        pos2[:,1] = s2*pos2[:,1] + s1
+        basis[1] = netb*basis[1]/np.linalg.norm(basis[1]) #Update 2nd vector
+
+    elif direction in ['x','a']:
+        a2 = (b2*c2)/(b1*c1)*a2
+        neta = a1+a2
+        s1, s2 = a1/neta, a2/neta
+        pos1[:,0] = s1*pos1[:,0]
+        pos2[:,0] = s2*pos2[:,0] + s1
+        basis[0] = neta*basis[0]/np.linalg.norm(basis[0]) #Update 1st vector
+
+    else:
+        return print("direction expects one of ['a','b','c','x','y','z']")
+
+    rec_basis = np.linalg.inv(basis)
+    volume = np.dot(basis[0],np.cross(basis[1],basis[2]))
+    u1 = _poscar1.unique.to_dict()
+    u2 = _poscar2.unique.to_dict()
+    u_all = np.unique([*u1.keys(),*u2.keys()])
+
+
+    pos_all = []
+    i_all = []
+    for u in u_all:
+        _i_ = 0
+        if u in u1.keys():
+            _i_ = len(u1[u])
+            pos_all = [*pos_all,*pos1[u1[u]]]
+        if u in u2.keys():
+            _i_ = _i_ + len(u2[u])
+            pos_all = [*pos_all,*pos2[u2[u]]]
+        i_all.append(_i_)
+
+    labels = [f"{u} {i+1}" for u,ii in zip(u_all,i_all) for i in range(ii)]
+    i_all = np.cumsum([0,*i_all]) # Do it after labels
+    uelems = {_u:range(i_all[i],i_all[i+1]) for i,_u in enumerate(u_all)}
+    sys = ''.join(uelems.keys()) + "   # Created by Pivotpy"
+    out_dict = {'SYSTEM':sys,'volume':volume,'basis':basis,'rec_basis':rec_basis,'positions':np.array(pos_all),'labels':labels,'unique':uelems}
+    return vp.Dict2Data(out_dict)
