@@ -3,7 +3,7 @@
 __all__ = ['Arrow3D', 'fancy_quiver3d', 'save_mp_API', 'load_mp_data', 'get_crystal', 'get_poscar', 'get_kpath',
            'export_poscar', 'get_basis', 'get_kmesh', 'tan_inv', 'order', 'out_bz_plane', 'rad_angle', 'get_bz',
            'splot_bz', 'iplot_bz', 'to_R3', 'kpoints2bz', 'BZ', 'fix_sites', 'get_pairs', 'iplot_lat', 'splot_lat',
-           'join_poscars']
+           'join_poscars', 'write_poscar']
 
 # Cell
 import os
@@ -671,15 +671,18 @@ def splot_bz(path_pos_bz = None, ax = None, plane=None,color='blue',fill=True,ve
         if vectors:
             if v3:
                 s_basis = bz.basis
+                ijk = [0,1,2]
             else:
                 s_basis = bz.basis[[i,j]]# Only two.
-            for k,y in enumerate(s_basis):
-                label = "\n" + r" ${}_{}$".format(_label,k+1)
-                ax.text(0.8*y[i],0.8*y[j], label, va='center',ha='left')
+                ijk = [i,j]
+
+            for k,y in zip(ijk,s_basis):
+                l = "\n" + r" ${}_{}$".format(_label,k+1)
+                ax.text(0.8*y[i],0.8*y[j], l, va='center',ha='left')
                 ax.scatter([y[i]],[y[j]],color='w',s=0.0005) # Must be to scale below arrow.
 
             s_zero = [0 for s_b in s_basis] # either 3 or 2.
-            ax.quiver(s_zero,s_zero,*s_basis.T,lw=0.9,color='k',angles='xy', scale_units='xy', scale=1)
+            ax.quiver(s_zero,s_zero,*s_basis.T[[i,j]],lw=0.9,color='k',angles='xy', scale_units='xy', scale=1)
 
         ax.set_xlabel(label.format(valid_planes[i]))
         ax.set_ylabel(label.format(valid_planes[j]))
@@ -1163,11 +1166,12 @@ def splot_lat(poscar,sizes=50,color_map=None,
 
 
 # Cell
-def join_poscars(poscar1,poscar2,direction='z',tol=1e-2,outfile=None):
-    """
-    out_str = '\\n'.join([\"{:>21.16f}{:>21.16f}{:>21.16f}\".format(*a) for a in arr])
-    out_str = ''.join(open(path,'r').readlines()[:skip]) + out_str
-    open(path.split('.')[0]+'_modified.vasp','w').write(out_str)"
+def join_poscars(poscar1,poscar2,direction='z',tol=1e-2):
+    """Joins two POSCARs in a given direction. In-plane lattice parameters are kept from `poscar1` and basis of `poscar2` parallel to `direction` is modified while volume is kept same.
+    - **Parameters**
+        - poscar1, poscar2:  Base and secondary POSCARs respectivly. Output of `export_poscar` or similar object from other functions.
+        - direction: The joining direction. It is general and can join in any direction along basis. Expect one of ['a','b','c','x','y','z'].
+        - tol: Default is 0.01. It is used to bring sites near 1 to near zero in order to complete sites in plane. Vasp relaxation could move a point, say at 0.00100 to 0.99800 which is not useful while merging sites.
     """
     _poscar1 = fix_sites(poscar1,tol=tol,eqv_sites=False)
     _poscar2 = fix_sites(poscar2,tol=tol,eqv_sites=False)
@@ -1207,7 +1211,7 @@ def join_poscars(poscar1,poscar2,direction='z',tol=1e-2,outfile=None):
     else:
         return print("direction expects one of ['a','b','c','x','y','z']")
 
-    rec_basis = np.linalg.inv(basis)
+    rec_basis = np.linalg.inv(basis).T # Transpose is must
     volume = np.dot(basis[0],np.cross(basis[1],basis[2]))
     u1 = _poscar1.unique.to_dict()
     u2 = _poscar2.unique.to_dict()
@@ -1232,3 +1236,40 @@ def join_poscars(poscar1,poscar2,direction='z',tol=1e-2,outfile=None):
     sys = ''.join(uelems.keys()) + "   # Created by Pivotpy"
     out_dict = {'SYSTEM':sys,'volume':volume,'basis':basis,'rec_basis':rec_basis,'positions':np.array(pos_all),'labels':labels,'unique':uelems}
     return vp.Dict2Data(out_dict)
+
+# Cell
+def write_poscar(poscar,sd_list=None,outfile=None,overwrite=False):
+    """Writes poscar data object to a file or returns string
+    - **Parameters**
+        - poscar   : Output of `export_poscar`,`join_poscars` etc.
+        - sd_list  : A list ['T T T','F F F',...] strings to turn on selective dynamics at required sites. len(sd_list)==len(sites) should hold.
+        - outfile  : str,file path to write on.
+        - overwrite: bool, if file already exists, overwrite=True chnages it.
+    """
+    out_str = poscar.SYSTEM + "  # Created by Pivotpy"
+    scale = np.linalg.norm(poscar.basis[0])
+    out_str += "\n  {:<20.14f}\n".format(scale)
+    out_str += '\n'.join(["{:>22.16f}{:>22.16f}{:>22.16f}".format(*a) for a in poscar.basis/scale])
+    uelems = poscar.unique.to_dict()
+    out_str += "\n  " + '\t'.join(uelems.keys())
+    out_str += "\n  " + '\t'.join([str(len(v)) for v in uelems.values()])
+    if sd_list:
+        out_str += "\nSelective Dynamics"
+    out_str += "\nDirect\n"
+    pos_list = ["{:>21.16f}{:>21.16f}{:>21.16f}".format(*a) for a in poscar.positions]
+    if sd_list:
+        if len(pos_list) != len(sd_list):
+            return print("len(sd_list) != len(sites).")
+        pos_list = [f"{p}   {s}" for p,s in zip(pos_list,sd_list)]
+    out_str += '\n'.join(pos_list)
+    if outfile:
+        if not os.path.isfile(outfile):
+            open(outfile,'w').write(out_str)
+            return
+        elif overwrite and os.path.isfile(outfile):
+            open(outfile,'w').write(out_str)
+            return
+        else:
+            return print(f"{outfile!r} exists, can not overwrite, \nuse overwrite=True if you want to chnage.")
+    # Return string anyway
+    return out_str
