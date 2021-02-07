@@ -214,6 +214,7 @@ def get_summary(xml_data=None):
     elem_index=[0]; #start index
     [elem_index.append((int(entry)+elem_index[-1])) for entry in elem[-type_ions:]];
     ISPIN=get_ispin(xml_data=xml_data)
+    NELECT = int([i.text.strip().split('.')[0] for i in xml_data.iter('i') if i.attrib['name']=='NELECT'][0])
     # Fields
     try:
         for pro in xml_data.iter('partial'):
@@ -225,8 +226,9 @@ def get_summary(xml_data=None):
         if(i.attrib=={'name': 'efermi'}):
             efermi=float(i.text)
     #Writing information to a dictionary
-    info_dic={'SYSTEM':incar['SYSTEM'],'NION':n_ions,'TypeION':type_ions,'ElemName':elem_name,'ElemIndex':elem_index,\
-        'E_Fermi': efermi,'ISPIN':ISPIN,'fields':dos_fields,'incar':incar}
+    info_dic={'SYSTEM':incar['SYSTEM'],'NION':n_ions,'NELECT':NELECT,'TypeION':type_ions,
+              'ElemName':elem_name,'ElemIndex':elem_index,'E_Fermi': efermi,'ISPIN':ISPIN,
+              'fields':dos_fields,'incar':incar}
     return Dict2Data(info_dic)
 
 # Cell
@@ -361,7 +363,7 @@ def get_evals(xml_data=None,skipk=None,elim=[]):
     for i in xml_data.iter('i'): #efermi for condition required.
         if(i.attrib=={'name': 'efermi'}):
             efermi=float(i.text)
-    evals_dic={'E_Fermi':efermi,'ISPIN':ISPIN,'NBANDS':NBANDS,'evals':evals}
+    evals_dic={'E_Fermi':efermi,'ISPIN':ISPIN,'NBANDS':NBANDS,'evals':evals,'indices': range(NBANDS)}
     if elim: #check if elim not empty
         if(ISPIN==1):
             up_ind=np.max(np.where(evals[:,:]-efermi<=np.max(elim))[1])+1
@@ -371,8 +373,10 @@ def get_evals(xml_data=None,skipk=None,elim=[]):
             up_ind=np.max(np.where(eval_1[:,:]-efermi<=np.max(elim))[1])+1
             lo_ind=np.min(np.where(eval_1[:,:]-efermi>=np.min(elim))[1])
             evals={'SpinUp':eval_1[:,lo_ind:up_ind],'SpinDown':eval_2[:,lo_ind:up_ind]}
-        NBANDS=up_ind-lo_ind #update Bands
-        evals_dic={'E_Fermi':efermi,'ISPIN':ISPIN,'NBANDS': int(NBANDS),'bands_range':range(lo_ind,up_ind),'evals':evals}
+        NBANDS = int(up_ind - lo_ind) #update Bands
+        evals_dic['NBANDS'] = NBANDS
+        evals_dic['indices'] = range(lo_ind,up_ind)
+        evals_dic['evals'] = evals
     return Dict2Data(evals_dic)
 
 # Cell
@@ -393,7 +397,7 @@ def get_bands_pro_set(xml_data=None,
         - Data     : pivotpy.Dict2Data with attibutes of bands projections and related parameters.
     """
     if(bands_range!=None):
-        check_list=list(bands_range)
+        check_list = list(bands_range)
         if check_list==[]:
             return print(gu.color.r("No bands prjections found in given energy range."))
     # Try to read _set.txt first. instance check is important.
@@ -526,6 +530,7 @@ def get_structure(xml_data=None):
         return
 
     SYSTEM = [i.text for i in xml_data.iter('i') if i.attrib['name'] == 'SYSTEM'][0]
+
     for final in xml_data.iter('structure'):
         if(final.attrib=={'name': 'finalpos'}):
             for i in final.iter('i'):
@@ -552,7 +557,13 @@ def get_structure(xml_data=None):
     return Dict2Data(st_dic)
 
 # Cell
-def export_vasprun(path=None,skipk=None,elim=[],joinPathAt=[],shift_kpath=0):
+def export_vasprun(path=None,
+                   skipk=None,
+                   elim=[],
+                   joinPathAt=[],
+                   shift_kpath=0,
+                   try_pwsh = True
+                   ):
     """
     - Returns a full dictionary of all objects from `vasprun.xml` file. It first try to load the data exported by powershell's `Export-VR(Vasprun)`, which is very fast for large files. It is recommended to export large files in powershell first.
     - **Parameters**
@@ -561,6 +572,7 @@ def export_vasprun(path=None,skipk=None,elim=[],joinPathAt=[],shift_kpath=0):
         - elim       : List [min,max] of energy interval. Default is [], covers all bands.
         - joinPathAt : List of indices of kpoints where path is broken.
         - shift_kpath: Default 0. Can be used to merge multiple calculations on single axes side by side.
+        - try_pwsh   : Default is True and tries to load data exported by `Vasp2Visual` in Powershell.
     - **Returns**
         - Data : Data accessible via dot notation containing nested Data objects:
             - sys_info  : System Information
@@ -574,13 +586,15 @@ def export_vasprun(path=None,skipk=None,elim=[],joinPathAt=[],shift_kpath=0):
             - poscar    : Data containing basis,positions, rec_basis and volume.
     """
     # Try to get files if exported data in PowerShell.
-    req_files = ['Bands.txt','tDOS.txt','pDOS.txt','Projection.txt','SysInfo.py']
-    if path and os.path.isfile(path):
-        req_files = [os.path.join(os.path.dirname(os.path.abspath(path)),f) for f in req_files]
-    logic = [os.path.isfile(f) for f in req_files]
-    if not False in logic:
-        print('Loading from PowerShell Exported Data...')
-        return load_export(path=(path if path else './vasprun.xml'))
+    if try_pwsh:
+        req_files = ['Bands.txt','tDOS.txt','pDOS.txt','Projection.txt','SysInfo.py']
+        if path and os.path.isfile(path):
+            req_files = [os.path.join(
+                os.path.dirname(os.path.abspath(path)),f) for f in req_files]
+        logic = [os.path.isfile(f) for f in req_files]
+        if not False in logic:
+            print('Loading from PowerShell Exported Data...')
+            return load_export(path=(path if path else './vasprun.xml'))
 
     # Proceed if not files from PWSH
     if path==None:
@@ -605,7 +619,7 @@ def export_vasprun(path=None,skipk=None,elim=[],joinPathAt=[],shift_kpath=0):
     tot_dos = get_tdos(xml_data=xml_data,spin_set=1,elim=elim)
     #Bands and DOS Projection
     if elim:
-        bands_range=eigenvals.bands_range
+        bands_range = eigenvals.indices #indices in range form.
         grid_range=tot_dos.grid_range
     else:
         bands_range=None #projection function will read itself.
@@ -694,6 +708,7 @@ def load_export(path= './vasprun.xml',
     NFILLED           = _vars.NFILLED
     TypeION           = _vars.TypeION
     NION              = _vars.NION
+    NELECT            = _vars.NELECT
     nField_Projection = _vars.nField_Projection
     E_Fermi           = _vars.E_Fermi
     ISPIN             = _vars.ISPIN
@@ -722,6 +737,7 @@ def load_export(path= './vasprun.xml',
 
     # Load Data
     bands= np.loadtxt('Bands.txt').reshape((-1,NBANDS+4)) #Must be read in 2D even if one row only.
+    start = int(open('Bands.txt').readline().split()[4][1:])
     pro_bands= np.loadtxt('Projection.txt').reshape((-1,NBANDS*nField_Projection))
     pro_dos = np.loadtxt('pDOS.txt')
     dos= np.loadtxt('tDOS.txt')
@@ -734,7 +750,7 @@ def load_export(path= './vasprun.xml',
     os.chdir(this_loc)
 
     # Work now!
-    sys_info = {'SYSTEM': SYSTEM,'NION': NION,'TypeION': TypeION,'ElemName': ElemName, 'E_Fermi': E_Fermi,'fields':fields, 'incar': incar,
+    sys_info = {'SYSTEM': SYSTEM,'NION': NION,'NELECT':NELECT,'TypeION': TypeION,'ElemName': ElemName, 'E_Fermi': E_Fermi,'fields':fields, 'incar': incar,
                'ElemIndex': ElemIndex,'ISPIN': ISPIN}
     dim_info = {'kpoints': '(NKPTS,3)','kpath': '(NKPTS,1)','bands': '⇅(NKPTS,NBANDS)',
 'dos': '⇅(grid_size,3)','pro_dos': '⇅(NION,grid_size,en+pro_fields)','pro_bands': '⇅(NION,NKPTS,NBANDS,pro_fields)'}
@@ -744,7 +760,7 @@ def load_export(path= './vasprun.xml',
         kpath   = bands[:,3]
         kpoints = bands[:,:3]
         evals   = bands[:,4:]
-        bands_dic = {'E_Fermi': E_Fermi, 'ISPIN': ISPIN, 'NBANDS': NBANDS, 'evals': evals}
+        bands_dic = {'E_Fermi': E_Fermi, 'ISPIN': ISPIN, 'NBANDS': NBANDS, 'evals': evals, 'indices': range(start,start+NBANDS)}
         tdos_dic  = {'E_Fermi': E_Fermi, 'ISPIN': ISPIN,'tdos': dos}
         pdos      = pro_dos.reshape(NION,-1,nField_Projection+1)
         pdos_dic  = {'labels': fields,'pros': pdos}
@@ -757,7 +773,7 @@ def load_export(path= './vasprun.xml',
         SpinUp  = bands[:NKPTS,4:]
         SpinDown= bands[NKPTS:,4:]
         evals   = {'SpinUp':SpinUp,'SpinDown': SpinDown}
-        bands_dic = {'E_Fermi': E_Fermi, 'ISPIN': ISPIN, 'NBANDS': NBANDS, 'evals': evals}
+        bands_dic = {'E_Fermi': E_Fermi, 'ISPIN': ISPIN, 'NBANDS': NBANDS, 'evals': evals,'indices': range(start,start+NBANDS)}
         # tDOS
         dlen    = int(np.shape(dos)[0]/2)
         SpinUp  = dos[:dlen,:]

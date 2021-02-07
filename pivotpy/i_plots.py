@@ -43,10 +43,10 @@ def get_rgb_data(   kpath       = None,
         - colors   : An (NBANDS,NKPTS,3) numpy array.
         - widths   : An (NBAND,NKPTS) numpy arry, its actually colors summed along z-axis.
     """
-    if(pros_set==[]):
+    if pros_set == []:
         print(gu.color.y("Can not plot an empty eigenvalues object."))
         return print(gu.color.g("Try with large energy range."))
-    if len(orbs)<3 :
+    if len(orbs) < 3 :
         raise ValueError("orbs have structure [[],[],[]], do not reduce structure even if it is empty.")
     elif len(elements) <3:
         raise ValueError("elements have structure [[],[],[]], do not reduce structure even if it is empty.")
@@ -103,7 +103,7 @@ def flip_even_patches(array_1d, patch_length):
     return out_put
 
 # Cell
-def rgb_to_plotly(rgb_data=None,mode='markers',max_width=None,showlegend=False,name='',labels=['s','p','d'],symbol=0):
+def rgb_to_plotly(rgb_data=None,mode='markers',max_width=None,showlegend=False,name='',labels=['s','p','d'],symbol=0,start=0):
     """
     - Returns data object of plotly's figure using `get_rgb_data`. Returned data could be fed to a plolty's figure.
     - ** Parameters**
@@ -117,6 +117,7 @@ def rgb_to_plotly(rgb_data=None,mode='markers',max_width=None,showlegend=False,n
         - labels     : Optional, show red green blue colors corresponding orbitals.
         - showlegend : Optional, only suitbale if spin up/down or 'bands' mode is ON.
         - symbol     : Plotly's marker symbol. 0 for circle, 5/6 for Up/Down.
+        - start      : Start index of bands, defult is zero. Should be export_vasprun().bands.indices[0] or get_evals().indices[0].
     """
     if mode not in ('markers','bands','lines'):
         raise TypeError("Argument `mode` expects one of ['markers','bands','lines'], got '{}'.".format(mode))
@@ -124,7 +125,7 @@ def rgb_to_plotly(rgb_data=None,mode='markers',max_width=None,showlegend=False,n
     if rgb_data:
         k,en,rgb,lws = rgb_data
 
-        _names = [["<sub>{}</sub>".format(int(1+i)) for j in range(len(en[0]))]
+        _names = [["<sub>{}</sub>".format(int(1+i+start)) for j in range(len(en[0]))]
                   for i in range(len(en))]
         clrs=(255*rgb).astype(int).clip(min=0,max=255) #clip in color range
         _txt=(100*rgb).astype(int)
@@ -162,7 +163,7 @@ def rgb_to_plotly(rgb_data=None,mode='markers',max_width=None,showlegend=False,n
             for i,values in enumerate(zip(en,colors,lws,h_text)):
                 e,c,w,t = values
                 data.append(go.Scatter(x=k,y=e,mode='markers+lines',
-                            name="{}<sub>{}</sub>".format(name,str(i+1)),
+                            name="{}<sub>{}</sub>".format(name,str(i+1+start)),
                             marker=dict(color=c,size=w,symbol=symbol),line=dict(width=0.001,
                             color='rgba(255,255,250,0)'),showlegend=showlegend,hovertext=t)
                            )
@@ -326,6 +327,7 @@ def plotly_rgb_lines(path_evr    = None,
         ISPIN=vr.sys_info.ISPIN
         args_dict=dict(orbs=orbs,elements=elements,interpolate=interpolate,n=n,k=k,scale_color=True) # Do not scale color there, scale here.
         data,showlegend,name=[],False,'' # Place holder
+        start = vr.bands.indices[0]
         if(mode=='bands'):
                 showlegend=True
         if(ISPIN==1):
@@ -333,7 +335,8 @@ def plotly_rgb_lines(path_evr    = None,
             Pros=vr.pro_bands.pros
             new_args=dict(kpath=K, evals_set=En, pros_set=Pros,**args_dict)
             rgb_lines=get_rgb_data(**new_args)
-            data=rgb_to_plotly(rgb_data=rgb_lines,mode=mode,showlegend=showlegend,labels=labels,name='B',max_width=max_width)
+            data=rgb_to_plotly(rgb_data=rgb_lines,mode=mode,showlegend=showlegend,
+                               labels=labels,name='B',max_width=max_width,start=start)
         if(ISPIN==2):
             if(mode=='markers'):
                 showlegend=True
@@ -343,10 +346,12 @@ def plotly_rgb_lines(path_evr    = None,
             Pros2=vr.pro_bands.pros.SpinDown
             new_args1=dict(kpath=K, evals_set=En1, pros_set=Pros1,**args_dict)
             rgb_lines1=get_rgb_data(**new_args1)
-            data1=rgb_to_plotly(rgb_data=rgb_lines1,mode=mode,symbol=0,showlegend=showlegend,labels=labels,name='B<sup>↑</sup>',max_width=max_width)
+            data1=rgb_to_plotly(rgb_data=rgb_lines1,mode=mode,symbol=0,showlegend=showlegend,
+                                labels=labels,name='B<sup>↑</sup>',max_width=max_width,start=start)
             new_args2=dict(kpath=K, evals_set=En2, pros_set=Pros2,**args_dict)
             rgb_lines2=get_rgb_data(**new_args2)
-            data2=rgb_to_plotly(rgb_data=rgb_lines2,mode=mode,symbol=100,showlegend=showlegend,labels=labels,name='B<sup>↓</sup>',max_width=max_width)
+            data2=rgb_to_plotly(rgb_data=rgb_lines2,mode=mode,symbol=100,showlegend=showlegend,
+                                labels=labels,name='B<sup>↓</sup>',max_width=max_width,start=start)
             data=[[d1,d2] for d1,d2 in zip(data1,data2)]
             data=[d for ds in data for d in ds]
         # Initiate figure
