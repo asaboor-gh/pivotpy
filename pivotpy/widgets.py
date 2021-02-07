@@ -18,9 +18,16 @@ from ipywidgets.embed import embed_minimal_html, dependency_state
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
-import pivotpy.vr_parser as vp
-import pivotpy.g_utils as gu
-import pivotpy.i_plots as ip
+
+# Inside packages import to work both with package and jupyter notebook.
+try:
+    from . import g_utils as gu
+    from . import vr_parser as vp
+    from . import i_plots as ip
+except:
+    import pivotpy.g_utils as gu
+    import pivotpy.vr_parser as vp
+    import pivotpy.i_plots as ip
 
 # Cell
 light_style = """<style>

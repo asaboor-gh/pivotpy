@@ -15,8 +15,13 @@ from matplotlib.colors import LinearSegmentedColormap as LSC
 from matplotlib.collections import LineCollection
 from mpl_toolkits.mplot3d import Axes3D
 
-import pivotpy.vr_parser as vp
-import pivotpy.g_utils as gu
+# Inside packages import to work both with package and jupyter notebook.
+try:
+    from . import vr_parser as vp
+    from . import g_utils as gu
+except:
+    import pivotpy.vr_parser as vp
+    import pivotpy.g_utils as gu
 
 from IPython import get_ipython
 from IPython.display import HTML, set_matplotlib_formats #HTML for plt_to_html

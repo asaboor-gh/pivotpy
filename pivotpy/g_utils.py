@@ -17,9 +17,15 @@ from itertools import islice # File generator for faster r
 
 import numpy as np
 import plotly.graph_objects as go
-import pivotpy.vr_parser as vp
-import pivotpy.s_plots as sp
-import pivotpy.i_plots as ip
+# Inside packages import to work both with package and jupyter notebook.
+try:
+    from . import vr_parser as vp
+    from . import s_plots as sp
+    from . import i_plots as ip
+except:
+    import pivotpy.vr_parser as vp
+    import pivotpy.s_plots as sp
+    import pivotpy.i_plots as ip
 
 # Cell
 def get_file_size(path):

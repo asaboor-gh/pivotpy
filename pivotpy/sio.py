@@ -21,9 +21,13 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as mplc #For viewpoint
 from mpl_toolkits import mplot3d
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
-
-import pivotpy.vr_parser as vp
-import pivotpy.s_plots as sp
+# Inside packages import to work both with package and jupyter notebook.
+try:
+    from . import vr_parser as vp
+    from . import s_plots as sp
+except:
+    import pivotpy.vr_parser as vp
+    import pivotpy.s_plots as sp
 
 # Cell
 from matplotlib.patches import FancyArrowPatch

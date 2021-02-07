@@ -16,7 +16,11 @@ import numpy as np
 from importlib.machinery import SourceFileLoader
 import textwrap
 import xml.etree.ElementTree as ET
-import pivotpy.g_utils as gu
+# Inside packages import to work both with package and jupyter notebook.
+try:
+    from . import g_utils as gu
+except:
+    import pivotpy.g_utils as gu
 
 # Cell
 def dict2tuple(name,d):

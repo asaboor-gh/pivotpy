@@ -10,9 +10,15 @@ import matplotlib.pyplot as plt
 
 import plotly.graph_objects as go
 
-import pivotpy.vr_parser as vp
-import pivotpy.s_plots as sp
-import pivotpy.g_utils as gu
+# Inside packages import to work both with package and jupyter notebook.
+try:
+    from . import vr_parser as vp
+    from . import s_plots as sp
+    from . import g_utils as gu
+except:
+    import pivotpy.vr_parser as vp
+    import pivotpy.s_plots as sp
+    import pivotpy.g_utils as gu
 
 # Cell
 def get_rgb_data(   kpath       = None,
