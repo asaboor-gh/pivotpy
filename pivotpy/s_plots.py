@@ -1302,43 +1302,48 @@ def plt_to_html(plt_fig=None,transparent=True,dash_html=None):
         return html.Img(src="data:image/svg+xml;base64,{}".format(img.decode('utf-8')))
 
 # Cell
-def plt_to_text(plt_fig=None,width=120,vscale=0.45,
-                chars = ['@','#','S','%','?','*','+',';',':','.',' '],
+def plt_to_text(plt_fig=None,width=120,vscale=0.45,colorful=False,
+                chars = [' ','.',':',';','+','*','?','%','S','#','@',' '],
                 outfile=None):
     """Displays matplotlib figure in terminal as text. You should use a monospcae font like `Cascadia Code PL` to display image correctly.
     - **Parameters**
         - plt_fig: Matplotlib's figure instance. Auto picks if not given.
         - width  : Character width in terminal, default is 120. Decrease font size when width increased.
         - vscale : Useful to tweek aspect ratio. Default is 0.45.
-        - chars: List of characters to map against gray scale values 0-255. Could be unicode as well. Last character shoulde be a spcae or `u'\u2588'`.AttributeError
+        - colorful: Default is False, prints colored picture if terminal supports it. Like xterm. If this is True, file is not written.
+        - chars: List of characters to map against gray scale values 0-255. Could be unicode as well. Last character shoulde be a spcae or `u'\u2588'`. Default list produces a true perspective gray scale image. Not required if colorful=True.
         - outfile: If None, prints to screen. Writes on a file.
     """
     if plt_fig==None:
         plt_fig = plt.gcf()
-    plt_fig.set_dpi(1200) #Must
-    plt_fig.canvas.draw()
-    buf = plt_fig.canvas.tostring_rgb()
-    ncols, nrows = plt_fig.canvas.get_width_height()
-    array = np.fromstring(buf, dtype=np.uint8).reshape(nrows, ncols, 3)
-
-    img = PIL.Image.fromarray(array)
+    plot_bytes = BytesIO()
+    plt.savefig(plot_bytes,format='png',dpi=1200,transparent=True)
+    img = PIL.Image.open(plot_bytes)
     w, h = img.size
     aspect = h/w
     height = int(aspect * width * vscale) # Integer
-
-    img = img.resize((width, height)).convert('L') # grayscale
-
-    pixels = [chars[int(v*len(chars)/255) - 1] for v in img.getdata()]
-    pixels = np.reshape(pixels,(-1,width)) #Make row/columns
-    out_str = '\n'.join([''.join([p for p in ps]) for ps in pixels])
-    out_str = textwrap.dedent(out_str)
-
     plt.clf() #Clear display
-    if outfile:
-        with open(outfile,'w') as f:
-            f.write(out_str)
-    else:
+    if colorful:
+        img = img.resize((width, height)) #colorful image.
+        # Add a space in background color \033[48;2 or block u'\u2588' in forground \033[38;2,that's it.
+        color_str = "\033[48;2;{};{};{}m \033[00m" #Just a space
+        pixels = [color_str.format(*v) if sum(v)>0 else ' ' for v in img.getdata()]
+        pixels = np.reshape(pixels,(-1,width)) #Make row/columns
+        out_str = '\n'.join([''.join([p for p in ps]) for ps in pixels])
+        out_str = textwrap.dedent(out_str) # Remove spaces.
         print(out_str)
+    else:
+        img = img.resize((width, height)).convert('L') # grayscale
+        pixels = [chars[int(v*len(chars)/255) - 1] for v in img.getdata()]
+        pixels = np.reshape(pixels,(-1,width)) #Make row/columns
+        out_str = '\n'.join([''.join([p for p in ps]) for ps in pixels])
+        out_str = textwrap.dedent(out_str)
+
+        if outfile:
+            with open(outfile,'w') as f:
+                f.write(out_str)
+        else:
+            print(out_str)
 
 # Cell
 def plot_potential(basis = None,

@@ -42,6 +42,12 @@
 - A function `pivotpy.vr_parser.split_vasprun` is added which splits `vasprun.xml` file into a small file `_vasprun.xml` without projected data and creates text files `_set[1,2,3,4].txt` based on how many spin sets are there. 
 - A function `pivotpy.vr_parser.islice2array` is added which can reads data from text/csv/tsv files (even if text and numbers are mixed) accoridng to slices you provide, this does not load full file in memory and it is also useful in parsing EIGENVAL, PROCAR like files with a few lines of code only. 
 
+## New: Plot in Terminal without GUI
+Use `pp.plt_to_text(colorful=True/False)` after matplotlib's code and your figure will appear in terminal. You need to zoom out alot to get a good view like below.
+
+Tip: Use file [matplotlib2terminal.py](https://gist.github.com/massgh/d5cc44ad32510d3ff58cfefd75c6884e) on github independent of this package to plot in terminal. 
+![IMG](terminal.jpg)
+
 # New: Ipywidgets-based GUI
 See GIF here:
 ![GIF](widget.gif) 
@@ -102,7 +108,7 @@ _ = df.data.sort_values('VBM').plot(ax=ax,x = 'VBM',y=['CBM','E_gap'])
 ```
 
 
-![svg](docs/images/output_8_0.svg)
+![svg](docs/images/output_9_0.svg)
 
 
 ```
@@ -206,7 +212,7 @@ pp._show()
     
 
 
-![svg](docs/images/output_11_1.svg)
+![svg](docs/images/output_12_1.svg)
 
 
 ## Interactive plots using plotly
@@ -270,7 +276,7 @@ pp.modify_axes(ax=axs,xlim=[0,last_k],ylim=[-10,10],**ti_cks)
 ```
 
 
-![svg](docs/images/output_17_0.svg)
+![svg](docs/images/output_18_0.svg)
 
 
 ## Interpolation 
@@ -290,7 +296,7 @@ pp.add_text(ax=plt.gca(),txts='Graphene')
 ```
 
 
-![svg](docs/images/output_19_0.svg)
+![svg](docs/images/output_20_0.svg)
 
 
 ## LOCPOT,CHG Visualization

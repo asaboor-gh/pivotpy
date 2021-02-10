@@ -157,6 +157,13 @@ def get_child_items(path = os.getcwd(),depth=None,recursive=True,include=None,ex
 
 # Cell
 class color:
+     def bg(text,r,g,b):
+          """Provide r,g,b component in range 0-255"""
+          return f"\033[48;2;{r};{g};{b}m{text}\033[00m"
+     def fg(text,r,g,b):
+          """Provide r,g,b component in range 0-255"""
+          return f"\033[38;2;{r};{g};{b}m{text}\033[00m"
+     # Usual Colos
      r  = lambda text: f"\033[0;91m {text}\033[00m"
      rb = lambda text: f"\033[1;91m {text}\033[00m"
      g  = lambda text: f"\033[0;92m {text}\033[00m"
