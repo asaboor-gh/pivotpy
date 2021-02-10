@@ -9,7 +9,7 @@ __all__ = ['modify_axes', 'init_figure', 'plot_bands', 'quick_bplot', 'add_text'
 import os
 import numpy as np
 from io import BytesIO
-import PIL, textwrap #For text image.
+import PIL, textwrap, re #For text image.
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -1310,40 +1310,40 @@ def plt_to_text(plt_fig=None,width=120,vscale=0.45,colorful=False,
         - plt_fig: Matplotlib's figure instance. Auto picks if not given.
         - width  : Character width in terminal, default is 120. Decrease font size when width increased.
         - vscale : Useful to tweek aspect ratio. Default is 0.45.
-        - colorful: Default is False, prints colored picture if terminal supports it. Like xterm. If this is True, file is not written.
+        - colorful: Default is False, prints colored picture if terminal supports it. Like xterm.
         - chars: List of characters to map against gray scale values 0-255. Could be unicode as well. Last character shoulde be a spcae or `u'\u2588'`. Default list produces a true perspective gray scale image. Not required if colorful=True.
         - outfile: If None, prints to screen. Writes on a file.
     """
     if plt_fig==None:
         plt_fig = plt.gcf()
     plot_bytes = BytesIO()
-    plt.savefig(plot_bytes,format='png',dpi=1200,transparent=True)
+    plt.savefig(plot_bytes,format='png',dpi=600,transparent=True) # Must be trasparent
     img = PIL.Image.open(plot_bytes)
     w, h = img.size
     aspect = h/w
     height = int(aspect * width * vscale) # Integer
     plt.clf() #Clear display
+
     if colorful:
         img = img.resize((width, height)) #colorful image.
         # Add a space in background color \033[48;2 or block u'\u2588' in forground \033[38;2,that's it.
         color_str = "\033[48;2;{};{};{}m \033[00m" #Just a space
         pixels = [color_str.format(*v) if sum(v)>0 else ' ' for v in img.getdata()]
         pixels = np.reshape(pixels,(-1,width)) #Make row/columns
-        out_str = '\n'.join([''.join([p for p in ps]) for ps in pixels])
-        out_str = textwrap.dedent(out_str) # Remove spaces.
-        print(out_str)
     else:
         img = img.resize((width, height)).convert('L') # grayscale
         pixels = [chars[int(v*len(chars)/255) - 1] for v in img.getdata()]
         pixels = np.reshape(pixels,(-1,width)) #Make row/columns
-        out_str = '\n'.join([''.join([p for p in ps]) for ps in pixels])
-        out_str = textwrap.dedent(out_str)
 
-        if outfile:
-            with open(outfile,'w') as f:
-                f.write(out_str)
-        else:
-            print(out_str)
+    # Trim spaces at end of each line
+    out_str = '\n'.join([re.sub('\s+$','',''.join([p for p in ps])) for ps in pixels])
+    # Trim initial spaces.
+    out_str = textwrap.dedent(out_str)
+    if outfile:
+        with open(outfile,'w') as f:
+            f.write(out_str)
+    else:
+        print(out_str)
 
 # Cell
 def plot_potential(basis = None,
