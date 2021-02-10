@@ -19,7 +19,7 @@ entries:
       title: Structure IO
       url: StructureIO.html
     - output: web,pdf
-      title: Pivotpy
+      title: Pivotpy Module
       url: test.html
     - output: web,pdf
       title: Utilities
