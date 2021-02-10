@@ -1302,14 +1302,14 @@ def plt_to_html(plt_fig=None,transparent=True,dash_html=None):
         return html.Img(src="data:image/svg+xml;base64,{}".format(img.decode('utf-8')))
 
 # Cell
-def plt_to_text(plt_fig=None,width=120,vscale=0.45,colorful=False,
+def plt_to_text(plt_fig=None,width=120,vscale=0.405,colorful=False,
                 chars = [' ','.',':',';','+','*','?','%','S','#','@',' '],
                 outfile=None):
     """Displays matplotlib figure in terminal as text. You should use a monospcae font like `Cascadia Code PL` to display image correctly.
     - **Parameters**
         - plt_fig: Matplotlib's figure instance. Auto picks if not given.
         - width  : Character width in terminal, default is 120. Decrease font size when width increased.
-        - vscale : Useful to tweek aspect ratio. Default is 0.45.
+        - vscale : Useful to tweek aspect ratio. Default is 0.405 and prints actual aspect in `Cascadia Code PL`. It is approximately `0.84*width/height` when you select a single space in terminal.
         - colorful: Default is False, prints colored picture if terminal supports it. Like xterm.
         - chars: List of characters to map against gray scale values 0-255. Could be unicode as well. Last character shoulde be a spcae or `u'\u2588'`. Default list produces a true perspective gray scale image. Not required if colorful=True.
         - outfile: If None, prints to screen. Writes on a file.
@@ -1343,7 +1343,9 @@ def plt_to_text(plt_fig=None,width=120,vscale=0.45,colorful=False,
         with open(outfile,'w') as f:
             f.write(out_str)
     else:
-        print(out_str)
+        # For loop is important for printing lines, otherwise breaks appear.
+        for line in out_str.splitlines():
+            print(line)
 
 # Cell
 def plot_potential(basis = None,
