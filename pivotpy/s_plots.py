@@ -9,7 +9,7 @@ __all__ = ['modify_axes', 'init_figure', 'plot_bands', 'quick_bplot', 'add_text'
 import os
 import numpy as np
 from io import BytesIO
-import PIL, textwrap, re #For text image.
+import PIL #For text image.
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -1307,7 +1307,7 @@ def plt_to_text(plt_fig=None,width=144,vscale=0.96,colorful=True,invert=False,cr
     - **Parameters**
         - plt_fig: Matplotlib's figure instance. Auto picks if not given.
         - width  : Character width in terminal, default is 144. Decrease font size when width increased.
-        - vscale : Useful to tweek aspect ratio. Default is 0.405 and prints actual aspect in `Cascadia Code PL`. It is approximately `2*width/height` when you select a single space in terminal.
+        - vscale : Useful to tweek aspect ratio. Default is 0.96 and prints actual aspect in `Cascadia Code PL`. It is approximately `2*width/height` when you select a single space in terminal.
         - colorful: Default is False, prints colored picture if terminal supports it, e.g Windows Terminal.
         - invert  : Defult is False, could be useful for grayscale image.
         - crop    : Default is False. Crops extra background, can change image color if top left pixel is not in background, in that case set this to False.
@@ -1349,10 +1349,8 @@ def plt_to_text(plt_fig=None,width=144,vscale=0.96,colorful=True,invert=False,cr
         pixels = [chars[int(v*len(chars)/255) -1] for v in img.getdata()]
         pixels = np.reshape(pixels,(height,-1)) #Make row/columns
 
-    # Trim spaces at end of each line
-    out_str = '\n'.join([re.sub('\s+$','',''.join([p for p in ps])) for ps in pixels])
-    # Trim initial spaces.
-    out_str = textwrap.dedent(out_str)
+    out_str = '\n'.join([''.join([p for p in ps]) for ps in pixels])
+
     if outfile:
         with open(outfile,'w') as f:
             f.write(out_str)
