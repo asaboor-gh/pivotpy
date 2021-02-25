@@ -207,7 +207,7 @@ def plot_bands(ax=None,kpath=None,bands=None,showlegend=False,E_Fermi=None,\
 
 # Cell
 def quick_bplot(path_evr=None,ax=None,skipk=None,joinPathAt=[],elim=[],xt_indices=[],\
-            xt_labels=[],E_Fermi=None,figsize=(3.4,2.6),txt=None,xytxt=[0.05,0.9],ctxt='black'):
+            xt_labels=[],E_Fermi=None,figsize=(3.4,2.6),txt=None,xytxt=[0.2,0.9],ctxt='black'):
     """
     - Returns axes object and plot on which all matplotlib allowed actions could be performed.
     - **Parameters**
@@ -260,7 +260,7 @@ def quick_bplot(path_evr=None,ax=None,skipk=None,joinPathAt=[],elim=[],xt_indice
         return ax
 
 # Cell
-def add_text(ax=None,xs=0.05,ys=0.9,txts='[List]',colors='r',transform=True,**kwargs):
+def add_text(ax=None,xs=0.25,ys=0.9,txts='[List]',colors='r',transform=True,**kwargs):
     """
     - Adds text entries on axes, given single string or list.
     - **Parameters**
@@ -533,7 +533,10 @@ def make_line_collection(max_width   = None,
     else:
         # default linewidth = 2.5 unless specified otherwise
         if rgb: # Single channel line widths
-            lws = 0.1 + 2.5*np.sum(colors,axis=1) #residual linewidth 0.1
+            try:
+                lws = pros_data.get('lws') #Get from quick_rgb_lines, so lws represent actual data
+            except:
+                lws = 0.1 + 0.25*np.sum(colors,axis=1) # If not called from quick_rgb_lines
         else: # For separate lines
             lws = 0.1 + 2.5*colors.T # .T to access in for loop.
 
@@ -606,7 +609,7 @@ def quick_rgb_lines(path_evr    = None,
                     E_Fermi     = None,
                     figsize     = (3.4,2.6),
                     txt         = None,
-                    xytxt       = [0.05,0.9],
+                    xytxt       = [0.2,0.9],
                     ctxt        = 'black',
                     uni_width   = False,
                     interpolate = False,
@@ -728,6 +731,9 @@ def quick_rgb_lines(path_evr    = None,
     #=====================================================
     def _add_collection(gpd_args,mlc_args,ax):
         pros_data = get_pros_data(**gpd_args)
+        _lws_ = 0.1 + 2.5*np.sum(pros_data['pros'],axis=2) # Before changing color, get linewidths
+        pros_data['lws']  = np.transpose(_lws_[:-1,:]/2 + _lws_[1:,:]/2).ravel() # NBANDS[NKPTS-1] repeatition.
+        # These 'lws' are passed in to make_line_collection to keep true linwidths even color changes
 
         if scale_color and None not in np.unique(color_matrix):
             colors = pros_data['pros']
@@ -820,7 +826,7 @@ def quick_color_lines(path_evr      = None,
                       showlegend    = True,
                       figsize       = (3.4, 2.6),
                       txt           = None,
-                      xytxt         = [0.05, 0.85],
+                      xytxt         = [0.2, 0.85],
                       ctxt          = 'black',
                       interpolate   = False,
                       n             = 5,
@@ -1132,7 +1138,7 @@ def quick_dos_lines(path_evr      = None,
                     E_Fermi       = None,
                     figsize       = (3.4,2.6),
                     txt           = None,
-                    xytxt         = [0.05,0.85],
+                    xytxt         = [0.2,0.85],
                     ctxt          = 'black',
                     spin          = 'both',
                     interpolate   = False,
