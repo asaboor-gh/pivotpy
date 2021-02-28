@@ -3,7 +3,7 @@
 __all__ = ['Arrow3D', 'fancy_quiver3d', 'save_mp_API', 'load_mp_data', 'get_crystal', 'get_poscar', 'get_kpath',
            'export_poscar', 'get_basis', 'get_kmesh', 'tan_inv', 'order', 'out_bz_plane', 'rad_angle', 'get_bz',
            'splot_bz', 'iplot_bz', 'to_R3', 'kpoints2bz', 'BZ', 'fix_sites', 'get_pairs', 'iplot_lat', 'splot_lat',
-           'join_poscars', 'write_poscar']
+           'join_poscars', 'write_poscar', 'scale_poscar']
 
 # Cell
 import os
@@ -1011,14 +1011,14 @@ def get_pairs(basis, positions, r, eps=1e-2):
         - eps      : Tolerance value. Default is 10^-2.
     """
     coords = to_R3(basis,positions)
-    _r = r*np.max(coords)
+    _r = r*np.max(coords) # In coordinate form
     tree = KDTree(coords)
     inds = np.array([[*p] for p in tree.query_pairs(_r,eps=eps)])
     return vp.dict2tuple('Lattice',{'coords':coords,'pairs':inds})
 
 # Cell
 def iplot_lat(poscar,sizes=10,colors='blue',
-              bond_length=0.3,tol=1e-1,eps=1e-2,eqv_sites=True,
+              bond_length=0.15,tol=1e-1,eps=1e-2,eqv_sites=True,
               line_width=4,edge_color = 'black',
               fill=False,alpha=0.4, ortho3d=True,fig=None):
     """Interactive plot of lattice.
@@ -1093,7 +1093,7 @@ def iplot_lat(poscar,sizes=10,colors='blue',
 
 # Cell
 def splot_lat(poscar,sizes=50,color_map=None,
-              bond_length=0.3,tol=1e-1,eps=1e-2,eqv_sites=True,
+              bond_length=0.15,tol=1e-1,eps=1e-2,eqv_sites=True,
               line_width=1,edge_color=((1,0.5,0,0.4)),
               vectors=True,v3=False,plane=None,
               light_from=(1,1,1),
@@ -1248,7 +1248,7 @@ def write_poscar(poscar,sd_list=None,outfile=None,overwrite=False):
         - poscar   : Output of `export_poscar`,`join_poscars` etc.
         - sd_list  : A list ['T T T','F F F',...] strings to turn on selective dynamics at required sites. len(sd_list)==len(sites) should hold.
         - outfile  : str,file path to write on.
-        - overwrite: bool, if file already exists, overwrite=True chnages it.
+        - overwrite: bool, if file already exists, overwrite=True changes it.
     """
     out_str = poscar.SYSTEM + "  # Created by Pivotpy"
     scale = np.linalg.norm(poscar.basis[0])
@@ -1277,3 +1277,67 @@ def write_poscar(poscar,sd_list=None,outfile=None,overwrite=False):
             return print(f"{outfile!r} exists, can not overwrite, \nuse overwrite=True if you want to chnage.")
     # Return string anyway
     return out_str
+
+
+# Cell
+def scale_poscar(path_poscar,scale=(1,1,1),tol=1e-2):
+    """Create larger/smaller cell from a given POSCAR.
+    - **Parameters**
+        - path_poscar: Path/to/POSCAR or `poscar` data object.
+        - scale: Tuple of three values along (a,b,c) vectors. int or float values. If number of sites are not as expected in output, tweak `tol` instead of `scale`. You can put a minus sign with `tol` to get more sites and plus sign to reduce sites.
+        - tol: It is used such that site positions are blow `1 - tol`, as 1 belongs to next cell, not previous one.
+    > Tip: scale = (2,2,2) enlarges a cell and next operation of (1/2,1/2,1/2) should bring original cell back.
+    """
+    if isinstance(path_poscar,str):
+        poscar = export_poscar(path_poscar)
+    else:
+        poscar = path_poscar
+
+    ii, jj, kk = np.ceil(scale).astype(int) # Need int for joining.
+    _orig_poscar = poscar # Assign base for x
+    if ii > 1:
+        for i in range(1,ii): # 1 poscar is already there.
+            poscar = join_poscars(_orig_poscar,poscar,direction='x',tol=tol)
+        _orig_poscar = poscar # Reassign base for y
+
+    if jj > 1:
+        for i in range(1,jj):
+            poscar = join_poscars(_orig_poscar,poscar,direction='y',tol=tol)
+        _orig_poscar = poscar # Reassign base for z
+
+    if kk > 1:
+        for i in range(1,kk):
+            poscar = join_poscars(_orig_poscar,poscar,direction='z',tol=tol)
+
+    new_poscar = poscar.to_dict() # Update in it
+
+    # Get clip fraction
+    fi, fj, fk = scale[0]/ii, scale[1]/jj, scale[2]/kk
+
+    # Clip at end according to scale, change length of basis as fractions.
+    pos   = poscar.positions.copy()/np.array([fi,fj,fk]) # rescale for clip
+    basis = poscar.basis.copy()
+    for i,f in zip(range(3),[fi,fj,fk]):
+        basis[i] = f*basis[i] # Basis rescale for clip
+
+    new_poscar['basis']      = basis
+    new_poscar['volume']     = np.linalg.det(basis)
+    new_poscar['rec_basis']  = np.linalg.inv(basis).T
+
+    uelems = poscar.unique.to_dict()
+    # Minus in below for block is because if we have 0-2 then 1 belongs to next cell not original.
+    positions,drop = [],0
+    for key,value in uelems.items():
+        i0 = np.where(pos[value][:,0] <= 1 - tol)
+        i1 = np.where(pos[value][:,1] <= 1 - tol)
+        i2 = np.where(pos[value][:,2] <= 1 - tol)
+        all_i = np.intersect1d(np.intersect1d(i0,i1),i2)
+        uelems[key] = range(drop,drop + len(all_i))
+        positions = [*positions,*pos[value][all_i]] # Pick positions
+        drop = len(all_i) #Update for next element
+
+    labels = ["{} {}".format(k,_v - vs[0] + 1) for k,vs in uelems.items() for _v in vs]
+    new_poscar['labels']    = labels
+    new_poscar['unique']    = uelems
+    new_poscar['positions'] = np.array(positions)
+    return vp.Dict2Data(new_poscar)
