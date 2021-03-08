@@ -462,7 +462,9 @@ def click_data(sel_en_w,fermi_w,data_dict,fig):
             if data_dict['so_max'] and data_dict['so_min']:
                 data_dict['Δ_SO'] = np.round(data_dict['so_max'] - data_dict['so_min'], 4)
             # Cycle energy types on graph click and chnage table as well unless it is None.
-            if sel_en_w.value != 'None': # Avoid while in DOS and in general too
+            if sel_en_w.value == 'CBM': # Avoid accidental SO calculation
+                sel_en_w.value = 'None'
+            if sel_en_w.value != 'None': # Keep usually as None
                 _this = sel_en_w.options.index(sel_en_w.value)
                 _next = _this + 1 if _this < len(sel_en_w.options) - 1 else 0
                 sel_en_w.value = sel_en_w.options[_next] #To simulate as it changes
