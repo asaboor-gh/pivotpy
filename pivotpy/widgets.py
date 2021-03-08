@@ -440,18 +440,22 @@ def get_input_gui(rgb=True,sys_info=None,html_style=None,height=400):
 
 # Cell
 #mouse event handler
-def click_data(sel_en_w,fermi_w,data_dict,fig,graph_button):
+def click_data(sel_en_w,fermi_w,data_dict,fig):
     def handle_click(trace, points, state):
         if(points.ys!=[]):
             e_fermi = (float(fermi_w.value) if fermi_w.value else 0)
-            val = np.round(float(points.ys[0]) + e_fermi,4)
+            val = np.round(float(points.ys[0]) + e_fermi,4) #exact value
             for key in sel_en_w.options:
                 if key in sel_en_w.value and key != 'None':
                     data_dict[key] = val # Assign value back
                 if 'Fermi' in sel_en_w.value:
                     fermi_w.value = str(val) # change fermi
-                    fig.update_traces(marker=dict(size=100)) #need update after chnage of Fermi
-                    graph_button.description = '↺ Update Graph'
+            # Shift Graph for Fermi value
+            if 'Fermi' in sel_en_w.value:
+                with fig.batch_animate():
+                    for trace in fig.data: # SHift graph as Fermi Changes
+                        trace.y = [y - data_dict['Fermi'] + e_fermi for y in trace.y]
+
             # Update Fermi, SO etc
             if data_dict['VBM'] and data_dict['CBM']:
                 data_dict['E_gap'] = np.round(data_dict['CBM'] - data_dict['VBM'], 4)
@@ -469,7 +473,7 @@ def click_data(sel_en_w,fermi_w,data_dict,fig,graph_button):
 
 # Display Table
 def tabulate_data(data_dict):
-    new_dict = {k:v for k,v in data_dict.items() if v and k not in ['sys','so_max','so_min','Fermi']}
+    new_dict = {k:v for k,v in data_dict.items() if v != '' and k not in ['sys','so_max','so_min','Fermi']}
     ls = list(new_dict.keys())
     ds = list(new_dict.values())
 
@@ -610,7 +614,7 @@ class VasprunApp:
                         }
 
         b_out = Layout(width='30%')
-        en_options = ['VBM','CBM','so_max','so_min','Fermi','None']
+        en_options = ['Fermi','VBM','CBM','so_max','so_min','None']
         self.dds   = {'band_dos': Dropdown(options=['Bands','DOS'],value='Bands',
                                                 layout= Layout(width='80px')),
                       'en_type' : Dropdown(options = en_options,value='None',layout=b_out),
@@ -725,7 +729,7 @@ class VasprunApp:
 
     @output.capture()
     def show(self):
-        intro_html = ipw.HTML("<h2>Pivotpy</h2><p>Filter files here and switch tab to Graphs. You can create cache ahead of time to load quickly while working. If anything does not seem to work, see the error in STD(out/err) tab. For large files, do `Export-VR(or Vasprun)` in Powershell to access fast.</p><marquee style='color:red'>Pivotpy GUI based on ipywidgets!</marquee>")
+        intro_html = ipw.HTML("<h2>Pivotpy</h2><p>Filter files here and switch tab to Graphs. You can create cache ahead of time to load quickly while working. If anything does not seem to work, see the error in STD(out/err) tab. For large files, do `Export-VR` in Powershell to access fast.</p><marquee style='color:red'>Pivotpy GUI based on ipywidgets!</marquee>")
         header_box = HBox([intro_html,
                            Label('Theme:',layout=Layout(width='80px')),
                            self.dds['theme']
@@ -818,6 +822,7 @@ class VasprunApp:
         self.tab.selected_index = 1
         if self.dds['band_dos'].value=='DOS':
             tmp_ui,__ = get_input_gui(rgb=False,sys_info=sys_info,height=None)
+            self.dds['en_type'].value = 'None' #Avoid data ,modification
         else:
             tmp_ui,__ = get_input_gui(rgb=True,sys_info=sys_info,height=None)
 
@@ -890,7 +895,7 @@ class VasprunApp:
     @output.capture(clear_output=True,wait=True)
     def __expand_fig(self,btn):
         self.tab.selected_index = 2
-        self.dds['en_type'] = 'None'
+        self.dds['en_type'] = 'None' # To avoid accidental clicks
         display(self.fig)
     # Garph
     @output.capture(clear_output=True,wait=True)
@@ -939,6 +944,7 @@ class VasprunApp:
                 argdict.update({'xt_labels':([v for v in ktickv_str.split(',')] if ktickv_str else ['A','B'])})
                 fig_data = ip.plotly_rgb_lines(path_evr=self.data,**argdict)
             else:
+                self.dds['en_type'].value = 'None' # Avoid random clicks
                 fig_data = ip.plotly_dos_lines(path_evr=self.data,**argdict)
 
             self.tab.selected_index = 1
@@ -948,7 +954,7 @@ class VasprunApp:
                 fig_data.layout.template = self.dds['style'].value # before layout to avoid color blink
                 self.fig.layout = fig_data.layout
 
-            click_data(self.dds['en_type'],self.texts['fermi'],self.result,self.fig,self.buttons['load_graph'])
+            click_data(self.dds['en_type'],self.texts['fermi'],self.result,self.fig)
             self.buttons['load_graph'].tooltip = "Current System\n{!r}".format(self.data.sys_info)
 
     @output.capture(clear_output=True,wait=True)
