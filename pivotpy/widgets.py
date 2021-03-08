@@ -440,7 +440,7 @@ def get_input_gui(rgb=True,sys_info=None,html_style=None,height=400):
 
 # Cell
 #mouse event handler
-def click_data(sel_en_w,fermi_w,data_dict,fig):
+def click_data(sel_en_w,fermi_w,data_dict,fig,graph_button):
     def handle_click(trace, points, state):
         if(points.ys!=[]):
             e_fermi = (float(fermi_w.value) if fermi_w.value else 0)
@@ -450,6 +450,8 @@ def click_data(sel_en_w,fermi_w,data_dict,fig):
                     data_dict[key] = val # Assign value back
                 if 'Fermi' in sel_en_w.value:
                     fermi_w.value = str(val) # change fermi
+                    fig.update_traces(marker=dict(size=100)) #need update after chnage of Fermi
+                    graph_button.description = '↺ Update Graph'
             # Update Fermi, SO etc
             if data_dict['VBM'] and data_dict['CBM']:
                 data_dict['E_gap'] = np.round(data_dict['CBM'] - data_dict['VBM'], 4)
@@ -608,7 +610,7 @@ class VasprunApp:
                         }
 
         b_out = Layout(width='30%')
-        en_options = ['Fermi','VBM','CBM','so_max','so_min','None']
+        en_options = ['VBM','CBM','so_max','so_min','Fermi','None']
         self.dds   = {'band_dos': Dropdown(options=['Bands','DOS'],value='Bands',
                                                 layout= Layout(width='80px')),
                       'en_type' : Dropdown(options = en_options,value='None',layout=b_out),
@@ -946,7 +948,7 @@ class VasprunApp:
                 fig_data.layout.template = self.dds['style'].value # before layout to avoid color blink
                 self.fig.layout = fig_data.layout
 
-            click_data(self.dds['en_type'],self.texts['fermi'],self.result,self.fig)
+            click_data(self.dds['en_type'],self.texts['fermi'],self.result,self.fig,self.buttons['load_graph'])
             self.buttons['load_graph'].tooltip = "Current System\n{!r}".format(self.data.sys_info)
 
     @output.capture(clear_output=True,wait=True)
