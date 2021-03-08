@@ -87,8 +87,8 @@ def css_style(colors_dict):
         border-radius: 0px !important;
     }}
     .output {{
-        color: {out_fg} !important;
-        background-color:inherit !important;
+        color: {text} !important;
+        background-color: inherit !important;
     }}
     .widget-tab {{
         background-color: {tab_bg} !important;
@@ -145,7 +145,6 @@ dark_colors = {
  'btn_bg': '#3D4450',
  'tab_bg': '#21252B',
  'tab_fg': '#61AFEF',
- 'out_fg': '#ABB2BF',
  'tab_shadow': '#282C34',
  'box_bg': '#21252B',
  'box_border': '#282C34',
@@ -170,7 +169,6 @@ light_colors = {
     'btn_bg'      : '#c3d4d4',
     'tab_bg'      : '#F3F3F3',
     'tab_fg'      : 'black',
-    'out_fg'      : 'black',
     'tab_shadow'  : 'gray',
     'box_bg'      : '#F3F3F3',
     'box_border'  : 'whitesmoke',
@@ -304,7 +302,7 @@ def get_input_gui(rgb=True,sys_info=None,html_style=None,height=400):
     label_w = ipw.Text(layout=layout)
     rgb_w   = ipw.Dropdown(options={'Red':0,'Green':1,'Blue':2},value=0,layout=layout)
     rgbl_w  = Label('Color: ')
-    click_w= ipw.Button(layout=Layout(width='max-content'),icon='fa-hand-o-up')
+    click_w= ipw.Button(layout=Layout(width='max-content'),icon='fa-hand-o-up',tooltip='Read Projection Input')
     # Uniform label widths
     l_width = Layout(width='20%')
     rgbl_w.layout=l_width
@@ -398,6 +396,7 @@ def get_input_gui(rgb=True,sys_info=None,html_style=None,height=400):
         sleep(1)
         click_w.description = "Read Input"
         click_w.icon = 'fa-hand-o-up'
+        click_w.tooltip = "Current Input\n{!r}".format(vp.Dict2Data(_input_))
 
     click_w.on_click(read_lines)
 
@@ -445,57 +444,52 @@ def click_data(sel_en_w,fermi_w,data_dict,fig):
     def handle_click(trace, points, state):
         if(points.ys!=[]):
             e_fermi = (float(fermi_w.value) if fermi_w.value else 0)
-            val=np.round(float(points.ys[0]) + e_fermi,4)
+            val = np.round(float(points.ys[0]) + e_fermi,4)
             for key in sel_en_w.options:
                 if key in sel_en_w.value and key != 'None':
                     data_dict[key] = val # Assign value back
                 if 'Fermi' in sel_en_w.value:
                     fermi_w.value = str(val) # change fermi
-            # Cycle energy types on graph click and chnage table as well.
-            _this = sel_en_w.options.index(sel_en_w.value)
-            _next = _this + 1 if _this < len(sel_en_w.options) - 1 else 0
-            sel_en_w.value = sel_en_w.options[_next] #To simulate as it changes
+            # Update Fermi, SO etc
+            if data_dict['VBM'] and data_dict['CBM']:
+                data_dict['E_gap'] = np.round(data_dict['CBM'] - data_dict['VBM'], 4)
+            if data_dict['so_max'] and data_dict['so_min']:
+                data_dict['Δ_SO'] = np.round(data_dict['so_max'] - data_dict['so_min'], 4)
+            # Cycle energy types on graph click and chnage table as well unless it is None.
+            if sel_en_w.value != 'None': # Avoid while in DOS and in general too
+                _this = sel_en_w.options.index(sel_en_w.value)
+                _next = _this + 1 if _this < len(sel_en_w.options) - 1 else 0
+                sel_en_w.value = sel_en_w.options[_next] #To simulate as it changes
 
     for i in range(len(fig.data)):
         trace=fig.data[i]
         trace.on_click(handle_click)
+
 # Display Table
 def tabulate_data(data_dict):
-    ls,ds,ud = [],[],{}
-    for k,v in data_dict.items():
-        if v and k not in ['Fermi','E_gap','Δ_SO','sys']:
-            if k not in ['so_max','so_min']: # No need to show in table, but difference required.
-                ls.append(k)
-                ds.append(v)
-        if v and 'VBM' in k and data_dict['CBM']:
-            ls.append('E_gap')
-            ds.append(np.round(data_dict['CBM']-v,5))
-            ud.update({'E_gap':ds[-1]})
-        if v and 'so_min' in k and data_dict['so_max']:
-            ls.append('Δ_SO')
-            ds.append(np.round(data_dict['so_max']-v,5))
-            ud.update({'Δ_SO':ds[-1]})
-    data_dict = {**data_dict,**ud}
+    new_dict = {k:v for k,v in data_dict.items() if v and k not in ['sys','so_max','so_min','Fermi']}
+    ls = list(new_dict.keys())
+    ds = list(new_dict.values())
+
     if len(ls) % 2 != 0:
         ls.append('')
         ds.append('')
+
     tab_data = [ls[:int(len(ls)/2)],ds[:int(len(ls)/2)],ls[int(len(ls)/2):],ds[int(len(ls)/2):]]
 
     htm_string = """<style>table {border-collapse: collapse !important;
       min-width: 100% !important;
-      border: 1px solid gray !important;
       margin: 1px 1px 1px 1px !important;
       font-size: small !important;
       font-family: "Times New Roman", "Times", "serif" !important;}
       th, td {text-align: center !important;
-      border: 1px solid gray !important;
       padding: 0px 8px 0px 8px !important;}
-      tr {width: 100% !important;}
+      tr { width: 100% !important;}
       tr:nth-child(odd) {font-weight:bold !important;}
       </style>"""
     htm_string += "<table><tr>{}</tr></table>".format( '</tr><tr>'.join(
                    '<td>{}</td>'.format('</td><td>'.join(str(_) for _ in row)) for row in tab_data) )
-    return htm_string, data_dict
+    return htm_string
 
 # Send Data
 def save_data(out_w1,data_dict):
@@ -604,13 +598,13 @@ class VasprunApp:
         self.theme_colors = light_colors.copy() # Avoid Modification
 
         l_btn = ipw.Layout(width='max-content')
-        self.buttons = {'load_data' : Button(description='Load Data',layout=l_btn),
-                        'load_graph': Button(description='Load Graph',layout=l_btn,icon='fa-spiner'),
+        self.buttons = {'load_data' : Button(description='Load Data',layout=l_btn,tooltip='Load and Cache Data'),
+                        'load_graph': Button(description='Load Graph',layout=l_btn,tooltip='Create Graph'),
                         'confirm'   : Button(description='Confirm Delete',layout=l_btn,icon='trash'),
-                        'summary'   : Button(description='Project Summary',layout=l_btn),
-                        'expand'    : Button(icon = "fa-expand",layout=l_btn),
-                        'toggle'    : Button(description='RGB',layout=l_btn,icon='toggle-on'),
-                        'save_fig'  : Button(description='Save Fig',icon='download',layout=l_btn)
+                        'summary'   : Button(description='Project Summary',layout=l_btn,tootltip='Make DataFrame'),
+                        'expand'    : Button(icon = "fa-expand",layout=l_btn,tooltip='Expand Fig'),
+                        'toggle'    : Button(description='RGB',layout=l_btn,icon='toggle-on',tooltip='Toggle Colors'),
+                        'save_fig'  : Button(description='Save Fig',icon='download',layout=l_btn,tooltip='')
                         }
 
         b_out = Layout(width='30%')
@@ -720,7 +714,7 @@ class VasprunApp:
                         HBox([Label('X, Y, Title'),self.texts['xyt']]).add_class('borderless'),
                         HBox([Label('Options:'),self.buttons['save_fig'],self.buttons['toggle']]),
                         cache_box,
-                        summary_box],layout=Layout(max_width='40%')
+                        summary_box],layout=Layout(max_width='40%'),
                         ).add_class('marginless').add_class('borderless')
         self.fig_gui.children = (left_box,right_box)
         return self.fig_gui # Return for use in show
@@ -831,15 +825,15 @@ class VasprunApp:
         ipw.dlink((__,'value'),(self.input_dd,'value'))
         self.buttons['load_data'].description='Load Data'
         self.__path = self.files_dd.value # Update in __on_load or graph to make sure data loads once
+        self.buttons['load_data'].tooltip = "Current System\n{!r}".format(self.data.sys_info)
 
     def __update_input(self,change):
         self.input = json.loads(self.input_dd.value)
 
     @output.capture(clear_output=True,wait=True)
     def __update_table(self,change):
-        htm_string,data_dict = tabulate_data(self.result)
-        self.htmls['table'].value = htm_string
-        save_data(self.files_dd,data_dict) # save data as well.
+        self.htmls['table'].value = tabulate_data(self.result)
+        save_data(self.files_dd,self.result) # save data as well.
 
     @output.capture(clear_output=True,wait=True)
     def __df_out(self,btn):
@@ -884,9 +878,12 @@ class VasprunApp:
     def __save_connected(self,btn):
         s_p = os.path.split(self.files_dd.value)[0]
         filename = os.path.join(s_p,'ConnectedFig.html')
+        self.buttons['save_fig'].description = 'Saving...'
         views = VBox([self.htmls['theme'],self.fig,self.htmls['table']],
                 layout=Layout(width='500px',height='490px')).add_class('borderless')
         embed_minimal_html(filename, views=[views], state=dependency_state([views]))
+        self.buttons['save_fig'].description = 'Save Fig'
+        self.buttons['save_fig'].tooltip = 'Recently Saved\n{!r}'.format(filename)
 
     @output.capture(clear_output=True,wait=True)
     def __expand_fig(self,btn):
@@ -900,7 +897,7 @@ class VasprunApp:
         if path:
             self.tab.selected_index = 2
             self.fig.data = []
-            if self.data and path == self.__path: # Same load and data exists, heps in fast
+            if self.data and path == self.__path: # Same load and data exists, heeps in fast
                 print('Data already loaded')
             else:
                 try:
@@ -950,14 +947,16 @@ class VasprunApp:
                 self.fig.layout = fig_data.layout
 
             click_data(self.dds['en_type'],self.texts['fermi'],self.result,self.fig)
+            self.buttons['load_graph'].tooltip = "Current System\n{!r}".format(self.data.sys_info)
 
     @output.capture(clear_output=True,wait=True)
     def __clear_cache(self):
         self.tab.selected_index = 2
         _dir = os.path.split(self.files_dd.value)[0]
         if 'Table' in self.dds['cache'].value:
-            for k in ['VBM','CBM','so_max','so_min']: # Avoid deleting V,a,b,Fermi
-                self.result[k] = ''
+            for k in self.result.keys(): # Avoid deleting V,a,b,Fermi
+                if k not in ['sys','V','a','b','c','Fermi']:
+                    self.result[k] = ''
         if 'PWD' in self.dds['cache'].value:
             _files = [os.path.join(_dir,f) for f in ['sys_info.pickle','vasprun.pickle']]
             _ = [[print("Deleting", _file),os.remove(_file)] for _file in _files if os.path.isfile(_file)]
