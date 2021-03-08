@@ -441,19 +441,21 @@ def get_input_gui(rgb=True,sys_info=None,html_style=None,height=400):
 
 # Cell
 #mouse event handler
-def click_data(sel_en_w,fermi_w,tabel_w,fig):
+def click_data(sel_en_w,fermi_w,data_dict,fig):
     def handle_click(trace, points, state):
         if(points.ys!=[]):
-            data_dict = json.loads(tabel_w.value)
             e_fermi = (float(fermi_w.value) if fermi_w.value else 0)
-            val=np.round(float(points.ys[0])+e_fermi,4)
+            val=np.round(float(points.ys[0]) + e_fermi,4)
             for key in sel_en_w.options:
                 if key in sel_en_w.value and key != 'None':
                     data_dict[key] = val # Assign value back
                 if 'Fermi' in sel_en_w.value:
                     fermi_w.value = str(val) # change fermi
-            tabel_w.value = json.dumps(data_dict,indent=1)
-            #data_send(None) #send data to Table
+            # Cycle energy types on graph click and chnage table as well.
+            _this = sel_en_w.options.index(sel_en_w.value)
+            _next = _this + 1 if _this < len(sel_en_w.options) - 1 else 0
+            sel_en_w.value = sel_en_w.options[_next] #To simulate as it changes
+
     for i in range(len(fig.data)):
         trace=fig.data[i]
         trace.on_click(handle_click)
@@ -651,6 +653,7 @@ class VasprunApp:
         self.buttons['save_fig'].on_click(self.__save_connected)
         self.buttons['expand'].on_click(self.__expand_fig)
         self.buttons['load_graph'].on_click(self.__update_graph)
+        self.dds['en_type'].observe(self.__update_table,"value") # This works from click_data
 
 
     def __figure_tab(self,change):
@@ -752,8 +755,6 @@ class VasprunApp:
         self.dds['style'].value = 'plotly' # to trigger first callback on graph.
         return self.tab
 
-
-    @output.capture(clear_output=True,wait=True)
     def __update_theme(self,change):
         if self.dds['theme'].value == 'Dark':
             self.htmls['theme'].value = css_style(dark_colors)
@@ -895,9 +896,9 @@ class VasprunApp:
     # Garph
     @output.capture(clear_output=True,wait=True)
     def __update_graph(self,btn):
-        self.tab.selected_index = 2
         path = self.files_dd.value
         if path:
+            self.tab.selected_index = 2
             self.fig.data = []
             if self.data and path == self.__path: # Same load and data exists, heps in fast
                 print('Data already loaded')
@@ -948,7 +949,7 @@ class VasprunApp:
                 fig_data.layout.template = self.dds['style'].value # before layout to avoid color blink
                 self.fig.layout = fig_data.layout
 
-            click_data(self.dds['en_type'],self.texts['fermi'],self.htmls['table'],self.fig)
+            click_data(self.dds['en_type'],self.texts['fermi'],self.result,self.fig)
 
     @output.capture(clear_output=True,wait=True)
     def __clear_cache(self):
