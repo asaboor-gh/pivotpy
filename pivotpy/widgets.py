@@ -287,6 +287,10 @@ class InputGui:
         - **Parmeters**
             - html_style : None,Output of `css_style`.
             - height     : Height of Grid box, Can set to None for auto-resizing.
+            - sys_info   : `export_vasprun().sys_info`. Can change later using `self.update_options` mthod.
+        - **Output Parameters**
+            - output: Dictionary that contains kwargs for plot functions.
+            - html  : A widget which can be used to bserve change in output, used in `VasprunApp`.
         """
         html_style = html_style if html_style else '' # Not self
         self.sys_info = sys_info if sys_info else vp.Dict2Data({'fields':['s'],
@@ -296,18 +300,9 @@ class InputGui:
         layout = Layout(width='30%')
         l_width = Layout(width='20%')
         self.html = ipw.HTML() # For Display in Big App as well. Very important
-        orbs_opts = {str(i)+': '+item:str(i) for i,item in enumerate(self.sys_info.fields)}
-        if not 'p' in self.sys_info.fields:
-            orbs_opts = {**orbs_opts,'1-3: p':'1-3','4-8: d':'4-8'}
-        if not 'f' in self.sys_info.fields:
-            orbs_opts = {**orbs_opts,'9-15: f':'9-15'}
-        inds = self.sys_info.ElemIndex
-        ions_opts = {"{}-{}: {}".format(inds[i],inds[i+1]-1,item):"{}-{}".format(
-                                inds[i],inds[i+1]-1) for i,item in enumerate(self.sys_info.ElemName)}
-        ions_opts = {**ions_opts,'All':'{}-{}'.format(inds[0],inds[-1]-1)}
         self.dds = {
-            'elms': Dropdown(options=ions_opts,layout=layout),
-            'orbs': Dropdown(options=orbs_opts,layout=layout),
+            'elms': Dropdown(layout=layout),
+            'orbs': Dropdown(layout=layout),
             'rgb' : Dropdown(options={'Red':0,'Green':1,'Blue':2},value=0,layout=layout)
             }
         self.texts = {
@@ -315,9 +310,10 @@ class InputGui:
             'elms' : Text(layout=layout),
             'label': Text(layout=layout)
             }
+        self.update_options(self.sys_info) # In start if given
+
         self.box = VBox([ipw.HTML(html_style),
-                HBox([ipw.HTML("<h3>Projections</h3><p>"),self.html
-                    ]).add_class('borderless').add_class('marginless'),
+                self.html,
                 HBox([Label('Color: ',layout=l_width), self.dds['rgb'],
                       Label('Label: ',layout=l_width),self.texts['label']
                     ]).add_class('borderless').add_class('marginless'),
@@ -334,6 +330,20 @@ class InputGui:
         self.dds['rgb'].observe(self.__see_input,'value')
         self.dds['orbs'].observe(self.__forward_input,'value')
         self.dds['elms'].observe(self.__forward_input,'value')
+
+    def update_options(self,sys_info=None):
+        if sys_info:
+            orbs_opts = {str(i)+': '+item:str(i) for i,item in enumerate(sys_info.fields)}
+            if len(sys_info.fields) == 9:
+                orbs_opts = {**orbs_opts,'1-3: p':'1-3','4-8: d':'4-8'}
+            if len(sys_info.fields) == 16:
+                orbs_opts = {**orbs_opts,'9-15: f':'9-15'}
+            inds = sys_info.ElemIndex
+            ions_opts = {"{}-{}: {}".format(inds[i],inds[i+1]-1,item):"{}-{}".format(
+                                    inds[i],inds[i+1]-1) for i,item in enumerate(sys_info.ElemName)}
+            self.dds['elms'].options = {**ions_opts,'All':'{}-{}'.format(inds[0],inds[-1]-1)}
+            self.dds['orbs'].options = orbs_opts
+            self.sys_info = sys_info # Update it as well.
 
     def __read_pro(self,btn):
         def read(cell_value):
@@ -372,11 +382,12 @@ class InputGui:
 
 # Cell
 #mouse event handler
-def click_data(sel_en_w,fermi_w,data_dict,fig):
+def click_data(sel_en_w,fermi_w,data_dict,fig,bd_w):
     def handle_click(trace, points, state):
         if(points.ys!=[]):
             e_fermi = (float(fermi_w.value) if fermi_w.value else 0)
-            val = np.round(float(points.ys[0]) + e_fermi,4) #exact value
+            v_clicked = points.ys[0] if bd_w.value=='Bands' else points.xs[0]
+            val = np.round(float(v_clicked) + e_fermi,4) #exact value
             for key in sel_en_w.options:
                 if key in sel_en_w.value and key != 'None':
                     data_dict[key] = val # Assign value back
@@ -385,8 +396,11 @@ def click_data(sel_en_w,fermi_w,data_dict,fig):
             # Shift Graph for Fermi value
             if 'Fermi' in sel_en_w.value:
                 with fig.batch_animate():
-                    for trace in fig.data: # SHift graph as Fermi Changes
-                        trace.y = [y - data_dict['Fermi'] + e_fermi for y in trace.y]
+                    for trace in fig.data: # Shift graph as Fermi Changes
+                        if bd_w.value == 'Bands':
+                            trace.y = [y - data_dict['Fermi'] + e_fermi for y in trace.y]
+                        else:
+                            trace.x = [x - data_dict['Fermi'] + e_fermi for x in trace.x]
 
             # Update Fermi, SO etc
             if data_dict['VBM'] and data_dict['CBM']:
@@ -401,8 +415,7 @@ def click_data(sel_en_w,fermi_w,data_dict,fig):
                 _next = _this + 1 if _this < len(sel_en_w.options) - 1 else 0
                 sel_en_w.value = sel_en_w.options[_next] #To simulate as it changes
 
-    for i in range(len(fig.data)):
-        trace=fig.data[i]
+    for trace in fig.data:
         trace.on_click(handle_click)
 
 # Display Table
@@ -532,7 +545,7 @@ class VasprunApp:
                      'VBM':'','CBM':'','so_max':'','so_min':''} # Table widget value
 
         self.files_gui,self.files_dd = get_files_gui(height=300)
-        self.imported = InputGui(height=None)
+        self.InGui  = InputGui(height=None)
         self.input  = {'E_Fermi':0} # Dictionary for input
         self.fig_gui = HBox() # Middle Tab
         self.theme_colors = light_colors.copy() # Avoid Modification
@@ -572,9 +585,14 @@ class VasprunApp:
                       'table': ipw.HTML()}
 
         # Observing
-        self.imported.html.observe(self.__update_input,"value")
+        self.InGui.html.observe(self.__update_input,"value")
         self.dds['band_dos'].observe(self.__update_input,"value")
         self.texts['fermi'].observe(self.__update_input,"value")
+        self.texts['kjoin'].observe(self.__update_input,"value")
+        self.texts['kticks'].observe(self.__update_xyt,"value")
+        self.texts['ktickv'].observe(self.__update_xyt,"value")
+        self.texts['elim'].observe(self.__update_xyt,"value")
+        self.texts['xyt'].observe(self.__update_xyt)
         self.dds['theme'].observe(self.__update_theme,"value")
         self.dds['style'].observe(self.__update_plot_style,"value")
         self.files_dd.observe(self.__load_previous,"value")
@@ -584,7 +602,6 @@ class VasprunApp:
         self.buttons['load_data'].observe(self.__update_table,'value')
         self.buttons['summary'].on_click(self.__df_out)
         self.buttons['confirm'].on_click(self.__deleter)
-        self.texts['xyt'].observe(self.__update_xyt)
         self.buttons['toggle'].on_click(self.__tog_b)
         self.buttons['save_fig'].on_click(self.__save_connected)
         self.buttons['expand'].on_click(self.__expand_fig)
@@ -611,7 +628,7 @@ class VasprunApp:
                     ]).add_class('marginless').add_class('borderless'),
                     self.buttons['load_graph']
                     ],layout=Layout(width='100%')).add_class('marginless')
-        in_box = VBox([self.imported.box,#self.input_gui
+        in_box = VBox([self.InGui.box,
                     ]).add_class('marginless').add_class('borderless')
         top_right = HBox([self.buttons['load_graph'],
                           Label('Style:'),
@@ -626,7 +643,8 @@ class VasprunApp:
 
 
         if 'Bands' in self.dds['band_dos'].value:
-            in_box.children = [self.imported.box,#self.input_gui,
+            in_box.children = [Label('---------- Projections ----------'),self.InGui.box,
+                               Label('---- Other Arguments/Options ----'),
                       VBox([HBox([Label('Ticks At: ',layout=l_out),
                                   self.texts['kticks'],
                                   Label('Labels: ',layout=l_out),
@@ -639,15 +657,18 @@ class VasprunApp:
                            ]).add_class('marginless').add_class('borderless')
                       ]).add_class('marginless')]
             right_box.children = [top_right,fig_box,points_box]
+            self.buttons['toggle'].description = 'RGB'
         else:
-            in_box.children = [self.imported.box,#self.input_gui,
+            in_box.children = [Label('---------- Projections ----------'),self.InGui.box,
+                               Label('---- Other Arguments/Options ----'),
                       HBox([Label('E Range:',layout=l_out),
                       self.texts['elim'],
                       Label('E-Fermi:',layout=l_out),
                       self.texts['fermi']
                       ]).add_class('marginless')]
-            right_box.children = [top_right,fig_box]
+            right_box.children = [top_right,fig_box,points_box]
             self.dds['en_type'].value = 'None' # no scatter collection in DOS.
+            self.buttons['toggle'].description = 'Fill'
 
 
         left_box = VBox([upper_box,
@@ -658,6 +679,7 @@ class VasprunApp:
                         self.htmls['table']],layout=Layout(max_width='40%'),
                         ).add_class('marginless').add_class('borderless')
         self.fig_gui.children = (left_box,right_box)
+        self.buttons['load_graph'].icon = 'fa-refresh'
         return self.fig_gui # Return for use in show
 
 
@@ -756,40 +778,34 @@ class VasprunApp:
         print('Done')
 
         self.tab.selected_index = 1
-        # Revamp input dropdowns on load  =====================================================
-        orbs_opts = {str(i)+': '+item:str(i) for i,item in enumerate(sys_info.fields)}
-        if not 'p' in sys_info.fields:
-            orbs_opts = {**orbs_opts,'1-3: p':'1-3','4-8: d':'4-8'}
-        if not 'f' in sys_info.fields:
-            orbs_opts = {**orbs_opts,'9-15: f':'9-15'}
-        self.imported.dds['orbs'].options = orbs_opts
-        inds = sys_info.ElemIndex
-        ions_opts = {"{}-{}: {}".format(inds[i],inds[i+1]-1,item):"{}-{}".format(
-                                inds[i],inds[i+1]-1) for i,item in enumerate(sys_info.ElemName)}
-        self.imported.dds['elms'].options = {**ions_opts,'All':'{}-{}'.format(inds[0],inds[-1]-1)}
-        #========================================================================================
+        # Revamp input dropdowns on load  ==========
+        self.InGui.update_options(sys_info=sys_info) #Upadate elements/orbs/labels
+        #===========================================
         self.buttons['load_data'].description='Load Data'
         self.__path = self.files_dd.value # Update in __on_load or graph to make sure data loads once
         self.buttons['load_data'].tooltip = "Current System\n{!r}".format(self.data.sys_info)
+        self.buttons['load_graph'].icon = 'fa-refresh'
+
     @output.capture(clear_output=True,wait=True)
     def __update_input(self,change):
-        self.input.update(self.imported.output)
+        self.input.update(self.InGui.output)
         elim_str  = self.texts['elim'].value
         fermi_str = self.texts['fermi'].value
         self.input['E_Fermi'] = float(fermi_str) if fermi_str else 0 # Change now, keep zero else must.
-        self.input['elim'] = [float(v) for v in elim_str.split(',')] if elim_str else None
+        self.input['elim'] = [float(v) for v in elim_str.split(',')][:2] if elim_str else None
         if self.dds['band_dos'].value == 'Bands':
             kjoin_str  = self.texts['kjoin'].value
             kticks_str = self.texts['kticks'].value
             ktickv_str = self.texts['ktickv'].value
-            self.input['joinPathAt'] = [int(v) for v in kjoin_str.split(',')] if kjoin_str else None
-            self.input['xt_indices'] = [int(v) for v in kticks_str.split(',')] if kticks_str else [0,-1]
-            self.input['xt_labels'] = [v for v in ktickv_str.split(',')] if ktickv_str else ['A','B']
+            self.input['kseg_inds'] = [int(v) for v in kjoin_str.split(',')] if kjoin_str else None
+            self.input['ktick_inds'] = [int(v) for v in kticks_str.split(',')] if kticks_str else [0,-1]
+            self.input['ktick_vals'] = [v for v in ktickv_str.split(',')] if ktickv_str else ['A','B']
         else:
-            self.input = {k:v for k,v in self.input.items() if k not in ['xt_indices','xt_labels','joinPathAt']}
-
-        #self.input_dd.value = json.dumps(self.input) #Update at last
-        self.imported.output = self.input
+            self.input = {k:v for k,v in self.input.items() if k not in ['ktick_inds','ktick_vals','kseg_inds']}
+        #Update at last
+        self.InGui.output = self.input
+        self.buttons['load_graph'].tooltip = "Current Input\n{!r}".format(vp.Dict2Data(self.input))
+        self.buttons['load_graph'].icon = 'fa-refresh'
 
     @output.capture(clear_output=True,wait=True)
     def __update_table(self,change):
@@ -831,6 +847,17 @@ class VasprunApp:
                 self.fig.update_layout(title=xyt_text[2])
             except: pass #do nothing else
 
+        if self.texts['ktickv'].value or self.texts['kticks'].value or self.texts['elim'].value:
+            self.__update_input(change=None)
+        if self.dds['band_dos'].value == 'Bands' and self.data:
+            tickvals = [self.data.kpath[i] for i in self.input['ktick_inds']]
+            self.fig.update_xaxes(ticktext=self.input['ktick_vals'], tickvals=tickvals)
+        if self.texts['elim'].value and len(self.input['elim']) == 2:
+            if self.dds['band_dos'].value == 'Bands':
+                self.fig.update_yaxes(range = self.input['elim'])
+            else:
+                self.fig.update_xaxes(range = self.input['elim'])
+
     @output.capture(clear_output=True,wait=True)
     def __tog_b(self,tog_w):
         color_toggle(self.buttons['toggle'],self.fig,self.dds['band_dos'])
@@ -849,7 +876,7 @@ class VasprunApp:
     @output.capture(clear_output=True,wait=True)
     def __expand_fig(self,btn):
         self.tab.selected_index = 2
-        self.dds['en_type'] = 'None' # To avoid accidental clicks
+        self.dds['en_type'].value = 'None' # To avoid accidental clicks
         display(self.fig)
     # Garph
     @output.capture(clear_output=True,wait=True)
@@ -885,7 +912,7 @@ class VasprunApp:
                 fig_data = ip.plotly_rgb_lines(path_evr=self.data,**self.input)
             else:
                 self.dds['en_type'].value = 'None' # Avoid random clicks
-                fig_data = ip.plotly_dos_lines(path_evr=self.data,**self.input,color_map="RGB") # input auto-modified
+                fig_data = ip.plotly_dos_lines(path_evr=self.data,**self.input,colormap="RGB") # input auto-modified
 
             self.tab.selected_index = 1
             with self.fig.batch_animate():
@@ -894,8 +921,8 @@ class VasprunApp:
                 fig_data.layout.template = self.dds['style'].value # before layout to avoid color blink
                 self.fig.layout = fig_data.layout
 
-            click_data(self.dds['en_type'],self.texts['fermi'],self.result,self.fig)
-            self.buttons['load_graph'].tooltip = "Current System\n{!r}".format(self.data.sys_info)
+            click_data(self.dds['en_type'],self.texts['fermi'],self.result,self.fig,self.dds['band_dos'])
+            self.buttons['load_graph'].icon = 'fa-check'
 
     @output.capture(clear_output=True,wait=True)
     def __clear_cache(self):

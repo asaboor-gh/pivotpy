@@ -44,7 +44,7 @@
 - Version 1.0.0 is updated with an overhaul of widgets module. `VasprunApp` is introduced as class to access internals of app easily. 
 
 ## New: Plot in Terminal without GUI
-Use `pp.plt_to_text(colorful=True/False)` after matplotlib's code and your figure will appear in terminal. You need to zoom out alot to get a good view like below.
+Use `pp.plt2text(colorful=True/False)` after matplotlib's code and your figure will appear in terminal. You need to zoom out alot to get a good view like below.
 
 Tip: Use file [matplotlib2terminal.py](https://gist.github.com/massgh/d5cc44ad32510d3ff58cfefd75c6884e) on github independent of this package to plot in terminal. 
 ![IMG](terminal.jpg)
@@ -198,11 +198,11 @@ axs=pp.init_figure(ncols=3,widths=[2,1,2.2],sharey=True,wspace=0.05,figsize=(8,2
 elements=[0,[0],[0,1]]
 orbs=[[0],[1],[2,3]]
 labels=['s','$p_z$','$(p_x+p_y)$']
-ti_cks=dict(xt_indices=[0,30,60,-1],xt_labels=['Γ','M','K','Γ'])
+ti_cks=dict(ktick_inds=[0,30,60,-1],ktick_vals=['Γ','M','K','Γ'])
 args_dict=dict(elements=elements,orbs=orbs,labels=labels,elim=[-20,15])
 pp.quick_bplot(path_evr=vr1,ax=axs[0],**ti_cks,elim=[-20,15])
 pp.quick_rgb_lines(path_evr=vr1,ax=axs[2],**args_dict,**ti_cks,colorbar=True,)
-pp.quick_dos_lines(path_evr=vr2,ax=axs[1],vertical=True,spin='both',include_dos='pdos',**args_dict,legend_kwargs={'ncol': 3},color_map='RGB_m')
+pp.quick_dos_lines(path_evr=vr2,ax=axs[1],vertical=True,spin='both',include_dos='pdos',**args_dict,legend_kwargs={'ncol': 3},colormap='RGB_m')
 pp.color_wheel(axs[2],xy=(0.7,1.15),scale=0.2,labels=[l+'$^{⇅}$' for l in labels])
 pp._show() 
 ```
@@ -221,7 +221,7 @@ pp._show()
 ```
 args_dict['labels'] = ['s','p_z','p_x+p_y']
 fig1 = pp.plotly_rgb_lines(vr1,**args_dict)
-#pp.plotly_to_html(fig1) #Do inside Google Colab, fig1 inside Jupyter
+#pp.plotly2html(fig1) #Do inside Google Colab, fig1 inside Jupyter
 from IPython.display import Markdown
 Markdown("[See Interactive Plot](https://massgh.github.io/InteractiveHTMLs/iGraphene.html)")
 ```
@@ -243,7 +243,7 @@ Markdown("[See Interactive Plot](https://massgh.github.io/InteractiveHTMLs/iGrap
 ```
 import pivotpy as pp 
 fig2 = pp.plot_bz([[1,0,0],[0,1,0],[0,0,1]])
-#pp.plotly_to_html(fig2) #Do inside Google Colab, fig1 inside Jupyter
+#pp.plotly2html(fig2) #Do inside Google Colab, fig1 inside Jupyter
 from IPython.display import Markdown
 Markdown("[See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ.html)")
 ```
@@ -270,7 +270,7 @@ last_k=vr2.kpath[-1]
 axs=pp.init_figure(figsize=(5,2.6))
 K_all=[*vr1.kpath,*vr2.kpath] # Merge kpath for ticks
 kticks=[K_all[i] for i in [0,30,60,90,120,150,-1]]
-ti_cks=dict(xticks=kticks,xt_labels=['Γ','M','K','Γ','M','K','Γ'])
+ti_cks=dict(xticks=kticks,ktick_vals=['Γ','M','K','Γ','M','K','Γ'])
 pp.quick_bplot(path_evr=vr1,ax=axs)
 pp.quick_bplot(path_evr=vr2,ax=axs,txt='Graphene(Left: ISPIN=1, Right: ISPIN=2)',ctxt='m')
 pp.modify_axes(ax=axs,xlim=[0,last_k],ylim=[-10,10],**ti_cks)
@@ -307,7 +307,7 @@ check out the class `pivotpy.LOCPOT_CHG` to visulize local potential/charge and 
 Some tasks are very tideious in python while just a click way in powershell. See below, and try to list processes in python yourself to see the difference!
 
 ```
-pp.ps_to_std(ps_command='(Get-Process)[0..4]')
+pp.ps2std(ps_command='(Get-Process)[0..4]')
 ```
 
     NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName

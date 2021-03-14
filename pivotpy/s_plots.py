@@ -2,7 +2,7 @@
 
 __all__ = ['modify_axes', 'init_figure', 'plot_bands', 'quick_bplot', 'add_text', 'add_legend', 'add_colorbar',
            'color_wheel', 'get_pros_data', 'make_line_collection', 'plot_collection', 'quick_rgb_lines',
-           'quick_color_lines', 'select_pdos', 'collect_dos', 'quick_dos_lines', 'plt_to_html', 'plt_to_text',
+           'quick_color_lines', 'select_pdos', 'collect_dos', 'quick_dos_lines', 'plt2html', 'plt2text',
            'plot_potential']
 
 # Cell
@@ -26,7 +26,7 @@ except:
     import pivotpy.g_utils as gu
 
 from IPython import get_ipython
-from IPython.display import HTML, set_matplotlib_formats #HTML for plt_to_html
+from IPython.display import HTML, set_matplotlib_formats #HTML for plt2html
 
 # print SVG in ipython
 try:
@@ -43,7 +43,7 @@ mpl.rcParams['mathtext.fontset'] = "stix"
 
 
 # Cell
-def modify_axes(ax=None,xticks=[],xt_labels=[],xlim=[],\
+def modify_axes(ax=None,xticks=[],ktick_vals=[],xlim=[],\
             yticks=[],yt_labels=[],ylim=[],xlabel=None,ylabel=None,\
             vlines=True,zeroline=True):
     """
@@ -62,7 +62,7 @@ def modify_axes(ax=None,xticks=[],xt_labels=[],xlim=[],\
     else:
         if(xticks):
             ax.set_xticks(xticks)
-            ax.set_xticklabels(xt_labels)
+            ax.set_xticklabels(ktick_vals)
         if(yticks):
             ax.set_yticks(yticks)
             ax.set_yticklabels(yt_labels)
@@ -206,32 +206,32 @@ def plot_bands(ax=None,kpath=None,bands=None,showlegend=False,E_Fermi=None,\
     return ax
 
 # Cell
-def quick_bplot(path_evr=None,ax=None,skipk=None,joinPathAt=[],elim=[],xt_indices=[],\
-            xt_labels=[],E_Fermi=None,figsize=(3.4,2.6),txt=None,xytxt=[0.2,0.9],ctxt='black'):
+def quick_bplot(path_evr=None,ax=None,skipk=None,kseg_inds=[],elim=[],ktick_inds=[],\
+            ktick_vals=[],E_Fermi=None,figsize=(3.4,2.6),txt=None,xytxt=[0.2,0.9],ctxt='black'):
     """
     - Returns axes object and plot on which all matplotlib allowed actions could be performed.
     - **Parameters**
         - path_evr   : path/to/vasprun.xml or output of `export_vasprun`. Auto picks in CWD.
         - ax         : Matplotlib axes object, if not given, one is created.
         - skipk      : Number of kpoints to skip, default will be from IBZKPT.
-        - joinPathAt : Points where kpath is broken.
+        - kseg_inds : Points where kpath is broken.
         - elim       : [min,max] of energy range.
         - E_Fermi    : If not given, automatically picked from `export_vasprun`.
-        - xt_indices : High symmetry kpoints indices.abs
-        - xt_labels  : High Symmetry kpoints labels.
+        - ktick_inds : High symmetry kpoints indices.abs
+        - ktick_vals  : High Symmetry kpoints labels.
         - **kwargs   : figsize=(3.4,2.6). Text,its position and color.
     - **Returns**
         - ax : matplotlib axes object with plotted bands.
     """
     #checking type of given path.
     if(path_evr==None):
-        vr=vp.export_vasprun(path=path_evr,skipk=skipk,elim=elim,joinPathAt=joinPathAt)
+        vr=vp.export_vasprun(path=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
     if(path_evr!=None):
         from os import path as pt
         if(type(path_evr)==vp.Dict2Data):
             vr=path_evr
         elif(pt.isfile(path_evr)):
-            vr=vp.export_vasprun(path=path_evr,skipk=skipk,elim=elim,joinPathAt=joinPathAt)
+            vr=vp.export_vasprun(path=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
         else:
             return print("path_evr = `{}` does not exist".format(path_evr))
     # Apply a robust final check.
@@ -242,7 +242,7 @@ def quick_bplot(path_evr=None,ax=None,skipk=None,joinPathAt=[],elim=[],xt_indice
     else:
         # Main working here.
         K=vr.kpath
-        xticks=[K[i] for i in xt_indices]
+        xticks=[K[i] for i in ktick_inds]
         xlim=[min(K),max(K)]
         if(elim):
             ylim=[min(elim),max(elim)]
@@ -250,7 +250,7 @@ def quick_bplot(path_evr=None,ax=None,skipk=None,joinPathAt=[],elim=[],xt_indice
             ylim=[]
         if(ax==None):
             fig,ax=plt.subplots(1,1,figsize=figsize)
-        modify_axes(ax=ax,ylabel='Energy (eV)',xticks=xticks,xt_labels=xt_labels,xlim=xlim,ylim=ylim)
+        modify_axes(ax=ax,ylabel='Energy (eV)',xticks=xticks,ktick_vals=ktick_vals,xlim=xlim,ylim=ylim)
         plot_bands(ax=ax,kpath=K,bands=vr.bands,showlegend=True,E_Fermi=E_Fermi,lw1=0.9)
         if(txt!=None):
             ax.text(*xytxt,txt,bbox=dict(edgecolor='white',facecolor='white', alpha=0.9),transform=ax.transAxes,color=ctxt)
@@ -390,7 +390,7 @@ def color_wheel(ax=None,
                 scale = 0.12,
                 rlim=(0.2,1),
                 N=256,
-                color_map=None,
+                colormap=None,
                 ticks=[1/6,1/2,5/6],
                 labels=['s','p','d'],
                 showlegend=True):
@@ -402,16 +402,16 @@ def color_wheel(ax=None,
         - scale     : Scale of the cax internally generated by color wheel.
         - rlim      : Values in [0,1] interval, to make donut like shape.
         - N         : Number of segments in color wheel.
-        - color_map : Matplotlib's color map name. Auto picks `RGB_f` and if fails, fallbacks to `viridis`.
+        - colormap : Matplotlib's color map name. Auto picks `RGB_f` and if fails, fallbacks to `viridis`.
         - ticks     : Ticks in fractions in interval [0,1].
         - labels    : Ticks labels.
         - showlegend: True or False.
     """
     if ax is None:
         ax = init_figure()
-    if color_map is None:
-        try: color_map = plt.cm.get_cmap('RGB_f')
-        except: color_map = 'viridis'
+    if colormap is None:
+        try: colormap = plt.cm.get_cmap('RGB_f')
+        except: colormap = 'viridis'
     pos = ax.get_position()
     ratio = pos.height/pos.width
     cpos = [pos.x0+pos.width*xy[0]-scale/2,pos.y0+pos.height*xy[1]-scale/2,scale,scale]
@@ -420,12 +420,12 @@ def color_wheel(ax=None,
     t = np.linspace(0,2*np.pi,N)
     r = np.linspace(*rlim,2)
     rg,tg = np.meshgrid(r,t)
-    cax.pcolormesh(t,r,tg.T,norm=norm,cmap=color_map,edgecolor='face')
+    cax.pcolormesh(t,r,tg.T,norm=norm,cmap=colormap,edgecolor='face')
     cax.set_yticklabels([])
     cax.spines['polar'].set_visible(False)
     ##########
     if showlegend == True:
-        colors = plt.cm.get_cmap(color_map)(ticks) # Get colors values.
+        colors = plt.cm.get_cmap(colormap)(ticks) # Get colors values.
         labels = ["◾ "+l for l in labels]
         labels[0] = labels[0]+'\n' #hack to write labels correctly on a single point.
         labels[2] = '\n'+ labels[2]
@@ -598,14 +598,14 @@ def plot_collection(gpd_args,mlc_args,axes=None):
 def quick_rgb_lines(path_evr    = None,
                     ax          = None,
                     skipk       = None,
-                    joinPathAt  = [],
+                    kseg_inds  = [],
                     elim        = [],
                     elements    = [[0],[],[]],
                     orbs        = [[0],[],[]],
                     labels      = ['Elem0-s','',''],
                     max_width   = None,
-                    xt_indices  = [0,-1],
-                    xt_labels   = [r'$\Gamma$','M'],
+                    ktick_inds  = [0,-1],
+                    ktick_vals   = [r'$\Gamma$','M'],
                     E_Fermi     = None,
                     figsize     = (3.4,2.6),
                     txt         = None,
@@ -627,11 +627,11 @@ def quick_rgb_lines(path_evr    = None,
         - path_evr   : path/to/vasprun.xml or output of `export_vasprun`. Auto picks in CWD.
         - ax         : Matplotlib axes object, if not given, one is created.
         - skipk      : Number of kpoints to skip, default will be from IBZKPT.
-        - joinPathAt : Points where kpath is broken.
+        - kseg_inds : Points where kpath is broken.
         - elim       : [min,max] of energy range.
         - E_Fermi    : If not given, automatically picked from `export_vasprun`.
-        - xt_indices : High symmetry kpoints indices.abs
-        - xt_labels  : High Symmetry kpoints labels.
+        - ktick_inds : High symmetry kpoints indices.abs
+        - ktick_vals  : High Symmetry kpoints labels.
         - elements   : List [[0],[],[]] by default and plots s orbital of first ion..
         - orbs       : List [[r],[g],[b]] of indices of orbitals, could be empty, but shape should be same.
         - labels     : List [str,str,str] of projection labels. empty string should exist to maintain shape. Auto adds `↑`,`↓` for ISPIN=2. If a label is empty i.e. '', it will not show up in colorbar ticks or legend.
@@ -664,7 +664,7 @@ def quick_rgb_lines(path_evr    = None,
     if type(path_evr) == vp.Dict2Data:
         vr = path_evr
     elif os.path.isfile(path_evr):
-        vr = vp.export_vasprun(path=path_evr,skipk=skipk,elim=elim,joinPathAt=joinPathAt)
+        vr = vp.export_vasprun(path=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
     else:
         return print("path_evr = {!r} does not exist".format(path_evr))
     # Apply a robust final check.
@@ -707,7 +707,7 @@ def quick_rgb_lines(path_evr    = None,
     if E_Fermi == None:
         E_Fermi = vr.bands.E_Fermi
     K = vr.kpath
-    xticks = [K[i] for i in xt_indices]
+    xticks = [K[i] for i in ktick_inds]
     xlim = [min(K),max(K)]
     if elim:
         ylim = [min(elim),max(elim)]
@@ -778,7 +778,7 @@ def quick_rgb_lines(path_evr    = None,
     if not txt:
         txt=vr.sys_info.SYSTEM
     add_text(ax=ax,xs=xytxt[0],ys=xytxt[1],txts=txt,colors=ctxt)
-    modify_axes(ax=ax,xticks=xticks,xt_labels=xt_labels,xlim=xlim,ylim=ylim)
+    modify_axes(ax=ax,xticks=xticks,ktick_vals=ktick_vals,xlim=xlim,ylim=ylim)
     # Colorbar and Colormap
     _colors_ = np.multiply([[1,0,1],[1,0,0],[1,1,0],[0,1,0],[0,1,1],
                                 [0,0,1],[1,0,1]],colorbar_scales)
@@ -811,17 +811,17 @@ def quick_rgb_lines(path_evr    = None,
 def quick_color_lines(path_evr      = None,
                       axes          = None,
                       skipk         = None,
-                      joinPathAt    = [],
+                      kseg_inds    = [],
                       elim          = [],
                       elements      = [[0]],
                       orbs          = [[0]],
                       labels        = ['s'],
-                      color_map     = 'gist_rainbow',
+                      colormap     = 'gist_rainbow',
                       scale_data    = False,
                       max_width     = None,
                       spin          = 'both',
-                      xt_indices    = [0, -1],
-                      xt_labels     = ['$\\Gamma$', 'M'],
+                      ktick_inds    = [0, -1],
+                      ktick_vals     = ['$\\Gamma$', 'M'],
                       E_Fermi       = None,
                       showlegend    = True,
                       figsize       = (3.4, 2.6),
@@ -841,15 +841,15 @@ def quick_color_lines(path_evr      = None,
         - path_evr   : Path/to/vasprun.xml or output of `export_vasprun`. Auto picks in CWD.
         - axes       : Matplotlib axes object with one or many axes, if not given, auto created.
         - skipk      : Number of kpoints to skip, default will be from IBZKPT.
-        - joinPathAt : Points where kpath is broken.
+        - kseg_inds : Points where kpath is broken.
         - elim       : [min,max] of energy range.
         - E_Fermi    : If not given, automatically picked from `export_vasprun`.
-        - xt_indices : High symmetry kpoints indices.abs
-        - xt_labels  : High Symmetry kpoints labels.
+        - ktick_inds : High symmetry kpoints indices.abs
+        - ktick_vals  : High Symmetry kpoints labels.
         - elements   : List [[0],], by defualt and plot first ion's projections.
         - orbs       : List [[0],] lists of indices of orbitals, could be empty.
         - labels     : List [str,] of orbitals labels. len(labels)==len(orbs) must hold.  Auto adds `↑`,`↓` for ISPIN=2. If a label is empty i.e. '', it will not show up in legend.
-        - color_map  : Matplotlib's standard color maps. Default is 'gist_ranibow'.
+        - colormap  : Matplotlib's standard color maps. Default is 'gist_ranibow'.
         - showlegend : True by defualt and displays legend relative to axes[0]. If False, it writes text on individual ax.
         - scale_data : Default is False, If True, normalize projection data to 1.
         - max_width  : Width to scale whole projections. Default is None and linewidth at any point on a line = 2.5*sum(ions+orbitals projection of the input for that line at that point). Linewidth is scaled to max_width if an int or float is given.
@@ -877,7 +877,7 @@ def quick_color_lines(path_evr      = None,
     if type(path_evr) == vp.Dict2Data:
         vr = path_evr
     elif os.path.isfile(path_evr):
-        vr = vp.export_vasprun(path=path_evr,skipk=skipk,elim=elim,joinPathAt=joinPathAt)
+        vr = vp.export_vasprun(path=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
     else:
         return print("path_evr = {!r} does not exist".format(path_evr))
     # Apply a robust final check.
@@ -918,7 +918,7 @@ def quick_color_lines(path_evr      = None,
     if E_Fermi == None:
         E_Fermi = vr.bands.E_Fermi
     K = vr.kpath
-    xticks = [K[i] for i in xt_indices]
+    xticks = [K[i] for i in ktick_inds]
     xlim = [min(K),max(K)]
     if elim:
         ylim = [min(elim),max(elim)]
@@ -926,11 +926,11 @@ def quick_color_lines(path_evr      = None,
         ylim = []
 
     # Fix elements and colors length. ISPIN 2 case is done in loop itself
-    if color_map not in plt.colormaps():
+    if colormap not in plt.colormaps():
         c_map = plt.cm.get_cmap('viridis')
-        print("color_map = {!r} not exists, falling back to default color map.".format(color_map))
+        print("colormap = {!r} not exists, falling back to default color map.".format(colormap))
     else:
-        c_map = plt.cm.get_cmap(color_map)
+        c_map = plt.cm.get_cmap(colormap)
     c_vals = np.linspace(0,1,len(orbs))
     colors  = c_map(c_vals)
 
@@ -969,7 +969,7 @@ def quick_color_lines(path_evr      = None,
     else:
         x,y=[*xytxt]
         _ = [add_text(ax=ax,xs=x,ys=y,txts=_tl_,colors=ctxt) for ax,_tl_ in zip(axes,_tls_)]
-    _ = [modify_axes(ax=ax,xticks=xticks,xt_labels=xt_labels,xlim=xlim,ylim=ylim) for ax in axes]
+    _ = [modify_axes(ax=ax,xticks=xticks,ktick_vals=ktick_vals,xlim=xlim,ylim=ylim) for ax in axes]
     plt.subplots_adjust(**subplots_adjust_kwargs)
     return axes
 
@@ -1130,7 +1130,7 @@ def quick_dos_lines(path_evr      = None,
                     elements      = [[0],],
                     orbs          = [[0],],
                     labels        = ['s',],
-                    color_map     = 'gist_rainbow',
+                    colormap     = 'gist_rainbow',
                     tdos_color    = (0.8,0.95,0.8),
                     linewidth     = 0.5,
                     fill_area     = True,
@@ -1165,7 +1165,7 @@ def quick_dos_lines(path_evr      = None,
             - elements   : List [[0],], by defualt and plot first ion's projections.
             - orbs       : List [[0],] lists of indices of orbitals, could be empty.
             - labels     : List [str,] of orbitals labels. len(labels)==len(orbs) must hold.  Auto adds `↑`,`↓` for ISPIN=2.
-            - color_map  : Matplotlib's standard color maps. Default is 'gist_ranibow'. Use 'RGB' if want to compare with `quick_rgb_lines` with 3 projection inputs (len(orbs)==3).
+            - colormap  : Matplotlib's standard color maps. Default is 'gist_ranibow'. Use 'RGB' if want to compare with `quick_rgb_lines` with 3 projection inputs (len(orbs)==3).
             - fill_area  : Default is True and plots filled area for dos. If False, plots lines only.
             - vertical   : False, If True, plots along y-axis.
             - showlegend : True by defualt.
@@ -1201,21 +1201,21 @@ def quick_dos_lines(path_evr      = None,
             from .g_utils import color
             return print(gu.color.g("Try with large energy range."))
         # Fix elements and colors length
-        if color_map in plt.colormaps():
+        if colormap in plt.colormaps():
             from matplotlib.pyplot import cm
             if len(tdos) == 2:
-                c_map   = cm.get_cmap(color_map)
+                c_map   = cm.get_cmap(colormap)
                 c_vals  = np.linspace(0,1,2*len(orbs))
                 colors  = c_map(c_vals)
             else:
-                c_map   = cm.get_cmap(color_map)
+                c_map   = cm.get_cmap(colormap)
                 c_vals  = np.linspace(0,1,len(orbs))
                 colors  = c_map(c_vals)
             # Fix for RGB comparison
             if len(tdos) == 2 and 'both' in spin and len(orbs)==3:
                 colors[[-1,-2]]= colors[[-2,-1]] #Flip last two colors only
         else:
-            return print("`color_map` expects one of the follwoing:\n{}".format(plt.colormaps()))
+            return print("`colormap` expects one of the follwoing:\n{}".format(plt.colormaps()))
 
         # Make additional colors for spin down. Inverted colors are better.
         t_color=mpl.colors.to_rgb(tdos_color)
@@ -1275,7 +1275,7 @@ def quick_dos_lines(path_evr      = None,
         return ax
 
 # Cell
-def plt_to_html(plt_fig=None,transparent=True,dash_html=None):
+def plt2html(plt_fig=None,transparent=True,dash_html=None):
     """
     - Returns base64 encoded Image to display in notebook or HTML <svg> or plotly's dash_html_components.Img object.
     - **Parameters**
@@ -1308,7 +1308,7 @@ def plt_to_html(plt_fig=None,transparent=True,dash_html=None):
         return html.Img(src="data:image/svg+xml;base64,{}".format(img.decode('utf-8')))
 
 # Cell
-def plt_to_text(plt_fig=None,width=144,vscale=0.96,colorful=True,invert=False,crop=False,outfile=None):
+def plt2text(plt_fig=None,width=144,vscale=0.96,colorful=True,invert=False,crop=False,outfile=None):
     """Displays matplotlib figure in terminal as text. You should use a monospcae font like `Cascadia Code PL` to display image correctly. Use before plt.show().
     - **Parameters**
         - plt_fig: Matplotlib's figure instance. Auto picks if not given.
