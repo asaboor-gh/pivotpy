@@ -646,6 +646,8 @@ class VasprunApp:
 
     def __setattr__(self,name,value):
         self.__dict__[name] = value
+        if 'dds' in self.__dict__.keys():
+            self.dds['theme'].value = 'Custom'
         if 'htmls' in self.__dict__.keys() and name == 'theme_colors':
             self.htmls['theme'].value = css_style(self.theme_colors)
 
@@ -726,7 +728,7 @@ class VasprunApp:
 
     @output.capture()
     def show(self):
-        intro_html = ipw.HTML("<h2>Pivotpy</h2><p>Filter files here and switch tab to Graphs. You can create cache ahead of time to load quickly while working. If anything does not seem to work, see the error in STD(out/err) tab. For large files, do `Export-VR` in Powershell to access fast.</p><marquee style='color:red'>Pivotpy GUI based on ipywidgets!</marquee>")
+        intro_html = ipw.HTML("<h2>Pivotpy</h2><p>Filter files here and switch tab to Graphs. You can create cache ahead of time to load quickly while working. If anything does not seem to work, see the error in STD(out/err) tab. For large files, do `Export-VaspRun` in Powershell to access fast.</p><marquee style='color:red'>Pivotpy GUI based on ipywidgets!</marquee>")
         header_box = HBox([intro_html,
                            Label('Theme:',layout=Layout(width='80px')),
                            self.dds['theme']
@@ -831,17 +833,17 @@ class VasprunApp:
     @output.capture(clear_output=True,wait=True)
     def __update_input(self,change):
         self.input.update(self.InGui.output)
-        elim_str  = self.texts['elim'].value
+        elim_str  = [v for v in self.texts['elim'].value.split(',') if v!='']
         fermi_str = self.texts['fermi'].value
         self.input['E_Fermi'] = float(fermi_str) if fermi_str else 0 # Change now, keep zero else must.
-        self.input['elim'] = [float(v) for v in elim_str.split(',')][:2] if elim_str else None
+        self.input['elim'] = [float(v) for v in elim_str if v!='-'][:2] if len(elim_str) >= 2 else None
         if self.dds['band_dos'].value == 'Bands':
-            kjoin_str  = self.texts['kjoin'].value
-            kticks_str = self.texts['kticks'].value
-            ktickv_str = self.texts['ktickv'].value
-            self.input['kseg_inds'] = [int(v) for v in kjoin_str.split(',')] if kjoin_str else None
-            self.input['ktick_inds'] = [int(v) for v in kticks_str.split(',')] if kticks_str else [0,-1]
-            self.input['ktick_vals'] = [v for v in ktickv_str.split(',')] if ktickv_str else ['A','B']
+            kjoin_str  = [v for v in self.texts['kjoin'].value.split(',') if v!='']
+            kticks_str = [v for v in self.texts['kticks'].value.split(',') if v!='']
+            ktickv_str = [v for v in self.texts['ktickv'].value.split(',') if v!='']
+            self.input['kseg_inds'] = [int(v) for v in kjoin_str if v!='-'] if kjoin_str else None
+            self.input['ktick_inds'] = [int(v) for v in kticks_str if v!='-'] if kticks_str else [0,-1]
+            self.input['ktick_vals'] = [v for v in ktickv_str if v!=''] if ktickv_str else ['A','B']
         else:
             self.input = {k:v for k,v in self.input.items() if k not in ['ktick_inds','ktick_vals','kseg_inds']}
         #Update at last
@@ -894,7 +896,7 @@ class VasprunApp:
         if self.dds['band_dos'].value == 'Bands' and self.data:
             tickvals = [self.data.kpath[i] for i in self.input['ktick_inds']]
             self.fig.update_xaxes(ticktext=self.input['ktick_vals'], tickvals=tickvals)
-        if self.texts['elim'].value and len(self.input['elim']) == 2:
+        if self.texts['elim'].value and self.input['elim'] != None and len(self.input['elim']) == 2:
             if self.dds['band_dos'].value == 'Bands':
                 self.fig.update_yaxes(range = self.input['elim'])
             else:
