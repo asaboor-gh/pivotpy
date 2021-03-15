@@ -353,6 +353,18 @@ nb_path: "Widgets.ipynb"
 <div class="output_markdown rendered_html output_subarea ">
 <h2 id="VasprunApp" class="doc_header"><code>class</code> <code>VasprunApp</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L526" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>VasprunApp</code>(<strong><code>height</code></strong>=<em><code>580</code></em>)</p>
 </blockquote>
+<p>Display a GUI for vasp output analysis. <code>self.theme_colors</code> can be used to edit custom theme.</p>
+<ul>
+<li><strong>Usage Example</strong><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pivotpy</span> <span class="k">as</span> <span class="nn">pp</span>
+<span class="n">va</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">VasprunApp</span><span class="p">()</span>
+<span class="n">va</span><span class="o">.</span><span class="n">show</span><span class="p">()</span> <span class="c1">#Displays App and do work!</span>
+<span class="n">va</span><span class="o">.</span><span class="n">theme_colors</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">dark_colors</span> <span class="c1">#Set theme to dark externally and edit dictionary values to make your own theme</span>
+<span class="n">pp</span><span class="o">.</span><span class="n">quick_rgb_lines</span><span class="p">(</span><span class="n">va</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">va</span><span class="o">.</span><span class="n">input</span><span class="p">)</span> <span class="c1">#Get matplotlib plot of current data.</span>
+<span class="n">va</span><span class="o">.</span><span class="n">df</span> <span class="c1">#After you do some analysis and hit `Project Summary` button, get DataFrame.</span>
+<span class="n">va</span><span class="o">.</span><span class="n">fig</span> <span class="c1">#Get current fig in Notebook cell.</span>
+</pre></div>
+</li>
+</ul>
 
 </div>
 
@@ -379,7 +391,46 @@ nb_path: "Widgets.ipynb"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">va</span> <span class="o">=</span> <span class="n">VasprunApp</span><span class="p">()</span>
-<span class="n">va</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1">#va.show()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">va</span><span class="o">.</span><span class="n">theme_colors</span> <span class="o">=</span> <span class="p">{</span>
+ <span class="s1">&#39;table_fg&#39;</span><span class="p">:</span> <span class="s1">&#39;#ABB2BF&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;tr_odd_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;#282C34&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;tr_even_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;#21252B&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;tr_hover_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;#414855&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;btn_fg&#39;</span><span class="p">:</span> <span class="s1">&#39;green&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;btn_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;#3D4450&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;tab_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;#21252B&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;tab_fg&#39;</span><span class="p">:</span> <span class="s1">&#39;#61AFEF&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;tab_shadow&#39;</span><span class="p">:</span> <span class="s1">&#39;#282C34&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;box_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;#21252B&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;box_border&#39;</span><span class="p">:</span> <span class="s1">&#39;#282C34&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;#ABB2BF&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;input_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;#282C34&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;input_fg&#39;</span><span class="p">:</span> <span class="s1">&#39;#ABB2BF&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;input_border&#39;</span><span class="p">:</span> <span class="s1">&#39;#282C34&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;input_hover&#39;</span><span class="p">:</span> <span class="s1">&#39;#414855&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;dd_select_fg&#39;</span><span class="p">:</span> <span class="s1">&#39;#ABB2BF&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;dd_select_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;transparent&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;dd_hover&#39;</span><span class="p">:</span> <span class="s1">&#39;#3D4450&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;dd_opt_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;#282C34&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;dd_opt_fg&#39;</span><span class="p">:</span> <span class="s1">&#39;whitesmoke&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;dd_focus_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;green&#39;</span><span class="p">}</span>
 </pre></div>
 
     </div>
@@ -397,7 +448,7 @@ nb_path: "Widgets.ipynb"
 <li><code>va.result</code> is what you see in table. </li>
 <li><code>va.data</code> is output of <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a>. </li>
 <li><code>va.fig</code> is current figure. </li>
-<li><code>va.theme_colors</code> could be modified for Custom theme. </li>
+<li><code>va.theme_colors</code> could be used to change theme, e.g <code>va.theme_colors = pp.dark_colors</code> will change theme to Dark. This is useful to create new themes, you can edit color values in <code>dark_colors/light_colors</code> and assign it to <code>va.theme_colors</code> as you preferr. Do not modify keys, just values!.  </li>
 <li><code>va.InGui</code> is instance of <a href="/pivotpy/Widgets.html#InputGui"><code>InputGui</code></a> class and <code>va.InGui.out</code> is used as <code>va.input</code>. <code>va.html</code> is used to observe <code>self.__updata_input</code> internally.</li>
 </ul>
 <p>Almost every other attribute is a gui or collection of widgets. E.g. <code>va.dds</code> is dictionary that contains all dropdowns in app.</p>
@@ -448,6 +499,6 @@ nb_path: "Widgets.ipynb"
  
 
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"08c1cd237bdd4541bcbe0343d6a0bd2c": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "fc7ff60aeb5740c8a6491a2d13b058ad": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_08c1cd237bdd4541bcbe0343d6a0bd2c", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
+{"state": {"b203ffead84a4539bdf797bd1055447d": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "11be054225234b278f34f1d5ed237150": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_b203ffead84a4539bdf797bd1055447d", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
 </script>
 

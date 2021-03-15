@@ -524,7 +524,19 @@ def generate_summary(paths_list=None):
 
 # Cell
 class VasprunApp:
-    # capture output
+    """
+    Display a GUI for vasp output analysis. `self.theme_colors` can be used to edit custom theme.
+    - **Usage Example**
+    ```python
+    import pivotpy as pp
+    va = pp.VasprunApp()
+    va.show() #Displays App and do work!
+    va.theme_colors = pp.dark_colors #Set theme to dark externally and edit dictionary values to make your own theme
+    pp.quick_rgb_lines(va.data, **va.input) #Get matplotlib plot of current data.
+    va.df #After you do some analysis and hit `Project Summary` button, get DataFrame.
+    va.fig #Get current fig in Notebook cell.
+    ```
+    """
     output = ipw.Output().add_class('output')
     def __init__(self,height=580):
         self.height = height
@@ -608,6 +620,10 @@ class VasprunApp:
         self.buttons['load_graph'].on_click(self.__update_graph)
         self.dds['en_type'].observe(self.__update_table,"value") # This works from click_data
 
+    def __setattr__(self,name,value):
+        self.__dict__[name] = value
+        if 'htmls' in self.__dict__.keys() and name == 'theme_colors':
+            self.htmls['theme'].value = css_style(self.theme_colors)
 
     def __figure_tab(self,change):
         l_out = Layout(width='20%')
