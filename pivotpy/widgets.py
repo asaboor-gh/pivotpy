@@ -330,9 +330,9 @@ class InputGui:
             'rgb' : Dropdown(options={'Red':0,'Green':1,'Blue':2},value=0,layout=layout)
             }
         self.texts = {
-            'orbs' : Text(layout=layout),
-            'elms' : Text(layout=layout),
-            'label': Text(layout=layout)
+            'orbs' : Text(layout=layout,continuous_update=False),
+            'elms' : Text(layout=layout,continuous_update=False),
+            'label': Text(layout=layout,continuous_update=False)
             }
         self.update_options(self.sys_info) # In start if given
 
@@ -352,8 +352,12 @@ class InputGui:
 
         #Obsever
         self.dds['rgb'].observe(self.__see_input,'value')
-        self.dds['orbs'].observe(self.__forward_input,'value')
-        self.dds['elms'].observe(self.__forward_input,'value')
+        self.texts['label'].observe(self.__read_pro,'value')
+        self.texts['orbs'].observe(self.__read_pro,'value')
+        self.texts['elms'].observe(self.__read_pro,'value')
+        # Link
+        ipw.dlink((self.dds['elms'],'value'),(self.texts['elms'],'value'))
+        ipw.dlink((self.dds['orbs'],'value'),(self.texts['orbs'],'value'))
 
     def update_options(self,sys_info=None):
         if sys_info:
@@ -384,23 +388,28 @@ class InputGui:
         self.output['orbs'][index] = read(self.texts['orbs'].value)
         _text,_ion,_orb = self.texts['label'].value,self.texts['elms'].value,self.texts['orbs'].value
         self.output['labels'][index] = _text if _text else "{}:{}".format(_ion,_orb)
-        self.html.value = "<h4>  Got {}</h4>".format(self.dds['rgb'].label)
+        self.html.value = """<div style='border: 2px solid {0}!important;
+                             background-color:{0} !important;'> </div>
+                             """.format(self.dds['rgb'].label.lower())
         sleep(1)
         self.html.value = ''
 
     def __see_input(self,change):
+        # Unobserve first to avoid overwriting
+        self.texts['label'].unobserve(self.__read_pro,'value')
+        self.texts['orbs'].unobserve(self.__read_pro,'value')
+        self.texts['elms'].unobserve(self.__read_pro,'value')
+
+        # Look up while not observing
         x = self.dds['rgb'].value
         self.texts['elms'].value = ','.join([str(i) for i in self.output['elements'][x]])
         self.texts['orbs'].value = ','.join([str(i) for i in self.output['orbs'][x]])
         self.texts['label'].value = self.output['labels'][x]
+        # Observe Back Again
+        self.texts['label'].observe(self.__read_pro,'value')
+        self.texts['orbs'].observe(self.__read_pro,'value')
+        self.texts['elms'].observe(self.__read_pro,'value')
 
-    def __forward_input(self,change):
-        self.html.value = '<h4>Updating output ...</h4>'
-        self.texts['elms'].value = self.dds['elms'].value
-        self.texts['orbs'].value = self.dds['orbs'].value
-        if not self.texts['label'].value:
-            self.texts['label'].value = "{}:{}".format(self.dds['elms'].value,self.dds['orbs'].value)
-        self.__read_pro(None) # Update current value. Here is real magic
     def show(self):
         return self.box
 
@@ -609,12 +618,12 @@ class VasprunApp:
                                     "ggplot2", "seaborn", "simple_white", "none"],layout=l_btn),
                                     }
 
-        self.texts = {'kticks': Text(value='',layout=b_out),
-                      'ktickv': Text(value='',layout=b_out),
-                      'kjoin' : Text(value='',layout=b_out),
-                      'elim'  : Text(value='',layout=b_out),
-                      'fermi' : Text(value='',layout=b_out),
-                      'xyt'   : Text(value='')
+        self.texts = {'kticks': Text(value='',layout=b_out,continuous_update=False),
+                      'ktickv': Text(value='',layout=b_out,continuous_update=False),
+                      'kjoin' : Text(value='',layout=b_out,continuous_update=False),
+                      'elim'  : Text(value='',layout=b_out,continuous_update=False),
+                      'fermi' : Text(value='',layout=b_out,continuous_update=False),
+                      'xyt'   : Text(value='',continuous_update=False)
                       }
 
         self.htmls = {'theme': ipw.HTML(css_style(light_colors)),
