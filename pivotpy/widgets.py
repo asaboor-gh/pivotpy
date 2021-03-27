@@ -83,12 +83,10 @@ def css_style(colors_dict):
         box-shadow: none !important;
         border-radius: 4px !important;
         margin:4px !important;
-        resize: both !important;
     }}
     .marginless {{
         margin: 0px !important;
         border-radius: 0px !important;
-        resize: both !important;
     }}
     .output {{
         color: {text} !important;

@@ -1007,18 +1007,27 @@ def get_pairs(basis, positions, r, eps=1e-2):
     - **Parameters**
         - basis: Real space lattice basis.
         - positions: Array(N,3) of fractional positions of lattice sites.
-        - r        : Farctional distance between the pairs in range [0,1]. Auto fixed against largest coordinate.
+        - r        : Cartesian distance between the pairs.
         - eps      : Tolerance value. Default is 10^-2.
     """
     coords = to_R3(basis,positions)
-    _r = r*np.max(coords) # In coordinate form
     tree = KDTree(coords)
-    inds = np.array([[*p] for p in tree.query_pairs(_r,eps=eps)])
+    inds = np.array([[*p] for p in tree.query_pairs(r,eps=eps)])
     return vp.dict2tuple('Lattice',{'coords':coords,'pairs':inds})
+
+def _get_bond_length(poscar,given=None,eps=1e-2):
+    "eps is add to calculated bond length in order to fix small differences"
+    if given != None:
+        return given*poscar.volume**(1/3) + eps
+    else:
+        _coords = to_R3(poscar.basis,poscar.positions)
+        _arr = np.linalg.norm(_coords[1:] - _coords[0],axis=1)
+        return np.min(_arr) + eps if _arr.any() else 1
+
 
 # Cell
 def iplot_lat(poscar,sizes=10,colors='blue',
-              bond_length=0.15,tol=1e-1,eps=1e-2,eqv_sites=True,
+              bond_length=None,tol=1e-1,eps=1e-2,eqv_sites=True,
               line_width=4,edge_color = 'black',
               fill=False,alpha=0.4, ortho3d=True,fig=None):
     """Interactive plot of lattice.
@@ -1026,10 +1035,11 @@ def iplot_lat(poscar,sizes=10,colors='blue',
         - poscar     : Output of export_poscar or export_vasprun().poscar.
         - sizes      : Size of sites. Either one int/float or list equal to type of ions.
         - colors     : Colors of sites. Either one colors or list equal to type of ions.
-        - bond_length: Length of bond in fractional unit [0,1].
+        - bond_length: Length of bond in fractional unit [0,1]. It is scaled to V^1/3 and auto calculated if not provides.
     Other parameters just mean what they seem to be.
     """
     poscar = fix_sites(poscar=poscar,tol=tol,eqv_sites=eqv_sites)
+    bond_length = _get_bond_length(poscar,given=bond_length,eps=eps)
     coords, pairs = get_pairs(basis=poscar.basis,
                         positions =poscar.positions,
                         r=bond_length,eps=eps)
@@ -1092,8 +1102,8 @@ def iplot_lat(poscar,sizes=10,colors='blue',
     return fig
 
 # Cell
-def splot_lat(poscar,sizes=50,colormap=None,
-              bond_length=0.15,tol=1e-1,eps=1e-2,eqv_sites=True,
+def splot_lat(poscar,sizes=50,colors=[],colormap=None,
+              bond_length=None,tol=1e-1,eps=1e-2,eqv_sites=True,
               line_width=1,edge_color=((1,0.5,0,0.4)),
               vectors=True,v3=False,plane=None,
               light_from=(1,1,1),
@@ -1102,12 +1112,14 @@ def splot_lat(poscar,sizes=50,colormap=None,
     - **Main Parameters**
         - poscar     : Output of export_poscar or export_vasprun().poscar.
         - sizes      : Size of sites. Either one int/float or list equal to type of ions.
-        - bond_length: Length of bond in fractional unit [0,1].
+        - bond_length: Length of bond in fractional unit [0,1]. It is scaled to V^1/3 and auto calculated if not provides.
+        - colors: List of colos. If given, preffered over colormap, should have same length as type of ions.
     Other parameters just mean what they seem to be.
 
     > Tip: Use `plt.style.use('ggplot')` for better 3D perception.
     """
     poscar = fix_sites(poscar=poscar,tol=tol,eqv_sites=eqv_sites)
+    bond_length = _get_bond_length(poscar,given=bond_length,eps=eps)
     coords, pairs = get_pairs(basis=poscar.basis,
                         positions =poscar.positions,
                         r=bond_length,eps=eps)
@@ -1123,7 +1135,9 @@ def splot_lat(poscar,sizes=50,colormap=None,
 
     if not colormap in plt.colormaps():
         colormap = 'brg'
-    colors = plt.cm.get_cmap(colormap)(np.linspace(0.2,0.7,len(uelems)))
+
+    if not colors or len(colors) != len(uelems):
+        colors = plt.cm.get_cmap(colormap)(np.linspace(0.1,0.9,len(uelems)))
 
     _colors = []
     for i,vs in enumerate(uelems.values()):
