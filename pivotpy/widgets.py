@@ -567,9 +567,13 @@ class VasprunApp:
     ```python
     import pivotpy as pp
     va = pp.VasprunApp()
+    va.cache_data = False #Turn off cache globally.
+    va.evr_kws['elim'] = [-2,2] #Only Bands in this range will be included. Global accross project, can change anytime.
+    va.evr_kws['try_pwsh'] = False #Defult is True. Tries to load Powershell exported data.
+    va.ibands_kws['mode'] = 'bands' #Change graph mode from 'markers' to 'bands'. Setting it to 'lines' is not recommended in live graph, it could hang all UI.
     va.show() #Displays App and do work!
     va.theme_colors = pp.dark_colors #Set theme to dark externally and edit dictionary values to make your own theme
-    pp.quick_rgb_lines(va.data, **va.input) #Get matplotlib plot of current data.
+    va.splot(**kwargs) #Get matplotlib plot of current data.
     va.df #After you do some analysis and hit `Project Summary` button, get DataFrame.
     va.fig #Get current fig in Notebook cell.
     ```
@@ -598,10 +602,12 @@ class VasprunApp:
         self.input  = {'E_Fermi':0} # Dictionary for input
         self.fig_gui = HBox() # Middle Tab
         self.theme_colors = simple_colors.copy() # Avoid Modification
-
+        # Permeannet Parameters
         self.idos_kws   = dict(colormap='RGB',tdos_color=(0.5, 0.95, 0),linewidth=2,fill_area=True,
                                spin='both',interpolate=False,n=5,k=3,title=None)
         self.ibands_kws = dict(mode='markers',skipk=None,max_width=6,title=None,interpolate=False,n=5,k=3)
+        self.evr_kws = dict(skipk=None,elim=[],try_pwsh = True)
+        self.cache_data = True
 
         l_btn = ipw.Layout(width='max-content')
         self.buttons = {'load_data' : Button(description='Load Data',layout=l_btn,tooltip='Load and Cache Data'),
@@ -827,16 +833,17 @@ class VasprunApp:
             print('Cache Loaded')
         except:
             print('Trying Loading from Python ...')
-            self.data = vp.export_vasprun(self.files_dd.value)
-            print('Caching From: {}'.format(self.files_dd.value)) #Cache result
-            ifile = os.path.join(_dir,'sys_info.pickle')
-            vfile = os.path.join(_dir,'vasprun.pickle')
-            vp.dump_dict(self.data.sys_info,outfile=ifile)
-            vp.dump_dict(self.data,outfile=vfile)
+            self.data = vp.export_vasprun(self.files_dd.value, **self.evr_kws)
+            if self.cache_data:
+                print('Caching From: {}'.format(self.files_dd.value)) #Cache result
+                vp.dump_dict(self.data.sys_info,outfile=os.path.join(_dir,'sys_info.pickle'))
+                vp.dump_dict(self.data,outfile=os.path.join(_dir,'vasprun.pickle'))
+
             sys_info = self.data.sys_info # required here.
+            print('Done')
 
         _ = self.__read_data(self.data.poscar,sys_info) # Update Table data on load
-        print('Done')
+
 
         self.tab.selected_index = 1
         # Revamp input dropdowns on load  ==========
@@ -951,16 +958,16 @@ class VasprunApp:
                 print('Data already loaded')
             else:
                 try:
-                    self.buttons['load_graph'].description = 'loading pickle...'
+                    self.buttons['load_graph'].description = 'Loading pickle...'
                     print('Trying to Load Cache for Graph ...')
                     file = os.path.join(os.path.split(path)[0],'vasprun.pickle')
                     self.buttons['load_graph'].description = file
                     self.data = vp.load_from_dump(file)
                     self.buttons['load_graph'].description = 'Load Graph'
                 except:
-                    self.buttons['load_graph'].description = 'loading export...'
+                    self.buttons['load_graph'].description = 'Loading export...'
                     print('No cache found. Loading from file {} ...'.format(path))
-                    self.data = vp.export_vasprun(path)
+                    self.data = vp.export_vasprun(path, **self.evr_kws)
                 self.buttons['load_graph'].description = "Load Graph"
 
             print('Done')
