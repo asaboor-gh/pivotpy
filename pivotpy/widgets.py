@@ -24,10 +24,12 @@ try:
     from . import g_utils as gu
     from . import vr_parser as vp
     from . import i_plots as ip
+    from . import s_plots as sp
 except:
     import pivotpy.g_utils as gu
     import pivotpy.vr_parser as vp
     import pivotpy.i_plots as ip
+    import pivotpy.s_plots as sp
 
 # Cell
 def css_style(colors_dict):
@@ -81,10 +83,12 @@ def css_style(colors_dict):
         box-shadow: none !important;
         border-radius: 4px !important;
         margin:4px !important;
+        resize: both !important;
     }}
     .marginless {{
         margin: 0px !important;
         border-radius: 0px !important;
+        resize: both !important;
     }}
     .output {{
         color: {text} !important;
@@ -366,10 +370,12 @@ class InputGui:
                 orbs_opts = {**orbs_opts,'1-3: p':'1-3','4-8: d':'4-8'}
             if len(sys_info.fields) == 16:
                 orbs_opts = {**orbs_opts,'9-15: f':'9-15'}
+            max_ind = len(sys_info.fields)-1
+            orbs_opts['0-{}: All'.format(max_ind)] = "0-{}".format(max_ind)
             inds = sys_info.ElemIndex
             ions_opts = {"{}-{}: {}".format(inds[i],inds[i+1]-1,item):"{}-{}".format(
                                     inds[i],inds[i+1]-1) for i,item in enumerate(sys_info.ElemName)}
-            self.dds['elms'].options = {**ions_opts,'All':'{}-{}'.format(inds[0],inds[-1]-1)}
+            self.dds['elms'].options = {**ions_opts,'0-{}: All'.format(inds[-1]-1):'0-{}'.format(inds[-1]-1)}
             self.dds['orbs'].options = orbs_opts
             self.sys_info = sys_info # Update it as well.
 
@@ -595,6 +601,10 @@ class VasprunApp:
         self.fig_gui = HBox() # Middle Tab
         self.theme_colors = simple_colors.copy() # Avoid Modification
 
+        self.idos_kws   = dict(colormap='RGB',tdos_color=(0.5, 0.95, 0),linewidth=2,fill_area=True,
+                               spin='both',interpolate=False,n=5,k=3,title=None)
+        self.ibands_kws = dict(mode='markers',skipk=None,max_width=6,title=None,interpolate=False,n=5,k=3)
+
         l_btn = ipw.Layout(width='max-content')
         self.buttons = {'load_data' : Button(description='Load Data',layout=l_btn,tooltip='Load and Cache Data'),
                         'load_graph': Button(description='Load Graph',layout=l_btn,tooltip='Create Graph'),
@@ -655,10 +665,12 @@ class VasprunApp:
 
     def __setattr__(self,name,value):
         self.__dict__[name] = value
-        if 'dds' in self.__dict__.keys():
-            self.dds['theme'].value = 'Custom'
-        if 'htmls' in self.__dict__.keys() and name == 'theme_colors':
-            self.htmls['theme'].value = css_style(self.theme_colors)
+        # Special treatment while setting theme_colors from outside.
+        if name == 'theme_colors':
+            if 'dds' in self.__dict__.keys():
+                self.dds['theme'].value = 'Custom'
+            if 'htmls' in self.__dict__.keys():
+                self.htmls['theme'].value = css_style(self.theme_colors)
 
     def __figure_tab(self,change):
         l_out = Layout(width='20%')
@@ -732,8 +744,6 @@ class VasprunApp:
         self.fig_gui.children = (left_box,right_box)
         self.buttons['load_graph'].icon = 'fa-refresh'
         return self.fig_gui # Return for use in show
-
-
 
     @output.capture()
     def show(self):
@@ -962,10 +972,10 @@ class VasprunApp:
             _ = self.__read_data(self.data.poscar,self.data.sys_info) # Update Table data
             # Do Not Read Fermi, its 0 or given by user
             if self.dds['band_dos'].value == 'Bands':
-                fig_data = ip.plotly_rgb_lines(path_evr=self.data,**self.input)
+                fig_data = ip.plotly_rgb_lines(path_evr=self.data,**self.input,**self.ibands_kws)
             else:
                 self.dds['en_type'].value = 'None' # Avoid random clicks
-                fig_data = ip.plotly_dos_lines(path_evr=self.data,**self.input,colormap="RGB") # input auto-modified
+                fig_data = ip.plotly_dos_lines(path_evr=self.data,**self.input,**self.idos_kws) # input auto-modified
 
             self.tab.selected_index = 1
             with self.fig.batch_animate():
@@ -994,4 +1004,20 @@ class VasprunApp:
                 _files = [os.path.join(_dir,f) for f in ['sys_info.pickle','vasprun.pickle']]
                 _ = [[print("Deleting", _file),os.remove(_file)] for _file in _files if os.path.isfile(_file)]
         self.tab.selected_index = 1
+
+    def iplot(self,**kwargs):
+        "Returns a detached interactive Figure. `kwargs` are passed to `plotly_rgb_lines` or `plotly_dos_lines` based on current figure. `kwargs` should exclude whatever inside `self.input` and `path_evr`"
+        kwargs = {k:v for k,v in kwargs.items() if k not in self.input.keys() or k!='path_evr'}
+        if self.dds['band_dos'].value == 'Bands':
+            return ip.plotly_rgb_lines(path_evr=self.data,**self.input,**kwargs)
+        else:
+            return ip.plotly_dos_lines(path_evr=self.data,**self.input,**kwargs)
+
+    def splot(self,**kwargs):
+        "Returns matplotlib Axes.`kwargs` are passed to `quick_rgb_lines` or `quick_dos_lines` based on current figure. `kwargs` should exclude whatever inside `self.input` and `path_evr`"
+        kwargs = {k:v for k,v in kwargs.items() if k not in self.input.keys() or k!='path_evr'}
+        if self.dds['band_dos'].value == 'Bands':
+            return sp.quick_rgb_lines(path_evr=self.data,**self.input,**kwargs)
+        else:
+            return sp.quick_dos_lines(path_evr=self.data,**self.input,**kwargs)
 
