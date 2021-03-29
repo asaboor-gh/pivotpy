@@ -19,9 +19,9 @@ import numpy as np
 import plotly.graph_objects as go
 # Inside packages import to work both with package and jupyter notebook.
 try:
-    from . import vr_parser as vp
-    from . import s_plots as sp
-    from . import i_plots as ip
+    from pivotpy import vr_parser as vp
+    from pivotpy import s_plots as sp
+    from pivotpy import i_plots as ip
 except:
     import pivotpy.vr_parser as vp
     import pivotpy.s_plots as sp
@@ -366,7 +366,6 @@ def export_outcar(path=None):
     final_dict = {'ion_pot':pot_arr,'positions':pos_arr,'site_pot':pos_pot,'basis':basis[:,:3],'rec_basis':basis[:,3:],'n_kbi':n_kbi}
     return vp.Dict2Data(final_dict)
 
-
 # Cell
 def export_potential(locpot=None,e = True,m = False):
     """
@@ -552,7 +551,6 @@ class LOCPOT_CHG:
                           yaxis = go.layout.YAxis(title_text='No. of Points in Rolling Average'),
                           xaxis = go.layout.XAxis(title_text="{}({}<sub>max</sub>)".format(_dir,_dir)))
         return fig
-
 
 # Cell
 def transform_color(arr,s=1,c=1,b=0,mixing_matrix=None):

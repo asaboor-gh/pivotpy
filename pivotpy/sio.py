@@ -23,8 +23,8 @@ from mpl_toolkits import mplot3d
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 # Inside packages import to work both with package and jupyter notebook.
 try:
-    from . import vr_parser as vp
-    from . import s_plots as sp
+    from pivotpy import vr_parser as vp
+    from pivotpy import s_plots as sp
 except:
     import pivotpy.vr_parser as vp
     import pivotpy.s_plots as sp
@@ -529,7 +529,6 @@ def rad_angle(v1,v2):
     angle = np.arccos(dot_p)
     return angle
 
-
 # Cell
 def get_bz(path_pos = None,loop = True,digits=8,primitive=False):
     """
@@ -741,8 +740,6 @@ def splot_bz(path_pos_bz = None, ax = None, plane=None,color='blue',fill=True,ve
         ax3d.set_zlabel(label.format('z'))
         return ax3d
 
-
-
 # Cell
 def iplot_bz(path_pos_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',background = 'rgb(255,255,255)',vname = 'b', alpha=0.4,ortho3d=True,fig=None):
     """
@@ -950,7 +947,6 @@ class BZ:
         """Brings atoms's positions inside Cell and returns their R3 coordinates."""
         return to_R3(self.cell.basis, kpoints= points)
 
-
 # Cell
 def fix_sites(poscar,tol=1e-2,eqv_sites=True):
     """Add equivalent sites to make a full data shape of lattice. Returns same data after fixing.
@@ -1022,7 +1018,6 @@ def _get_bond_length(poscar,given=None,eps=1e-2):
         _coords = to_R3(poscar.basis,poscar.positions)
         _arr = sorted(np.linalg.norm(_coords[1:] - _coords[0],axis=1)) # Sort in ascending. returns list
         return np.mean(_arr[:2]) + eps if _arr else 1 #Between nearest and second nearest.
-
 
 # Cell
 def iplot_lat(poscar,sizes=10,colors='blue',
@@ -1180,8 +1175,6 @@ def splot_lat(poscar,sizes=50,colors=[],colormap=None,
     sp.add_legend(ax)
     return ax
 
-
-
 # Cell
 def join_poscars(poscar1,poscar2,direction='z',tol=1e-2):
     """Joins two POSCARs in a given direction. In-plane lattice parameters are kept from `poscar1` and basis of `poscar2` parallel to `direction` is modified while volume is kept same.
@@ -1290,7 +1283,6 @@ def write_poscar(poscar,sd_list=None,outfile=None,overwrite=False):
             return print(f"{outfile!r} exists, can not overwrite, \nuse overwrite=True if you want to chnage.")
     # Return string anyway
     return out_str
-
 
 # Cell
 def scale_poscar(path_poscar,scale=(1,1,1),tol=1e-2):

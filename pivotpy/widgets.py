@@ -21,10 +21,10 @@ import plotly.graph_objects as go
 
 # Inside packages import to work both with package and jupyter notebook.
 try:
-    from . import g_utils as gu
-    from . import vr_parser as vp
-    from . import i_plots as ip
-    from . import s_plots as sp
+    from pivotpy import g_utils as gu
+    from pivotpy import vr_parser as vp
+    from pivotpy import i_plots as ip
+    from pivotpy import s_plots as sp
 except:
     import pivotpy.g_utils as gu
     import pivotpy.vr_parser as vp
@@ -304,7 +304,6 @@ def get_files_gui(auto_fill = 'vasprun.xml',html_style=None,height=320):
     full_box.add_class('marginless')
     return full_box, files_w
 
-
 # Cell
 class InputGui:
     def __init__(self,sys_info=None,html_style=None,height=400):
@@ -486,7 +485,6 @@ def save_data(out_w1,data_dict):
     out_f = os.path.join(os.path.split(out_w1.value)[0],'result.json')
     vp.dump_dict(data_dict,dump_to='json',outfile=out_f)
 
-
 # Cell
 def color_toggle(tog_w,fig,rd_btn):
     if tog_w.icon == 'toggle-off':
@@ -510,7 +508,6 @@ def color_toggle(tog_w,fig,rd_btn):
                     trace.mode='lines'
                     trace.line.width=1.5
                     trace.line.color='skyblue'
-
 
 # Cell
 def generate_summary(paths_list=None):
@@ -557,7 +554,6 @@ def generate_summary(paths_list=None):
     if common_prefix:
         return df.style.set_caption("Root Path: {}".format(common_prefix)) # return with header
     return df #return simple
-
 
 # Cell
 class VasprunApp:
@@ -1026,4 +1022,3 @@ class VasprunApp:
             return sp.quick_rgb_lines(path_evr=self.data,**self.input,**kwargs)
         else:
             return sp.quick_dos_lines(path_evr=self.data,**self.input,**kwargs)
-

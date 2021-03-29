@@ -19,8 +19,8 @@ from mpl_toolkits.mplot3d import Axes3D
 
 # Inside packages import to work both with package and jupyter notebook.
 try:
-    from . import vr_parser as vp
-    from . import g_utils as gu
+    from pivotpy import vr_parser as vp
+    from pivotpy import g_utils as gu
 except:
     import pivotpy.vr_parser as vp
     import pivotpy.g_utils as gu
@@ -40,7 +40,6 @@ mpl.rcParams['axes.linewidth'] = 0.4 #set the value globally
 mpl.rcParams['font.serif'] = "STIXGeneral"
 mpl.rcParams['font.family'] = "serif"
 mpl.rcParams['mathtext.fontset'] = "stix"
-
 
 # Cell
 def modify_axes(ax=None,xticks=[],ktick_vals=[],xlim=[],\

@@ -19,7 +19,7 @@ import textwrap
 import xml.etree.ElementTree as ET
 # Inside packages import to work both with package and jupyter notebook.
 try:
-    from . import g_utils as gu
+    from pivotpy import g_utils as gu
 except:
     import pivotpy.g_utils as gu
 
@@ -1018,7 +1018,6 @@ def slice_data(dim_inds,old_shape):
     new_shape = [len(inds) for inds in dim_inds] #dim_inds are only in rows.
     new_shape.append(old_shape[-1])
     return {'start':_out_,'nlines':nlines,'count': nlines*len(_out_),'cols':cols,'new_shape':tuple(new_shape)}
-
 
 # Cell
 def split_vasprun(path=None):
