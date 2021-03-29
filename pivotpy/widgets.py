@@ -564,6 +564,7 @@ class VasprunApp:
     """
     Display a GUI for vasp output analysis. `self.theme_colors` can be used to edit custom theme.
     - **Usage Example**
+
     ```python
     import pivotpy as pp
     va = pp.VasprunApp()

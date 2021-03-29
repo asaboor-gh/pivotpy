@@ -76,15 +76,15 @@ Markdown(df.data.to_markdown())
 
 
 
-|    | sys   |       V |         a |         b |        c |      VBM |      CBM |   so_max |   so_min | rel_path             |   E_gap |
-|---:|:------|--------:|----------:|----------:|---------:|---------:|---------:|---------:|---------:|:---------------------|--------:|
-|  0 | C2    | 105.493 |   2.46803 |   2.46803 |  19.9983 | nan      | nan      |      nan |      nan | ISPIN_1/bands/DOS    | nan     |
-|  1 | C2    | 105.493 |   2.46803 |   2.46803 |  19.9983 |  -2.7733 |  -2.7733 |      nan |      nan | ISPIN_1/bands        | nan     |
-|  2 | C2    | 105.493 |   2.46803 |   2.46803 |  19.9983 | -12.7211 |  -5.2581 |      nan |      nan | ISPIN_1/dos          |   7.463 |
-|  3 | C2    | 105.493 |   2.46803 |   2.46803 |  19.9983 | -12.7211 |  -5.2581 |      nan |      nan | ISPIN_2/bands        |   7.463 |
-|  4 | C2    | 105.493 |   2.46803 |   2.46803 |  19.9983 | nan      | nan      |      nan |      nan | ISPIN_2/dos/sigm0_01 | nan     |
-|  5 | nan   | nan     | nan       | nan       | nan      | nan      | nan      |      nan |      nan | ISPIN_2/dos          | nan     |
-|  6 | C2    | 105.493 |   2.46803 |   2.46803 |  19.9983 |  -3.7816 |  -1.7516 |      nan |      nan | nan                  |   2.03  |
+|    | sys   |       V |       a |       b |       c |      VBM |      CBM |   so_max |   so_min |    E_gap | rel_path             |
+|---:|:------|--------:|--------:|--------:|--------:|---------:|---------:|---------:|---------:|---------:|:---------------------|
+|  0 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 |  -2.6818 |  -2.6818 |      nan |      nan |   0      | ISPIN_1/bands/DOS    |
+|  1 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 |  -2.7733 |  -2.7733 |      nan |      nan |   0      | ISPIN_1/bands        |
+|  2 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 | -12.7211 |  -5.2581 |      nan |      nan |   7.463  | ISPIN_1/dos          |
+|  3 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 |  -3.5339 |  -1.9647 |      nan |      nan |   1.5692 | ISPIN_2/bands        |
+|  4 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 | nan      | nan      |      nan |      nan | nan      | ISPIN_2/dos/sigm0_01 |
+|  5 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 |  -3.0398 |  -2.6296 |      nan |      nan |   0.4102 | ISPIN_2/dos          |
+|  6 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 |  -1.2155 |  -1.9644 |      nan |      nan |  -0.7489 | nan                  |
 
 
 
@@ -92,12 +92,12 @@ Markdown(df.data.to_markdown())
 print(df.data[:2].to_latex())
 ```
 
-    \begin{tabular}{llrrrrrrrrlr}
+    \begin{tabular}{llrrrrrrrrrl}
     \toprule
-    {} & sys &          V &        a &        b &         c &     VBM &     CBM &  so\_max &  so\_min &           rel\_path &  E\_gap \\
+    {} & sys &          V &        a &        b &         c &     VBM &     CBM &  so\_max &  so\_min &  E\_gap &           rel\_path \\
     \midrule
-    0 &  C2 &  105.49325 &  2.46803 &  2.46803 &  19.99829 &     NaN &     NaN &     NaN &     NaN &  ISPIN\_1/bands/DOS &    NaN \\
-    1 &  C2 &  105.49325 &  2.46803 &  2.46803 &  19.99829 & -2.7733 & -2.7733 &     NaN &     NaN &      ISPIN\_1/bands &    NaN \\
+    0 &  C2 &  105.49325 &  2.46803 &  2.46803 &  19.99829 & -2.6818 & -2.6818 &     NaN &     NaN &    0.0 &  ISPIN\_1/bands/DOS \\
+    1 &  C2 &  105.49325 &  2.46803 &  2.46803 &  19.99829 & -2.7733 & -2.7733 &     NaN &     NaN &    0.0 &      ISPIN\_1/bands \\
     \bottomrule
     \end{tabular}
     
@@ -120,6 +120,9 @@ vr=pp.export_vasprun(elim=[-5,5])
 vr
 ```
 
+    Loading from PowerShell Exported Data...
+    
+
 
 
 
@@ -127,6 +130,7 @@ vr
         sys_info = Data(
             SYSTEM = C2
             NION = 2
+            NELECT = 8
             TypeION = 1
             ElemName = ['C']
             E_Fermi = -3.3501
@@ -146,7 +150,6 @@ vr
             ISPIN = 1
         )
         dim_info = Data(
-            ⇅ = Each of SpinUp/SpinDown Arrays
             kpoints = (NKPTS,3)
             kpath = (NKPTS,1)
             bands = ⇅(NKPTS,NBANDS)
@@ -161,6 +164,7 @@ vr
             ISPIN = 1
             NBANDS = 21
             evals = <ndarray:shape=(90, 21)>
+            indices = range(1, 22)
         )
         tdos = Data(
             E_Fermi = -3.3501
@@ -168,7 +172,7 @@ vr
             tdos = <ndarray:shape=(301, 3)>
         )
         pro_bands = Data(
-            labels = ['py', 'pz', 'px', 'dxy', 'dyz', 'dz2', 'dxz', 'x2-y2']
+            labels = ['s', 'py', 'pz', 'px', 'dxy', 'dyz', 'dz2', 'dxz', 'x2-y2']
             pros = <ndarray:shape=(2, 90, 21, 9)>
         )
         pro_dos = Data(
@@ -176,10 +180,15 @@ vr
             pros = <ndarray:shape=(2, 301, 10)>
         )
         poscar = Data(
+            SYSTEM = C2
             volume = 105.49324928
             basis = <ndarray:shape=(3, 3)>
             rec_basis = <ndarray:shape=(3, 3)>
             positions = <ndarray:shape=(2, 3)>
+            labels = ['C 1', 'C 2']
+            unique = Data(
+                C = range(0, 2)
+            )
         )
     )
 
@@ -208,8 +217,9 @@ pp._show()
 ```
 
     Loading from PowerShell Exported Data...
-    Loading from PowerShell Exported Data...
-    [92m elements[0] = 0 is converted to range(0, 2) which picks all ions of 'C'.To just pick one ion at this index, wrap it in brackets [].[00m
+    [0;92m elements[0] = 0 is converted to range(0, 2) which picks all ions of 'C'.To just pick one ion at this index, wrap it in brackets [].[00m
+    e:\Research\pivotpy\pivotpy\s_plots.py:423: MatplotlibDeprecationWarning: shading='flat' when X and Y have the same dimensions as C is deprecated since 3.3.  Either specify the corners of the quadrilaterals with X and Y, or pass shading='auto', 'nearest' or 'gouraud', or set rcParams['pcolor.shading'].  This will become an error two minor releases later.
+      cax.pcolormesh(t,r,tg.T,norm=norm,cmap=colormap,edgecolor='face')
     
 
 
@@ -242,7 +252,7 @@ Markdown("[See Interactive Plot](https://massgh.github.io/InteractiveHTMLs/iGrap
 
 ```
 import pivotpy as pp 
-fig2 = pp.plot_bz([[1,0,0],[0,1,0],[0,0,1]])
+pp.splot_bz([[1,0,0],[0,1,0],[0,0,1]],color=(1,1,1,0.2),light_from=(0.5,0,2),colormap='RGB').set_axis_off()
 #pp.plotly2html(fig2) #Do inside Google Colab, fig1 inside Jupyter
 from IPython.display import Markdown
 Markdown("[See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ.html)")
@@ -253,6 +263,10 @@ Markdown("[See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ
 
 [See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ.html)
 
+
+
+
+![svg](docs/images/output_16_1.svg)
 
 
 ## Plotting Two Calculations Side by Side 
@@ -276,8 +290,12 @@ pp.quick_bplot(path_evr=vr2,ax=axs,txt='Graphene(Left: ISPIN=1, Right: ISPIN=2)'
 pp.modify_axes(ax=axs,xlim=[0,last_k],ylim=[-10,10],**ti_cks)
 ```
 
+    Loading from PowerShell Exported Data...
+    Loading from PowerShell Exported Data...
+    
 
-![svg](docs/images/output_18_0.svg)
+
+![svg](docs/images/output_18_1.svg)
 
 
 ## Interpolation 
@@ -312,11 +330,11 @@ pp.ps2std(ps_command='(Get-Process)[0..4]')
 
     NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
     ------    -----      -----     ------      --  -- -----------
-    50    38.14      61.34     185.53   17860   1 AltC
-    24    13.38      51.61       2.80   17324   1 ApplicationFrameHost
-    8     1.59       5.84       0.00    5884   0 armsvc
-    39    33.12      46.57      10.81   15428   1 BingWallpaperApp
-    22    42.45      88.01       5.38    2916   1 Code
+    52    37.95      63.51       7.45   13920   1 AltC
+    33    26.79      77.11       5.55    1560   1 ApplicationFrameHost
+    9     1.60       5.48       0.00    5560   0 armsvc
+    21   146.68      29.53       5.58    1916   0 audiodg
+    35    30.07      40.47       1.53   13496   1 BingWallpaperApp
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -352,23 +370,23 @@ c.ScriptMagics.script_paths = {
 Get-ChildItem 'E:\Research\graphene_example\'
 ```
 
-    
-    
-        Directory: E:\Research\graphene_example
-    
-    
-    Mode                 LastWriteTime         Length Name                                                                 
-    ----                 -------------         ------ ----                                                                 
-    da----        10/31/2020   1:30 PM                ISPIN_1                                                              
-    da----          5/9/2020   1:05 PM                ISPIN_2                                                              
-    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                               
-    -a----        11/22/2020   7:02 PM            162 result.json                                                          
-    -a----        11/22/2020   6:08 PM            693 sys_info.pickle                                                      
-    -a----        11/22/2020   6:08 PM          91850 vasprun.pickle                                                       
-    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                          
-    
-    
-
+    
+    
+        Directory: E:\Research\graphene_example
+    
+    
+    Mode                 LastWriteTime         Length Name                                                                 
+    ----                 -------------         ------ ----                                                                 
+    da----        10/31/2020   1:30 PM                ISPIN_1                                                              
+    da----          5/9/2020   1:05 PM                ISPIN_2                                                              
+    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                               
+    -a----         3/13/2021   4:14 PM            193 result.json                                                          
+    -a----        11/22/2020   6:08 PM            693 sys_info.pickle                                                      
+    -a----        11/22/2020   6:08 PM          91850 vasprun.pickle                                                       
+    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                          
+    
+    
+    
 
 ```
 x = %ps (Get-ChildItem 'E:\Research\graphene_example\').FullName

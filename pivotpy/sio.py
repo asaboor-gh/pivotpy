@@ -249,7 +249,6 @@ def get_kpath(hsk_list=[],labels=[], n = 5,weight= None ,ibzkpt = None,outfile=N
         - hsk_list : N x 3 list of N high symmetry points, if broken path then [[N x 3],[M x 3],...]. Optionally you can put a 4 values point where 4th entry will decide number of kpoints in current interval. Make sure that points in a connected path patch are at least two i.e. `[[x1,y1,z1],[x2,y2,z2]]` or `[[x1,y1,z1,N],[x2,y2,z2]]`.
         - n        ; int, number per unit length, this makes uniform steps based on distance between points.
         - weight : Float, if None, auto generates weights.
-        - gamma  : If True, shifts mesh at gamma point.
         - ibzkpt : Path to ibzkpt file, required for HSE calculations.
         - labels : Hight symmetry points labels. Good for keeping record of lables and points indices for later use.                - Note: If you do not want to label a point, label it as 'skip' at its index and it will be removed.
         - outfile: Path/to/file to write kpoints.
@@ -1021,8 +1020,8 @@ def _get_bond_length(poscar,given=None,eps=1e-2):
         return given*poscar.volume**(1/3) + eps
     else:
         _coords = to_R3(poscar.basis,poscar.positions)
-        _arr = np.linalg.norm(_coords[1:] - _coords[0],axis=1)
-        return np.min(_arr[:2]) + eps if _arr.any() else 1 #Between nearest and second nearest.
+        _arr = sorted(np.linalg.norm(_coords[1:] - _coords[0],axis=1)) # Sort in ascending. returns list
+        return np.mean(_arr[:2]) + eps if _arr else 1 #Between nearest and second nearest.
 
 
 # Cell
