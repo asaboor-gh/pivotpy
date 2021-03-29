@@ -751,7 +751,7 @@ class VasprunApp:
 
     @output.capture()
     def show(self):
-        intro_html = ipw.HTML("<h2>Pivotpy</h2><p>Filter files here and switch tab to Graphs. You can create cache ahead of time to load quickly while working. If anything does not seem to work, see the error in STD(out/err) tab. For large files, do `Export-VaspRun` in Powershell to access fast.</p><marquee style='color:red'>Pivotpy GUI based on ipywidgets!</marquee>")
+        intro_html = ipw.HTML("<h2>Pivotpy</h2><p>Filter files here and switch tab to Graphs. You can create cache ahead of time to load quickly while working. If anything does not seem to work, see the error in STD(out/err) tab. For large files, do `Export-VaspRun` in Powershell to access fast. <a href=https://massgh.github.io/pivotpy/Widgets.html#VasprunApp target='_blank'>See More</a></p><marquee style='color:blue'>Pivotpy GUI based on ipywidgets!</marquee>")
         header_box = HBox([intro_html,
                            Label('Theme:',layout=Layout(width='80px')),
                            self.dds['theme']
@@ -843,7 +843,7 @@ class VasprunApp:
             print('Done')
 
         _ = self.__read_data(self.data.poscar,sys_info) # Update Table data on load
-
+        self.texts['fermi'].value = str(sys_info.E_Fermi) # Needs each time new data loads up.
 
         self.tab.selected_index = 1
         # Revamp input dropdowns on load  ==========

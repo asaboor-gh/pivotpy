@@ -1006,8 +1006,8 @@ def get_pairs(basis, positions, r, eps=1e-2):
     """Returns a tuple of Lattice (coords,pairs), so coords[pairs] given nearest site bonds.
     - **Parameters**
         - basis: Real space lattice basis.
-        - positions: Array(N,3) of fractional positions of lattice sites.
-        - r        : Cartesian distance between the pairs.
+        - positions: Array(N,3) of fractional positions of lattice sites. If coordinates positions, provide unity basis.
+        - r        : Cartesian distance between the pairs in units of Angstrom e.g. 1.2 -> 1.2E-10.
         - eps      : Tolerance value. Default is 10^-2.
     """
     coords = to_R3(basis,positions)
@@ -1016,13 +1016,13 @@ def get_pairs(basis, positions, r, eps=1e-2):
     return vp.dict2tuple('Lattice',{'coords':coords,'pairs':inds})
 
 def _get_bond_length(poscar,given=None,eps=1e-2):
-    "eps is add to calculated bond length in order to fix small differences"
+    "eps is add to calculated bond length in order to fix small differences, paramater `given` in range [0,1] which is scaled to V^(1/3)."
     if given != None:
         return given*poscar.volume**(1/3) + eps
     else:
         _coords = to_R3(poscar.basis,poscar.positions)
         _arr = np.linalg.norm(_coords[1:] - _coords[0],axis=1)
-        return np.min(_arr) + eps if _arr.any() else 1
+        return np.min(_arr[:2]) + eps if _arr.any() else 1 #Between nearest and second nearest.
 
 
 # Cell
