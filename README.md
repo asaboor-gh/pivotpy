@@ -5,22 +5,6 @@
 [![Run in Azure](https://notebooks.azure.com/launch.png)](https://testazurenotebooks-massaz.notebooks.azure.com/j/notebooks/test.ipynb)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/massgh/pivotpy/blob/master/test.ipynb)
 
-
-
-
-<style>a{text-decoration: none !important;color:lightkblue;font-weight:bold;}
-                a:focus,a:active,a:hover{color:hotpink !important;}</style>
-> [&nbsp;`▶` Index●&nbsp;](https://massgh.github.io/pivotpy/)  
-> [&nbsp;`▶` XmlElementTree&nbsp;](https://massgh.github.io/pivotpy/XmlElementTree)  
-> [&nbsp;`▶` StaticPlots&nbsp;](https://massgh.github.io/pivotpy/StaticPlots)  
-> [&nbsp;`▶` InteractivePlots&nbsp;](https://massgh.github.io/pivotpy/InteractivePlots)  
-> [&nbsp;`▶` Utilities&nbsp;](https://massgh.github.io/pivotpy/Utilities)  
-> [&nbsp;`▶` StructureIO&nbsp;](https://massgh.github.io/pivotpy/StructureIO)  
-> [&nbsp;`▶` Widgets&nbsp;](https://massgh.github.io/pivotpy/Widgets)  
-
-
-
-
 ## Install
 `pip install pivotpy`
 
@@ -70,47 +54,14 @@ print(df.caption)
 Markdown(df.data.to_markdown())
 ```
 
-    Root Path: e:/Research/graphene_example/
-    
-
-
-
-
-|    | sys   |       V |       a |       b |       c |      VBM |      CBM |   so_max |   so_min |    E_gap | rel_path             |
-|---:|:------|--------:|--------:|--------:|--------:|---------:|---------:|---------:|---------:|---------:|:---------------------|
-|  0 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 |  -2.6818 |  -2.6818 |      nan |      nan |   0      | ISPIN_1/bands/DOS    |
-|  1 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 |  -2.7733 |  -2.7733 |      nan |      nan |   0      | ISPIN_1/bands        |
-|  2 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 | -12.7211 |  -5.2581 |      nan |      nan |   7.463  | ISPIN_1/dos          |
-|  3 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 |  -3.5339 |  -1.9647 |      nan |      nan |   1.5692 | ISPIN_2/bands        |
-|  4 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 | nan      | nan      |      nan |      nan | nan      | ISPIN_2/dos/sigm0_01 |
-|  5 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 |  -3.0398 |  -2.6296 |      nan |      nan |   0.4102 | ISPIN_2/dos          |
-|  6 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 |  -1.2155 |  -1.9644 |      nan |      nan |  -0.7489 | nan                  |
-
-
-
 ```
 print(df.data[:2].to_latex())
 ```
-
-    \begin{tabular}{llrrrrrrrrrl}
-    \toprule
-    {} & sys &          V &        a &        b &         c &     VBM &     CBM &  so\_max &  so\_min &  E\_gap &           rel\_path \\
-    \midrule
-    0 &  C2 &  105.49325 &  2.46803 &  2.46803 &  19.99829 & -2.6818 & -2.6818 &     NaN &     NaN &    0.0 &  ISPIN\_1/bands/DOS \\
-    1 &  C2 &  105.49325 &  2.46803 &  2.46803 &  19.99829 & -2.7733 & -2.7733 &     NaN &     NaN &    0.0 &      ISPIN\_1/bands \\
-    \bottomrule
-    \end{tabular}
-    
-    
 
 ```
 ax = pp.init_figure(figsize=(3,1.5))
 _ = df.data.sort_values('VBM').plot(ax=ax,x = 'VBM',y=['CBM','E_gap'])
 ```
-
-
-![svg](docs/images/output_9_0.svg)
-
 
 ```
 import os 
@@ -119,80 +70,6 @@ xml_data=pp.read_asxml()
 vr=pp.export_vasprun(elim=[-5,5])
 vr
 ```
-
-    Loading from PowerShell Exported Data...
-    
-
-
-
-
-    Data(
-        sys_info = Data(
-            SYSTEM = C2
-            NION = 2
-            NELECT = 8
-            TypeION = 1
-            ElemName = ['C']
-            E_Fermi = -3.3501
-            fields = ['s', 'py', 'pz', 'px', 'dxy', 'dyz', 'dz2', 'dxz', 'x2-y2']
-            incar = Data(
-                SYSTEM = C2
-                PREC = high
-                ALGO = N
-                LSORBIT = T
-                NELMIN = 7
-                ISMEAR = 0
-                SIGMA = 0.10000000
-                LORBIT = 11
-                GGA = PS
-            )
-            ElemIndex = [0, 2]
-            ISPIN = 1
-        )
-        dim_info = Data(
-            kpoints = (NKPTS,3)
-            kpath = (NKPTS,1)
-            bands = ⇅(NKPTS,NBANDS)
-            dos = ⇅(grid_size,3)
-            pro_dos = ⇅(NION,grid_size,en+pro_fields)
-            pro_bands = ⇅(NION,NKPTS,NBANDS,pro_fields)
-        )
-        kpoints = <ndarray:shape=(90, 3)>
-        kpath = <list:len=90>
-        bands = Data(
-            E_Fermi = -3.3501
-            ISPIN = 1
-            NBANDS = 21
-            evals = <ndarray:shape=(90, 21)>
-            indices = range(1, 22)
-        )
-        tdos = Data(
-            E_Fermi = -3.3501
-            ISPIN = 1
-            tdos = <ndarray:shape=(301, 3)>
-        )
-        pro_bands = Data(
-            labels = ['s', 'py', 'pz', 'px', 'dxy', 'dyz', 'dz2', 'dxz', 'x2-y2']
-            pros = <ndarray:shape=(2, 90, 21, 9)>
-        )
-        pro_dos = Data(
-            labels = ['s', 'py', 'pz', 'px', 'dxy', 'dyz', 'dz2', 'dxz', 'x2-y2']
-            pros = <ndarray:shape=(2, 301, 10)>
-        )
-        poscar = Data(
-            SYSTEM = C2
-            volume = 105.49324928
-            basis = <ndarray:shape=(3, 3)>
-            rec_basis = <ndarray:shape=(3, 3)>
-            positions = <ndarray:shape=(2, 3)>
-            labels = ['C 1', 'C 2']
-            unique = Data(
-                C = range(0, 2)
-            )
-        )
-    )
-
-
 
 ## Matplotlib's static plots
 Add anything from legend,colorbar, colorwheel. In below figure, all three are shown.
@@ -216,16 +93,6 @@ pp.color_wheel(axs[2],xy=(0.7,1.15),scale=0.2,labels=[l+'$^{⇅}$' for l in labe
 pp._show() 
 ```
 
-    Loading from PowerShell Exported Data...
-    [0;92m elements[0] = 0 is converted to range(0, 2) which picks all ions of 'C'.To just pick one ion at this index, wrap it in brackets [].[00m
-    e:\Research\pivotpy\pivotpy\s_plots.py:423: MatplotlibDeprecationWarning: shading='flat' when X and Y have the same dimensions as C is deprecated since 3.3.  Either specify the corners of the quadrilaterals with X and Y, or pass shading='auto', 'nearest' or 'gouraud', or set rcParams['pcolor.shading'].  This will become an error two minor releases later.
-      cax.pcolormesh(t,r,tg.T,norm=norm,cmap=colormap,edgecolor='face')
-    
-
-
-![svg](docs/images/output_12_1.svg)
-
-
 ## Interactive plots using plotly
 
 ```
@@ -235,13 +102,6 @@ fig1 = pp.plotly_rgb_lines(vr1,**args_dict)
 from IPython.display import Markdown
 Markdown("[See Interactive Plot](https://massgh.github.io/InteractiveHTMLs/iGraphene.html)")
 ```
-
-
-
-
-[See Interactive Plot](https://massgh.github.io/InteractiveHTMLs/iGraphene.html)
-
-
 
 ## Brillouin Zone (BZ) Processing
 - Look in `pivotpy.sio` module for details on generating mesh and path of KPOINTS as well as using Materials Projects' API to get POSCAR right in the working folder with command `get_poscar`. Below is a screenshot of interactive BZ plot. You can `double click` on blue points and hit `Ctrl + C` to copy the high symmetry points relative to reciprocal lattice basis vectors. (You will be able to draw kpath in `Pivotpy-Dash` application and generate KPOINTS automatically from a web interface later on!). 
@@ -257,17 +117,6 @@ pp.splot_bz([[1,0,0],[0,1,0],[0,0,1]],color=(1,1,1,0.2),light_from=(0.5,0,2),col
 from IPython.display import Markdown
 Markdown("[See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ.html)")
 ```
-
-
-
-
-[See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ.html)
-
-
-
-
-![svg](docs/images/output_16_1.svg)
-
 
 ## Plotting Two Calculations Side by Side 
 - Here we will use `shift_kpath` to demonstrate plot of two calculations on same axes side by side
@@ -290,14 +139,6 @@ pp.quick_bplot(path_evr=vr2,ax=axs,txt='Graphene(Left: ISPIN=1, Right: ISPIN=2)'
 pp.modify_axes(ax=axs,xlim=[0,last_k],ylim=[-10,10],**ti_cks)
 ```
 
-    Loading from PowerShell Exported Data...
-    Loading from PowerShell Exported Data...
-    
-
-
-![svg](docs/images/output_18_1.svg)
-
-
 ## Interpolation 
 
 ```
@@ -314,10 +155,6 @@ plot=plt.plot(k,evals,'w',lw=1,label='interpolated',ls='dashed')
 pp.add_text(ax=plt.gca(),txts='Graphene')
 ```
 
-
-![svg](docs/images/output_20_0.svg)
-
-
 ## LOCPOT,CHG Visualization
 check out the class `pivotpy.LOCPOT_CHG` to visulize local potential/charge and magnetization in a given direction.
 
@@ -327,15 +164,6 @@ Some tasks are very tideious in python while just a click way in powershell. See
 ```
 pp.ps2std(ps_command='(Get-Process)[0..4]')
 ```
-
-    NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
-    ------    -----      -----     ------      --  -- -----------
-    52    37.95      63.51       7.45   13920   1 AltC
-    33    26.79      77.11       5.55    1560   1 ApplicationFrameHost
-    9     1.60       5.48       0.00    5560   0 armsvc
-    21   146.68      29.53       5.58    1916   0 audiodg
-    35    30.07      40.47       1.53   13496   1 BingWallpaperApp
-    
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
 - You can create a IPython cell magic to run powershell commands directly in IPython Shell/Notebook (Powershell core installation required).
@@ -370,56 +198,9 @@ c.ScriptMagics.script_paths = {
 Get-ChildItem 'E:\Research\graphene_example\'
 ```
 
-    
-    
-        Directory: E:\Research\graphene_example
-    
-    
-    Mode                 LastWriteTime         Length Name                                                                 
-    ----                 -------------         ------ ----                                                                 
-    da----        10/31/2020   1:30 PM                ISPIN_1                                                              
-    da----          5/9/2020   1:05 PM                ISPIN_2                                                              
-    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                               
-    -a----         3/13/2021   4:14 PM            193 result.json                                                          
-    -a----        11/22/2020   6:08 PM            693 sys_info.pickle                                                      
-    -a----        11/22/2020   6:08 PM          91850 vasprun.pickle                                                       
-    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                          
-    
-    
-    
-
 ```
 x = %ps (Get-ChildItem 'E:\Research\graphene_example\').FullName
 x
 ```
 
-
-
-
-    ['E:\\Research\\graphene_example\\ISPIN_1',
-     'E:\\Research\\graphene_example\\ISPIN_2',
-     'E:\\Research\\graphene_example\\OUTCAR',
-     'E:\\Research\\graphene_example\\result.json',
-     'E:\\Research\\graphene_example\\sys_info.pickle',
-     'E:\\Research\\graphene_example\\vasprun.pickle',
-     'E:\\Research\\graphene_example\\vasprun.xml']
-
-
-
 [Functions Reference](functions.md)
-
-
-
-
-<style>a{text-decoration: none !important;color:lightkblue;font-weight:bold;}
-                a:focus,a:active,a:hover{color:hotpink !important;}</style>
-> [&nbsp;`▶` Index●&nbsp;](https://massgh.github.io/pivotpy/)  
-> [&nbsp;`▶` XmlElementTree&nbsp;](https://massgh.github.io/pivotpy/XmlElementTree)  
-> [&nbsp;`▶` StaticPlots&nbsp;](https://massgh.github.io/pivotpy/StaticPlots)  
-> [&nbsp;`▶` InteractivePlots&nbsp;](https://massgh.github.io/pivotpy/InteractivePlots)  
-> [&nbsp;`▶` Utilities&nbsp;](https://massgh.github.io/pivotpy/Utilities)  
-> [&nbsp;`▶` StructureIO&nbsp;](https://massgh.github.io/pivotpy/StructureIO)  
-> [&nbsp;`▶` Widgets&nbsp;](https://massgh.github.io/pivotpy/Widgets)  
-
-
-
