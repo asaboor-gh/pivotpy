@@ -25,11 +25,13 @@ try:
     from pivotpy import vr_parser as vp
     from pivotpy import i_plots as ip
     from pivotpy import s_plots as sp
+    from pivotpy import sio
 except:
     import pivotpy.g_utils as gu
     import pivotpy.vr_parser as vp
     import pivotpy.i_plots as ip
     import pivotpy.s_plots as sp
+    import pivotpy.sio as sio
 
 # Cell
 def css_style(colors_dict):
@@ -774,6 +776,16 @@ class VasprunApp:
         self.dds['style'].value = 'plotly' # to trigger first callback on graph.
         return self.tab
 
+    def __fill_ticks(self):
+        kpath = os.path.join(os.path.split(self.files_dd.value)[0],'KPOINTS')
+        tvs = sio.read_ticks(kpath) #ticks values segments
+        if tvs['ktick_inds']: #If is must, if not present, avoid overwritting custom input
+            self.texts['kticks'].value = ','.join([str(v) for v in tvs['ktick_inds']])
+        if tvs['ktick_vals']:
+            self.texts['ktickv'].value = ','.join(tvs['ktick_vals'])
+        if tvs['kseg_inds']:
+            self.texts['kjoin'].value = ','.join([str(v) for v in tvs['kseg_inds']])
+
     def __update_theme(self,change):
         if self.dds['theme'].value == 'Dark':
             self.htmls['theme'].value = css_style(dark_colors)
@@ -819,6 +831,7 @@ class VasprunApp:
 
     @output.capture(clear_output=True,wait=True)
     def __on_load(self,button):
+        self.__fill_ticks() # First fill ticks, then update input
         self.__update_input(change=None) # Fix input right here.
         self.__load_previous(change=button) # previous calculations.
         self.tab.selected_index = 2
@@ -948,6 +961,7 @@ class VasprunApp:
     def __update_graph(self,btn):
         path = self.files_dd.value
         if path:
+            self.__fill_ticks() # First fill ticks, then update input
             self.__update_input(change=None) # Update input here as well
             self.tab.selected_index = 2
             self.fig.data = []
