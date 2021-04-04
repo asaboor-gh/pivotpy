@@ -185,6 +185,8 @@ def plot_bands(ax=None,kpath=None,bands=None,showlegend=False,E_Fermi=None,**kwa
     # Plotting
     kws_u = {k:v for k,v in kwargs.items() if not k.endswith('_')}
     kws_d = {k.rstrip('_'):v for k,v in kwargs.items() if k.endswith('_')}
+    kws_u = {'color':((0,0,0.8)),'lw': 1.5,**kws_u}
+    kws_d = {'color_':'red','lw_': 1.2,'ls_':'dashed',**kws_d}
     if bands.ISPIN==1:
         if(not bands.evals.any()):
             print(gu.color.y("Can not plot an empty eigenvalues object."))
