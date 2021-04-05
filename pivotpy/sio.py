@@ -964,16 +964,24 @@ class BZ:
         return to_R3(self.cell.basis, kpoints= points)
 
 # Cell
-def fix_sites(poscar,tol=1e-2,eqv_sites=True):
+def fix_sites(poscar,tol=1e-2,eqv_sites=True,translate=None):
     """Add equivalent sites to make a full data shape of lattice. Returns same data after fixing.
     - **Parameters**
         - poscar: Output of `export_poscar` or `export_vasprun().poscar`.
         - tol   : Tolerance value. Default is 0.01.
         - eqv_sites: If True, add sites on edges and faces. If False, just fix coordinates, i.e. `pos > 1 - tol -> pos - 1`, useful for merging poscars to make slabs.
+        - translate: A number(+/-) or list of three numbers to translate in x,y,z directions.
     """
     sys,vol,basis,rec_basis,pos,labels,unique = poscar.to_tuple()
     pos = pos.copy() # Must to avoid chnaging outside.
     out_dict = poscar.to_dict() # For output
+
+    if translate and isinstance(translate,(int,float)):
+        pos = pos + (translate - int(translate)) # Only translate in 0 - 1
+    elif translate and len(translate) == 3:
+        txyz = np.array([translate])
+        pos = pos + (txyz - txyz.astype(int))
+
     if eqv_sites:
         inds, new_pos = [],[]
         for p in product([-1,0,1],[-1,0,1],[-1,0,1]):
@@ -1038,6 +1046,7 @@ def _get_bond_length(poscar,given=None,eps=1e-2):
 # Cell
 def iplot_lat(poscar,sizes=10,colors='blue',
               bond_length=None,tol=1e-1,eps=1e-2,eqv_sites=True,
+              translate = None,
               line_width=4,edge_color = 'black',
               fill=False,alpha=0.4, ortho3d=True,fig=None):
     """Interactive plot of lattice.
@@ -1048,7 +1057,7 @@ def iplot_lat(poscar,sizes=10,colors='blue',
         - bond_length: Length of bond in fractional unit [0,1]. It is scaled to V^1/3 and auto calculated if not provides.
     Other parameters just mean what they seem to be.
     """
-    poscar = fix_sites(poscar=poscar,tol=tol,eqv_sites=eqv_sites)
+    poscar = fix_sites(poscar=poscar,tol=tol,eqv_sites=eqv_sites,translate=translate)
     bond_length = _get_bond_length(poscar,given=bond_length,eps=eps)
     coords, pairs = get_pairs(basis=poscar.basis,
                         positions =poscar.positions,
@@ -1114,6 +1123,7 @@ def iplot_lat(poscar,sizes=10,colors='blue',
 # Cell
 def splot_lat(poscar,sizes=50,colors=[],colormap=None,
               bond_length=None,tol=1e-1,eps=1e-2,eqv_sites=True,
+              translate = None,
               line_width=1,edge_color=((1,0.5,0,0.4)),
               vectors=True,v3=False,plane=None,
               light_from=(1,1,1),
@@ -1128,7 +1138,7 @@ def splot_lat(poscar,sizes=50,colors=[],colormap=None,
 
     > Tip: Use `plt.style.use('ggplot')` for better 3D perception.
     """
-    poscar = fix_sites(poscar=poscar,tol=tol,eqv_sites=eqv_sites)
+    poscar = fix_sites(poscar=poscar,tol=tol,eqv_sites=eqv_sites,translate=translate)
     bond_length = _get_bond_length(poscar,given=bond_length,eps=eps)
     coords, pairs = get_pairs(basis=poscar.basis,
                         positions =poscar.positions,
