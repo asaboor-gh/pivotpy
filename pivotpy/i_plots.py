@@ -261,121 +261,86 @@ def plotly_rgb_lines(path_evr    = None,
     if mode not in ('markers','bands','lines'):
         raise TypeError("Argument `mode` expects one of ['markers','bands','lines'], got '{}'.".format(mode))
         return
-    if(len(orbs) < 3 or len(elements) < 3):
+    if(len(orbs) != 3 or len(elements) != 3):
         raise ValueError("orbs/elements have structure [[],[],[]], do not reduce structure even if it is empty.")
         return
-    #checking type of given path.
-    if(path_evr==None):
-        vr=vp.export_vasprun(path=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
-    if(path_evr!=None):
-        from os import path as pt
-        if(type(path_evr)==vp.Dict2Data):
-            vr=path_evr
-        elif(pt.isfile(path_evr)):
-            vr=vp.export_vasprun(path=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
-        else:
-            return print("path_evr = `{}` does not exist".format(path_evr))
-    # Apply a robust final check.
-    try:
-        vr.bands;vr.kpath
-    except:
-        return print("Object: \n{} \nis like a lower tree of export_vasprun(). Expects top tree.".format(vr))
+
+    check, vr = vp._validate_evr(path_evr=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
+    if check == False:
+        return print('Check first argument, something went wrong')
+    # Fix orbitals, elements and labels lengths very early.
+    bool_, elements,orbs,labels = sp._validate_input(elements,orbs,labels,vr.sys_info)
+    if bool_ == False:
+        return print('Check any of elements,orbs,labels. Something went wrong')
+
+    ## Main working here.
+    if(vr.pro_bands==None):
+        print(gu.color.y("Can not plot an empty eigenvalues object."))
+        return print(gu.color.g("Try with large energy range."))
+
+    if(E_Fermi==None):
+        E_Fermi=vr.bands.E_Fermi
+    K=vr.kpath
+    xticks=[K[i] for i in ktick_inds]
+    xlim=[min(K),max(K)]
+    if(elim):
+        ylim=[min(elim),max(elim)]
     else:
-        ## Main working here.
-        if(vr.pro_bands==None):
-            print(gu.color.y("Can not plot an empty eigenvalues object."))
-            return print(gu.color.g("Try with large energy range."))
-        #=====================================================
-        orbs = [[item] if type(item)==int else item for item in orbs] #Fix if integer given.
-        elem_inds = vr.sys_info.ElemIndex
-        max_ind   = elem_inds[-1]-1 # Last index is used for range in ElemIndex, not python index.
+        ylim=[-10,10]
+    #====Title Name======
+    SYSTEM=vr.sys_info.SYSTEM
+    if(title==None):
+        title= "{}[{}]".format(SYSTEM,','.join(labels))
+    # After All Fixing
+    ISPIN=vr.sys_info.ISPIN
+    args_dict=dict(orbs=orbs,elements=elements,interpolate=interpolate,n=n,k=k,scale_color=True) # Do not scale color there, scale here.
+    data,showlegend,name=[],False,'' # Place holder
+    start = vr.bands.indices[0]
+    if(mode=='bands'):
+            showlegend=True
+    if(ISPIN==1):
+        En=vr.bands.evals-E_Fermi
+        Pros=vr.pro_bands.pros
+        new_args=dict(kpath=K, evals_set=En, pros_set=Pros,**args_dict)
+        rgb_lines=get_rgb_data(**new_args)
+        data=rgb2plotly(rgb_data=rgb_lines,mode=mode,showlegend=showlegend,
+                           labels=labels,name='B',max_width=max_width,start=start)
+    if(ISPIN==2):
+        if(mode=='markers'):
+            showlegend=True
+        En1=vr.bands.evals.SpinUp-E_Fermi
+        En2=vr.bands.evals.SpinDown-E_Fermi
+        Pros1=vr.pro_bands.pros.SpinUp
+        Pros2=vr.pro_bands.pros.SpinDown
+        new_args1=dict(kpath=K, evals_set=En1, pros_set=Pros1,**args_dict)
+        rgb_lines1=get_rgb_data(**new_args1)
+        data1=rgb2plotly(rgb_data=rgb_lines1,mode=mode,symbol=0,showlegend=showlegend,
+                            labels=labels,name='B<sup>↑</sup>',max_width=max_width,start=start)
+        new_args2=dict(kpath=K, evals_set=En2, pros_set=Pros2,**args_dict)
+        rgb_lines2=get_rgb_data(**new_args2)
+        data2=rgb2plotly(rgb_data=rgb_lines2,mode=mode,symbol=100,showlegend=showlegend,
+                            labels=labels,name='B<sup>↓</sup>',max_width=max_width,start=start)
+        data=[[d1,d2] for d1,d2 in zip(data1,data2)]
+        data=[d for ds in data for d in ds]
 
-        nfields=len(vr.sys_info.fields)
-
-        # Fix int elements and orbs
-        for i,e in enumerate(elements):
-            if type(e)==int and e < elem_inds[-1]:
-                elements[i] = range(elem_inds[e],elem_inds[e+1])
-        _elements_inds = [e for es in elements for e in es]
-        if _elements_inds and max(_elements_inds) > max_ind:
-            return print("index {} is out of bound for {} elements.".format(max(_elements_inds),max_ind+1))
-        _orb_inds = [p for orb in orbs for p in orb]
-        if _orb_inds and max(_orb_inds) > nfields-1:
-            return print("index {} is out of bound for {} orbitals.".format(max(_orb_inds),nfields))
-
-        if(E_Fermi==None):
-            E_Fermi=vr.bands.E_Fermi
-        K=vr.kpath
-        xticks=[K[i] for i in ktick_inds]
-        xlim=[min(K),max(K)]
-        if(elim):
-            ylim=[min(elim),max(elim)]
-        else:
-            ylim=[-10,10]
-        # If elements not given, get whole system
-        if _elements_inds==[]:
-            elements = [range(0,max_ind+1),range(0,max_ind+1),range(0,max_ind+1)]
-        # If orbs not given, get whole projections.
-        if(_orb_inds==[]):
-            if(nfields==3):
-                orbs=[[0],[1],[2]]
-            if(nfields==9 or nfields==16):
-                orbs=[[0],[1,2,3],[4,5,6,7,8]]
-        if _elements_inds==[] and _orb_inds == []:
-            labels=['sys-s','sys-p','sys-d']
-        #====Title Name======
-        SYSTEM=vr.sys_info.SYSTEM
-        if(title==None):
-            title= "{}[{}]".format(SYSTEM,','.join(labels))
-
-        # After All Fixing
-        ISPIN=vr.sys_info.ISPIN
-        args_dict=dict(orbs=orbs,elements=elements,interpolate=interpolate,n=n,k=k,scale_color=True) # Do not scale color there, scale here.
-        data,showlegend,name=[],False,'' # Place holder
-        start = vr.bands.indices[0]
-        if(mode=='bands'):
-                showlegend=True
-        if(ISPIN==1):
-            En=vr.bands.evals-E_Fermi
-            Pros=vr.pro_bands.pros
-            new_args=dict(kpath=K, evals_set=En, pros_set=Pros,**args_dict)
-            rgb_lines=get_rgb_data(**new_args)
-            data=rgb2plotly(rgb_data=rgb_lines,mode=mode,showlegend=showlegend,
-                               labels=labels,name='B',max_width=max_width,start=start)
-        if(ISPIN==2):
-            if(mode=='markers'):
-                showlegend=True
-            En1=vr.bands.evals.SpinUp-E_Fermi
-            En2=vr.bands.evals.SpinDown-E_Fermi
-            Pros1=vr.pro_bands.pros.SpinUp
-            Pros2=vr.pro_bands.pros.SpinDown
-            new_args1=dict(kpath=K, evals_set=En1, pros_set=Pros1,**args_dict)
-            rgb_lines1=get_rgb_data(**new_args1)
-            data1=rgb2plotly(rgb_data=rgb_lines1,mode=mode,symbol=0,showlegend=showlegend,
-                                labels=labels,name='B<sup>↑</sup>',max_width=max_width,start=start)
-            new_args2=dict(kpath=K, evals_set=En2, pros_set=Pros2,**args_dict)
-            rgb_lines2=get_rgb_data(**new_args2)
-            data2=rgb2plotly(rgb_data=rgb_lines2,mode=mode,symbol=100,showlegend=showlegend,
-                                labels=labels,name='B<sup>↓</sup>',max_width=max_width,start=start)
-            data=[[d1,d2] for d1,d2 in zip(data1,data2)]
-            data=[d for ds in data for d in ds]
-        # Initiate figure
-        fig=go.Figure(data=data)
-        fig.update_layout(title=title,
-            margin=go.layout.Margin(l=60,r=50,b=40,t=75,pad=0),#paper_bgcolor="whitesmoke",
+    # Initiate figure
+    fig=go.Figure(data=data)
+    fig.update_layout(title=title,margin=go.layout.Margin(l=60,r=50,b=40,t=75,pad=0),
             yaxis=go.layout.YAxis(title_text='Energy (eV)',range=ylim),
-            xaxis=go.layout.XAxis(ticktext=ktick_vals, tickvals=xticks,
-            tickmode="array",range=xlim),font=dict(family="stix, serif",size=14))
-        if(figsize!=None):
-            fig.update_layout(width=figsize[0],height=figsize[1],autosize=False)
-        #Draw lines at breakpoints
-        if(kseg_inds):
-            for pt in kseg_inds:
-                fig.add_trace(go.Scatter(x=[K[pt],K[pt]],y=ylim,mode='lines',line=dict(color='rgb(0,0,0)',width=2),showlegend=False))
-                fig.add_trace(go.Scatter(x=[K[pt],K[pt]],y=ylim,mode='lines',line=dict(color='rgb(222,222,222)',width=1.2),showlegend=False))
-        fig.update_xaxes(showgrid=True, zeroline=False,showline=True, linewidth=0.1, linecolor='rgba(222,222,222,0.1)', mirror=True)
-        fig.update_yaxes(showgrid=False, zeroline=True,showline=True, linewidth=0.1, linecolor='rgba(222,222,222,0.1)', mirror=True)
-        return fig
+            xaxis=go.layout.XAxis(ticktext=ktick_vals, tickvals=xticks,tickmode="array",range=xlim),
+            font=dict(family="stix, serif",size=14))
+    if(figsize!=None):
+        fig.update_layout(width=figsize[0],height=figsize[1],autosize=False)
+    #Draw lines at breakpoints
+    if(kseg_inds):
+        kargs_dict = dict(mode='lines',line=dict(color='rgb(222,222,222)',width=1.2),showlegend=False)
+        for pt in kseg_inds:
+            fig.add_trace(go.Scatter(x=[K[pt],K[pt]],y=ylim,**kargs_dict))
+            fig.add_trace(go.Scatter(x=[K[pt],K[pt]],y=ylim,**kargs_dict))
+    update_args = dict(linewidth=0.1,linecolor='rgba(222,222,222,0.1)', mirror=True)
+    fig.update_xaxes(showgrid=True,zeroline=False,showline=True,**update_args)
+    fig.update_yaxes(showgrid=False,zeroline=True,showline=True,**update_args)
+    return fig
 
 # Cell
 def plotly_dos_lines(path_evr     = None,
@@ -417,7 +382,7 @@ def plotly_dos_lines(path_evr     = None,
             - fig        : Plotly's figure object.
         """
         en,tdos,pdos,vr=None,None,None,None # Place holders for defining
-        cl_dos=sp.collect_dos(path_evr=path_evr,elim=elim, elements=elements, orbs=orbs,\
+        cl_dos = sp.collect_dos(path_evr=path_evr,elim=elim, elements=elements, orbs=orbs,\
                               labels=labels, E_Fermi=E_Fermi, spin='both', interpolate=interpolate, n=n, k=k)
         try:
             en,tdos,pdos,labels,vr = cl_dos

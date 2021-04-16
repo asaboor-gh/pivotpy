@@ -262,38 +262,25 @@ def quick_bplot(path_evr=None,ax=None,skipk=None,kseg_inds=[],elim=[],ktick_inds
     - **Returns**
         - ax : matplotlib axes object with plotted bands.
     """
-    #checking type of given path.
-    if path_evr == None:
-        vr=vp.export_vasprun(path=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
-    if path_evr != None:
-        from os import path as pt
-        if type(path_evr) == vp.Dict2Data:
-            vr=path_evr
-        elif pt.isfile(path_evr):
-            vr=vp.export_vasprun(path=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
-        else:
-            return print("path_evr = `{}` does not exist".format(path_evr))
-    # Apply a robust final check.
-    try:
-        vr.bands;vr.kpath
-    except:
-        return print("Object: \n{} \nis like a lower tree of export_vasprun(). Expects top tree.".format(vr))
+    check, vr = vp._validate_evr(path_evr=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
+    if check == False:
+        return print('Check first argument, something went wrong')
+
+    # Main working here.
+    K=vr.kpath
+    xticks = [K[i] for i in ktick_inds]
+    xlim = [min(K),max(K)]
+    if elim:
+        ylim=[min(elim),max(elim)]
     else:
-        # Main working here.
-        K=vr.kpath
-        xticks = [K[i] for i in ktick_inds]
-        xlim = [min(K),max(K)]
-        if elim:
-            ylim=[min(elim),max(elim)]
-        else:
-            ylim=[]
-        if ax==None:
-            ax = init_figure()
-        modify_axes(ax=ax,ylabel='Energy (eV)',xticks=xticks,xt_labels=ktick_vals,xlim=xlim,ylim=ylim)
-        plot_bands(ax=ax,kpath=K,bands=vr.bands,showlegend=True,E_Fermi=E_Fermi,**kwargs)
-        text = txt if txt != None else vr.sys_info.SYSTEM
-        add_text(ax,*xytxt,text,colors=ctxt)
-        return ax
+        ylim=[]
+    if ax==None:
+        ax = init_figure()
+    modify_axes(ax=ax,ylabel='Energy (eV)',xticks=xticks,xt_labels=ktick_vals,xlim=xlim,ylim=ylim)
+    plot_bands(ax=ax,kpath=K,bands=vr.bands,showlegend=True,E_Fermi=E_Fermi,**kwargs)
+    text = txt if txt != None else vr.sys_info.SYSTEM
+    add_text(ax,*xytxt,text,colors=ctxt)
+    return ax
 
 # Cell
 def add_legend(ax=None,colors=[],labels=[],styles='solid',\
@@ -604,13 +591,61 @@ def plot_collection(gpd_args,mlc_args,axes=None):
     return axes
 
 # Cell
+def _validate_input(elements,orbs,labels,sys_info):
+    "Fix input elements, orbs and labels according to given sys_info. Returns (Bool, elements, orbs,labels)."
+    if len(elements) != len(orbs) or len(elements) != len(labels):
+        print("`elements`, `orbs` and `labels` expect same length, even if empty.")
+        return (False,elements,orbs,labels)
+
+    elem_inds = sys_info.ElemIndex
+    max_ind   = elem_inds[-1]-1 # Last index is used for range in ElemIndex, not python index.
+    elements = [[item] if type(item) == int else item for item in elements] #Fix if integer given.
+    for i,elem in enumerate(elements.copy()):
+        if type(elem) == int:
+            try:
+                elements[i] = range(elem_inds[elem],elem_inds[elem+1])
+                info = "elements[{}] = {} is converted to {} which picks all ions of {!r}.".format(
+                        i,elem,elements[i],sys_info.ElemName[elem])
+                info += "To just pick one ion at this index, wrap it in brackets []."
+                print(gu.color.g(info))
+            except:
+                print("Wrap elements[{}] in [] and try again.".format(i))
+
+    _es = [e for ee in elements for e in ee]
+    if  _es and max(_es) > max_ind:
+        print("index {} is out of bound for {} ions".format(max(_es),max_ind+1))
+        return (False,elements,orbs,labels)
+    # Orbitals Index fixing
+    nfields = len(sys_info.fields)
+    orbs = [[item] if type(item) == int else item for item in orbs] #Fix if integer given.
+    _os = [r for rr in orbs for r in rr]
+    if  _os and max(_os) >= nfields:
+        print("index {} is out of bound for {} orbs".format(max(_os),nfields))
+        return (False,elements,orbs,labels)
+
+    # If elements not given, get whole system in case of RGB_Lines
+    if len(elements) == 3:
+        if not _es:
+            elements = [range(0,max_ind+1),range(0,max_ind+1),range(0,max_ind+1)]
+        # If orbs not given, get whole projections.
+        if not _os:
+            if nfields == 3:
+                orbs=[[0],[1],[2]]
+            if nfields==9 or nfields==16:
+                orbs = [[0],[1,2,3],[4,5,6,7,8]]
+        if not _es and not _os:
+            labels=[sys_info.SYSTEM + v for v in ['-s','-p','-d']]
+
+    return (True,elements,orbs,labels)
+
+# Cell
 def quick_rgb_lines(path_evr    = None,
                     ax          = None,
                     skipk       = None,
                     kseg_inds  = [],
                     elim        = [],
-                    elements    = [[0],[],[]],
-                    orbs        = [[0],[],[]],
+                    elements    = [[],[],[]],
+                    orbs        = [[],[],[]],
                     labels      = ['Elem0-s','',''],
                     max_width   = None,
                     ktick_inds  = [0,-1],
@@ -641,7 +676,7 @@ def quick_rgb_lines(path_evr    = None,
         - E_Fermi    : If not given, automatically picked from `export_vasprun`.
         - ktick_inds : High symmetry kpoints indices.abs
         - ktick_vals  : High Symmetry kpoints labels.
-        - elements   : List [[0],[],[]] by default and plots s orbital of first ion..
+        - elements   : List [[],[],[]] by default and plots s,p,d orbital of system..
         - orbs       : List [[r],[g],[b]] of indices of orbitals, could be empty, but shape should be same.
         - labels     : List [str,str,str] of projection labels. empty string should exist to maintain shape. Auto adds `↑`,`↓` for ISPIN=2. If a label is empty i.e. '', it will not show up in colorbar ticks or legend.
         - max_width  : Width to scale whole projections. if `uni_width=True, width=max_width/2`. Default is None and linewidth at any point = 2.5*sum(ions+orbitals projection of all three input at that point). Linewidth is scaled to max_width if an int or float is given.
@@ -663,24 +698,15 @@ def quick_rgb_lines(path_evr    = None,
         - Registers as colormap `RGB_m` to use in DOS to plot in same colors and `RGB_f` to display bands colorbar on another axes.
     > Note: Two figures made by this function could be comapred quantitatively only if `scale_data=False, max_width=None, scale_color=False` as these parameters act internally on data.
     """
+    # Fix input data
+    check, vr = vp._validate_evr(path_evr=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
+    if check == False:
+        return print('Check first argument, something went wrong')
+
     # Fix orbitals, elements and labels lengths very early.
-    if len(elements) != len(orbs) or len(elements) != len(labels):
-        raise ValueError("`elements`, `orbs` and `labels` expect same length, even if empty.")
-
-    if path_evr == None:
-        path_evr = './vasprun.xml'
-
-    if type(path_evr) == vp.Dict2Data:
-        vr = path_evr
-    elif os.path.isfile(path_evr):
-        vr = vp.export_vasprun(path=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
-    else:
-        return print("path_evr = {!r} does not exist".format(path_evr))
-    # Apply a robust final check.
-    try:
-        vr.bands;vr.kpath
-    except:
-        return print("Object: \n{!r} \ndoes not match the output of `export_vasprun`.".format(vr))
+    bool_, elements,orbs,labels = _validate_input(elements,orbs,labels,vr.sys_info)
+    if bool_ == False:
+        return print('Check any of elements,orbs,labels. Something went wrong')
 
     # Main working here.
     if vr.pro_bands == None:
@@ -688,29 +714,6 @@ def quick_rgb_lines(path_evr    = None,
         return print(gu.color.g("Try with large energy range."))
     if not spin in ('up','down','both'):
         raise ValueError("spin can take any of ['up','down'. 'both'] only.")
-
-    # Elements Index fixing.
-    elem_inds = vr.sys_info.ElemIndex
-    max_ind   = elem_inds[-1]-1 # Last index is used for range in ElemIndex, not python index.
-    for i,elem in enumerate(elements.copy()):
-        if type(elem) == int:
-            try:
-                elements[i] = range(elem_inds[elem],elem_inds[elem+1])
-                info = "elements[{}] = {} is converted to {} which picks all ions of {!r}.".format(
-                        i,elem,elements[i],vr.sys_info.ElemName[elem])
-                info += "To just pick one ion at this index, wrap it in brackets []."
-                print(gu.color.g(info))
-            except:
-                raise IndexError("Wrap elements[{}] in [] and try again.".format(i))
-    max_e = np.max([e for ee in elements for e in ee])
-    if  max_e > max_ind:
-        raise IndexError("index {} is out of bound for {} ions".format(max_e,max_ind+1))
-    # Orbitals Index fixing
-    nfields = len(vr.pro_bands.labels)
-    orbs = [[item] if type(item) == int else item for item in orbs] #Fix if integer given.
-    max_o = np.max([r for rr in orbs for r in rr])
-    if  max_o >= nfields:
-        return print("index {} is out of bound for {} orbs".format(max_o,nfields))
 
     # Small things
     if E_Fermi == None:
@@ -876,24 +879,15 @@ def quick_color_lines(path_evr      = None,
         - ax : matplotlib axes object with plotted projected bands.
     > Note: Two figures made by this function could be comapred quantitatively only if `scale_data=False, max_width=None` as these parameters act internally on data.
     """
+    # Fix data input
+    check, vr = vp._validate_evr(path_evr=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
+    if check == False:
+        return print('Check first argument, something went wrong')
+
     # Fix orbitals, elements and labels lengths very early.
-    if len(elements) != len(orbs) or len(elements) != len(labels):
-        raise ValueError("`elements`, `orbs` and `labels` expect same length, even if empty.")
-
-    if path_evr == None:
-        path_evr = './vasprun.xml'
-
-    if type(path_evr) == vp.Dict2Data:
-        vr = path_evr
-    elif os.path.isfile(path_evr):
-        vr = vp.export_vasprun(path=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
-    else:
-        return print("path_evr = {!r} does not exist".format(path_evr))
-    # Apply a robust final check.
-    try:
-        vr.bands;vr.kpath
-    except:
-        return print("Object: \n{!r} \ndoes not match the output of `export_vasprun`.".format(vr))
+    bool_, elements,orbs,labels = _validate_input(elements,orbs,labels,vr.sys_info)
+    if bool_ == False:
+        return print('Check any of elements,orbs,labels. Something went wrong')
 
     # Main working here.
     if vr.pro_bands == None:
@@ -902,27 +896,7 @@ def quick_color_lines(path_evr      = None,
     if not spin in ('up','down','both'):
         raise ValueError("spin can take any of ['up','down'. 'both'] only.")
 
-    # Elements Index fixing.
-    elem_inds = vr.sys_info.ElemIndex
-    max_ind   = elem_inds[-1]-1 # Last index is used for range in ElemIndex, not python index.
-    for i,elem in enumerate(elements.copy()):
-        if type(elem) == int:
-            try:
-                elements[i] = range(elem_inds[elem],elem_inds[elem+1])
-                info = "elements[{}] = {} is converted to {} which picks all ions of {!r}.".format(i,elem,elements[i],vr.sys_info.ElemName[elem])
-                info += "To just pick one ion at this index, wrap it in brackets []."
-                print(gu.color.g(info))
-            except:
-                raise IndexError("Wrap elements[{}] in [] and try again.".format(i))
-    max_e = np.max([e for ee in elements for e in ee])
-    if  max_e > max_ind:
-        raise IndexError("index {} is out of bound for {} ions".format(max_e,max_ind+1))
-    # Orbitals Index fixing
-    nfields = len(vr.pro_bands.labels)
-    orbs = [[item] if type(item) == int else item for item in orbs] #Fix if integer given.
-    max_o = np.max([r for rr in orbs for r in rr])
-    if  max_o >= nfields:
-        return print("index {} is out of bound for {} orbs".format(max_o,nfields))
+
     # Small things
     if E_Fermi == None:
         E_Fermi = vr.bands.E_Fermi
@@ -1052,84 +1026,64 @@ def collect_dos(path_evr      = None,
         - labels : ['label1,'label2',...] spin polarized is auto-fixed.
         - vr     : Exported vasprun.
     """
-    #checking type of given path.
-    if(path_evr==None):
-        vr=vp.export_vasprun(path=path_evr,elim=elim)
-    if(path_evr!=None):
-        if(type(path_evr)==vp.Dict2Data):
-            vr=path_evr
-        elif(os.path.isfile(path_evr)):
-            vr=vp.export_vasprun(path=path_evr,elim=elim)
-        else:
-            return print("path_evr = `{}` does not exist".format(path_evr))
-    # Apply a robust final check.
-    try:
-        vr.tdos;vr.pro_dos
-    except:
-        return print("Object: \n{} \nis like a lower tree of export_vasprun(). Expects top tree.".format(vr))
-    else:
-        # Main working here.
-        if(vr.pro_dos==None):
-            return print(gu.color.y("Can not plot an empty DOS object."))
-        if not spin in ('up','down','both'):
-            raise ValueError(
-                "spin can take `up`,`down` or `both` values only.")
-            return
-        orbs=[[item] if type(item)==int else item for item in orbs] #Fix if integer given.
-        elements=[[item] if type(item)==int else item for item in elements] #Fix if integer given.
-        elem_inds = vr.sys_info.ElemIndex
-        max_ind   = elem_inds[-1]-1 # Last index is used for range in ElemIndex, not python index.
-        for i,elem in enumerate(elements.copy()):
-            if(type(elem)==int):
-                if(elem <= max_ind):
-                    elements[i]=range(i,i+1)
-                else:
-                    return print("index {} is out of bound for ions of length {}".format(i,max_ind+1))
-        if(E_Fermi==None):
-            E_Fermi=vr.tdos.E_Fermi
+    check, vr = vp._validate_evr(path_evr=path_evr,elim=elim)
+    if check == False:
+        return print('Check first argument, something went wrong')
 
-        nfields = len(vr.pro_dos.labels) - 1 #
-        # First fix orbitals
-        if len(elements)!=len(orbs) or len(elements)!=len(labels):
-            raise ValueError("elements, orbs and labels expect same length even if their entries are empty.")
-            return
+    # Fix orbitals, elements and labels lengths very early.
+    bool_, elements,orbs,labels = _validate_input(elements,orbs,labels,vr.sys_info)
+    if bool_ == False:
+        return print('Check any of elements,orbs,labels. Something went wrong')
 
-        # After All Fixing
-        ISPIN=vr.sys_info.ISPIN
-        e,ts,ps,ls=None,None,[],[] # to collect all total/projected dos.
-        for elem,orb,label in zip(elements,orbs,labels):
-            args_dict=dict(ions=elem,orbs=orb,interpolate=interpolate,n=n,k=k,E_Fermi=E_Fermi)
-            if ISPIN==1:
-                tdos=vr.tdos.tdos
-                pdos_set=vr.pro_dos.pros
-                e,t,p = select_pdos(tdos=tdos,pdos_set=pdos_set, **args_dict)
-                ps.append(p)
-                ls.append(label)
-                ts = t
-            if ISPIN==2:
-                tdos1=vr.tdos.tdos.SpinUp
-                tdos2=vr.tdos.tdos.SpinDown
-                pdos_set1=vr.pro_dos.pros.SpinUp
-                pdos_set2=vr.pro_dos.pros.SpinDown
-                if spin=='up':
-                    e,t1,p1 = select_pdos(tdos=tdos1,pdos_set=pdos_set1, **args_dict)
-                    ps.append(p1)
-                    ls.append((label+'$^↑$' if label else ''))
-                    ts = t1
-                if spin=='down':
-                    e,t2,p2 = select_pdos(tdos=tdos2,pdos_set=pdos_set2, **args_dict)
-                    ps.append(p2)
-                    ls.append((label+'$^↓$' if label else ''))
-                    ts = t2
-                if spin=='both':
-                    e,t1,p1 = select_pdos(tdos=tdos1,pdos_set=pdos_set1, **args_dict)
-                    ps.append(p1)
-                    ls.append((label+'$^↑$' if label else ''))
-                    e,t2,p2 = select_pdos(tdos=tdos2,pdos_set=pdos_set2, **args_dict)
-                    ps.append(-p2)
-                    ls.append((label+'$^↓$' if label else ''))
-                    ts=[t1,-t2]
-        return e,ts,ps,ls,vr
+    # Main working here.
+    if(vr.pro_dos==None):
+        return print(gu.color.y("Can not plot an empty DOS object."))
+    if not spin in ('up','down','both'):
+        raise ValueError(
+            "spin can take `up`,`down` or `both` values only.")
+        return
+
+    if(E_Fermi==None):
+        E_Fermi=vr.tdos.E_Fermi
+    nfields = len(vr.pro_dos.labels) - 1 #
+
+
+    # After All Fixing
+    ISPIN=vr.sys_info.ISPIN
+    e,ts,ps,ls=None,None,[],[] # to collect all total/projected dos.
+    for elem,orb,label in zip(elements,orbs,labels):
+        args_dict=dict(ions=elem,orbs=orb,interpolate=interpolate,n=n,k=k,E_Fermi=E_Fermi)
+        if ISPIN==1:
+            tdos=vr.tdos.tdos
+            pdos_set=vr.pro_dos.pros
+            e,t,p = select_pdos(tdos=tdos,pdos_set=pdos_set, **args_dict)
+            ps.append(p)
+            ls.append(label)
+            ts = t
+        if ISPIN==2:
+            tdos1=vr.tdos.tdos.SpinUp
+            tdos2=vr.tdos.tdos.SpinDown
+            pdos_set1=vr.pro_dos.pros.SpinUp
+            pdos_set2=vr.pro_dos.pros.SpinDown
+            if spin=='up':
+                e,t1,p1 = select_pdos(tdos=tdos1,pdos_set=pdos_set1, **args_dict)
+                ps.append(p1)
+                ls.append((label+'$^↑$' if label else ''))
+                ts = t1
+            if spin=='down':
+                e,t2,p2 = select_pdos(tdos=tdos2,pdos_set=pdos_set2, **args_dict)
+                ps.append(p2)
+                ls.append((label+'$^↓$' if label else ''))
+                ts = t2
+            if spin=='both':
+                e,t1,p1 = select_pdos(tdos=tdos1,pdos_set=pdos_set1, **args_dict)
+                ps.append(p1)
+                ls.append((label+'$^↑$' if label else ''))
+                e,t2,p2 = select_pdos(tdos=tdos2,pdos_set=pdos_set2, **args_dict)
+                ps.append(-p2)
+                ls.append((label+'$^↓$' if label else ''))
+                ts=[t1,-t2]
+    return e,ts,ps,ls,vr
 
 # Cell
 def quick_dos_lines(path_evr      = None,

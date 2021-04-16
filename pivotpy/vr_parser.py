@@ -37,7 +37,7 @@ def dict2tuple(name,d):
 # Cell
 class Dict2Data:
     """
-    - Returns a Data object with dictionary keys as attributes of Data accessible by dot notation. Once an attribute is created, it can not be changed from outside.
+    - Returns a Data object with dictionary keys as attributes of Data accessible by dot notation or by key. Once an attribute is created, it can not be changed from outside.
     - **Parmeters**
         - dict : Python dictionary (nested as well) containing any python data types.
     - **Methods**
@@ -120,6 +120,13 @@ class Dict2Data:
             raise AttributeError(f"Outside assignment is restricted for already present attribute.")
         else:
             self.__dict__[name] = value
+    # Dictionary-wise access
+    def keys(self):
+        return self.__dict__.keys()
+    def __getitem__(self,key):
+        return self.__dict__[key]
+    def items(self):
+        return self.__dict__.items()
 
 # Cell
 def read_asxml(path=None):
@@ -669,6 +676,24 @@ def export_vasprun(path=None,
     full_dic={'sys_info':info_dic,'dim_info':dim_dic,'kpoints':kpts.kpoints,'kpath':kpath,'bands':eigenvals,
              'tdos':tot_dos,'pro_bands':pro_bands,'pro_dos':pro_dos,'poscar': poscar}
     return Dict2Data(full_dic)
+
+# Cell
+def _validate_evr(path_evr=None,**kwargs):
+    "Validates data given for plotting functions. Returns a tuple of (Boolean,data)."
+    if type(path_evr) == Dict2Data:
+        vr = path_evr
+    elif path_evr is None:
+        path_evr = './vasprun.xml'
+
+    if isinstance(path_evr,str) and os.path.isfile(path_evr):
+        # kwargs -> skipk=skipk,elim=elim,kseg_inds=kseg_inds
+        vr = export_vasprun(path=path_evr,**kwargs)
+    # Apply a robust final check.
+    try:
+        vr.bands;vr.kpath
+        return (True,vr)
+    except:
+        return (False,path_evr)
 
 # Cell
 def load_export(path= './vasprun.xml',
