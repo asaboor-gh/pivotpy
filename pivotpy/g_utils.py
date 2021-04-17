@@ -271,23 +271,23 @@ class Vasprun:
         self.data = vp.export_vasprun(path=path, skipk=skipk, elim=elim, kseg_inds=kseg_inds, shift_kpath=shift_kpath)
 
     @_g2f
-    def sbands(self,**kwargs):
-        return sp.quick_bplot(self.data,**kwargs)
+    def sbands(self,*args,**kwargs):
+        return sp.quick_bplot(self.data,*args,**kwargs)
     @_g2f
-    def sdos(self,**kwargs):
-        return sp.quick_dos_lines(self.data,**kwargs)
+    def sdos(self,*args,**kwargs):
+        return sp.quick_dos_lines(self.data,*args,**kwargs)
     @_g2f
-    def srgb(self,**kwargs):
-        return sp.quick_rgb_lines(self.data,**kwargs)
+    def srgb(self,*args,**kwargs):
+        return sp.quick_rgb_lines(self.data,*args,**kwargs)
     @_g2f
-    def scolor(self,**kwargs):
-        return sp.quick_color_lines(self.data,**kwargs)
+    def scolor(self,*args,**kwargs):
+        return sp.quick_color_lines(self.data,*args,**kwargs)
     @_g2f
-    def idos(self,**kwargs):
-        return ip.plotly_dos_lines(self.data,**kwargs)
+    def idos(self,*args,**kwargs):
+        return ip.plotly_dos_lines(self.data,*args,**kwargs)
     @_g2f
-    def irgb(self,**kwargs):
-        return ip.plotly_rgb_lines(self.data,**kwargs)
+    def irgb(self,*args,**kwargs):
+        return ip.plotly_rgb_lines(self.data,*args,**kwargs)
 
 # Cell
 def nav_links(current_index=0,

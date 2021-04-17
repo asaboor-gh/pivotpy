@@ -261,15 +261,12 @@ def plotly_rgb_lines(path_evr    = None,
     if mode not in ('markers','bands','lines'):
         raise TypeError("Argument `mode` expects one of ['markers','bands','lines'], got '{}'.".format(mode))
         return
-    if(len(orbs) != 3 or len(elements) != 3):
-        raise ValueError("orbs/elements have structure [[],[],[]], do not reduce structure even if it is empty.")
-        return
 
     check, vr = vp._validate_evr(path_evr=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
     if check == False:
         return print('Check first argument, something went wrong')
     # Fix orbitals, elements and labels lengths very early.
-    bool_, elements,orbs,labels = sp._validate_input(elements,orbs,labels,vr.sys_info)
+    bool_, elements,orbs,labels = sp._validate_input(elements,orbs,labels,vr.sys_info,rgb=True)
     if bool_ == False:
         return print('Check any of elements,orbs,labels. Something went wrong')
 
@@ -344,11 +341,11 @@ def plotly_rgb_lines(path_evr    = None,
 
 # Cell
 def plotly_dos_lines(path_evr     = None,
-                    elim          = [],
                     elements      = [[0,],],
                     orbs          = [[0],],
                     labels        = ['s',],
-                    colormap     = 'gist_rainbow',
+                    elim          = [],
+                    colormap      = 'gist_rainbow',
                     tdos_color    = (0.5,0.95,0),
                     linewidth     = 2,
                     fill_area     = True,
@@ -365,11 +362,11 @@ def plotly_dos_lines(path_evr     = None,
         - Returns ax object (if ax!=False) and plot on which all matplotlib allowed actions could be performed, returns lists of energy,tdos and pdos and labels. If given,elements,orbs colors, and labels must have same length. If not given, zeroth ions is plotted with s-orbital.
         - **Parameters**)
             - path_evr   : Path/to/vasprun.xml or output of `export_vasprun`. Auto picks in CWD.
-            - elim       : [min,max] of energy range.
-            - E_Fermi    : If not given, automatically picked from `export_vasprun`.
             - elements   : List [[0,],] of ions indices, by defualt plot first ion's projections.
             - orbs       : List [[0,],] lists of indices of orbitals, could be empty.
-            - labels     : List [str,] of orbitals labels. len(labels)==len(orbs) must hold.
+            - labels     : List [str,] of orbitals labels. len(labels) == len(orbs) must hold.
+            - elim       : [min,max] of energy range.
+            - E_Fermi    : If not given, automatically picked from `export_vasprun`.
             - colormap  : Matplotlib's standard color maps. Default is 'gist_ranibow'. Use 'RGB' if want to compare with `plotly_rgb_lines` with 3 projection inputs (len(orbs)==3).
             - fill_area  : Default is True and plots filled area for dos. If False, plots lines only.
             - vertical   : False, If True, plots along y-axis.

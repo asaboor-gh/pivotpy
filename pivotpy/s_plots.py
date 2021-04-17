@@ -483,7 +483,7 @@ def get_pros_data(kpath      = None,
         if c_max > 0.0000001: # Avoid division error
             _colors = _colors/c_max
 
-    if(interpolate==True):
+    if interpolate == True:
         min_d, max_d = np.min(_colors),np.max(_colors) # For cliping
         from pivotpy import g_utils as gu
         knew, evals = gu.interpolate_data(kpath,evals_set,n=n,k=k)
@@ -591,7 +591,7 @@ def plot_collection(gpd_args,mlc_args,axes=None):
     return axes
 
 # Cell
-def _validate_input(elements,orbs,labels,sys_info):
+def _validate_input(elements,orbs,labels,sys_info,rgb=False):
     "Fix input elements, orbs and labels according to given sys_info. Returns (Bool, elements, orbs,labels)."
     if len(elements) != len(orbs) or len(elements) != len(labels):
         print("`elements`, `orbs` and `labels` expect same length, even if empty.")
@@ -599,7 +599,6 @@ def _validate_input(elements,orbs,labels,sys_info):
 
     elem_inds = sys_info.ElemIndex
     max_ind   = elem_inds[-1]-1 # Last index is used for range in ElemIndex, not python index.
-    elements = [[item] if type(item) == int else item for item in elements] #Fix if integer given.
     for i,elem in enumerate(elements.copy()):
         if type(elem) == int:
             try:
@@ -609,9 +608,10 @@ def _validate_input(elements,orbs,labels,sys_info):
                 info += "To just pick one ion at this index, wrap it in brackets []."
                 print(gu.color.g(info))
             except:
-                print("Wrap elements[{}] in [] and try again.".format(i))
+                print("Wrap elements[{}] in []. You have only {} types of ions.".format(i,len(sys_info.ElemName)))
+                return (False,elements,orbs,labels)
 
-    _es = [e for ee in elements for e in ee]
+    _es = [e for ee in elements for e in (*ee,)] # important if ee is int
     if  _es and max(_es) > max_ind:
         print("index {} is out of bound for {} ions".format(max(_es),max_ind+1))
         return (False,elements,orbs,labels)
@@ -623,30 +623,34 @@ def _validate_input(elements,orbs,labels,sys_info):
         print("index {} is out of bound for {} orbs".format(max(_os),nfields))
         return (False,elements,orbs,labels)
 
+    while rgb and len(elements) < 3: # < 3 as it appends to make it 3.
+        elements.append([])
+        orbs.append([])
+        labels.append('')
+
+    if rgb and len(elements) > 3:
+        print('Only keeping first 3 entries in elements/orbs/labels in RGB plots.')
+        elements, orbs, labels = elements[:3], orbs[:3], labels[:3]
+
     # If elements not given, get whole system in case of RGB_Lines
-    if len(elements) == 3:
-        if not _es:
-            elements = [range(0,max_ind+1),range(0,max_ind+1),range(0,max_ind+1)]
-        # If orbs not given, get whole projections.
-        if not _os:
-            if nfields == 3:
-                orbs=[[0],[1],[2]]
-            if nfields==9 or nfields==16:
-                orbs = [[0],[1,2,3],[4,5,6,7,8]]
-        if not _es and not _os:
-            labels=[sys_info.SYSTEM + v for v in ['-s','-p','-d']]
+    if rgb and not _es:
+        elements = [range(0,max_ind+1),range(0,max_ind+1),range(0,max_ind+1)]
+    if rgb and not _os:
+        orbs=[[0],[1],[2]] if nfields == 3 else [[0],[1,2,3],[4,5,6,7,8]]
+    if rgb and not _es and not _os:
+        labels=[sys_info.SYSTEM + v for v in ['-s','-p','-d']]
 
     return (True,elements,orbs,labels)
 
 # Cell
 def quick_rgb_lines(path_evr    = None,
-                    ax          = None,
-                    skipk       = None,
-                    kseg_inds  = [],
-                    elim        = [],
                     elements    = [[],[],[]],
                     orbs        = [[],[],[]],
-                    labels      = ['Elem0-s','',''],
+                    labels      = ['','',''],
+                    ax          = None,
+                    skipk       = None,
+                    kseg_inds   = [],
+                    elim        = [],
                     max_width   = None,
                     ktick_inds  = [0,-1],
                     ktick_vals   = [r'$\Gamma$','M'],
@@ -669,6 +673,9 @@ def quick_rgb_lines(path_evr    = None,
     - Returns axes object and plot on which all matplotlib allowed actions could be performed. In this function,orbs,labels,elements all have list of length 3. Inside list, sublists or strings could be any length but should be there even if empty.
     - **Parameters**
         - path_evr   : path/to/vasprun.xml or output of `export_vasprun`. Auto picks in CWD.
+        - elements   : List [[],[],[]] by default and plots s,p,d orbital of system..
+        - orbs       : List [[r],[g],[b]] of indices of orbitals, could be empty, but shape should be same.
+        - labels     : List [str,str,str] of projection labels. empty string should exist to maintain shape. Auto adds `↑`,`↓` for ISPIN=2. If a label is empty i.e. '', it will not show up in colorbar ticks or legend.
         - ax         : Matplotlib axes object, if not given, one is created.
         - skipk      : Number of kpoints to skip, default will be from IBZKPT.
         - kseg_inds : Points where kpath is broken.
@@ -676,9 +683,6 @@ def quick_rgb_lines(path_evr    = None,
         - E_Fermi    : If not given, automatically picked from `export_vasprun`.
         - ktick_inds : High symmetry kpoints indices.abs
         - ktick_vals  : High Symmetry kpoints labels.
-        - elements   : List [[],[],[]] by default and plots s,p,d orbital of system..
-        - orbs       : List [[r],[g],[b]] of indices of orbitals, could be empty, but shape should be same.
-        - labels     : List [str,str,str] of projection labels. empty string should exist to maintain shape. Auto adds `↑`,`↓` for ISPIN=2. If a label is empty i.e. '', it will not show up in colorbar ticks or legend.
         - max_width  : Width to scale whole projections. if `uni_width=True, width=max_width/2`. Default is None and linewidth at any point = 2.5*sum(ions+orbitals projection of all three input at that point). Linewidth is scaled to max_width if an int or float is given.
         - figsize    : Tuple (width,height) in inches. Default (3.4.2.6) is article column's width.
         - txt        : Text on figure, if None, SYSTEM's name is printed.
@@ -704,7 +708,7 @@ def quick_rgb_lines(path_evr    = None,
         return print('Check first argument, something went wrong')
 
     # Fix orbitals, elements and labels lengths very early.
-    bool_, elements,orbs,labels = _validate_input(elements,orbs,labels,vr.sys_info)
+    bool_, elements,orbs,labels = _validate_input(elements,orbs,labels,vr.sys_info,rgb=True)
     if bool_ == False:
         return print('Check any of elements,orbs,labels. Something went wrong')
 
@@ -821,13 +825,13 @@ def quick_rgb_lines(path_evr    = None,
 
 # Cell
 def quick_color_lines(path_evr      = None,
+                      elements      = [[0]],
+                      orbs          = [[0]],
+                      labels        = ['s'],
                       axes          = None,
                       skipk         = None,
                       kseg_inds    = [],
                       elim          = [],
-                      elements      = [[0]],
-                      orbs          = [[0]],
-                      labels        = ['s'],
                       colormap     = 'gist_rainbow',
                       scale_data    = False,
                       max_width     = None,
@@ -851,6 +855,9 @@ def quick_color_lines(path_evr      = None,
     - Returns axes object and plot on which all matplotlib allowed actions could be performed. If given, elements, orbs, and labels must have same length. If not given, zeroth ion is plotted with s-orbital.
     - **Parameters**
         - path_evr   : Path/to/vasprun.xml or output of `export_vasprun`. Auto picks in CWD.
+        - elements   : List [[0],], by defualt and plot first ion's projections.
+        - orbs       : List [[0],] lists of indices of orbitals, could be empty.
+        - labels     : List [str,] of orbitals labels. len(labels)==len(orbs) must hold.  Auto adds `↑`,`↓` for ISPIN=2. If a label is empty i.e. '', it will not show up in legend.
         - axes       : Matplotlib axes object with one or many axes, if not given, auto created.
         - skipk      : Number of kpoints to skip, default will be from IBZKPT.
         - kseg_inds : Points where kpath is broken.
@@ -858,9 +865,6 @@ def quick_color_lines(path_evr      = None,
         - E_Fermi    : If not given, automatically picked from `export_vasprun`.
         - ktick_inds : High symmetry kpoints indices.abs
         - ktick_vals  : High Symmetry kpoints labels.
-        - elements   : List [[0],], by defualt and plot first ion's projections.
-        - orbs       : List [[0],] lists of indices of orbitals, could be empty.
-        - labels     : List [str,] of orbitals labels. len(labels)==len(orbs) must hold.  Auto adds `↑`,`↓` for ISPIN=2. If a label is empty i.e. '', it will not show up in legend.
         - colormap  : Matplotlib's standard color maps. Default is 'gist_ranibow'.
         - showlegend : True by defualt and displays legend relative to axes[0]. If False, it writes text on individual ax.
         - scale_data : Default is False, If True, normalize projection data to 1.
@@ -1087,13 +1091,13 @@ def collect_dos(path_evr      = None,
 
 # Cell
 def quick_dos_lines(path_evr      = None,
-                    ax            = None,
-                    elim          = [],
-                    include_dos   = 'both',
                     elements      = [[0],],
                     orbs          = [[0],],
                     labels        = ['s',],
-                    colormap     = 'gist_rainbow',
+                    ax            = None,
+                    elim          = [],
+                    include_dos   = 'both',
+                    colormap      = 'gist_rainbow',
                     tdos_color    = (0.8,0.95,0.8),
                     linewidth     = 0.5,
                     fill_area     = True,
@@ -1121,13 +1125,13 @@ def quick_dos_lines(path_evr      = None,
         - Returns ax object (if ax!=False) and plot on which all matplotlib allowed actions could be performed, returns lists of energy,tdos and pdos and labels. If given,elements,orbs colors, and labels must have same length. If not given, zeroth ions is plotted with s-orbital.
         - **Parameters**)
             - path_evr   : Path/to/vasprun.xml or output of `export_vasprun`. Auto picks in CWD.
+            - elements   : List [[0],], by defualt and plot first ion's projections.
+            - orbs       : List [[0],] lists of indices of orbitals, could be empty.
+            - labels     : List [str,] of orbitals labels. len(labels)==len(orbs) must hold.  Auto adds `↑`,`↓` for ISPIN=2.
             - ax         : Matplotlib axes object, if None, one is created. If False, data lists are returned.
             - include_dos: One of {'both','tdos','pdos'}.
             - elim       : [min,max] of energy range.
             - E_Fermi    : If not given, automatically picked from `export_vasprun`.
-            - elements   : List [[0],], by defualt and plot first ion's projections.
-            - orbs       : List [[0],] lists of indices of orbitals, could be empty.
-            - labels     : List [str,] of orbitals labels. len(labels)==len(orbs) must hold.  Auto adds `↑`,`↓` for ISPIN=2.
             - colormap  : Matplotlib's standard color maps. Default is 'gist_ranibow'. Use 'RGB' if want to compare with `quick_rgb_lines` with 3 projection inputs (len(orbs)==3).
             - fill_area  : Default is True and plots filled area for dos. If False, plots lines only.
             - vertical   : False, If True, plots along y-axis.
@@ -1183,57 +1187,57 @@ def quick_dos_lines(path_evr      = None,
         # Make additional colors for spin down. Inverted colors are better.
         t_color=mpl.colors.to_rgb(tdos_color)
         it_color=gu.transform_color(t_color,c=-1) # -1 contrast inverts color
-        if(ax==None):
+        if ax == None:
             ax = init_figure(figsize=figsize)
-        if(vertical==False):
-            if(fill_area==False):
-                if(include_dos!='pdos'):
-                    if(len(tdos)==2):   # Spin polarized.
+        if vertical == False:
+            if fill_area == False:
+                if include_dos != 'pdos':
+                    if len(tdos) == 2:   # Spin polarized.
                         ax.plot(en,tdos[0],color=(t_color),label=r'TDOS$^↑$',lw=linewidth)
                         ax.plot(en,tdos[1],color=(it_color),label=r'TDOS$^↓$',lw=linewidth)
                     else:   # unpolarized.
                         ax.plot(en,tdos,color=(t_color),label='TDOS',lw=linewidth)
-                if(include_dos!='tdos'):
+                if include_dos != 'tdos':
                     for p,l,c in zip(pdos,labels,colors):
                         ax.plot(en,p, color=(c),linewidth=linewidth,label=l)
-            if(fill_area==True):
-                if(include_dos!='pdos'):
-                    if(len(tdos)==2):   # Spin polarized.
+            if fill_area == True:
+                if include_dos != 'pdos':
+                    if len(tdos) == 2:   # Spin polarized.
                         ax.fill_between(en,tdos[0],color=(t_color),label=r'TDOS$^↑$',lw=0)
                         ax.fill_between(en,tdos[1],color=(it_color),label=r'TDOS$^↓$',lw=0)
                     else:   # unpolarized.
                         ax.fill_between(en,tdos,color=(t_color),label='TDOS',lw=0)
-                if(include_dos!='tdos'):
+                if include_dos != 'tdos':
                     for p,l,c in zip(pdos,labels,colors):
                         ax.fill_between(en,p,color=(mpl.colors.to_rgba(c,0.4)),linewidth=0)
                         ax.plot(en,p, color=(c),linewidth=linewidth,label=l)
             if elim:
                 ax.set_xlim([min(elim),max(elim)])
-        if(vertical==True):
-            if(fill_area==False):
-                if(include_dos!='pdos'):
-                    if(len(tdos)==2):   # Spin polarized.
+        if vertical == True:
+            if fill_area == False:
+                if include_dos != 'pdos':
+                    if len(tdos) == 2:   # Spin polarized.
                         ax.plot(tdos[0],en,color=(t_color),label=r'TDOS$^↑$',lw=linewidth)
                         ax.plot(tdos[1],en,color=(it_color),label=r'TDOS$^↓$',lw=linewidth)
                     else:   # unpolarized.
                         ax.plot(tdos,en,color=(t_color),label='TDOS',lw=linewidth)
-                if(include_dos!='tdos'):
+                if include_dos != 'tdos':
                     for p,l,c in zip(pdos,labels,colors):
                         ax.plot(p,en, color=(c),linewidth=linewidth,label=l)
-            if(fill_area==True):
-                if(include_dos!='pdos'):
-                    if(len(tdos)==2):   # Spin polarized.
+            if fill_area == True:
+                if include_dos != 'pdos':
+                    if len(tdos) == 2:   # Spin polarized.
                         ax.fill_betweenx(en,tdos[0],color=(t_color),label=r'TDOS$^↑$',lw=0)
                         ax.fill_betweenx(en,tdos[1],color=(it_color),label=r'TDOS$^↓$',lw=0)
                     else:   # unpolarized.
                         ax.fill_betweenx(en,tdos,color=(t_color),label='TDOS',lw=0)
-                if(include_dos!='tdos'):
+                if include_dos != 'tdos':
                     for p,l,c in zip(pdos,labels,colors):
                         ax.fill_betweenx(en,p,color=(mpl.colors.to_rgba(c,0.4)),linewidth=0)
                         ax.plot(p,en, color=(c),linewidth=linewidth,label=l)
             if elim:
                 ax.set_ylim([min(elim),max(elim)])
-        if(showlegend==True):
+        if showlegend == True:
             add_legend(ax=ax,labels=[],colors=colors,widths=linewidth,**legend_kwargs)
         return ax
 
