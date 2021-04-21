@@ -252,11 +252,8 @@ def get_kpath(hsk_list=[],labels=[], n = 5,weight= None ,ibzkpt = None,outfile=N
         - ibzkpt : Path to ibzkpt file, required for HSE calculations.
         - labels : Hight symmetry points labels. Good for keeping record of lables and points indices for later use.                - Note: If you do not want to label a point, label it as 'skip' at its index and it will be removed.
         - outfile: Path/to/file to write kpoints.
-    - **Attributes**
-        - If `outfile = None`, a tuple is returned which consists of:
-            - nkpts   : get_kmesh().nkpts.
-            - kpoints : get_kmesh().kpoints.
-            - weights : get_kmesh().weights.
+
+    If `outfile = None`, KPONITS file content is printed.
     """
     if hsk_list:
         try: hsk_list[0][0][0]
@@ -272,8 +269,8 @@ def get_kpath(hsk_list=[],labels=[], n = 5,weight= None ,ibzkpt = None,outfile=N
 
             inds.append(inds[-1]+_m)
             if j !=0:
-
                 joinat.append(inds[-2]) # Add previous in joinpath
+
             xs.append(list(np.linspace(a[i][0],a[i+1][0],_m)))
             ys.append(list(np.linspace(a[i][1],a[i+1][1],_m)))
             zs.append(list(np.linspace(a[i][2],a[i+1][2],_m)))
@@ -302,12 +299,10 @@ def get_kpath(hsk_list=[],labels=[], n = 5,weight= None ,ibzkpt = None,outfile=N
     top_str = "Automatically generated using PivotPy with HSK-INDS = {}, LABELS = {}, SEG-INDS = {}\n\t{}\nReciprocal Lattice".format(inds,labels,joinat,N)
     out_str = "{}\n{}".format(top_str,out_str)
     if outfile != None:
-        f = open(outfile,'w')
-        f.write(out_str)
-        f.close()
+        with open(outfile,'w') as f:
+            f.write(out_str)
     else:
-        mesh = namedtuple('Mesh',['nkpts','kpoints','weights'])
-        return mesh(N,np.array([[x,y,x] for x,y,z in zip(xs,ys,zs)]),[weight for x in xs])
+        print(out_str)
 
 def read_ticks(kpoints_file_path):
     "Reads ticks values and labels in header of kpoint file. Returns dictionary of `ktick_inds`,`ktick_vals`,`kseg_inds` that can be unpacked to plotting functions. If not exist in header, returns empty values(still valid)."
@@ -387,12 +382,8 @@ def get_kmesh(n_xyz=[5,5,5],weight = None, ibzkpt= None,path_pos=None,outfile=No
         - ibzkpt : Path to ibzkpt file, required for HSE calculations.
         - path_pos : POSCAR file path or real space lattice vectors, if None, cubic symmetry is used and it is fast.
         - outfile: Path/to/file to write kpoints.
-    - **Attributes**
-        - If `outfile = None`, a tuple is returned which consists of:
-            - nkpts   : get_kmesh().nkpts.
-            - kpoints : get_kmesh().kpoints.
-            - weight  : get_kmesh().weight, its one float number, provided or calculated.
-    """
+
+    If `outfile = None`, KPOINTS file content is printed."""
     if type(n_xyz) == int:
         nx,ny,nz = n_xyz,n_xyz,n_xyz
     else:
@@ -432,12 +423,10 @@ def get_kmesh(n_xyz=[5,5,5],weight = None, ibzkpt= None,path_pos=None,outfile=No
     top_str = "Automatically generated uniform mesh using PivotPy with {}x{}x{} grid{}\n\t{}\nReciprocal Lattice".format(nx,ny,nz,top_info,N)
     out_str = "{}\n{}".format(top_str,out_str)
     if outfile != None:
-        f = open(outfile,'w')
-        f.write(out_str)
-        f.close()
+        with open(outfile,'w') as f:
+            f.write(out_str)
     else:
-        mesh = namedtuple('Mesh',['nkpts','kpoints','weight'])
-        return mesh(N,points,weight)
+        print(out_str)
 
 # Cell
 def tan_inv(vy,vx):
@@ -678,12 +667,14 @@ def splot_bz(path_pos_bz = None, ax = None, plane=None,color='blue',fill=True,ve
 
     _label = r'\vec{}'.format(vname) # For both
 
-    valid_planes = 'xyzx' # cylic
+    valid_planes = 'xyzxzyx' # cylic
     if plane and plane not in valid_planes:
-        return print(f"`plane` expects any of ['xy','yz','zx',None], got {plane!r}")
+        return print(f"`plane` expects value in 'xyzxzyx' or None, got {plane!r}")
     elif plane and plane in valid_planes: #Project 2D
         faces = bz.faces
-        i, j = ([0,1] if plane=='xy' else [1,2] if plane=='yz' else [2,0])
+        ind = valid_planes.index(plane)
+        arr = [0,1,2,0,2,1,0]
+        i, j = arr[ind], arr[ind+1]
         _ = [ax.plot(f[:,i],f[:,j],color=(color),lw=0.7) for f in faces]
 
         if vectors:
@@ -796,12 +787,13 @@ def iplot_bz(path_pos_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',back
         a_name = 'RealAxes'
 
     # Axes
-    fig.add_trace(go.Scatter3d(x=[0.25,0,0,0,0],y=[0,0,0.25,0,0],z=[0,0,0,0,0.25],
+    _len = 0.5*np.mean(bz.basis)
+    fig.add_trace(go.Scatter3d(x=[_len,0,0,0,0],y=[0,0,_len,0,0],z=[0,0,0,0,_len],
         mode='lines+text',
         text= axes_text,
         line_color='green', legendgroup=a_name,name=a_name))
-    fig.add_trace(go.Cone(x=[0.18,0,0],y=[0,0.18,0],z=[0,0,0.18],
-        u=[0.00001,0,0],v=[0,0.00001,0],w=[0,0,    0.00001],showscale=False,
+    fig.add_trace(go.Cone(x=[0.95*_len,0,0],y=[0,0.95*_len,0],z=[0,0,0.95*_len],
+        u=[0.2*_len,0,0],v=[0,0.2*_len,0],w=[0,0,0.2*_len],showscale=False,
         colorscale='Greens',legendgroup=a_name,name=a_name))
     # Basis
     for i,b in enumerate(bz.basis):
@@ -855,7 +847,7 @@ def iplot_bz(path_pos_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',back
                 hovertext=texts,name="HSK",marker_color=colors,mode='markers'))
     proj = dict(projection=dict(type = "orthographic")) if ortho3d else {}
     camera = dict(center=dict(x=0.1, y=0.1, z=0.1),**proj)
-    fig.update_layout(scene_camera=camera,paper_bgcolor=background,
+    fig.update_layout(scene_camera=camera,paper_bgcolor=background, plot_bgcolor=background,
         font_family="Times New Roman",font_size= 14,
         scene = dict(aspectmode='data',xaxis = dict(showbackground=False,visible=False),
                         yaxis = dict(showbackground=False,visible=False),
@@ -1138,6 +1130,13 @@ def splot_lat(poscar,sizes=50,colors=[],colormap=None,
 
     > Tip: Use `plt.style.use('ggplot')` for better 3D perception.
     """
+    #Plane fix
+    if plane and plane not in 'xyzxzyx':
+        return print("plane expects in 'xyzxzyx' or None.")
+    if plane:
+        ind = 'xyzxzyx'.index(plane)
+        arr = [0,1,2,0,2,1,0]
+        ix,iy = arr[ind], arr[ind+1]
     poscar = fix_sites(poscar=poscar,tol=tol,eqv_sites=eqv_sites,translate=translate)
     bond_length = _get_bond_length(poscar,given=bond_length,eps=eps)
     coords, pairs = get_pairs(basis=poscar.basis,
@@ -1181,22 +1180,14 @@ def splot_lat(poscar,sizes=50,colors=[],colormap=None,
 
         if not plane:
             _ = [ax.plot(*c.T,c=_c,lw=line_width) for c,_c in zip(coords_n,colors_n)]
-        elif 'xy' in plane:
-            _ = [ax.plot(c[:,0],c[:,1],c=_c,lw=line_width) for c,_c in zip(coords_n,colors_n)]
-        elif 'yz' in plane:
-            _ = [ax.plot(c[:,1],c[:,2],c=_c,lw=line_width) for c,_c in zip(coords_n,colors_n)]
-        elif 'zx' in plane:
-            _ = [ax.plot(c[:,2],c[:,0],c=_c,lw=line_width) for c,_c in zip(coords_n,colors_n)]
+        elif plane in 'xyzxzyx':
+            _ = [ax.plot(c[:,ix],c[:,iy],c=_c,lw=line_width) for c,_c in zip(coords_n,colors_n)]
 
     for (k,v),c,s in zip(uelems.items(),colors,sizes):
         if not plane:
             ax.scatter(coords[v][:,0],coords[v][:,1],coords[v][:,2],color = c ,s =s,label=k,depthshade=False)
-        elif 'xy' in plane:
-            ax.scatter(coords[v][:,0],coords[v][:,1],color = c ,s =s,label=k,zorder=3)
-        elif 'yz' in plane:
-            ax.scatter(coords[v][:,1],coords[v][:,2],color = c ,s =s,label=k,zorder=3)
-        elif 'zx' in plane:
-            ax.scatter(coords[v][:,2],coords[v][:,0],color = c ,s =s,label=k,zorder=3)
+        elif plane in 'xyzxzyx':
+            ax.scatter(coords[v][:,ix],coords[v][:,iy],color = c ,s =s,label=k,zorder=3)
     ax.set_axis_off()
     sp.add_legend(ax)
     return ax

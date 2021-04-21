@@ -20,8 +20,10 @@ import xml.etree.ElementTree as ET
 # Inside packages import to work both with package and jupyter notebook.
 try:
     from pivotpy import g_utils as gu
+    from .sio import read_ticks
 except:
     import pivotpy.g_utils as gu
+    import pivotpy.sio.read_ticks as read_ticks
 
 # Cell
 def dict2tuple(name,d):
@@ -797,10 +799,10 @@ def load_export(path= './vasprun.xml',
     os.chdir(this_loc)
 
     # Work now!
-    sys_info = {'SYSTEM': SYSTEM,'NION': NION,'NELECT':NELECT,'TypeION': TypeION,'ElemName': ElemName, 'E_Fermi': E_Fermi,'fields':fields, 'incar': incar,
-               'ElemIndex': ElemIndex,'ISPIN': ISPIN}
-    dim_info = {'kpoints': '(NKPTS,3)','kpath': '(NKPTS,1)','bands': '⇅(NKPTS,NBANDS)',
-'dos': '⇅(grid_size,3)','pro_dos': '⇅(NION,grid_size,en+pro_fields)','pro_bands': '⇅(NION,NKPTS,NBANDS,pro_fields)'}
+    sys_info = {'SYSTEM': SYSTEM,'NION': NION,'NELECT':NELECT,'TypeION': TypeION,'ElemName': ElemName,
+                'E_Fermi': E_Fermi,'fields':fields, 'incar': incar,'ElemIndex': ElemIndex,'ISPIN': ISPIN}
+    dim_info = {'kpoints': '(NKPTS,3)','kpath': '(NKPTS,1)','bands': '⇅(NKPTS,NBANDS)','dos': '⇅(grid_size,3)',
+                'pro_dos': '⇅(NION,grid_size,en+pro_fields)','pro_bands': '⇅(NION,NKPTS,NBANDS,pro_fields)'}
 
     bands_dic,tdos_dic,pdos_dic,pro_dic,kpath={},{},{},{},[]
     if(ISPIN==1):

@@ -267,7 +267,7 @@ def quick_bplot(path_evr=None,ax=None,skipk=None,kseg_inds=[],elim=[],ktick_inds
         return print('Check first argument, something went wrong')
 
     # Main working here.
-    K=vr.kpath
+    K = vr.kpath
     xticks = [K[i] for i in ktick_inds]
     xlim = [min(K),max(K)]
     if elim:
@@ -649,11 +649,11 @@ def quick_rgb_lines(path_evr    = None,
                     labels      = ['','',''],
                     ax          = None,
                     skipk       = None,
-                    kseg_inds   = [],
                     elim        = [],
                     max_width   = None,
                     ktick_inds  = [0,-1],
-                    ktick_vals   = [r'$\Gamma$','M'],
+                    ktick_vals  = [r'$\Gamma$','M'],
+                    kseg_inds   = [],
                     E_Fermi     = None,
                     figsize     = (3.4,2.6),
                     txt         = None,
