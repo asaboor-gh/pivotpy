@@ -1055,6 +1055,7 @@ class KPathApp:
         self.files_gui, self.files_dd = get_files_gui(auto_fill='POSCAR')
         self.files_dd.layout.width = '50%'
         self.tab = ipw.Tab([self.files_gui,Box([]),KPathApp.output])
+        self.tab.add_class('marginless').add_class('borderless')
         self.tab.set_title(0,'Home')
         self.tab.set_title(1,'Main')
         self.tab.set_title(2,'STDERR')
@@ -1094,9 +1095,11 @@ class KPathApp:
         if self.buttons['theme'].value:
             self.theme_html.value = css_style(dark_colors)
             self.fig.layout.template = 'plotly_dark'
+            self.fig.layout.paper_bgcolor = dark_colors['box_bg'] #important
         else:
             self.theme_html.value = css_style(light_colors)
             self.fig.layout.template = 'plotly_white'
+            self.fig.layout.paper_bgcolor = light_colors['box_bg']
 
     @output.capture(clear_output=True,wait=True)
     def __manual_k(self,change):
@@ -1270,6 +1273,7 @@ class KPathApp:
                 self.fig.layout.scene.aspectmode = 'data' #very important
 
             self.__click()
+        self.__toggle_theme() #Important to let text appear correctly
 
 
     @output.capture(clear_output=True,wait=True)
