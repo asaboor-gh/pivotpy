@@ -844,7 +844,7 @@ def iplot_bz(path_pos_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',back
 
         colors[0]= "rgb(255,215,0)" # Gold color at Gamma!.
         fig.add_trace(go.Scatter3d(x=values[:,0], y=values[:,1],z=values[:,2],
-                hovertext=texts,name="HSK",marker_color=colors,mode='markers'))
+                hovertext=texts,name="HSK",marker=dict(color=colors,size=4),mode='markers'))
     proj = dict(projection=dict(type = "orthographic")) if ortho3d else {}
     camera = dict(center=dict(x=0.1, y=0.1, z=0.1),**proj)
     fig.update_layout(scene_camera=camera,paper_bgcolor=background, plot_bgcolor=background,

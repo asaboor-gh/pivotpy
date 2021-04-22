@@ -604,7 +604,7 @@ class VasprunApp:
         self.InGui  = InputGui(height=None)
         self.input  = {'E_Fermi':0} # Dictionary for input
         self.fig_gui = HBox() # Middle Tab
-        self.theme_colors = simple_colors.copy() # Avoid Modification
+        self.theme_colors = light_colors.copy() # Avoid Modification
         # Permeannet Parameters
         self.idos_kws   = dict(colormap='RGB',tdos_color=(0.5, 0.95, 0),linewidth=2,fill_area=True,
                                spin='both',interpolate=False,n=5,k=3,title=None)
@@ -1105,6 +1105,7 @@ class KPathApp:
                 self.kpoints[i] = [float(v) for v in self.texts['kxyz'].value.split(',') if v != ''][:3]
                 kp,n,l = self.kpoints[i], self.nkpts[i],self.labels[i]
                 c.description = "{0:>9.4f}{1:>9.4f}{2:>9.4f} -> {3}!{4}".format(*kp,n,l)
+        self.__update_selection() #Change on graph too
 
     @output.capture(clear_output=True,wait=True)
     def __check_all(self,change):
@@ -1125,10 +1126,10 @@ class KPathApp:
         self.tab.children = [self.tab.children[0],
                             HBox([
                                   VBox([self.theme_html,
-                                            VBox([top_row,_buttons1,_buttons2],
-                                            layout = Layout(min_height='120px')),
-                                            Box([self.views]).add_class('marginless').add_class('borderless'),
-                                            *self.texts.values()],
+                                        VBox([top_row,_buttons1,_buttons2],
+                                        layout = Layout(min_height='140px')),
+                                        Box([self.views]).add_class('marginless').add_class('borderless'),
+                                        *self.texts.values()],
                                   layout=Layout(min_width='320px')).add_class('borderless'),
                                   Box([self.fig]).add_class('borderless')],
                             layout=Layout(height='400px')).add_class('borderless'),
@@ -1258,7 +1259,9 @@ class KPathApp:
             self.fig.data = []
             with self.fig.batch_animate():
                 self.fig.add_trace(go.Scatter3d(x = [],y = [],z = [],
-                                    mode='lines+text+markers',name='path',text=self.labels))
+                    mode='lines+text+markers',name='path',text=[],
+                    textfont_size=18))
+                self.__update_selection() #Show previous path on current fig.
                 for trace in fig_data.data:
                     self.fig.add_trace(trace)
 
