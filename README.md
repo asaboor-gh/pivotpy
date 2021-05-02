@@ -53,75 +53,13 @@ Tip: Use file [matplotlib2terminal.py](https://gist.github.com/massgh/d5cc44ad32
 See GIF here:
 ![GIF](widget.gif) 
 
-- The code at end is used below to rebuild dataframe which can be use in many ways such as generating latex table. The matplotlib code is used to generate publication quality figure.
-
-```
-from IPython.display import Markdown
-import pivotpy as pp
-paths = ['e:/Research/graphene_example/ISPIN_1/bands/DOS/vasprun.xml',
-         'e:/Research/graphene_example/ISPIN_1/bands/vasprun.xml',
-         'e:/Research/graphene_example/ISPIN_1/dos/vasprun.xml',
-         'e:/Research/graphene_example/ISPIN_2/bands/vasprun.xml',
-         'e:/Research/graphene_example/ISPIN_2/dos/sigm0_01/vasprun.xml',
-         'e:/Research/graphene_example/ISPIN_2/dos/vasprun.xml',
-         'e:/Research/graphene_example/vasprun.xml']
-df = pp.generate_summary(paths_list=paths)
-print(df.caption)
-Markdown(df.data.to_markdown())
-```
-
-    Root Path: e:/Research/graphene_example/
-    
-
-
-
-
-|    | sys   |       V |       a |       b |       c |      VBM |      CBM |   so_max |   so_min |    E_gap | rel_path             |
-|---:|:------|--------:|--------:|--------:|--------:|---------:|---------:|---------:|---------:|---------:|:---------------------|
-|  0 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 |  -2.6818 |  -2.6818 |      nan |      nan |   0      | ISPIN_1/bands/DOS    |
-|  1 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 |  -2.7733 |  -2.7733 |      nan |      nan |   0      | ISPIN_1/bands        |
-|  2 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 | -12.7211 |  -5.2581 |      nan |      nan |   7.463  | ISPIN_1/dos          |
-|  3 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 |  -3.5339 |  -1.9647 |      nan |      nan |   1.5692 | ISPIN_2/bands        |
-|  4 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 | nan      | nan      |      nan |      nan | nan      | ISPIN_2/dos/sigm0_01 |
-|  5 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 |  -3.0398 |  -2.6296 |      nan |      nan |   0.4102 | ISPIN_2/dos          |
-|  6 | C2    | 105.493 | 2.46803 | 2.46803 | 19.9983 |  -1.2155 |  -1.9644 |      nan |      nan |  -0.7489 | nan                  |
-
-
-
-```
-print(df.data[:2].to_latex())
-```
-
-    \begin{tabular}{llrrrrrrrrrl}
-    \toprule
-    {} & sys &          V &        a &        b &         c &     VBM &     CBM &  so\_max &  so\_min &  E\_gap &           rel\_path \\
-    \midrule
-    0 &  C2 &  105.49325 &  2.46803 &  2.46803 &  19.99829 & -2.6818 & -2.6818 &     NaN &     NaN &    0.0 &  ISPIN\_1/bands/DOS \\
-    1 &  C2 &  105.49325 &  2.46803 &  2.46803 &  19.99829 & -2.7733 & -2.7733 &     NaN &     NaN &    0.0 &      ISPIN\_1/bands \\
-    \bottomrule
-    \end{tabular}
-    
-    
-
-```
-ax = pp.init_figure(figsize=(3,1.5))
-_ = df.data.sort_values('VBM').plot(ax=ax,x = 'VBM',y=['CBM','E_gap'])
-```
-
-
-![svg](docs/images/output_9_0.svg)
-
-
-```
+```python
 import os 
 os.chdir('E:/Research/graphene_example/ISPIN_1/bands')
 xml_data=pp.read_asxml()
 vr=pp.export_vasprun(elim=[-5,5])
 vr
 ```
-
-    Loading from PowerShell Exported Data...
-    
 
 
 
@@ -133,7 +71,9 @@ vr
             NELECT = 8
             TypeION = 1
             ElemName = ['C']
-            E_Fermi = -3.3501
+            ElemIndex = [0, 2]
+            E_Fermi = -3.35005822
+            ISPIN = 1
             fields = ['s', 'py', 'pz', 'px', 'dxy', 'dyz', 'dz2', 'dxz', 'x2-y2']
             incar = Data(
                 SYSTEM = C2
@@ -144,10 +84,9 @@ vr
                 ISMEAR = 0
                 SIGMA = 0.10000000
                 LORBIT = 11
+                KPOINT_BSE = -1     0     0     0
                 GGA = PS
             )
-            ElemIndex = [0, 2]
-            ISPIN = 1
         )
         dim_info = Data(
             kpoints = (NKPTS,3)
@@ -160,24 +99,25 @@ vr
         kpoints = <ndarray:shape=(90, 3)>
         kpath = <list:len=90>
         bands = Data(
-            E_Fermi = -3.3501
+            E_Fermi = -3.35005822
             ISPIN = 1
-            NBANDS = 21
-            evals = <ndarray:shape=(90, 21)>
-            indices = range(1, 22)
+            NBANDS = 10
+            evals = <ndarray:shape=(90, 10)>
+            indices = range(4, 14)
         )
         tdos = Data(
-            E_Fermi = -3.3501
+            E_Fermi = -3.35005822
             ISPIN = 1
-            tdos = <ndarray:shape=(301, 3)>
+            grid_range = range(124, 203)
+            tdos = <ndarray:shape=(79, 3)>
         )
         pro_bands = Data(
             labels = ['s', 'py', 'pz', 'px', 'dxy', 'dyz', 'dz2', 'dxz', 'x2-y2']
-            pros = <ndarray:shape=(2, 90, 21, 9)>
+            pros = <ndarray:shape=(2, 90, 10, 9)>
         )
         pro_dos = Data(
-            labels = ['s', 'py', 'pz', 'px', 'dxy', 'dyz', 'dz2', 'dxz', 'x2-y2']
-            pros = <ndarray:shape=(2, 301, 10)>
+            labels = ['energy', 's', 'py', 'pz', 'px', 'dxy', 'dyz', 'dz2', 'dxz', 'x2-y2']
+            pros = <ndarray:shape=(2, 79, 10)>
         )
         poscar = Data(
             SYSTEM = C2
@@ -198,7 +138,7 @@ vr
 - Add anything from legend,colorbar, colorwheel. In below figure, all three are shown.
 - Use aliases such as sbands, sdos,srgb,irgb,scolor,idos for plotting. 
 
-```
+```python
 #collapse_input
 import pivotpy as pp, numpy as np 
 import matplotlib.pyplot as plt 
@@ -217,19 +157,20 @@ pp.color_wheel(axs[2],xy=(0.7,1.15),scale=0.2,labels=[l+'$^{⇅}$' for l in labe
 pp._show() 
 ```
 
-    Loading from PowerShell Exported Data...
     [0;92m elements[0] = 0 is converted to range(0, 2) which picks all ions of 'C'.To just pick one ion at this index, wrap it in brackets [].[00m
-    e:\Research\pivotpy\pivotpy\s_plots.py:428: MatplotlibDeprecationWarning: shading='flat' when X and Y have the same dimensions as C is deprecated since 3.3.  Either specify the corners of the quadrilaterals with X and Y, or pass shading='auto', 'nearest' or 'gouraud', or set rcParams['pcolor.shading'].  This will become an error two minor releases later.
+    
+
+    E:\Research\pivotpy\pivotpy\s_plots.py:425: MatplotlibDeprecationWarning: shading='flat' when X and Y have the same dimensions as C is deprecated since 3.3.  Either specify the corners of the quadrilaterals with X and Y, or pass shading='auto', 'nearest' or 'gouraud', or set rcParams['pcolor.shading'].  This will become an error two minor releases later.
       cax.pcolormesh(t,r,tg.T,norm=norm,cmap=colormap,edgecolor='face')
     
 
 
-![svg](docs/images/output_12_1.svg)
+![svg](docs/images/output_8_2.svg)
 
 
 ## Interactive plots using plotly
 
-```
+```python
 args_dict['labels'] = ['s','p_z','p_x+p_y']
 fig1 = pp.iplot_rgb_lines(vr1,**args_dict)
 #pp.iplot2html(fig1) #Do inside Google Colab, fig1 inside Jupyter
@@ -251,7 +192,7 @@ Markdown("[See Interactive Plot](https://massgh.github.io/InteractiveHTMLs/iGrap
 #### Look the output of `pivotpy.sio.splot_bz`.
 ![BZ](docs\images\3bz.jpg)
 
-```
+```python
 import pivotpy as pp 
 pp.splot_bz([[1,0,0],[0,1,0],[0,0,1]],color=(1,1,1,0.2),light_from=(0.5,0,2),colormap='RGB').set_axis_off()
 #pp.iplot2html(fig2) #Do inside Google Colab, fig1 inside Jupyter
@@ -267,13 +208,13 @@ Markdown("[See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ
 
 
 
-![svg](docs/images/output_16_1.svg)
+![svg](docs/images/output_12_1.svg)
 
 
 ## Plotting Two Calculations Side by Side 
 - Here we will use `shift_kpath` to demonstrate plot of two calculations on same axes side by side
 
-```
+```python
 #nbdev_collapse_input
 import matplotlib.pyplot as plt
 import pivotpy as pp 
@@ -291,17 +232,14 @@ pp.splot_bands(path_evr=vr2,ax=axs,txt='Graphene(Left: ISPIN=1, Right: ISPIN=2)'
 pp.modify_axes(ax=axs,xlim=[0,last_k],ylim=[-10,10],**ti_cks)
 ```
 
-    Loading from PowerShell Exported Data...
-    
 
-
-![svg](docs/images/output_18_1.svg)
+![svg](docs/images/output_14_0.svg)
 
 
 ## Interpolation 
 Amost every bandstructure and DOS plot function has an argument `interp_nk` which is a dictionary with keys `n` (Number of additional points between adjacent points) and `k` (order of interpolation 0-3). `n > k` must hold.
 
-```
+```python
 #collapse_input
 import pivotpy as pp
 plt.style.use('ggplot')
@@ -316,7 +254,7 @@ pp.add_text(ax=plt.gca(),txts='Graphene')
 ```
 
 
-![svg](docs/images/output_20_0.svg)
+![svg](docs/images/output_16_0.svg)
 
 
 ## LOCPOT,CHG Visualization
@@ -325,17 +263,17 @@ check out the class `pivotpy.LOCPOT_CHG` to visulize local potential/charge and 
 ## Running powershell commands from python.
 Some tasks are very tideious in python while just a click way in powershell. See below, and try to list processes in python yourself to see the difference!
 
-```
+```python
 pp.ps2std(ps_command='(Get-Process)[0..4]')
 ```
 
     NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
     ------    -----      -----     ------      --  -- -----------
-    51    38.57      17.12     494.38   15032   1 AltC
-    34    25.75      52.16      16.78   12744   1 ApplicationFrameHost
-    8     1.56       6.43       0.00   14652   0 AppVShNotify
-    9     1.84       7.13       0.08   16136   1 AppVShNotify
-    19     4.46       4.61       0.00    5244   0 armsvc
+    51    42.43      62.00      55.78   15288   1 AltC
+    26    12.28      56.91       2.88    7936   1 ApplicationFrameHost
+    9     1.69       4.91       0.00    4564   0 armsvc
+    41    35.82      49.69       6.00   14504   1 BingWallpaperApp
+    37    43.50      82.27      78.77    1216   1 Code
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -366,30 +304,27 @@ c.ScriptMagics.script_paths = {
 }
 ```
 
-```
+```python
 %%ps 
 Get-ChildItem 'E:\Research\graphene_example\'
 ```
 
-    
-    
-        Directory: E:\Research\graphene_example
-    
-    
-    Mode                 LastWriteTime         Length Name                                                                 
-    ----                 -------------         ------ ----                                                                 
-    da----        10/31/2020   1:30 PM                ISPIN_1                                                              
-    da----          5/9/2020   1:05 PM                ISPIN_2                                                              
-    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                               
-    -a----         3/13/2021   4:14 PM            193 result.json                                                          
-    -a----        11/22/2020   6:08 PM            693 sys_info.pickle                                                      
-    -a----        11/22/2020   6:08 PM          91850 vasprun.pickle                                                       
-    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                          
-    
-    
-    
+    
+    
+        Directory: E:\Research\graphene_example
+    
+    
+    Mode                 LastWriteTime         Length Name                                                                                   
+    ----                 -------------         ------ ----                                                                                   
+    da----        10/31/2020   1:30 PM                ISPIN_1                                                                                
+    da----          5/9/2020   1:05 PM                ISPIN_2                                                                                
+    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                                                 
+    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                                            
+    
+    
 
-```
+
+```python
 x = %ps (Get-ChildItem 'E:\Research\graphene_example\').Name
 x
 ```
@@ -397,13 +332,7 @@ x
 
 
 
-    ['ISPIN_1',
-     'ISPIN_2',
-     'OUTCAR',
-     'result.json',
-     'sys_info.pickle',
-     'vasprun.pickle',
-     'vasprun.xml']
+    ['ISPIN_1', 'ISPIN_2', 'OUTCAR', 'vasprun.xml']
 
 
 
