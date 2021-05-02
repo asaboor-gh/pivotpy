@@ -47,42 +47,12 @@ nb_path: "InteractivePlots.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_rgb_data" class="doc_header"><code>get_rgb_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L24" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_rgb_data</code>(<strong><code>kpath</code></strong>=<em><code>None</code></em>, <strong><code>evals_set</code></strong>=<em><code>None</code></em>, <strong><code>pros_set</code></strong>=<em><code>None</code></em>, <strong><code>elements</code></strong>=<em><code>[[0], [], []]</code></em>, <strong><code>orbs</code></strong>=<em><code>[[0], [], []]</code></em>, <strong><code>interp_nk</code></strong>=<em><code>{}</code></em>, <strong><code>scale_color</code></strong>=<em><code>False</code></em>)</p>
-</blockquote>
-<ul>
-<li>Returns a formatted RGB colored data to pass into <a href="/pivotpy/InteractivePlots.html#rgb2plotly"><code>rgb2plotly</code></a> function. Two arguments, <code>elements</code> and <code>orbs</code> should be in one-to-one correspondence. Returned item has transpose data shape, so that main iteration is over bands.</li>
-<li><strong>Parameters</strong><ul>
-<li>kapath   : <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a>().kpath or <a href="/pivotpy/XmlElementTree.html#get_kpts"><code>get_kpts</code></a>().kpath.</li>
-<li>evals_set: <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a>().bands.evals or <a href="/pivotpy/XmlElementTree.html#get_evals"><code>get_evals</code></a>().evals. If calculations are spin-polarized, it will be <code>...evals.SpinUp/SpinDown</code> for both. You need to apply twice for SpinUp and SpinDown separately.</li>
-<li>pros_set : <code>export_vasprun().pro_bands.pros</code> or <a href="/pivotpy/XmlElementTree.html#get_bands_pro_set"><code>get_bands_pro_set</code></a>().pros. If calculations are spin-polarized, it will be <code>...pros.SpinUp/SpinDown</code> for both. You need to create collections twice for SpinUp and SpinDown separately.</li>
-<li>elements : List three lists of ions to project on, each element could be <code>range(start,stop,step)</code> as well, remember that <code>stop</code> is not included in python. so <code>range(0,2)</code> will generate 0 and 1 indices.</li>
-<li>orbs     : List of three lists of orbitals indices. <code>[[red],[green],[blue]]</code>, you can create any color by this combination. For example, to get <code>s-orbital in yellow color</code>, you will use <code>[[0],[0],[]]</code>. Do not remove empty list from there, it will not effect your orbital selection.</li>
-<li>interp_nk   : Dictionary with keys 'n' and 'k' for interpolation.</li>
-<li>scale_color: If True, colors are scaled to 1 at each points.</li>
-</ul>
-</li>
-<li><strong>Returns</strong><ul>
-<li>kpath    : List of NKPTS. (interpolated if given.)</li>
-<li>evals    : An (NBAND,NKPTS) numpy arry.</li>
-<li>colors   : An (NBANDS,NKPTS,3) numpy array.</li>
-<li>widths   : An (NBAND,NKPTS) numpy arry, its actually colors summed along z-axis.</li>
-</ul>
-</li>
-</ul>
-
 </div>
+    {% endraw %}
 
-</div>
-
-</div>
-</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
@@ -105,105 +75,7 @@ nb_path: "InteractivePlots.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="flip_even_patches" class="doc_header"><code>flip_even_patches</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L85" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>flip_even_patches</code>(<strong><code>array_1d</code></strong>, <strong><code>patch_length</code></strong>)</p>
-</blockquote>
-<ul>
-<li>When you reshape bands data to 1D array, you may need to draw lines which do not link ends of plot, for that, it is required to flip patches, so that next band start from where 1st end and so one.</li>
-<li><strong>Parameters</strong><ul>
-<li>array_1d     : Numpy 1d array or list.</li>
-<li>patch_length : length of xaxis patches, e.g NKPTS.</li>
-</ul>
-</li>
-<li><strong>Returns</strong><ul>
-<li>1D list</li>
-</ul>
-</li>
-<li><strong> Example</strong><blockquote><p>k=[1,2,3,1,2,3]
-flip_even_patches(k,3)
-[1,2,3,3,2,1]</p>
-</blockquote>
-</li>
-</ul>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="rgb2plotly" class="doc_header"><code>rgb2plotly</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L108" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>rgb2plotly</code>(<strong><code>rgb_data</code></strong>=<em><code>None</code></em>, <strong><code>mode</code></strong>=<em><code>'markers'</code></em>, <strong><code>max_width</code></strong>=<em><code>None</code></em>, <strong><code>showlegend</code></strong>=<em><code>False</code></em>, <strong><code>name</code></strong>=<em><code>''</code></em>, <strong><code>labels</code></strong>=<em><code>['s', 'p', 'd']</code></em>, <strong><code>symbol</code></strong>=<em><code>0</code></em>, <strong><code>start</code></strong>=<em><code>0</code></em>)</p>
-</blockquote>
-<ul>
-<li>Returns data object of plotly's figure using <a href="/pivotpy/InteractivePlots.html#get_rgb_data"><code>get_rgb_data</code></a>. Returned data could be fed to a plolty's figure.</li>
-<li><strong> Parameters</strong><ul>
-<li>rgb_data    : output of <a href="/pivotpy/InteractivePlots.html#get_rgb_data"><code>get_rgb_data</code></a>.</li>
-<li>mode        : Three plotting modes are available:<ul>
-<li>'markers' : Plot whole data as a single scatter object. Its too fast.</li>
-<li>'bands'   : Plot data such that each band is accessible via legend.</li>
-<li>'lines'   : A replica of <code>matplotlib LineCollection</code> object. It plots at each point separately, slower than other two modes.</li>
-</ul>
-</li>
-<li>max_width  : Line/Scatter thickness is scaled to <code>max_width</code>. None by default and represent actual data.</li>
-<li>name       : Name to be shown on hover text or legend.</li>
-<li>labels     : Optional, show red green blue colors corresponding orbitals.</li>
-<li>showlegend : Optional, only suitbale if spin up/down or 'bands' mode is ON.</li>
-<li>symbol     : Plotly's marker symbol. 0 for circle, 5/6 for Up/Down.</li>
-<li>start      : Start index of bands, defult is zero. Should be export_vasprun().bands.indices[0] or get_evals().indices[0].</li>
-</ul>
-</li>
-</ul>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="plotly2html" class="doc_header"><code>plotly2html</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L175" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>plotly2html</code>(<strong><code>fig</code></strong>, <strong><code>filename</code></strong>=<em><code>None</code></em>, <strong><code>out_string</code></strong>=<em><code>False</code></em>, <strong><code>modebar</code></strong>=<em><code>True</code></em>)</p>
+<h4 id="iplot2html" class="doc_header"><code>iplot2html</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L174" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>iplot2html</code>(<strong><code>fig</code></strong>, <strong><code>filename</code></strong>=<em><code>None</code></em>, <strong><code>out_string</code></strong>=<em><code>False</code></em>, <strong><code>modebar</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <ul>
 <li>Writes plotly's figure as HTML file or display in IPython which is accessible when online. It is different than plotly's <code>fig.to_html</code> as it is minimal in memory. If you need to have offline working file, just use <code>fig.write_html('file.html')</code> which will be larger in size.</li>
@@ -243,7 +115,7 @@ flip_even_patches(k,3)
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="plotly_rgb_lines" class="doc_header"><code>plotly_rgb_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L226" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>plotly_rgb_lines</code>(<strong><code>path_evr</code></strong>=<em><code>None</code></em>, <strong><code>elements</code></strong>=<em><code>[[], [], []]</code></em>, <strong><code>orbs</code></strong>=<em><code>[[], [], []]</code></em>, <strong><code>labels</code></strong>=<em><code>['', '', '']</code></em>, <strong><code>mode</code></strong>=<em><code>'markers'</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>E_Fermi</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>kseg_inds</code></strong>=<em><code>[]</code></em>, <strong><code>max_width</code></strong>=<em><code>6</code></em>, <strong><code>title</code></strong>=<em><code>None</code></em>, <strong><code>ktick_inds</code></strong>=<em><code>[0, -1]</code></em>, <strong><code>ktick_vals</code></strong>=<em><code>['Γ', 'M']</code></em>, <strong><code>figsize</code></strong>=<em><code>None</code></em>, <strong><code>interp_nk</code></strong>=<em><code>{}</code></em>)</p>
+<h4 id="iplot_rgb_lines" class="doc_header"><code>iplot_rgb_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L225" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>iplot_rgb_lines</code>(<strong><code>path_evr</code></strong>=<em><code>None</code></em>, <strong><code>elements</code></strong>=<em><code>[[], [], []]</code></em>, <strong><code>orbs</code></strong>=<em><code>[[], [], []]</code></em>, <strong><code>labels</code></strong>=<em><code>['', '', '']</code></em>, <strong><code>mode</code></strong>=<em><code>'markers'</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>E_Fermi</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>kseg_inds</code></strong>=<em><code>[]</code></em>, <strong><code>max_width</code></strong>=<em><code>6</code></em>, <strong><code>title</code></strong>=<em><code>None</code></em>, <strong><code>ktick_inds</code></strong>=<em><code>[0, -1]</code></em>, <strong><code>ktick_vals</code></strong>=<em><code>['Γ', 'M']</code></em>, <strong><code>figsize</code></strong>=<em><code>None</code></em>, <strong><code>interp_nk</code></strong>=<em><code>{}</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns plotly's figure object, takes care of spin-polarized calculations automatically. <code>elements</code>,<code>orbs</code> and <code>labels</code> are required to be one-to-one lists of size 3 where each item in list could be another list or integer.</li>
@@ -295,8 +167,8 @@ flip_even_patches(k,3)
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">os</span> 
 <span class="kn">import</span> <span class="nn">pivotpy</span> <span class="k">as</span> <span class="nn">pp</span> 
 <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;E:/Research/graphene_example/ISPIN_2/bands&#39;</span><span class="p">)</span>
-<span class="n">fig</span><span class="o">=</span><span class="n">plotly_rgb_lines</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;lines&#39;</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span><span class="n">orbs</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]],</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;s&#39;</span><span class="p">,</span><span class="s1">&#39;p&lt;sub&gt;z&lt;/sub&gt;&#39;</span><span class="p">,</span><span class="s1">&#39;p&lt;sub&gt;x&lt;/sub&gt;+p&lt;sub&gt;y&lt;/sub&gt;&#39;</span><span class="p">],</span> <span class="n">ktick_inds</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">ktick_vals</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Γ&#39;</span><span class="p">,</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;K&#39;</span><span class="p">,</span><span class="s1">&#39;Γ&#39;</span><span class="p">],</span><span class="n">E_Fermi</span><span class="o">=-</span><span class="mf">2.7735</span><span class="p">)</span>
-<span class="n">plotly2html</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span><span class="n">modebar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">=</span><span class="n">iplot_rgb_lines</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;lines&#39;</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span><span class="n">orbs</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]],</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;s&#39;</span><span class="p">,</span><span class="s1">&#39;p&lt;sub&gt;z&lt;/sub&gt;&#39;</span><span class="p">,</span><span class="s1">&#39;p&lt;sub&gt;x&lt;/sub&gt;+p&lt;sub&gt;y&lt;/sub&gt;&#39;</span><span class="p">],</span> <span class="n">ktick_inds</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">ktick_vals</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Γ&#39;</span><span class="p">,</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;K&#39;</span><span class="p">,</span><span class="s1">&#39;Γ&#39;</span><span class="p">],</span><span class="n">E_Fermi</span><span class="o">=-</span><span class="mf">2.7735</span><span class="p">)</span>
+<span class="n">iplot2html</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span><span class="n">modebar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -308,8 +180,8 @@ flip_even_patches(k,3)
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Creating-a-grid-plot-using-plotly_rgb_lines">Creating a grid plot using <a href="/pivotpy/InteractivePlots.html#plotly_rgb_lines"><code>plotly_rgb_lines</code></a><a class="anchor-link" href="#Creating-a-grid-plot-using-plotly_rgb_lines"> </a></h3><ul>
-<li>Here is a workaround if you want to plot multiple axes like matplotlib. You can add traces to plotly's <code>make_subplots</code> object by getting <code>data=plotly_rgb_lines().data</code>   and <code>layout=plotly_rgb_lines().layout</code> objects. See example below: </li>
+<h3 id="Creating-a-grid-plot-using-iplot_rgb_lines">Creating a grid plot using <a href="/pivotpy/InteractivePlots.html#iplot_rgb_lines"><code>iplot_rgb_lines</code></a><a class="anchor-link" href="#Creating-a-grid-plot-using-iplot_rgb_lines"> </a></h3><ul>
+<li>Here is a workaround if you want to plot multiple axes like matplotlib. You can add traces to plotly's <code>make_subplots</code> object by getting <code>data=iplot_rgb_lines().data</code>   and <code>layout=iplot_rgb_lines().layout</code> objects. See example below: </li>
 </ul>
 
 </div>
@@ -340,16 +212,16 @@ flip_even_patches(k,3)
     <span class="n">row_heights</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span>
     <span class="n">y_title</span><span class="o">=</span><span class="s1">&#39;Energy (eV)&#39;</span>
                                   <span class="p">)</span>
-<span class="p">[</span><span class="n">fig5</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">trace</span> <span class="ow">in</span> <span class="n">ips</span><span class="o">.</span><span class="n">plotly_rgb_lines</span><span class="p">(</span><span class="n">orbs</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,[],[]],</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">]</span>
-<span class="p">[</span><span class="n">fig5</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">trace</span> <span class="ow">in</span> <span class="n">ips</span><span class="o">.</span><span class="n">plotly_rgb_lines</span><span class="p">(</span><span class="n">orbs</span><span class="o">=</span><span class="p">[[],[</span><span class="mi">1</span><span class="p">],[]],</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">]</span>
-<span class="p">[</span><span class="n">fig5</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span><span class="n">row</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">trace</span> <span class="ow">in</span> <span class="n">ips</span><span class="o">.</span><span class="n">plotly_rgb_lines</span><span class="p">(</span><span class="n">orbs</span><span class="o">=</span><span class="p">[[],[],[</span><span class="mi">2</span><span class="p">]],</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">]</span>
-<span class="n">last</span><span class="o">=</span><span class="n">ips</span><span class="o">.</span><span class="n">plotly_rgb_lines</span><span class="p">(</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+<span class="p">[</span><span class="n">fig5</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">trace</span> <span class="ow">in</span> <span class="n">ips</span><span class="o">.</span><span class="n">iplot_rgb_lines</span><span class="p">(</span><span class="n">orbs</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,[],[]],</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">]</span>
+<span class="p">[</span><span class="n">fig5</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">trace</span> <span class="ow">in</span> <span class="n">ips</span><span class="o">.</span><span class="n">iplot_rgb_lines</span><span class="p">(</span><span class="n">orbs</span><span class="o">=</span><span class="p">[[],[</span><span class="mi">1</span><span class="p">],[]],</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">]</span>
+<span class="p">[</span><span class="n">fig5</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span><span class="n">row</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">trace</span> <span class="ow">in</span> <span class="n">ips</span><span class="o">.</span><span class="n">iplot_rgb_lines</span><span class="p">(</span><span class="n">orbs</span><span class="o">=</span><span class="p">[[],[],[</span><span class="mi">2</span><span class="p">]],</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">]</span>
+<span class="n">last</span><span class="o">=</span><span class="n">ips</span><span class="o">.</span><span class="n">iplot_rgb_lines</span><span class="p">(</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
 <span class="p">[</span><span class="n">fig5</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span><span class="n">row</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">trace</span> <span class="ow">in</span> <span class="n">last</span><span class="o">.</span><span class="n">data</span><span class="p">]</span>
 <span class="n">fig5</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span><span class="n">font</span><span class="o">=</span><span class="n">last</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">font</span><span class="p">,</span><span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">l</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">t</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">40</span><span class="p">))</span>
 <span class="n">fig5</span><span class="o">.</span><span class="n">update_xaxes</span><span class="p">(</span><span class="n">last</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">xaxis</span><span class="p">)</span>
 <span class="n">last</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
 <span class="n">fig5</span><span class="o">.</span><span class="n">update_yaxes</span><span class="p">(</span><span class="n">last</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">yaxis</span><span class="p">)</span>
-<span class="n">plotly2html</span><span class="p">(</span><span class="n">fig5</span><span class="p">,</span><span class="n">modebar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">iplot2html</span><span class="p">(</span><span class="n">fig5</span><span class="p">,</span><span class="n">modebar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -368,8 +240,8 @@ flip_even_patches(k,3)
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Using-collect_dos-in-Plotly">Using <a href="/pivotpy/StaticPlots.html#collect_dos"><code>collect_dos</code></a> in Plotly<a class="anchor-link" href="#Using-collect_dos-in-Plotly"> </a></h2><ul>
-<li>A function similar to <a href="/pivotpy/StaticPlots.html#quick_dos_lines"><code>quick_dos_lines</code></a> is created in plotly below. Plotly will reduce number of parameters and you are able to tweek those parameters interactively in graph.</li>
+<h2 id="Using-_collect_dos-in-Plotly">Using <code>_collect_dos</code> in Plotly<a class="anchor-link" href="#Using-_collect_dos-in-Plotly"> </a></h2><ul>
+<li>A function similar to <a href="/pivotpy/StaticPlots.html#splot_dos_lines"><code>splot_dos_lines</code></a> is created in plotly below. Plotly will reduce number of parameters and you are able to tweek those parameters interactively in graph.</li>
 </ul>
 
 </div>
@@ -386,7 +258,7 @@ flip_even_patches(k,3)
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="plotly_dos_lines" class="doc_header"><code>plotly_dos_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L342" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>plotly_dos_lines</code>(<strong><code>path_evr</code></strong>=<em><code>None</code></em>, <strong><code>elements</code></strong>=<em><code>[[0]]</code></em>, <strong><code>orbs</code></strong>=<em><code>[[0]]</code></em>, <strong><code>labels</code></strong>=<em><code>['s']</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>colormap</code></strong>=<em><code>'gist_rainbow'</code></em>, <strong><code>tdos_color</code></strong>=<em><code>(0.5, 0.95, 0)</code></em>, <strong><code>linewidth</code></strong>=<em><code>2</code></em>, <strong><code>fill_area</code></strong>=<em><code>True</code></em>, <strong><code>vertical</code></strong>=<em><code>False</code></em>, <strong><code>E_Fermi</code></strong>=<em><code>None</code></em>, <strong><code>figsize</code></strong>=<em><code>None</code></em>, <strong><code>spin</code></strong>=<em><code>'both'</code></em>, <strong><code>interp_nk</code></strong>=<em><code>{}</code></em>, <strong><code>title</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="iplot_dos_lines" class="doc_header"><code>iplot_dos_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L340" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>iplot_dos_lines</code>(<strong><code>path_evr</code></strong>=<em><code>None</code></em>, <strong><code>elements</code></strong>=<em><code>[[0]]</code></em>, <strong><code>orbs</code></strong>=<em><code>[[0]]</code></em>, <strong><code>labels</code></strong>=<em><code>['s']</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>colormap</code></strong>=<em><code>'gist_rainbow'</code></em>, <strong><code>tdos_color</code></strong>=<em><code>(0.5, 0.95, 0)</code></em>, <strong><code>linewidth</code></strong>=<em><code>2</code></em>, <strong><code>fill_area</code></strong>=<em><code>True</code></em>, <strong><code>vertical</code></strong>=<em><code>False</code></em>, <strong><code>E_Fermi</code></strong>=<em><code>None</code></em>, <strong><code>figsize</code></strong>=<em><code>None</code></em>, <strong><code>spin</code></strong>=<em><code>'both'</code></em>, <strong><code>interp_nk</code></strong>=<em><code>{}</code></em>, <strong><code>title</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns plotly's figure. If given,elements,orbs colors, and labels must have same length. If not given, zeroth ions is plotted with s-orbital.</li>
@@ -397,7 +269,7 @@ flip_even_patches(k,3)
 <li>labels     : List [str,] of orbitals labels. len(labels) == len(orbs) must hold.</li>
 <li>elim       : [min,max] of energy range.</li>
 <li>E_Fermi    : If not given, automatically picked from <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a>.</li>
-<li>colormap  : Matplotlib's standard color maps. Default is 'gist_ranibow'. Use 'RGB' if want to compare with <a href="/pivotpy/InteractivePlots.html#plotly_rgb_lines"><code>plotly_rgb_lines</code></a> with 3 projection inputs (len(orbs)==3).</li>
+<li>colormap  : Matplotlib's standard color maps. Default is 'gist_ranibow'. Use 'RGB' if want to compare with <a href="/pivotpy/InteractivePlots.html#iplot_rgb_lines"><code>iplot_rgb_lines</code></a> with 3 projection inputs (len(orbs)==3).</li>
 <li>fill_area  : Default is True and plots filled area for dos. If False, plots lines only.</li>
 <li>vertical   : False, If True, plots along y-axis.</li>
 <li>interp_nk   : Dictionary with keys 'n' and 'k' for interpolation.</li>
@@ -435,8 +307,8 @@ flip_even_patches(k,3)
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pivotpy</span> <span class="k">as</span> <span class="nn">pp</span> 
-<span class="n">fig</span><span class="o">=</span><span class="n">plotly_dos_lines</span><span class="p">(</span><span class="n">path_evr</span><span class="o">=</span><span class="s1">&#39;E:/Research/graphene_example/ISPIN_2/dos/vasprun.xml&#39;</span><span class="p">,</span><span class="n">vertical</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">fill_area</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">elements</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">],[]],</span><span class="n">orbs</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]],</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;C1-s&#39;</span><span class="p">,</span><span class="s1">&#39;C2-p&lt;sub&gt;z&lt;/sub&gt;&#39;</span><span class="p">,</span><span class="s1">&#39;None-p&lt;sub&gt;x&lt;/sub&gt;+p&lt;sub&gt;y&lt;/sub&gt;&#39;</span><span class="p">],</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">700</span><span class="p">,</span><span class="mi">550</span><span class="p">),</span><span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;RGB&#39;</span><span class="p">)</span>
-<span class="n">plotly2html</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span><span class="n">modebar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">=</span><span class="n">iplot_dos_lines</span><span class="p">(</span><span class="n">path_evr</span><span class="o">=</span><span class="s1">&#39;E:/Research/graphene_example/ISPIN_2/dos/vasprun.xml&#39;</span><span class="p">,</span><span class="n">vertical</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">fill_area</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">elements</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">],[]],</span><span class="n">orbs</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]],</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;C1-s&#39;</span><span class="p">,</span><span class="s1">&#39;C2-p&lt;sub&gt;z&lt;/sub&gt;&#39;</span><span class="p">,</span><span class="s1">&#39;None-p&lt;sub&gt;x&lt;/sub&gt;+p&lt;sub&gt;y&lt;/sub&gt;&#39;</span><span class="p">],</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">700</span><span class="p">,</span><span class="mi">550</span><span class="p">),</span><span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;RGB&#39;</span><span class="p">)</span>
+<span class="n">iplot2html</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span><span class="n">modebar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -457,6 +329,6 @@ flip_even_patches(k,3)
  
 
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"00c367b7f5d945b4adefb735897cfc81": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "c4f12a3142fd48e6a169526ae53d1032": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_00c367b7f5d945b4adefb735897cfc81", "msg_id": "", "outputs": []}}, "debb793cc27a4554bd8b7fdc26aacb0e": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "67502d6a90b34075aa47cd7bbb36bcd7": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_debb793cc27a4554bd8b7fdc26aacb0e", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
+{"state": {"9fc8c94d3585425ab9be7549699332b2": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "9f611c2451794312b3f0545f3a6c00be": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_9fc8c94d3585425ab9be7549699332b2", "msg_id": "", "outputs": []}}, "bf887eb243bd4faf8fa19a098d328f1c": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "debc3c53edf4477698a583782483d52e": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_bf887eb243bd4faf8fa19a098d328f1c", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
 </script>
 

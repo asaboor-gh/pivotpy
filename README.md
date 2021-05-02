@@ -25,19 +25,19 @@
 `pip install pivotpy`
 
 ## How to use
-- [Read Function References](https://github.com/massgh/pivotpy/tree/master/functions.md)
 - See [Full Documentation](https://massgh.github.io/pivotpy/).
 - For CLI, use [Vasp2Visual](https://github.com/massgh/Vasp2Visual).
 
 ## Changelog for version 0.9.5 onward
-- `pivotpy.s_plots.quick_rgb_lines` and `pivotpy.s_plots.quick_rgb_lines` are refactored and no more depnd on `create_rgb_lines`, so this function is dropped, If you still want to use it, use versions below 0.9.5. 
+- `pivotpy.s_plots.splot_rgb_lines` and `pivotpy.s_plots.splot_rgb_lines` are refactored and no more depnd on `create_rgb_lines`, so this function is dropped, If you still want to use it, use versions below 0.9.5. 
 - A class `pivotpy.g_utils.Vasprun` is added which provides shortcut for `export_vasprun` and plotting functions. Under this class or as aliases:
-    - `quick_bplot`       --> `sbands`
-    - `quick_rgb_lines`   --> `srgb`
-    - `plotly_rgb_lines`  --> `irgb`
-    - `quick_color_lines` --> `scolor`
-    - `quick_dos_lines`   --> `sdos`
-    - `plotly_dos_lines`  --> `idos`
+    - `splot_bands`       --> `sbands`
+    - `splot_rgb_lines`   --> `srgb`
+    - `iplot_rgb_lines`  --> `irgb`
+    - `splot_color_lines` --> `scolor`
+    - `splot_dos_lines`   --> `sdos`
+    - `iplot_dos_lines`  --> `idos`
+- The plot functions starting with 'quick' or 'plotly' are still working but deprecated in favor of consistent names above starting from version 1.0.3.   
 - A class `pivotpy.g_utils.LOCPOT_CHG` is added which can be used to parse and visualize files like LOCPOT and CHG. 
 - A function `pivotpy.vr_parser.split_vasprun` is added which splits `vasprun.xml` file into a small file `_vasprun.xml` without projected data and creates text files `_set[1,2,3,4].txt` based on how many spin sets are there. 
 - A function `pivotpy.vr_parser.islice2array` is added which can reads data from text/csv/tsv files (even if text and numbers are mixed) accoridng to slices you provide, this does not load full file in memory and it is also useful in parsing EIGENVAL, PROCAR like files with a few lines of code only. 
@@ -210,9 +210,9 @@ orbs=[[0],[1],[2,3]]
 labels=['s','$p_z$','$(p_x+p_y)$']
 ti_cks=dict(ktick_inds=[0,30,60,-1],ktick_vals=['Γ','M','K','Γ'])
 args_dict=dict(elements=elements,orbs=orbs,labels=labels,elim=[-20,15])
-pp.quick_bplot(path_evr=vr1,ax=axs[0],**ti_cks,elim=[-20,15])
-pp.quick_rgb_lines(path_evr=vr1,ax=axs[2],**args_dict,**ti_cks,colorbar=True,)
-pp.quick_dos_lines(path_evr=vr2,ax=axs[1],vertical=True,spin='both',include_dos='pdos',**args_dict,legend_kwargs={'ncol': 3},colormap='RGB_m')
+pp.splot_bands(path_evr=vr1,ax=axs[0],**ti_cks,elim=[-20,15])
+pp.splot_rgb_lines(path_evr=vr1,ax=axs[2],**args_dict,**ti_cks,colorbar=True,)
+pp.splot_dos_lines(path_evr=vr2,ax=axs[1],vertical=True,spin='both',include_dos='pdos',**args_dict,legend_kwargs={'ncol': 3},colormap='RGB_m')
 pp.color_wheel(axs[2],xy=(0.7,1.15),scale=0.2,labels=[l+'$^{⇅}$' for l in labels])
 pp._show() 
 ```
@@ -231,8 +231,8 @@ pp._show()
 
 ```
 args_dict['labels'] = ['s','p_z','p_x+p_y']
-fig1 = pp.plotly_rgb_lines(vr1,**args_dict)
-#pp.plotly2html(fig1) #Do inside Google Colab, fig1 inside Jupyter
+fig1 = pp.iplot_rgb_lines(vr1,**args_dict)
+#pp.iplot2html(fig1) #Do inside Google Colab, fig1 inside Jupyter
 from IPython.display import Markdown
 Markdown("[See Interactive Plot](https://massgh.github.io/InteractiveHTMLs/iGraphene.html)")
 ```
@@ -254,7 +254,7 @@ Markdown("[See Interactive Plot](https://massgh.github.io/InteractiveHTMLs/iGrap
 ```
 import pivotpy as pp 
 pp.splot_bz([[1,0,0],[0,1,0],[0,0,1]],color=(1,1,1,0.2),light_from=(0.5,0,2),colormap='RGB').set_axis_off()
-#pp.plotly2html(fig2) #Do inside Google Colab, fig1 inside Jupyter
+#pp.iplot2html(fig2) #Do inside Google Colab, fig1 inside Jupyter
 from IPython.display import Markdown
 Markdown("[See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ.html)")
 ```
@@ -286,8 +286,8 @@ axs=pp.init_figure(figsize=(5,2.6))
 K_all=[*vr1.kpath,*vr2.kpath] # Merge kpath for ticks
 kticks=[K_all[i] for i in [0,30,60,90,120,150,-1]]
 ti_cks=dict(xticks=kticks,xt_labels=['Γ','M','K','Γ','M','K','Γ'])
-pp.quick_bplot(path_evr=vr1,ax=axs)
-pp.quick_bplot(path_evr=vr2,ax=axs,txt='Graphene(Left: ISPIN=1, Right: ISPIN=2)',ctxt='m')
+pp.splot_bands(path_evr=vr1,ax=axs)
+pp.splot_bands(path_evr=vr2,ax=axs,txt='Graphene(Left: ISPIN=1, Right: ISPIN=2)',ctxt='m')
 pp.modify_axes(ax=axs,xlim=[0,last_k],ylim=[-10,10],**ti_cks)
 ```
 

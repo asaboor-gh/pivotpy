@@ -229,8 +229,8 @@ class DecodeToNumpy(json.JSONDecoder):
 def _g2f(f):
     """Add kwargs of `_g` as attribute to `f` and assing __doc__."""
     _map_d = { # Define inside function, otherwise will throw error in runtime.
-    'sbands': sp.quick_bplot, 'sdos'  : sp.quick_dos_lines, 'scolor': sp.quick_color_lines,
-    'srgb'  : sp.quick_rgb_lines, 'irgb'  : ip.plotly_rgb_lines, 'idos'  : ip.plotly_dos_lines}
+    'sbands': sp.splot_bands, 'sdos'  : sp.splot_dos_lines, 'scolor': sp.splot_color_lines,
+    'srgb'  : sp.splot_rgb_lines, 'irgb'  : ip.iplot_rgb_lines, 'idos'  : ip.iplot_dos_lines}
     f.__doc__ = '\n'.join(l for l in _map_d[f.__name__].__doc__.splitlines() if 'path_evr' not in l)
     f.kwargs = {k:v for k,v in gcargs(_map_d[f.__name__]).items() if 'path_evr' not in k}
     return f
@@ -247,12 +247,12 @@ class Vasprun:
     - **Attributes**
         - data : Return of `export_vasprun` which is auto-picked in plotting methods under this class.
     - **Methods**
-        - sbands    : Shortcut for `quick_bplot`.
-        - sdos      : Shortcut for `quick_dos_lines`.
-        - srgb      : Shortcut for `quick_rgb_lines`.
-        - scolor    : Shortcut for `quick_color_lines`.
-        - idos      : Shortcut for `plotly_dos_lines`.
-        - irgb      : Shortcut for `plotly_rgb_lines`.
+        - sbands    : Shortcut for `splot_bands`.
+        - sdos      : Shortcut for `splot_dos_lines`.
+        - srgb      : Shortcut for `splot_rgb_lines`.
+        - scolor    : Shortcut for `splot_color_lines`.
+        - idos      : Shortcut for `iplot_dos_lines`.
+        - irgb      : Shortcut for `iplot_rgb_lines`.
         - Each of above mathods have an attribute `kwargs` which can be accessed, modified and put back as argumnets.
     - **Example**
         > vasp   = Vasprun(path='./vasprun.xml')
@@ -272,22 +272,22 @@ class Vasprun:
 
     @_g2f
     def sbands(self,*args,**kwargs):
-        return sp.quick_bplot(self.data,*args,**kwargs)
+        return sp.splot_bands(self.data,*args,**kwargs)
     @_g2f
     def sdos(self,*args,**kwargs):
-        return sp.quick_dos_lines(self.data,*args,**kwargs)
+        return sp.splot_dos_lines(self.data,*args,**kwargs)
     @_g2f
     def srgb(self,*args,**kwargs):
-        return sp.quick_rgb_lines(self.data,*args,**kwargs)
+        return sp.splot_rgb_lines(self.data,*args,**kwargs)
     @_g2f
     def scolor(self,*args,**kwargs):
-        return sp.quick_color_lines(self.data,*args,**kwargs)
+        return sp.splot_color_lines(self.data,*args,**kwargs)
     @_g2f
     def idos(self,*args,**kwargs):
-        return ip.plotly_dos_lines(self.data,*args,**kwargs)
+        return ip.iplot_dos_lines(self.data,*args,**kwargs)
     @_g2f
     def irgb(self,*args,**kwargs):
-        return ip.plotly_rgb_lines(self.data,*args,**kwargs)
+        return ip.iplot_rgb_lines(self.data,*args,**kwargs)
 
 # Cell
 def nav_links(current_index=0,

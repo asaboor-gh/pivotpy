@@ -39,8 +39,8 @@ nb_path: "StaticPlots.ipynb"
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Passing-Large-Number-of-Arguments-as-a-Dictionary">Passing Large Number of Arguments as a Dictionary<a class="anchor-link" href="#Passing-Large-Number-of-Arguments-as-a-Dictionary"> </a></h2><ul>
-<li>Let's take example of <a href="/pivotpy/StaticPlots.html#plot_bands"><code>plot_bands</code></a>. It requires 10 arguments and most of them are default, but in order to tweak parameters, you still need to access them. Follow These steps to input arguments easily.</li>
-<li>In code cell, write <code>plot_bands?</code> and hit enter. This will give Signature and DocString.</li>
+<li>Let's take example of <code>_plot_bands</code>. It requires 10 arguments and most of them are default, but in order to tweak parameters, you still need to access them. Follow These steps to input arguments easily.</li>
+<li>In code cell, write <code>_plot_bands?</code> and hit enter. This will give Signature and DocString.</li>
 <li>Copy arguments and pass to a dictionary <code>dict(what you copied)</code>. In a Jupyter Notebook cell, you can edit it:</li>
 </ul>
 
@@ -85,7 +85,7 @@ nb_path: "StaticPlots.ipynb"
 <div class="text_cell_render border-box-sizing rendered_html">
 <ul>
 <li>As you can see, I deleted few unnecessary arguments. Now you can use dictionary unpacking operator <code>**</code> inside function, it will pass all arguments present in dictionary. Make sure you do not change name of variables, although you can delete as few of them.</li>
-<li><strong>Usage:</strong> Call function as <code>plot_bands(**arg_dict)</code>. You can edit dictionary on fly, or can save it to a file to read (Not recommended, could be a threat to your system security as reading dictionaries from a file could run potentially harmful commands as well.)</li>
+<li><strong>Usage:</strong> Call function as <code>_plot_bands(**arg_dict)</code>. You can edit dictionary on fly, or can save it to a file to read (Not recommended, could be a threat to your system security as reading dictionaries from a file could run potentially harmful commands as well.)</li>
 </ul>
 
 </div>
@@ -108,7 +108,7 @@ nb_path: "StaticPlots.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="modify_axes" class="doc_header"><code>modify_axes</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L45" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>modify_axes</code>(<strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>xticks</code></strong>=<em><code>[]</code></em>, <strong><code>xt_labels</code></strong>=<em><code>[]</code></em>, <strong><code>xlim</code></strong>=<em><code>[]</code></em>, <strong><code>yticks</code></strong>=<em><code>[]</code></em>, <strong><code>yt_labels</code></strong>=<em><code>[]</code></em>, <strong><code>ylim</code></strong>=<em><code>[]</code></em>, <strong><code>xlabel</code></strong>=<em><code>None</code></em>, <strong><code>ylabel</code></strong>=<em><code>None</code></em>, <strong><code>vlines</code></strong>=<em><code>True</code></em>, <strong><code>zeroline</code></strong>=<em><code>True</code></em>)</p>
+<h4 id="modify_axes" class="doc_header"><code>modify_axes</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L43" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>modify_axes</code>(<strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>xticks</code></strong>=<em><code>[]</code></em>, <strong><code>xt_labels</code></strong>=<em><code>[]</code></em>, <strong><code>xlim</code></strong>=<em><code>[]</code></em>, <strong><code>yticks</code></strong>=<em><code>[]</code></em>, <strong><code>yt_labels</code></strong>=<em><code>[]</code></em>, <strong><code>ylim</code></strong>=<em><code>[]</code></em>, <strong><code>xlabel</code></strong>=<em><code>None</code></em>, <strong><code>ylabel</code></strong>=<em><code>None</code></em>, <strong><code>vlines</code></strong>=<em><code>True</code></em>, <strong><code>zeroline</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns None, applies given settings on axes. Prefered to use before other plotting.</li>
@@ -152,7 +152,7 @@ nb_path: "StaticPlots.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="init_figure" class="doc_header"><code>init_figure</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L84" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>init_figure</code>(<strong><code>figsize</code></strong>=<em><code>(3.4, 2.6)</code></em>, <strong><code>nrows</code></strong>=<em><code>1</code></em>, <strong><code>ncols</code></strong>=<em><code>1</code></em>, <strong><code>widths</code></strong>=<em><code>[]</code></em>, <strong><code>heights</code></strong>=<em><code>[]</code></em>, <strong><code>axes_off</code></strong>=<em><code>[]</code></em>, <strong><code>axes_3d</code></strong>=<em><code>[]</code></em>, <strong><code>sharex</code></strong>=<em><code>False</code></em>, <strong><code>sharey</code></strong>=<em><code>False</code></em>, <strong><code>azim</code></strong>=<em><code>45</code></em>, <strong><code>elev</code></strong>=<em><code>15</code></em>, <strong><code>ortho3d</code></strong>=<em><code>True</code></em>, <strong>**<code>subplots_adjust_kwargs</code></strong>)</p>
+<h4 id="init_figure" class="doc_header"><code>init_figure</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L82" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>init_figure</code>(<strong><code>figsize</code></strong>=<em><code>(3.4, 2.6)</code></em>, <strong><code>nrows</code></strong>=<em><code>1</code></em>, <strong><code>ncols</code></strong>=<em><code>1</code></em>, <strong><code>widths</code></strong>=<em><code>[]</code></em>, <strong><code>heights</code></strong>=<em><code>[]</code></em>, <strong><code>axes_off</code></strong>=<em><code>[]</code></em>, <strong><code>axes_3d</code></strong>=<em><code>[]</code></em>, <strong><code>sharex</code></strong>=<em><code>False</code></em>, <strong><code>sharey</code></strong>=<em><code>False</code></em>, <strong><code>azim</code></strong>=<em><code>45</code></em>, <strong><code>elev</code></strong>=<em><code>15</code></em>, <strong><code>ortho3d</code></strong>=<em><code>True</code></em>, <strong>**<code>subplots_adjust_kwargs</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns flatten axes of initialized figure, based on plt.subplots(). If you want to access parent figure, use ax.get_figure() or current figure as plt.gcf().</li>
@@ -254,7 +254,7 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 <span class="n">sp</span><span class="o">.</span><span class="n">add_text</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">txts</span><span class="o">=</span><span class="s1">&#39;axis[2,0] is off&#39;</span><span class="p">,</span><span class="n">xs</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span><span class="n">ys</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">pivotpy.vr_parser</span> <span class="k">as</span> <span class="nn">vp</span> 
 <span class="n">vr</span><span class="o">=</span><span class="n">vp</span><span class="o">.</span><span class="n">export_vasprun</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;E:/Research/graphene_example/ISPIN_1/bands/vasprun.xml&#39;</span><span class="p">)</span>
-<span class="n">sp</span><span class="o">.</span><span class="n">quick_bplot</span><span class="p">(</span><span class="n">path_evr</span><span class="o">=</span><span class="n">vr</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">axv</span><span class="p">,</span><span class="n">txt</span><span class="o">=</span><span class="s1">&#39;Plotting&#39;</span><span class="p">,</span><span class="n">E_Fermi</span><span class="o">=-</span><span class="mi">3</span><span class="p">,</span><span class="n">ktick_inds</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">30</span><span class="p">],</span><span class="n">ktick_vals</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">])</span>
+<span class="n">sp</span><span class="o">.</span><span class="n">splot_bands</span><span class="p">(</span><span class="n">path_evr</span><span class="o">=</span><span class="n">vr</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">axv</span><span class="p">,</span><span class="n">txt</span><span class="o">=</span><span class="s1">&#39;Plotting&#39;</span><span class="p">,</span><span class="n">E_Fermi</span><span class="o">=-</span><span class="mi">3</span><span class="p">,</span><span class="n">ktick_inds</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">30</span><span class="p">],</span><span class="n">ktick_vals</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">])</span>
 <span class="n">sp</span><span class="o">.</span><span class="n">add_text</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axv</span><span class="p">,</span><span class="n">txts</span><span class="o">=</span><span class="s1">&#39;BigAxes&#39;</span><span class="p">,</span><span class="n">xs</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span><span class="n">ys</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="n">modify_axes</span><span class="p">(</span><span class="n">axv</span><span class="p">,</span><span class="n">vlines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">ylim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
 </pre></div>
@@ -305,49 +305,6 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
     
 <div class="cell border-box-sizing code_cell rendered">
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="plot_bands" class="doc_header"><code>plot_bands</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L158" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>plot_bands</code>(<strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>kpath</code></strong>=<em><code>None</code></em>, <strong><code>bands</code></strong>=<em><code>None</code></em>, <strong><code>showlegend</code></strong>=<em><code>False</code></em>, <strong><code>E_Fermi</code></strong>=<em><code>None</code></em>, <strong><code>interp_nk</code></strong>=<em><code>{}</code></em>, <strong>**<code>kwargs</code></strong>)</p>
-</blockquote>
-<ul>
-<li>Returns axes object and plot on which all matplotlib allowed actions could be performed.</li>
-<li><strong>Parameters</strong><ul>
-<li>ax         : Matplotlib axes object, if not given, one is created.</li>
-<li>kpath      : 1D array from <a href="/pivotpy/XmlElementTree.html#get_kpts"><code>get_kpts</code></a>().kpath or <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a>().kpath.</li>
-<li>bands      : Dictionary Object from <a href="/pivotpy/XmlElementTree.html#get_evals"><code>get_evals</code></a> or <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a>().bands.</li>
-<li>showlegend : Boolean, default is False, if true, gives legend for spin-polarized calculations.</li>
-<li>E_Fermi    : If not given, automatically picked from bands object.</li>
-<li>interp_nk   : Dictionary with keys 'n' and 'k' for interpolation.</li>
-</ul>
-</li>
-</ul>
-<p>kwargs are passed to matplotlib.lines.Lin2D. For passing a keyword to spindown channel, append an underscore, e.g 'lw' goes to SpinUp and 'lw_' goes to SpinDown.</p>
-<ul>
-<li><strong>Returns</strong><ul>
-<li>ax : matplotlib axes object with plotted bands.</li>
-</ul>
-</li>
-</ul>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
 </div>
     {% endraw %}
 
@@ -378,12 +335,12 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <span class="n">ax</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">init_figure</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">10.2</span><span class="p">,</span><span class="mf">2.6</span><span class="p">),</span><span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">ax0</span><span class="o">=</span><span class="n">plot_bands</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">kpath</span><span class="o">=</span><span class="n">vr2</span><span class="o">.</span><span class="n">kpath</span><span class="p">,</span><span class="n">bands</span><span class="o">=</span><span class="n">vr2</span><span class="o">.</span><span class="n">bands</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="n">color_</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="n">lw_</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span><span class="n">ls_</span><span class="o">=</span><span class="s1">&#39;dashed&#39;</span><span class="p">,</span><span class="n">showlegend</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ax0</span><span class="o">=</span><span class="n">_plot_bands</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">kpath</span><span class="o">=</span><span class="n">vr2</span><span class="o">.</span><span class="n">kpath</span><span class="p">,</span><span class="n">bands</span><span class="o">=</span><span class="n">vr2</span><span class="o">.</span><span class="n">bands</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="n">color_</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="n">lw_</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span><span class="n">ls_</span><span class="o">=</span><span class="s1">&#39;dashed&#39;</span><span class="p">,</span><span class="n">showlegend</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="n">ax1</span><span class="o">=</span><span class="n">plot_bands</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">kpath</span><span class="o">=</span><span class="n">vr1</span><span class="o">.</span><span class="n">kpath</span><span class="p">,</span><span class="n">bands</span><span class="o">=</span><span class="n">vr1</span><span class="o">.</span><span class="n">bands</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">=</span><span class="n">_plot_bands</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">kpath</span><span class="o">=</span><span class="n">vr1</span><span class="o">.</span><span class="n">kpath</span><span class="p">,</span><span class="n">bands</span><span class="o">=</span><span class="n">vr1</span><span class="o">.</span><span class="n">bands</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
 
-<span class="n">ax2</span><span class="o">=</span><span class="n">plot_bands</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">kpath</span><span class="o">=</span><span class="n">vr1</span><span class="o">.</span><span class="n">kpath</span><span class="p">,</span><span class="n">bands</span><span class="o">=</span><span class="n">vr1</span><span class="o">.</span><span class="n">bands</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">=</span><span class="n">plot_bands</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">kpath</span><span class="o">=</span><span class="n">vr2</span><span class="o">.</span><span class="n">kpath</span><span class="p">,</span><span class="n">bands</span><span class="o">=</span><span class="n">vr2</span><span class="o">.</span><span class="n">bands</span><span class="p">,</span><span class="n">showlegend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span><span class="n">color_</span> <span class="o">=</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span><span class="n">lw_</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">ls_</span> <span class="o">=</span> <span class="s1">&#39;dashed&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">=</span><span class="n">_plot_bands</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">kpath</span><span class="o">=</span><span class="n">vr1</span><span class="o">.</span><span class="n">kpath</span><span class="p">,</span><span class="n">bands</span><span class="o">=</span><span class="n">vr1</span><span class="o">.</span><span class="n">bands</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">=</span><span class="n">_plot_bands</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">kpath</span><span class="o">=</span><span class="n">vr2</span><span class="o">.</span><span class="n">kpath</span><span class="p">,</span><span class="n">bands</span><span class="o">=</span><span class="n">vr2</span><span class="o">.</span><span class="n">bands</span><span class="p">,</span><span class="n">showlegend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span><span class="n">color_</span> <span class="o">=</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span><span class="n">lw_</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">ls_</span> <span class="o">=</span> <span class="s1">&#39;dashed&#39;</span><span class="p">)</span>
 <span class="n">xticks</span><span class="o">=</span><span class="p">[</span><span class="n">vr1</span><span class="o">.</span><span class="n">kpath</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
 <span class="n">txts</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Polarized&quot;</span><span class="p">,</span><span class="s2">&quot;Unpolarized&quot;</span><span class="p">,</span><span class="s2">&quot;Comparison&quot;</span><span class="p">]</span>
 <span class="k">for</span> <span class="n">axes</span><span class="p">,</span><span class="n">txt</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span><span class="n">txts</span><span class="p">):</span>
@@ -412,7 +369,7 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="add_text" class="doc_header"><code>add_text</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L223" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add_text</code>(<strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>xs</code></strong>=<em><code>0.25</code></em>, <strong><code>ys</code></strong>=<em><code>0.9</code></em>, <strong><code>txts</code></strong>=<em><code>'[List]'</code></em>, <strong><code>colors</code></strong>=<em><code>'r'</code></em>, <strong><code>transform</code></strong>=<em><code>True</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="add_text" class="doc_header"><code>add_text</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L221" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add_text</code>(<strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>xs</code></strong>=<em><code>0.25</code></em>, <strong><code>ys</code></strong>=<em><code>0.9</code></em>, <strong><code>txts</code></strong>=<em><code>'[List]'</code></em>, <strong><code>colors</code></strong>=<em><code>'r'</code></em>, <strong><code>transform</code></strong>=<em><code>True</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Adds text entries on axes, given single string or list.</li>
@@ -455,7 +412,7 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="quick_bplot" class="doc_header"><code>quick_bplot</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L254" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>quick_bplot</code>(<strong><code>path_evr</code></strong>=<em><code>None</code></em>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>kseg_inds</code></strong>=<em><code>[]</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>ktick_inds</code></strong>=<em><code>[]</code></em>, <strong><code>ktick_vals</code></strong>=<em><code>[]</code></em>, <strong><code>E_Fermi</code></strong>=<em><code>None</code></em>, <strong><code>txt</code></strong>=<em><code>None</code></em>, <strong><code>xytxt</code></strong>=<em><code>[0.2, 0.9]</code></em>, <strong><code>ctxt</code></strong>=<em><code>'black'</code></em>, <strong><code>interp_nk</code></strong>=<em><code>{}</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="splot_bands" class="doc_header"><code>splot_bands</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L252" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>splot_bands</code>(<strong><code>path_evr</code></strong>=<em><code>None</code></em>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>kseg_inds</code></strong>=<em><code>[]</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>ktick_inds</code></strong>=<em><code>[]</code></em>, <strong><code>ktick_vals</code></strong>=<em><code>[]</code></em>, <strong><code>E_Fermi</code></strong>=<em><code>None</code></em>, <strong><code>txt</code></strong>=<em><code>None</code></em>, <strong><code>xytxt</code></strong>=<em><code>[0.2, 0.9]</code></em>, <strong><code>ctxt</code></strong>=<em><code>'black'</code></em>, <strong><code>interp_nk</code></strong>=<em><code>{}</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns axes object and plot on which all matplotlib allowed actions could be performed.</li>
@@ -500,7 +457,7 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Below is example where you can add multiple text entries on a <a href="/pivotpy/StaticPlots.html#quick_bplot"><code>quick_bplot</code></a>.</p>
+<p>Below is example where you can add multiple text entries on a <a href="/pivotpy/StaticPlots.html#splot_bands"><code>splot_bands</code></a>.</p>
 
 </div>
 </div>
@@ -513,7 +470,7 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pivotpy.s_plots</span> <span class="k">as</span> <span class="nn">sp</span>
-<span class="n">ax</span><span class="o">=</span><span class="n">quick_bplot</span><span class="p">(</span><span class="n">path_evr</span><span class="o">=</span><span class="n">f2</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span><span class="n">ktick_inds</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">ktick_vals</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;W&#39;</span><span class="p">,</span><span class="s1">&#39;K&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">],</span><span class="n">txt</span><span class="o">=</span><span class="s1">&#39;Graphene&#39;</span><span class="p">,</span><span class="n">ctxt</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span><span class="n">color_</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="n">lw_</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Up&#39;</span><span class="p">,</span><span class="n">label_</span> <span class="o">=</span> <span class="s1">&#39;Down&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">=</span><span class="n">splot_bands</span><span class="p">(</span><span class="n">path_evr</span><span class="o">=</span><span class="n">f2</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span><span class="n">ktick_inds</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">ktick_vals</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;W&#39;</span><span class="p">,</span><span class="s1">&#39;K&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">],</span><span class="n">txt</span><span class="o">=</span><span class="s1">&#39;Graphene&#39;</span><span class="p">,</span><span class="n">ctxt</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span><span class="n">color_</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="n">lw_</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Up&#39;</span><span class="p">,</span><span class="n">label_</span> <span class="o">=</span> <span class="s1">&#39;Down&#39;</span><span class="p">)</span>
 <span class="n">add_text</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span><span class="n">xs</span><span class="o">=</span><span class="p">[</span><span class="mf">0.35</span><span class="p">,</span><span class="mf">0.5</span><span class="p">],</span><span class="n">ys</span><span class="o">=</span><span class="p">[</span><span class="mf">0.55</span><span class="p">,</span><span class="mf">0.7</span><span class="p">],</span><span class="n">txts</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s1">&#39;$E_</span><span class="si">{gap}</span><span class="s1">$ = 0 eV&#39;</span><span class="p">,</span><span class="s1">&#39;edge states&#39;</span><span class="p">],</span><span class="n">colors</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;red&#39;</span><span class="p">,</span><span class="s1">&#39;blue&#39;</span><span class="p">],</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
 </pre></div>
 
@@ -535,7 +492,7 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="add_legend" class="doc_header"><code>add_legend</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L295" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add_legend</code>(<strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>colors</code></strong>=<em><code>[]</code></em>, <strong><code>labels</code></strong>=<em><code>[]</code></em>, <strong><code>styles</code></strong>=<em><code>'solid'</code></em>, <strong><code>widths</code></strong>=<em><code>0.7</code></em>, <strong><code>anchor</code></strong>=<em><code>(0, 1)</code></em>, <strong><code>ncol</code></strong>=<em><code>3</code></em>, <strong><code>loc</code></strong>=<em><code>'lower left'</code></em>, <strong><code>fontsize</code></strong>=<em><code>'small'</code></em>, <strong><code>frameon</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="add_legend" class="doc_header"><code>add_legend</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L292" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add_legend</code>(<strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>colors</code></strong>=<em><code>[]</code></em>, <strong><code>labels</code></strong>=<em><code>[]</code></em>, <strong><code>styles</code></strong>=<em><code>'solid'</code></em>, <strong><code>widths</code></strong>=<em><code>0.7</code></em>, <strong><code>anchor</code></strong>=<em><code>(0, 1)</code></em>, <strong><code>ncol</code></strong>=<em><code>3</code></em>, <strong><code>loc</code></strong>=<em><code>'lower left'</code></em>, <strong><code>fontsize</code></strong>=<em><code>'small'</code></em>, <strong><code>frameon</code></strong>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Adds custom legeneds on a given axes,returns None.</li>
@@ -578,13 +535,13 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="add_colorbar" class="doc_header"><code>add_colorbar</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L330" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add_colorbar</code>(<strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>cmap_or_clist</code></strong>=<em><code>None</code></em>, <strong><code>N</code></strong>=<em><code>256</code></em>, <strong><code>ticks</code></strong>=<em><code>[0.16666666666666666, 0.5, 0.8333333333333334]</code></em>, <strong><code>ticklabels</code></strong>=<em><code>['r', 'g', 'b']</code></em>, <strong><code>vertical</code></strong>=<em><code>False</code></em>, <strong><code>fontsize</code></strong>=<em><code>8</code></em>)</p>
+<h4 id="add_colorbar" class="doc_header"><code>add_colorbar</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L327" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>add_colorbar</code>(<strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>cmap_or_clist</code></strong>=<em><code>None</code></em>, <strong><code>N</code></strong>=<em><code>256</code></em>, <strong><code>ticks</code></strong>=<em><code>[0.16666666666666666, 0.5, 0.8333333333333334]</code></em>, <strong><code>ticklabels</code></strong>=<em><code>['r', 'g', 'b']</code></em>, <strong><code>vertical</code></strong>=<em><code>False</code></em>, <strong><code>fontsize</code></strong>=<em><code>8</code></em>)</p>
 </blockquote>
 <ul>
 <li>Plots colorbar on a given axes. This axes should be only for colorbar. Returns None or throws ValueError for given colors.</li>
 <li><strong>Parameters</strong><ul>
 <li>ax         : Matplotlib axes object.</li>
-<li>cmap_or_clist: List/array of colors in or colormap's name. If None(default), first tries to get latest <a href="/pivotpy/StaticPlots.html#quick_rgb_lines"><code>quick_rgb_lines</code></a> colormap and if no success, then <code>RGB_f</code> colorbar is added. If nothing works, matplotlib's default colormap is plotted.</li>
+<li>cmap_or_clist: List/array of colors in or colormap's name. If None(default), first tries to get latest <a href="/pivotpy/StaticPlots.html#splot_rgb_lines"><code>splot_rgb_lines</code></a> colormap and if no success, then <code>RGB_f</code> colorbar is added. If nothing works, matplotlib's default colormap is plotted.</li>
 <li>N          : int, number of color points Default 256.</li>
 <li>ticks      : List of tick values to show on colorbar in interval [0,1].</li>
 <li>ticklabels : List of labels for ticks.</li>
@@ -592,7 +549,7 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 <li>fontsize   : Default 8. Adjustable according to plot space.</li>
 </ul>
 </li>
-<li><strong>Note</strong>: Use <code>'RGB_f'</code> to map colors (after) plotted in <a href="/pivotpy/StaticPlots.html#quick_rgb_lines"><code>quick_rgb_lines</code></a> and use <code>'RGB_m'</code> to plot DOS in same colors.</li>
+<li><strong>Note</strong>: Use <code>'RGB_f'</code> to map colors (after) plotted in <a href="/pivotpy/StaticPlots.html#splot_rgb_lines"><code>splot_rgb_lines</code></a> and use <code>'RGB_m'</code> to plot DOS in same colors.</li>
 </ul>
 
 </div>
@@ -645,7 +602,7 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="color_wheel" class="doc_header"><code>color_wheel</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L393" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>color_wheel</code>(<strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>xy</code></strong>=<em><code>(1, 1)</code></em>, <strong><code>scale</code></strong>=<em><code>0.12</code></em>, <strong><code>rlim</code></strong>=<em><code>(0.2, 1)</code></em>, <strong><code>N</code></strong>=<em><code>256</code></em>, <strong><code>colormap</code></strong>=<em><code>None</code></em>, <strong><code>ticks</code></strong>=<em><code>[0.16666666666666666, 0.5, 0.8333333333333334]</code></em>, <strong><code>labels</code></strong>=<em><code>['s', 'p', 'd']</code></em>, <strong><code>showlegend</code></strong>=<em><code>True</code></em>)</p>
+<h4 id="color_wheel" class="doc_header"><code>color_wheel</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L390" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>color_wheel</code>(<strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>xy</code></strong>=<em><code>(1, 1)</code></em>, <strong><code>scale</code></strong>=<em><code>0.12</code></em>, <strong><code>rlim</code></strong>=<em><code>(0.2, 1)</code></em>, <strong><code>N</code></strong>=<em><code>256</code></em>, <strong><code>colormap</code></strong>=<em><code>None</code></em>, <strong><code>ticks</code></strong>=<em><code>[0.16666666666666666, 0.5, 0.8333333333333334]</code></em>, <strong><code>labels</code></strong>=<em><code>['s', 'p', 'd']</code></em>, <strong><code>showlegend</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns cax i.e. color wheel axes.</li>
@@ -707,132 +664,13 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
     
 <div class="cell border-box-sizing code_cell rendered">
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_pros_data" class="doc_header"><code>get_pros_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L446" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_pros_data</code>(<strong><code>kpath</code></strong>=<em><code>None</code></em>, <strong><code>evals_set</code></strong>=<em><code>None</code></em>, <strong><code>pros_set</code></strong>=<em><code>None</code></em>, <strong><code>elements</code></strong>=<em><code>[[0]]</code></em>, <strong><code>orbs</code></strong>=<em><code>[[0]]</code></em>, <strong><code>interp_nk</code></strong>=<em><code>{}</code></em>, <strong><code>scale_data</code></strong>=<em><code>False</code></em>)</p>
-</blockquote>
-<ul>
-<li>Returns selected elements/orbitals data.</li>
-<li><strong>Parameters</strong><ul>
-<li>kapath   : <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a>().kpath or <a href="/pivotpy/XmlElementTree.html#get_kpts"><code>get_kpts</code></a>().kpath.</li>
-<li>evals_set: <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a>().bands.evals or <a href="/pivotpy/XmlElementTree.html#get_evals"><code>get_evals</code></a>().evals. If calculations are spin-polarized, it will be <code>...evals.SpinUp/SpinDown</code> for both.</li>
-<li>pros_set : <code>export_vasprun().pro_bands.pros</code> or <a href="/pivotpy/XmlElementTree.html#get_bands_pro_set"><code>get_bands_pro_set</code></a>().pros. If calculations are spin-polarized, it will be <code>...pros.SpinUp/SpinDown</code> for both.</li>
-<li>elements : Lists of list of ions to project on, could be <code>range(start,stop,step)</code> as well, remember that <code>stop</code> is not included in python. so <code>range(0,2)</code> will generate 0 and 1 indices.</li>
-<li>orbs     : List of lists of orbitals indices.</li>
-<li>scale_data : If True, normalizes projection data to 1.</li>
-<li>interp_nk   : Dictionary with keys 'n' and 'k' for interpolation.</li>
-</ul>
-</li>
-<li><strong>Returns</strong><ul>
-<li>A dictionary with keys 'kpath', 'evals', 'colors' that can be unpacked in next function's arguemnet.<ul>
-<li>'kpath' : Given or interpolated kpath of shape (NKPTS,).</li>
-<li>'evals' : Given or interpolated evals_set of shape (NKPTS,NBANDS).</li>
-<li>'pros': An array of shape (NKPTS,NBANDS,n) where n is length of input elements list. If scale_data = True, normalizes this array to 1.</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="make_line_collection" class="doc_header"><code>make_line_collection</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L500" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>make_line_collection</code>(<strong><code>max_width</code></strong>=<em><code>None</code></em>, <strong><code>colors_list</code></strong>=<em><code>None</code></em>, <strong><code>rgb</code></strong>=<em><code>False</code></em>, <strong><code>uni_width</code></strong>=<em><code>False</code></em>, <strong><code>scale_color</code></strong>=<em><code>False</code></em>, <strong>**<code>pros_data</code></strong>)</p>
-</blockquote>
-<ul>
-<li>Returns a tuple of line collections. If rgb = True (at len(orbs) = 3 in <a href="/pivotpy/StaticPlots.html#get_pros_data"><code>get_pros_data</code></a>), returns a tuple of two entries, multicolored line collection and RGB maximum values, otherwise return tuple of single colored multiple lines.</li>
-<li><strong>Parametrs</strong><ul>
-<li>**pros_data: Output dictionary from <a href="/pivotpy/StaticPlots.html#get_pros_data"><code>get_pros_data</code></a> containing kpath, evals and colors arrays.</li>
-<li>max_width  : Default is None and max linwidth = 2.5. Max inewidth is scaled to max_width if an int of float is given.</li>
-<li>colors_list: List of colors for multiple lines, length equal to 3rd axis length of colors.</li>
-<li>rgb        : Default is False. If True and np.shape(colors)[-1] == 3, RGB line collection is returned in a tuple of length 1. Tuple is just to support iteration.</li>
-<li>uni_width  : Default is False, If True, makes linewidth uniform at width = max_width/2.</li>
-<li>scale_color: If True, normalizes each point's color value, as (0,0,0.5) --&gt; (0,0,1). If False, clips colors in range [0,1] but does not effect linewidth.</li>
-</ul>
-</li>
-</ul>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="plot_collection" class="doc_header"><code>plot_collection</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L577" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>plot_collection</code>(<strong><code>gpd_args</code></strong>, <strong><code>mlc_args</code></strong>, <strong><code>axes</code></strong>=<em><code>None</code></em>)</p>
-</blockquote>
-<ul>
-<li>Plots line collection from the output of get_pros_data and make_line_collection on axes.</li>
-<li><strong>Parameters</strong><ul>
-<li>gpd_args: Dictionary of arguments from function <a href="/pivotpy/StaticPlots.html#get_pros_data"><code>get_pros_data</code></a>. Do not unpack it.</li>
-<li>mlc_args: Dictionary of arguments from function <a href="/pivotpy/StaticPlots.html#make_line_collection"><code>make_line_collection</code></a>. Do not unpack it.</li>
-<li>axes    : A single or list of matplotlib's Axes. len(list) should be equal to len(orbs) given in <a href="/pivotpy/StaticPlots.html#get_pros_data"><code>get_pros_data</code></a>. If axes = None, auto generated.</li>
-</ul>
-</li>
-<li><strong>Returns</strong><ul>
-<li>axes:  axes to return are spacially useful when axes = None, you can perform other actions on those axes. It will be a list of axes and all items could be same, depending on whether one are many axes were given/generated.</li>
-</ul>
-</li>
-</ul>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
 </div>
     {% endraw %}
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <ul>
-<li>We can use <a href="/pivotpy/StaticPlots.html#plot_collection"><code>plot_collection</code></a> together with arguments of <a href="/pivotpy/StaticPlots.html#get_pros_data"><code>get_pros_data</code></a>,<a href="/pivotpy/StaticPlots.html#make_line_collection"><code>make_line_collection</code></a>, see below.</li>
+<li>We can use <code>_plot_collection</code> together with arguments of <code>_get_pros_data</code>,<code>_make_line_collection</code>, see below.</li>
 </ul>
 
 </div>
@@ -880,14 +718,14 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 
 <span class="n">gpd_args</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]],</span><span class="n">orbs</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span>
 <span class="n">mlc_args</span><span class="p">[</span><span class="s1">&#39;colors_list&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.4</span><span class="p">)]</span>
-<span class="n">plot_collection</span><span class="p">(</span><span class="n">gpd_args</span><span class="p">,</span><span class="n">mlc_args</span><span class="p">,</span><span class="n">axes</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">_plot_collection</span><span class="p">(</span><span class="n">gpd_args</span><span class="p">,</span><span class="n">mlc_args</span><span class="p">,</span><span class="n">axes</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">sp</span><span class="o">.</span><span class="n">add_legend</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;C-s&#39;</span><span class="p">,</span><span class="s1">&#39;C-pz&#39;</span><span class="p">,</span><span class="s1">&#39;C-px+py&#39;</span><span class="p">],</span><span class="n">widths</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span><span class="n">colors</span><span class="o">=</span><span class="n">mlc_args</span><span class="p">[</span><span class="s1">&#39;colors_list&#39;</span><span class="p">])</span>
 
 <span class="n">gpd_args</span><span class="p">[</span><span class="s1">&#39;orbs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">]]</span>
-<span class="n">plot_collection</span><span class="p">(</span><span class="n">gpd_args</span><span class="p">,</span><span class="n">mlc_args</span><span class="p">,</span><span class="n">axes</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">_plot_collection</span><span class="p">(</span><span class="n">gpd_args</span><span class="p">,</span><span class="n">mlc_args</span><span class="p">,</span><span class="n">axes</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
 <span class="n">mlc_args</span><span class="p">[</span><span class="s1">&#39;uni_width&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">plot_collection</span><span class="p">(</span><span class="n">gpd_args</span><span class="p">,</span><span class="n">mlc_args</span><span class="p">,</span><span class="n">axes</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">_plot_collection</span><span class="p">(</span><span class="n">gpd_args</span><span class="p">,</span><span class="n">mlc_args</span><span class="p">,</span><span class="n">axes</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
 
 <span class="n">_</span> <span class="o">=</span> <span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">modify_axes</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="p">]</span>
 <span class="n">sp</span><span class="o">.</span><span class="n">add_colorbar</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axc</span><span class="p">,</span><span class="n">cmap_or_clist</span> <span class="o">=</span> <span class="n">mlc_args</span><span class="p">[</span><span class="s1">&#39;colors_list&#39;</span><span class="p">],</span><span class="n">ticklabels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;C-s&#39;</span><span class="p">,</span><span class="s1">&#39;C-p&#39;</span><span class="p">,</span><span class="s1">&#39;C-d&#39;</span><span class="p">],</span><span class="n">ticks</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
@@ -907,7 +745,7 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <ul>
-<li>Based on <a href="/pivotpy/StaticPlots.html#get_pros_data"><code>get_pros_data</code></a>,<a href="/pivotpy/StaticPlots.html#make_line_collection"><code>make_line_collection</code></a> and <a href="/pivotpy/StaticPlots.html#plot_collection"><code>plot_collection</code></a>, below are two functions <a href="/pivotpy/StaticPlots.html#quick_rgb_lines"><code>quick_rgb_lines</code></a> and <a href="/pivotpy/StaticPlots.html#quick_color_lines"><code>quick_color_lines</code></a>,which can be used without any hassel of changing and passing dictionary of arguments from one function to other. The difference between two is that <a href="/pivotpy/StaticPlots.html#quick_rgb_lines"><code>quick_rgb_lines</code></a> works with three <code>elemenents</code> only and generates a single variable color and variable thickness line, while <a href="/pivotpy/StaticPlots.html#quick_color_lines"><code>quick_color_lines</code></a> plots single colored as many lines as len(elements) with variable thickness.</li>
+<li>Based on <code>_get_pros_data</code>,<code>_make_line_collection</code> and <code>_plot_collection</code>, below are two functions <a href="/pivotpy/StaticPlots.html#splot_rgb_lines"><code>splot_rgb_lines</code></a> and <a href="/pivotpy/StaticPlots.html#splot_color_lines"><code>splot_color_lines</code></a>,which can be used without any hassel of changing and passing dictionary of arguments from one function to other. The difference between two is that <a href="/pivotpy/StaticPlots.html#splot_rgb_lines"><code>splot_rgb_lines</code></a> works with three <code>elemenents</code> only and generates a single variable color and variable thickness line, while <a href="/pivotpy/StaticPlots.html#splot_color_lines"><code>splot_color_lines</code></a> plots single colored as many lines as len(elements) with variable thickness.</li>
 </ul>
 
 </div>
@@ -931,7 +769,7 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="quick_rgb_lines" class="doc_header"><code>quick_rgb_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L651" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>quick_rgb_lines</code>(<strong><code>path_evr</code></strong>=<em><code>None</code></em>, <strong><code>elements</code></strong>=<em><code>[[], [], []]</code></em>, <strong><code>orbs</code></strong>=<em><code>[[], [], []]</code></em>, <strong><code>labels</code></strong>=<em><code>['', '', '']</code></em>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>max_width</code></strong>=<em><code>None</code></em>, <strong><code>ktick_inds</code></strong>=<em><code>[0, -1]</code></em>, <strong><code>ktick_vals</code></strong>=<em><code>['$\\Gamma$', 'M']</code></em>, <strong><code>kseg_inds</code></strong>=<em><code>[]</code></em>, <strong><code>E_Fermi</code></strong>=<em><code>None</code></em>, <strong><code>txt</code></strong>=<em><code>None</code></em>, <strong><code>xytxt</code></strong>=<em><code>[0.2, 0.9]</code></em>, <strong><code>ctxt</code></strong>=<em><code>'black'</code></em>, <strong><code>uni_width</code></strong>=<em><code>False</code></em>, <strong><code>spin</code></strong>=<em><code>'both'</code></em>, <strong><code>interp_nk</code></strong>=<em><code>{}</code></em>, <strong><code>scale_color</code></strong>=<em><code>True</code></em>, <strong><code>scale_data</code></strong>=<em><code>True</code></em>, <strong><code>colorbar</code></strong>=<em><code>True</code></em>, <strong><code>color_matrix</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="splot_rgb_lines" class="doc_header"><code>splot_rgb_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L648" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>splot_rgb_lines</code>(<strong><code>path_evr</code></strong>=<em><code>None</code></em>, <strong><code>elements</code></strong>=<em><code>[[], [], []]</code></em>, <strong><code>orbs</code></strong>=<em><code>[[], [], []]</code></em>, <strong><code>labels</code></strong>=<em><code>['', '', '']</code></em>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>max_width</code></strong>=<em><code>None</code></em>, <strong><code>ktick_inds</code></strong>=<em><code>[0, -1]</code></em>, <strong><code>ktick_vals</code></strong>=<em><code>['$\\Gamma$', 'M']</code></em>, <strong><code>kseg_inds</code></strong>=<em><code>[]</code></em>, <strong><code>E_Fermi</code></strong>=<em><code>None</code></em>, <strong><code>txt</code></strong>=<em><code>None</code></em>, <strong><code>xytxt</code></strong>=<em><code>[0.2, 0.9]</code></em>, <strong><code>ctxt</code></strong>=<em><code>'black'</code></em>, <strong><code>uni_width</code></strong>=<em><code>False</code></em>, <strong><code>spin</code></strong>=<em><code>'both'</code></em>, <strong><code>interp_nk</code></strong>=<em><code>{}</code></em>, <strong><code>scale_color</code></strong>=<em><code>True</code></em>, <strong><code>scale_data</code></strong>=<em><code>True</code></em>, <strong><code>colorbar</code></strong>=<em><code>True</code></em>, <strong><code>color_matrix</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns axes object and plot on which all matplotlib allowed actions could be performed. In this function,orbs,labels,elements all have list of length 3. Inside list, sublists or strings could be any length but should be there even if empty.</li>
@@ -989,7 +827,7 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <ul>
-<li><strong>quick_rgb_lines()</strong> is waraper around <code>make_line_collection(rgb=True)</code>. You can pass lists for <code>orbs</code>,<code>labels</code>, and <code>elements</code> each of length 3 which will be plotted on one axes. <ul>
+<li><strong>splot_rgb_lines()</strong> is waraper around <code>_make_line_collection(rgb=True)</code>. You can pass lists for <code>orbs</code>,<code>labels</code>, and <code>elements</code> each of length 3 which will be plotted on one axes. <ul>
 <li>If you do not provide any arguemnts, this will create graph of s orbital of first ion.</li>
 <li><code>elements</code> argument is special, you can pass index of element which will pick all ions of that type, or list(length=3) of indices of ions, e.g in <code>elements=[0,[0,1],2]</code> of system Ga<code>32</code>As<code>31</code>Bi<code>1</code>, 0 and 2 pick all ions of Ga and Bi respectively, while [0,1] will pick first two ions of Ga.</li>
 <li>If <code>scale_color=True</code>, ecah point on plot is scaled to maximum color, if <code>False</code>, whole data is normalized if <code>scale_data=True</code>.</li>
@@ -1020,19 +858,19 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 
 <span class="n">axs</span><span class="o">=</span><span class="n">init_figure</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span><span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
 <span class="n">caxs</span> <span class="o">=</span> <span class="n">init_figure</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">quick_rgb_lines</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="o">**</span><span class="n">args_dict</span><span class="p">,</span><span class="n">spin</span><span class="o">=</span><span class="s1">&#39;up&#39;</span><span class="p">,</span><span class="n">txt</span><span class="o">=</span><span class="s1">&#39;scale_color=False&#39;</span><span class="p">,</span><span class="n">scale_color</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">splot_rgb_lines</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="o">**</span><span class="n">args_dict</span><span class="p">,</span><span class="n">spin</span><span class="o">=</span><span class="s1">&#39;up&#39;</span><span class="p">,</span><span class="n">txt</span><span class="o">=</span><span class="s1">&#39;scale_color=False&#39;</span><span class="p">,</span><span class="n">scale_color</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">pp</span><span class="o">.</span><span class="n">add_colorbar</span><span class="p">(</span><span class="n">caxs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">quick_rgb_lines</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="o">**</span><span class="n">args_dict</span><span class="p">,</span><span class="n">scale_data</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">scale_color</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">spin</span><span class="o">=</span><span class="s1">&#39;down&#39;</span><span class="p">,</span><span class="n">txt</span><span class="o">=</span><span class="s1">&#39;scale_[color,data]=False&#39;</span><span class="p">)</span>
+<span class="n">splot_rgb_lines</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="o">**</span><span class="n">args_dict</span><span class="p">,</span><span class="n">scale_data</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">scale_color</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">spin</span><span class="o">=</span><span class="s1">&#39;down&#39;</span><span class="p">,</span><span class="n">txt</span><span class="o">=</span><span class="s1">&#39;scale_[color,data]=False&#39;</span><span class="p">)</span>
 <span class="n">pp</span><span class="o">.</span><span class="n">add_colorbar</span><span class="p">(</span><span class="n">caxs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">quick_rgb_lines</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="o">**</span><span class="n">args_dict</span><span class="p">,</span><span class="n">spin</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span><span class="n">txt</span><span class="o">=</span><span class="s1">&#39;scale_color=True&#39;</span><span class="p">)</span>
+<span class="n">splot_rgb_lines</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="o">**</span><span class="n">args_dict</span><span class="p">,</span><span class="n">spin</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span><span class="n">txt</span><span class="o">=</span><span class="s1">&#39;scale_color=True&#39;</span><span class="p">)</span>
 <span class="n">pp</span><span class="o">.</span><span class="n">add_colorbar</span><span class="p">(</span><span class="n">caxs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
 
 <span class="c1">#plt.style.use([&#39;default&#39;,&#39;seaborn&#39;])</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">quick_rgb_lines</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="o">**</span><span class="n">args_dict</span><span class="p">,</span><span class="n">spin</span><span class="o">=</span><span class="s1">&#39;up&#39;</span><span class="p">,</span><span class="n">txt</span><span class="o">=</span><span class="s1">&#39;color_matrix&#39;</span><span class="p">,</span><span class="n">color_matrix</span><span class="o">=</span><span class="n">pp</span><span class="o">.</span><span class="n">color_matrix</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">splot_rgb_lines</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="o">**</span><span class="n">args_dict</span><span class="p">,</span><span class="n">spin</span><span class="o">=</span><span class="s1">&#39;up&#39;</span><span class="p">,</span><span class="n">txt</span><span class="o">=</span><span class="s1">&#39;color_matrix&#39;</span><span class="p">,</span><span class="n">color_matrix</span><span class="o">=</span><span class="n">pp</span><span class="o">.</span><span class="n">color_matrix</span><span class="p">)</span>
 <span class="n">pp</span><span class="o">.</span><span class="n">add_colorbar</span><span class="p">(</span><span class="n">caxs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">quick_rgb_lines</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="o">**</span><span class="n">args_dict</span><span class="p">,</span><span class="n">spin</span><span class="o">=</span><span class="s1">&#39;down&#39;</span><span class="p">,</span><span class="n">txt</span><span class="o">=</span><span class="s1">&#39;color_matrix.T&#39;</span><span class="p">,</span><span class="n">color_matrix</span><span class="o">=</span><span class="n">pp</span><span class="o">.</span><span class="n">color_matrix</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">splot_rgb_lines</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="o">**</span><span class="n">args_dict</span><span class="p">,</span><span class="n">spin</span><span class="o">=</span><span class="s1">&#39;down&#39;</span><span class="p">,</span><span class="n">txt</span><span class="o">=</span><span class="s1">&#39;color_matrix.T&#39;</span><span class="p">,</span><span class="n">color_matrix</span><span class="o">=</span><span class="n">pp</span><span class="o">.</span><span class="n">color_matrix</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 <span class="n">pp</span><span class="o">.</span><span class="n">add_colorbar</span><span class="p">(</span><span class="n">caxs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">quick_rgb_lines</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="o">**</span><span class="n">args_dict</span><span class="p">,</span><span class="n">spin</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span><span class="n">txt</span><span class="o">=</span><span class="s1">&#39;gray_matrix&#39;</span><span class="p">,</span><span class="n">color_matrix</span><span class="o">=</span><span class="n">pp</span><span class="o">.</span><span class="n">gray_matrix</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">splot_rgb_lines</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="o">**</span><span class="n">args_dict</span><span class="p">,</span><span class="n">spin</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span><span class="n">txt</span><span class="o">=</span><span class="s1">&#39;gray_matrix&#39;</span><span class="p">,</span><span class="n">color_matrix</span><span class="o">=</span><span class="n">pp</span><span class="o">.</span><span class="n">gray_matrix</span><span class="p">)</span>
 <span class="n">pp</span><span class="o">.</span><span class="n">add_colorbar</span><span class="p">(</span><span class="n">caxs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
 <span class="n">caxs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_figure</span><span class="p">()</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;These colorbars are dynamically generated in sequence to above figure&#39;s axes&quot;</span><span class="p">)</span>
 </pre></div>
@@ -1055,7 +893,7 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="quick_color_lines" class="doc_header"><code>quick_color_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L822" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>quick_color_lines</code>(<strong><code>path_evr</code></strong>=<em><code>None</code></em>, <strong><code>elements</code></strong>=<em><code>[[0]]</code></em>, <strong><code>orbs</code></strong>=<em><code>[[0]]</code></em>, <strong><code>labels</code></strong>=<em><code>['s']</code></em>, <strong><code>axes</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>kseg_inds</code></strong>=<em><code>[]</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>colormap</code></strong>=<em><code>'gist_rainbow'</code></em>, <strong><code>scale_data</code></strong>=<em><code>False</code></em>, <strong><code>max_width</code></strong>=<em><code>None</code></em>, <strong><code>spin</code></strong>=<em><code>'both'</code></em>, <strong><code>ktick_inds</code></strong>=<em><code>[0, -1]</code></em>, <strong><code>ktick_vals</code></strong>=<em><code>['$\\Gamma$', 'M']</code></em>, <strong><code>E_Fermi</code></strong>=<em><code>None</code></em>, <strong><code>showlegend</code></strong>=<em><code>True</code></em>, <strong><code>txt</code></strong>=<em><code>None</code></em>, <strong><code>xytxt</code></strong>=<em><code>[0.2, 0.85]</code></em>, <strong><code>ctxt</code></strong>=<em><code>'black'</code></em>, <strong><code>interp_nk</code></strong>=<em><code>{}</code></em>, <strong><code>legend_kwargs</code></strong>=<em><code>{'ncol': 4, 'anchor': (0, 1.05), 'handletextpad': 0.5, 'handlelength': 1, 'fontsize': 'small', 'frameon': False}</code></em>, <strong>**<code>subplots_adjust_kwargs</code></strong>)</p>
+<h4 id="splot_color_lines" class="doc_header"><code>splot_color_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L818" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>splot_color_lines</code>(<strong><code>path_evr</code></strong>=<em><code>None</code></em>, <strong><code>elements</code></strong>=<em><code>[[0]]</code></em>, <strong><code>orbs</code></strong>=<em><code>[[0]]</code></em>, <strong><code>labels</code></strong>=<em><code>['s']</code></em>, <strong><code>axes</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>kseg_inds</code></strong>=<em><code>[]</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>colormap</code></strong>=<em><code>'gist_rainbow'</code></em>, <strong><code>scale_data</code></strong>=<em><code>False</code></em>, <strong><code>max_width</code></strong>=<em><code>None</code></em>, <strong><code>spin</code></strong>=<em><code>'both'</code></em>, <strong><code>ktick_inds</code></strong>=<em><code>[0, -1]</code></em>, <strong><code>ktick_vals</code></strong>=<em><code>['$\\Gamma$', 'M']</code></em>, <strong><code>E_Fermi</code></strong>=<em><code>None</code></em>, <strong><code>showlegend</code></strong>=<em><code>True</code></em>, <strong><code>txt</code></strong>=<em><code>None</code></em>, <strong><code>xytxt</code></strong>=<em><code>[0.2, 0.85]</code></em>, <strong><code>ctxt</code></strong>=<em><code>'black'</code></em>, <strong><code>interp_nk</code></strong>=<em><code>{}</code></em>, <strong><code>legend_kwargs</code></strong>=<em><code>{'ncol': 4, 'anchor': (0, 1.05), 'handletextpad': 0.5, 'handlelength': 1, 'fontsize': 'small', 'frameon': False}</code></em>, <strong>**<code>subplots_adjust_kwargs</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns axes object and plot on which all matplotlib allowed actions could be performed. If given, elements, orbs, and labels must have same length. If not given, zeroth ion is plotted with s-orbital.</li>
@@ -1112,7 +950,7 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <ul>
-<li><strong>quick_color_lines()</strong> is waraper around <code>make_line_collection(rgb=False,uni_width=False,scale_color = False)</code>. You can pass equal length lists for <code>orbs</code>,<code>labels</code>, and <code>elements</code> either with one axis or mutltiple axes of same length as <code>orbs</code>. <ul>
+<li><strong>splot_color_lines()</strong> is waraper around <code>_make_line_collection(rgb=False,uni_width=False,scale_color = False)</code>. You can pass equal length lists for <code>orbs</code>,<code>labels</code>, and <code>elements</code> either with one axis or mutltiple axes of same length as <code>orbs</code>. <ul>
 <li>If you do not provide any arguemnts, this will plots-orbital of first ion. </li>
 <li><code>elements</code> argument is special, you can pass index of element which will pick all ions of that type, or list of indices of ions, e.g in <code>elements=[0,[0,1],2]</code> of system Ga<code>32</code>As<code>31</code>Bi<code>1</code>, 0 and 2 pick all ions of Ga and Bi respectively, while [0,1] will pick first two ions of Ga.</li>
 <li>If your given <code>len(axis)=1</code>, all projections are plotted on single axis and you can tweak plot aesthetics, legend display etc. There are plenty of options.</li>
@@ -1134,7 +972,7 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 <span class="n">colors</span>  <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">hsv</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
 <span class="c1"># This will give you three colors from &#39;hsv&#39; map.</span>
 </pre></div>
-<p><strong>Note: </strong> A custom colormaps <code>RGB</code> is registered in session when you import pivotpy, which could be used when plotting DOS with bands of same color. An additional colormap <code>RGB_m</code> a at any moment would represent the latest <a href="/pivotpy/StaticPlots.html#quick_rgb_lines"><code>quick_rgb_lines</code></a> run.</p>
+<p><strong>Note: </strong> A custom colormaps <code>RGB</code> is registered in session when you import pivotpy, which could be used when plotting DOS with bands of same color. An additional colormap <code>RGB_m</code> a at any moment would represent the latest <a href="/pivotpy/StaticPlots.html#splot_rgb_lines"><code>splot_rgb_lines</code></a> run.</p>
 
 </div>
 </div>
@@ -1155,9 +993,9 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="n">axs</span><span class="o">=</span><span class="n">pp</span><span class="o">.</span><span class="n">init_figure</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mf">2.5</span><span class="p">),</span><span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">args_dict</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]],</span><span class="n">orbs</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,[</span><span class="mi">2</span><span class="p">]],</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="s1">&#39;$p_z$&#39;</span><span class="p">,</span><span class="s1">&#39;$p_x$&#39;</span><span class="p">],</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.07</span><span class="p">,</span><span class="n">showlegend</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">quick_color_lines</span><span class="p">(</span><span class="n">axes</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="o">**</span><span class="n">args_dict</span><span class="p">,</span><span class="n">left</span><span class="o">=</span><span class="mf">0.06</span><span class="p">,</span><span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;flag&#39;</span><span class="p">,</span><span class="n">spin</span><span class="o">=</span><span class="s1">&#39;up&#39;</span><span class="p">);</span>
-<span class="n">quick_color_lines</span><span class="p">(</span><span class="n">axes</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="o">**</span><span class="n">args_dict</span><span class="p">,</span><span class="n">left</span><span class="o">=</span><span class="mf">0.06</span><span class="p">,</span><span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;FCC&#39;</span><span class="p">,</span><span class="n">spin</span><span class="o">=</span><span class="s1">&#39;down&#39;</span><span class="p">,</span><span class="n">scale_data</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
-<span class="n">quick_color_lines</span><span class="p">(</span><span class="n">axes</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="o">**</span><span class="n">args_dict</span><span class="p">,</span><span class="n">left</span><span class="o">=</span><span class="mf">0.06</span><span class="p">,</span><span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;RGB&#39;</span><span class="p">,</span><span class="n">spin</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">);</span>
+<span class="n">splot_color_lines</span><span class="p">(</span><span class="n">axes</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="o">**</span><span class="n">args_dict</span><span class="p">,</span><span class="n">left</span><span class="o">=</span><span class="mf">0.06</span><span class="p">,</span><span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;flag&#39;</span><span class="p">,</span><span class="n">spin</span><span class="o">=</span><span class="s1">&#39;up&#39;</span><span class="p">);</span>
+<span class="n">splot_color_lines</span><span class="p">(</span><span class="n">axes</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="o">**</span><span class="n">args_dict</span><span class="p">,</span><span class="n">left</span><span class="o">=</span><span class="mf">0.06</span><span class="p">,</span><span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;FCC&#39;</span><span class="p">,</span><span class="n">spin</span><span class="o">=</span><span class="s1">&#39;down&#39;</span><span class="p">,</span><span class="n">scale_data</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
+<span class="n">splot_color_lines</span><span class="p">(</span><span class="n">axes</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="o">**</span><span class="n">args_dict</span><span class="p">,</span><span class="n">left</span><span class="o">=</span><span class="mf">0.06</span><span class="p">,</span><span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;RGB&#39;</span><span class="p">,</span><span class="n">spin</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">);</span>
 </pre></div>
 
     </div>
@@ -1177,88 +1015,6 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
     
 <div class="cell border-box-sizing code_cell rendered">
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="select_pdos" class="doc_header"><code>select_pdos</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L950" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>select_pdos</code>(<strong><code>tdos</code></strong>=<em><code>None</code></em>, <strong><code>pdos_set</code></strong>=<em><code>None</code></em>, <strong><code>ions</code></strong>=<em><code>[0]</code></em>, <strong><code>orbs</code></strong>=<em><code>[0]</code></em>, <strong><code>E_Fermi</code></strong>=<em><code>0</code></em>, <strong><code>interp_nk</code></strong>=<em><code>{}</code></em>)</p>
-</blockquote>
-<ul>
-<li>Returns (interpolated/orginal) enrgy(N,), tdos(N,), and pdos(N,) of selected ions/orbitals.</li>
-<li><strong>Parameters</strong><ul>
-<li>tdos     : <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a>().tdos or <a href="/pivotpy/XmlElementTree.html#get_tdos"><code>get_tdos</code></a>().tdos. If calculations are spin-polarized, it will be <code>..tdos.SpinUp/SpinDown</code> for both. You need to apply this function twice for SpinUp and SpinDown separately.</li>
-<li>pdos_set : <code>export_vasprun().pro_dos.pros</code> or <a href="/pivotpy/XmlElementTree.html#get_dos_pro_set"><code>get_dos_pro_set</code></a>().pros. If calculations are spin-polarized, it will be <code>...pros.SpinUp/SpinDown</code> for both.</li>
-<li>ions     : List of ions to project on, could be <code>range(start,stop,step)</code> as well, remember that <code>stop</code> is not included in python. so <code>range(0,2)</code> will generate 0 and 1 indices.</li>
-<li>orbs     : List of orbitals indices to pick.</li>
-<li>E_Fermi  : Here it is zero. Needs to be input.</li>
-<li>interp_nk   : Dictionary with keys 'n' and 'k' for interpolation.</li>
-</ul>
-</li>
-</ul>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="collect_dos" class="doc_header"><code>collect_dos</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L984" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>collect_dos</code>(<strong><code>path_evr</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>elements</code></strong>=<em><code>[[0]]</code></em>, <strong><code>orbs</code></strong>=<em><code>[[0]]</code></em>, <strong><code>labels</code></strong>=<em><code>['s']</code></em>, <strong><code>E_Fermi</code></strong>=<em><code>None</code></em>, <strong><code>spin</code></strong>=<em><code>'both'</code></em>, <strong><code>interp_nk</code></strong>=<em><code>{}</code></em>)</p>
-</blockquote>
-<ul>
-<li>Returns lists of energy,tdos, pdos and labels. If given,elements,orbs and labels must have same length. If not given, zeroth ions is collected with s-orbital.</li>
-<li><strong>Parameters</strong>)<ul>
-<li>path_evr   : Path/to/vasprun.xml or output of <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a>. Auto picks in CWD.</li>
-<li>elim       : [min,max] of energy range.</li>
-<li>E_Fermi    : If not given, automatically picked from <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a>.</li>
-<li>elements   : List [[0],], by defualt and plot first ion's projections.</li>
-<li>orbs       : List [[0],] lists of indices of orbitals, could be empty.</li>
-<li>labels     : List [str,] of orbitals labels. len(labels)==len(orbs) must hold.  Auto adds <code>↑</code>,<code>↓</code> for ISPIN=2.</li>
-<li>spin       : Plot spin-polarized for spin {'up','down','both'}. Default is both.</li>
-<li>interp_nk   : Dictionary with keys 'n' and 'k' for interpolation.</li>
-</ul>
-</li>
-<li><strong>Returns</strong><ul>
-<li>Energy : (N,1) size.</li>
-<li>tdos   : (N,1) size or [(N,1),(N,1)] if spin polarized.</li>
-<li>pdos   : [(N,1),(N,1),...], spin polarized is auto-fixed.</li>
-<li>labels : ['label1,'label2',...] spin polarized is auto-fixed.</li>
-<li>vr     : Exported vasprun.</li>
-</ul>
-</li>
-</ul>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
 </div>
     {% endraw %}
 
@@ -1272,7 +1028,7 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <ul>
-<li>Providing labels while using <a href="/pivotpy/StaticPlots.html#collect_dos"><code>collect_dos</code></a> is important, it will automatically return spin up/down saymbols.</li>
+<li>Providing labels while using <code>_collect_dos</code> is important, it will automatically return spin up/down saymbols.</li>
 </ul>
 
 </div>
@@ -1289,7 +1045,7 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="quick_dos_lines" class="doc_header"><code>quick_dos_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L1071" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>quick_dos_lines</code>(<strong><code>path_evr</code></strong>=<em><code>None</code></em>, <strong><code>elements</code></strong>=<em><code>[[0]]</code></em>, <strong><code>orbs</code></strong>=<em><code>[[0]]</code></em>, <strong><code>labels</code></strong>=<em><code>['s']</code></em>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>include_dos</code></strong>=<em><code>'both'</code></em>, <strong><code>colormap</code></strong>=<em><code>'gist_rainbow'</code></em>, <strong><code>tdos_color</code></strong>=<em><code>(0.8, 0.95, 0.8)</code></em>, <strong><code>linewidth</code></strong>=<em><code>0.5</code></em>, <strong><code>fill_area</code></strong>=<em><code>True</code></em>, <strong><code>vertical</code></strong>=<em><code>False</code></em>, <strong><code>E_Fermi</code></strong>=<em><code>None</code></em>, <strong><code>txt</code></strong>=<em><code>None</code></em>, <strong><code>xytxt</code></strong>=<em><code>[0.2, 0.85]</code></em>, <strong><code>ctxt</code></strong>=<em><code>'black'</code></em>, <strong><code>spin</code></strong>=<em><code>'both'</code></em>, <strong><code>interp_nk</code></strong>=<em><code>{}</code></em>, <strong><code>showlegend</code></strong>=<em><code>True</code></em>, <strong><code>legend_kwargs</code></strong>=<em><code>{'ncol': 4, 'anchor': (0, 1), 'handletextpad': 0.5, 'handlelength': 1, 'fontsize': 'small', 'frameon': False}</code></em>)</p>
+<h4 id="splot_dos_lines" class="doc_header"><code>splot_dos_lines</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L1066" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>splot_dos_lines</code>(<strong><code>path_evr</code></strong>=<em><code>None</code></em>, <strong><code>elements</code></strong>=<em><code>[[0]]</code></em>, <strong><code>orbs</code></strong>=<em><code>[[0]]</code></em>, <strong><code>labels</code></strong>=<em><code>['s']</code></em>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>include_dos</code></strong>=<em><code>'both'</code></em>, <strong><code>colormap</code></strong>=<em><code>'gist_rainbow'</code></em>, <strong><code>tdos_color</code></strong>=<em><code>(0.8, 0.95, 0.8)</code></em>, <strong><code>linewidth</code></strong>=<em><code>0.5</code></em>, <strong><code>fill_area</code></strong>=<em><code>True</code></em>, <strong><code>vertical</code></strong>=<em><code>False</code></em>, <strong><code>E_Fermi</code></strong>=<em><code>None</code></em>, <strong><code>txt</code></strong>=<em><code>None</code></em>, <strong><code>xytxt</code></strong>=<em><code>[0.2, 0.85]</code></em>, <strong><code>ctxt</code></strong>=<em><code>'black'</code></em>, <strong><code>spin</code></strong>=<em><code>'both'</code></em>, <strong><code>interp_nk</code></strong>=<em><code>{}</code></em>, <strong><code>showlegend</code></strong>=<em><code>True</code></em>, <strong><code>legend_kwargs</code></strong>=<em><code>{'ncol': 4, 'anchor': (0, 1), 'handletextpad': 0.5, 'handlelength': 1, 'fontsize': 'small', 'frameon': False}</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns ax object (if ax!=False) and plot on which all matplotlib allowed actions could be performed, returns lists of energy,tdos and pdos and labels. If given,elements,orbs colors, and labels must have same length. If not given, zeroth ions is plotted with s-orbital.</li>
@@ -1302,7 +1058,7 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 <li>include_dos: One of {'both','tdos','pdos'}.</li>
 <li>elim       : [min,max] of energy range.</li>
 <li>E_Fermi    : If not given, automatically picked from <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a>.</li>
-<li>colormap  : Matplotlib's standard color maps. Default is 'gist_ranibow'. Use 'RGB' if want to compare with <a href="/pivotpy/StaticPlots.html#quick_rgb_lines"><code>quick_rgb_lines</code></a> with 3 projection inputs (len(orbs)==3).</li>
+<li>colormap  : Matplotlib's standard color maps. Default is 'gist_ranibow'. Use 'RGB' if want to compare with <a href="/pivotpy/StaticPlots.html#splot_rgb_lines"><code>splot_rgb_lines</code></a> with 3 projection inputs (len(orbs)==3).</li>
 <li>fill_area  : Default is True and plots filled area for dos. If False, plots lines only.</li>
 <li>vertical   : False, If True, plots along y-axis.</li>
 <li>showlegend : True by defualt.</li>
@@ -1344,7 +1100,7 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">quick_dos_lines</span><span class="p">(</span><span class="n">path_evr</span><span class="o">=</span><span class="s1">&#39;E:/Research/graphene_example/ISPIN_2/dos/vasprun.xml&#39;</span><span class="p">,</span><span class="n">vertical</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">fill_area</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">showlegend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">include_dos</span><span class="o">=</span><span class="s1">&#39;pdos&#39;</span><span class="p">,</span><span class="n">orbs</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">elements</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],</span><span class="mi">0</span><span class="p">,[</span><span class="mi">1</span><span class="p">]],</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;p&#39;</span><span class="p">,</span><span class="s1">&#39;s&#39;</span><span class="p">,</span><span class="s1">&#39;g&#39;</span><span class="p">],</span><span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;RGB&#39;</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span><span class="n">spin</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">splot_dos_lines</span><span class="p">(</span><span class="n">path_evr</span><span class="o">=</span><span class="s1">&#39;E:/Research/graphene_example/ISPIN_2/dos/vasprun.xml&#39;</span><span class="p">,</span><span class="n">vertical</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">fill_area</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">showlegend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">include_dos</span><span class="o">=</span><span class="s1">&#39;pdos&#39;</span><span class="p">,</span><span class="n">orbs</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">elements</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],</span><span class="mi">0</span><span class="p">,[</span><span class="mi">1</span><span class="p">]],</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;p&#39;</span><span class="p">,</span><span class="s1">&#39;s&#39;</span><span class="p">,</span><span class="s1">&#39;g&#39;</span><span class="p">],</span><span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;RGB&#39;</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span><span class="n">spin</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -1372,7 +1128,7 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="plt2html" class="doc_header"><code>plt2html</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L1216" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>plt2html</code>(<strong><code>plt_fig</code></strong>=<em><code>None</code></em>, <strong><code>transparent</code></strong>=<em><code>True</code></em>, <strong><code>dash_html</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="plt2html" class="doc_header"><code>plt2html</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L1210" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>plt2html</code>(<strong><code>plt_fig</code></strong>=<em><code>None</code></em>, <strong><code>transparent</code></strong>=<em><code>True</code></em>, <strong><code>dash_html</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns base64 encoded Image to display in notebook or HTML <svg> or plotly's dash_html_components.Img object.</li>
@@ -1414,7 +1170,7 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pivotpy</span> <span class="k">as</span> <span class="nn">pp</span> 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="n">pp</span><span class="o">.</span><span class="n">quick_bplot</span><span class="p">(</span><span class="s2">&quot;E:/Research/graphene_example/ISPIN_1/bands/vasprun.xml&quot;</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">9</span><span class="p">,</span><span class="mi">9</span><span class="p">]);</span>
+<span class="n">pp</span><span class="o">.</span><span class="n">splot_bands</span><span class="p">(</span><span class="s2">&quot;E:/Research/graphene_example/ISPIN_1/bands/vasprun.xml&quot;</span><span class="p">,</span><span class="n">elim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">9</span><span class="p">,</span><span class="mi">9</span><span class="p">]);</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt2html</span><span class="p">(</span><span class="n">dash_html</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">transparent</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">fig</span>
 </pre></div>
@@ -1459,7 +1215,7 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="plt2text" class="doc_header"><code>plt2text</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L1249" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>plt2text</code>(<strong><code>plt_fig</code></strong>=<em><code>None</code></em>, <strong><code>width</code></strong>=<em><code>144</code></em>, <strong><code>vscale</code></strong>=<em><code>0.96</code></em>, <strong><code>colorful</code></strong>=<em><code>True</code></em>, <strong><code>invert</code></strong>=<em><code>False</code></em>, <strong><code>crop</code></strong>=<em><code>False</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="plt2text" class="doc_header"><code>plt2text</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L1243" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>plt2text</code>(<strong><code>plt_fig</code></strong>=<em><code>None</code></em>, <strong><code>width</code></strong>=<em><code>144</code></em>, <strong><code>vscale</code></strong>=<em><code>0.96</code></em>, <strong><code>colorful</code></strong>=<em><code>True</code></em>, <strong><code>invert</code></strong>=<em><code>False</code></em>, <strong><code>crop</code></strong>=<em><code>False</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Displays matplotlib figure in terminal as text. You should use a monospcae font like <code>Cascadia Code PL</code> to display image correctly. Use before plt.show().</p>
 <ul>
@@ -1509,7 +1265,7 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="plot_potential" class="doc_header"><code>plot_potential</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L1307" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>plot_potential</code>(<strong><code>basis</code></strong>=<em><code>None</code></em>, <strong><code>e_or_m</code></strong>=<em><code>None</code></em>, <strong><code>operation</code></strong>=<em><code>'mean_z'</code></em>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>period</code></strong>=<em><code>None</code></em>, <strong><code>lr_pos</code></strong>=<em><code>(0.25, 0.75)</code></em>, <strong><code>lr_widths</code></strong>=<em><code>[0.5, 0.5]</code></em>, <strong><code>labels</code></strong>=<em><code>('$V(z)$', '$\\langle V \\rangle _{roll}(z)$', '$\\langle V \\rangle $')</code></em>, <strong><code>colors</code></strong>=<em><code>((0, 0.2, 0.7), 'b', 'r')</code></em>, <strong><code>annotate</code></strong>=<em><code>True</code></em>)</p>
+<h4 id="plot_potential" class="doc_header"><code>plot_potential</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L1301" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>plot_potential</code>(<strong><code>basis</code></strong>=<em><code>None</code></em>, <strong><code>e_or_m</code></strong>=<em><code>None</code></em>, <strong><code>operation</code></strong>=<em><code>'mean_z'</code></em>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>period</code></strong>=<em><code>None</code></em>, <strong><code>lr_pos</code></strong>=<em><code>(0.25, 0.75)</code></em>, <strong><code>lr_widths</code></strong>=<em><code>[0.5, 0.5]</code></em>, <strong><code>labels</code></strong>=<em><code>('$V(z)$', '$\\langle V \\rangle _{roll}(z)$', '$\\langle V \\rangle $')</code></em>, <strong><code>colors</code></strong>=<em><code>((0, 0.2, 0.7), 'b', 'r')</code></em>, <strong><code>annotate</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns tuple(ax,Data) where Data contains resultatnt parameters of averaged potential of LOCPOT.</li>
@@ -1556,6 +1312,6 @@ ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise p
  
 
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"b6e4408f44b4405299a89ee2f5d49302": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "0e05245896ef402ea0ae5fa46fab5969": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_b6e4408f44b4405299a89ee2f5d49302", "msg_id": "", "outputs": []}}, "8e95d215038f4c0bbd4b239fc71bb879": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "51779bfa74864df3ba2595236bc4879a": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_8e95d215038f4c0bbd4b239fc71bb879", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
+{"state": {"dd9bbb749eb8485488b2a4ad9e4adb6f": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "926301991df3484cb990cf26175822a8": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_dd9bbb749eb8485488b2a4ad9e4adb6f", "msg_id": "", "outputs": []}}, "990f0a98101a477f9478ce4eb94e868c": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "782b29245a854298b277e13129a3c805": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_990f0a98101a477f9478ce4eb94e868c", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
 </script>
 

@@ -1,4 +1,4 @@
-__version__ = "1.0.1"
+__version__ = "1.0.3"
 
 __all__ = []
 
@@ -38,3 +38,27 @@ plt.register_cmap('RGB',RGB)
 # color_marices for quick_rgb_lines
 color_matrix = np.array([[0.5, 0, 0.5, 1],[0.5, 0.5, 0., 1],[0., 0.5, 0.5,0 ]])
 gray_matrix = np.array([[1,0,0,0],[0,1,0,1],[0,0,1,0]])
+
+#Backward Compatibility
+__mapping = {
+    'quick_bplot':      'splot_bands',
+    'quick_rgb_lines':  'splot_rgb_lines',
+    'quick_color_lines':'splot_color_lines',
+    'quick_dos_lines':  'splot_dos_lines',
+    'plotly_rgb_lines': 'iplot_dos_lines',
+    'plotly_dos_lines': 'iplot_dos_lines'
+}
+for k,v in __mapping.items():
+    _code = f"""def {k}(*args,**kwargs):
+    "See docs and arguments of {v!r} for reference to use in this function."
+    print(color.yb("Name {k!r} is deprecated, use {v!r} in future."))
+    return {v}(*args,**kwargs)"""
+    exec(_code)
+
+#Aliases
+sbands = splot_bands 
+srgb   = splot_rgb_lines
+scolor = splot_color_lines
+sdos   = splot_dos_lines
+idos   = iplot_dos_lines
+irgb   = iplot_rgb_lines
