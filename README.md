@@ -269,11 +269,11 @@ pp.ps2std(ps_command='(Get-Process)[0..4]')
 
     NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
     ------    -----      -----     ------      --  -- -----------
-    51    42.43      62.00      55.78   15288   1 AltC
-    26    12.28      56.91       2.88    7936   1 ApplicationFrameHost
-    9     1.69       4.91       0.00    4564   0 armsvc
-    41    35.82      49.69       6.00   14504   1 BingWallpaperApp
-    37    43.50      82.27      78.77    1216   1 Code
+    51    42.11      18.43      89.83   15288   1 AltC
+    26    16.68      23.12       4.62    7936   1 ApplicationFrameHost
+    8     1.56       3.91       0.00    4564   0 armsvc
+    42    32.57      24.20      10.95   14504   1 BingWallpaperApp
+    17    12.52      38.04       0.41    1100   1 Code
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
