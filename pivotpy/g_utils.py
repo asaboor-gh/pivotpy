@@ -506,17 +506,14 @@ class LOCPOT_CHG:
                                     labels=labels,colors=colors,annotate=annotate)
 
     def plot_m(self,operation='mean_z',ax=None,period=None,
-                lr_pos=(0.25,0.75),lr_widths = [0.5,0.5],
-                labels=(r'$M(z)$',r'$\langle M \rangle _{roll}(z)$',r'$\langle M \rangle $'),
+                lr_pos = (0.25,0.75),lr_widths = [0.5,0.5],
+                labels = (r'$M(z)$',r'$\langle M \rangle _{roll}(z)$',r'$\langle M \rangle $'),
                 colors = ((0,0.2,0.7),'b','r'),annotate=True):
-        if self.m == True:
-            e_or_m = self.data.m
-        elif self.m == 'x':
-            e_or_m = self.data.m_x
-        elif self.m == 'y':
-            e_or_m = self.data.m_y
-        elif self.m == 'z':
-            e_or_m = self.data.m_z
+        if self.m:
+            try:
+                e_or_m = self.data.m
+            except:
+                e_or_m = self.data.to_dict()[f'm_{self.m}']
         else:
             return print("Magnetization data set does not exist in {}".format(self.path))
         return sp.plot_potential(basis=self.data.basis,e_or_m=e_or_m,operation=operation,
@@ -540,28 +537,22 @@ class LOCPOT_CHG:
             try:
                 data = self.data.e
             except:
-                if self.m == True:
+                try:
                     data = self.data.m
-                elif self.m == 'x':
-                    data = self.data.m_x
-                elif self.m == 'y':
-                    data = self.data.m_y
-                elif self.m == 'z':
-                    data = self.data.m_z
+                except:
+                   data = self.data.to_dict()[f'm_{self.m}']
                 else:
                     return print("Magnetization data set does not exist in {}".format(self.path))
         else:
             data = e_or_m
 
         _opr,_dir = operation.split('_')
-        if 'z' in _dir:
-            a1,a2 = 0,0
-        elif 'y' in _dir:
-            a1,a2 = 2,0
-        else:
-            a1,a2 = 1,1
+        x_ind = 'xyz'.index(_dir)
+        other_inds = tuple([i for i in [0,1,2] if i != x_ind])
+        _func_ = np.min if _opr == 'min' else np.max if _opr == 'max' else np.mean
+
         fig = go.Figure()
-        _arr = eval("data.{}(axis={}).{}(axis={})".format(_opr,a1,_opr,a2))
+        _arr = _func_(data,axis = other_inds)
         N = np.rint(pos*len(_arr)).astype(int)
         _range = range(int(N-nslice/2),int(N+nslice/2+1)) # +1 for range.
         for div in _range:

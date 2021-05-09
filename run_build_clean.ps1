@@ -1,3 +1,4 @@
+nbdev_build_lib.exe #Add chnages in Library first
 Write-Host "Running Notebooks..." -ForegroundColor Green
 
 Resolve-Path "*.ipynb" | ForEach-Object { jupyter nbconvert --execute --to notebook --inplace $_}

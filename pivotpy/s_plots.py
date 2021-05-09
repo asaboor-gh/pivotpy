@@ -1328,47 +1328,26 @@ def plot_potential(basis = None,
         return print("`operation` excepts any of {}, got {}".format(check,operation))
     if ax is None:
         ax = init_figure()
-    if e_or_m is None:
-        print('`e_or_m` not given, trying to autopick LOCPOT...')
+    if e_or_m is None or basis is None:
+        print('`e_or_m` or `basis` not given, trying to autopick LOCPOT...')
         try:
             ep = gu.export_potential()
             basis = ep.basis
             e_or_m= ep.e
         except:
             return print('Could not auto fix. Make sure `basis` and `e_or_m` are provided.')
-    if 'min' in operation:
-        if '_x' in operation:
-            pot = e_or_m.min(axis=2).min(axis=1)
-        if '_y' in operation:
-            pot = e_or_m.min(axis=2).min(axis=0)
-        if '_z' in operation:
-            pot = e_or_m.min(axis=0).min(axis=0)
-    elif 'max' in operation:
-        if '_x' in operation:
-            pot = e_or_m.max(axis=2).max(axis=1)
-        if '_y' in operation:
-            pot = e_or_m.max(axis=2).max(axis=0)
-        if '_z' in operation:
-            pot = e_or_m.max(axis=0).max(axis=0)
-    else: #mean by default
-        if '_x' in operation:
-            pot = e_or_m.mean(axis=2).mean(axis=1)
-        if '_y' in operation:
-            pot = e_or_m.mean(axis=2).mean(axis=0)
-        if '_z' in operation:
-            pot = e_or_m.mean(axis=0).mean(axis=0)
+    x_ind = 'xyz'.index(operation.split('_')[1])
+    other_inds = tuple([i for i in [0,1,2] if i != x_ind])
+    _func_ = np.min if 'min' in operation else np.max if 'max' in operation else np.mean
+    pot = _func_(e_or_m, axis= other_inds)
+
     # Direction axis
-    if '_x' in operation:
-        x = np.linalg.norm(basis[0])*np.linspace(0,1,len(pot))
-    if '_y' in operation:
-        x = np.linalg.norm(basis[1])*np.linspace(0,1,len(pot))
-    if '_z' in operation:
-        x = np.linalg.norm(basis[2])*np.linspace(0,1,len(pot))
+    x = np.linalg.norm(basis[x_ind])*np.linspace(0,1,len(pot))
     ax.plot(x,pot,lw=0.8,c=colors[0],label=labels[0]) #Potential plot
     ret_dict = {'direction':operation.split('_')[1]}
     # Only go below if periodicity is given
     if period == None:
-        return (ax,ret_dict) # Simple Return
+        return (ax,vp.Dict2Data(ret_dict)) # Simple Return
     if period != None:
         period = int(period*len(pot))
         arr_con = np.convolve(pot, np.ones((period,))/period, mode='valid')
