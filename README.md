@@ -53,7 +53,7 @@ Tip: Use file [matplotlib2terminal.py](https://gist.github.com/massgh/d5cc44ad32
 See GIF here:
 ![GIF](widget.gif) 
 
-```
+```python
 import os 
 os.chdir('E:/Research/graphene_example/ISPIN_1/bands')
 xml_data=pp.read_asxml()
@@ -138,7 +138,7 @@ vr
 - Add anything from legend,colorbar, colorwheel. In below figure, all three are shown.
 - Use aliases such as sbands, sdos,srgb,irgb,scolor,idos for plotting. 
 
-```
+```python
 #collapse_input
 import pivotpy as pp, numpy as np 
 import matplotlib.pyplot as plt 
@@ -170,7 +170,7 @@ pp._show()
 
 ## Interactive plots using plotly
 
-```
+```python
 args_dict['labels'] = ['s','p_z','p_x+p_y']
 fig1 = pp.iplot_rgb_lines(vr1,**args_dict)
 #pp.iplot2html(fig1) #Do inside Google Colab, fig1 inside Jupyter
@@ -192,7 +192,7 @@ Markdown("[See Interactive Plot](https://massgh.github.io/InteractiveHTMLs/iGrap
 #### Look the output of `pivotpy.sio.splot_bz`.
 ![BZ](docs\images\3bz.jpg)
 
-```
+```python
 import pivotpy as pp 
 pp.splot_bz([[1,0,0],[0,1,0],[0,0,1]],color=(1,1,1,0.2),light_from=(0.5,0,2),colormap='RGB').set_axis_off()
 #pp.iplot2html(fig2) #Do inside Google Colab, fig1 inside Jupyter
@@ -214,7 +214,7 @@ Markdown("[See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ
 ## Plotting Two Calculations Side by Side 
 - Here we will use `shift_kpath` to demonstrate plot of two calculations on same axes side by side
 
-```
+```python
 #nbdev_collapse_input
 import matplotlib.pyplot as plt
 import pivotpy as pp 
@@ -239,7 +239,7 @@ pp.modify_axes(ax=axs,xlim=[0,last_k],ylim=[-10,10],**ti_cks)
 ## Interpolation 
 Amost every bandstructure and DOS plot function has an argument `interp_nk` which is a dictionary with keys `n` (Number of additional points between adjacent points) and `k` (order of interpolation 0-3). `n > k` must hold.
 
-```
+```python
 #collapse_input
 import pivotpy as pp
 plt.style.use('ggplot')
@@ -263,17 +263,17 @@ check out the class `pivotpy.LOCPOT_CHG` to visulize local potential/charge and 
 ## Running powershell commands from python.
 Some tasks are very tideious in python while just a click way in powershell. See below, and try to list processes in python yourself to see the difference!
 
-```
+```python
 pp.ps2std(ps_command='(Get-Process)[0..4]')
 ```
 
     NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
     ------    -----      -----     ------      --  -- -----------
-    50    41.67      65.79       7.62   13740   1 AltC
-    25    14.25      56.43       0.78   10560   1 ApplicationFrameHost
-    8     1.54       5.82       0.00    5280   0 armsvc
-    40    32.98      53.05       2.83    6580   1 BingWallpaperApp
-    30   144.33     174.98     165.70    7464   1 Code
+    51    42.12      59.57      90.41   13740   1 AltC
+    25    15.98      54.99       1.88   10560   1 ApplicationFrameHost
+    8     1.55       5.73       0.00    5280   0 armsvc
+    43    30.43      52.33       8.20    6580   1 BingWallpaperApp
+    38   455.11     489.07      26.61    1804   1 Code
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -304,7 +304,7 @@ c.ScriptMagics.script_paths = {
 }
 ```
 
-```
+```python
 %%ps 
 Get-ChildItem 'E:\Research\graphene_example\'
 ```
@@ -324,7 +324,7 @@ Get-ChildItem 'E:\Research\graphene_example\'
     
 
 
-```
+```python
 x = %ps (Get-ChildItem 'E:\Research\graphene_example\').Name
 x
 ```

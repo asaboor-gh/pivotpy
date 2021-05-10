@@ -272,9 +272,9 @@ def iplot_rgb_lines(path_evr    = None,
         print(gu.color.y("Can not plot an empty eigenvalues object."))
         return print(gu.color.g("Try with large energy range."))
 
-    if(E_Fermi==None):
+    if E_Fermi == None:
         E_Fermi=vr.bands.E_Fermi
-    K=vr.kpath
+    K = vp.join_ksegments(vr.kpath,kseg_inds=kseg_inds)
     xticks=[K[i] for i in ktick_inds]
     xlim=[min(K),max(K)]
     if(elim):

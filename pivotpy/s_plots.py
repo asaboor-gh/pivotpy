@@ -273,7 +273,7 @@ def splot_bands(path_evr=None,ax=None,skipk=None,kseg_inds=[],elim=[],ktick_inds
         return print('Check first argument, something went wrong')
 
     # Main working here.
-    K = vr.kpath
+    K = vp.join_ksegments(vr.kpath,kseg_inds=kseg_inds)
     xticks = [K[i] for i in ktick_inds]
     xlim = [min(K),max(K)]
     if elim:
@@ -718,7 +718,7 @@ def splot_rgb_lines(path_evr    = None,
     # Small things
     if E_Fermi == None:
         E_Fermi = vr.bands.E_Fermi
-    K = vr.kpath
+    K = vp.join_ksegments(vr.kpath,kseg_inds=kseg_inds)
     xticks = [K[i] for i in ktick_inds]
     xlim = [min(K),max(K)]
     if elim:
@@ -889,7 +889,7 @@ def splot_color_lines(path_evr      = None,
     # Small things
     if E_Fermi == None:
         E_Fermi = vr.bands.E_Fermi
-    K = vr.kpath
+    K = vp.join_ksegments(vr.kpath,kseg_inds=kseg_inds)
     xticks = [K[i] for i in ktick_inds]
     xlim = [min(K),max(K)]
     if elim:

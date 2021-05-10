@@ -94,7 +94,7 @@ from cycler import cycler as __cycler
 __mpl.rcParams.update(
     {
         'figure.dpi': 144, #Better to See
-        'figure.autolayout': True,
+        'figure.figsize': [4,2.8],
         'axes.prop_cycle': __cycler(color=['#636EFA', '#EF553B', '#00CC96', '#AB63FA', '#FFA15A', '#19D3F3', '#FF6692', '#B6E880', '#FF97FF', '#FECB52']),
         'axes.linewidth': 0.4, #set the value globally
         'font.serif': "STIXGeneral",
