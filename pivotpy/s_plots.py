@@ -164,7 +164,7 @@ def _plot_bands(ax=None,kpath=None,bands=None,showlegend=False,E_Fermi=None,inte
         - E_Fermi    : If not given, automatically picked from bands object.
         - interp_nk   : Dictionary with keys 'n' and 'k' for interpolation.
 
-    kwargs are passed to matplotlib.lines.Lin2D. For passing a keyword to spindown channel, append an underscore, e.g 'lw' goes to SpinUp and 'lw_' goes to SpinDown.
+    Additional kwargs are passed to matplotlib.lines.Lin2D. For passing a keyword to spindown channel, append an underscore, e.g 'lw' goes to SpinUp and 'lw_' goes to SpinDown.
     - **Returns**
         - ax : matplotlib axes object with plotted bands.
     """
@@ -178,11 +178,14 @@ def _plot_bands(ax=None,kpath=None,bands=None,showlegend=False,E_Fermi=None,inte
         raise ValueError("bands object is not provided. Use get_evals() or export_vasprun().bands to generate it.")
     if E_Fermi==None:
        E_Fermi = bands.E_Fermi
+
     # Plotting
     kws_u = {k:v for k,v in kwargs.items() if not k.endswith('_')}
     kws_d = {k.rstrip('_'):v for k,v in kwargs.items() if k.endswith('_')}
-    kws_u = {'color':((0,0,0.8)),'lw': 1.5,**kws_u}
-    kws_d = {'color':'red','lw': 1.2,'ls':'dashed',**kws_d}
+
+    # Set color and linewidth if not provided
+    ax.set_prop_cycle(color = [((0,0,0.8)),], linewidth = [1.5,]) #For spinup and simple if not given
+
     if bands.ISPIN==1:
         if not bands.evals.any():
             print(gu.color.y("Can not plot an empty eigenvalues object."))
@@ -205,9 +208,12 @@ def _plot_bands(ax=None,kpath=None,bands=None,showlegend=False,E_Fermi=None,inte
             kpath,enDown = gu.interpolate_data(kpath,enDown,**interp_nk)
 
         ax.plot(kpath,enUp,**{k:v for k,v in kws_u.items() if k != 'label'})
+
+        ax.set_prop_cycle(color = ['red',], linewidth = [1.2,],linestyle =['dashed',]) #For spindown if not given
         ax.plot(kpath,enDown,**{k:v for k,v in kws_d.items() if k != 'label'})
+
         # Legend only for spin polarized
-        if showlegend==True:
+        if showlegend:
             if 'label' not in kws_u:
                 kws_u['label'] = 'SpinUp'
             if 'label' not in kws_d:
@@ -228,7 +234,7 @@ def add_text(ax=None,xs=0.25,ys=0.9,txts='[List]',colors='r',transform=True,**kw
         - colors: List of x colors of txts or one color.
         - transform: Dafault is True and positions are relative to axes, If False, positions are in data coordinates.
 
-    kwargs are passe to plt.text.
+    kwargs are passed to plt.text.
     """
     if ax==None:
         raise ValueError("Matplotlib axes (ax) is not given.")
@@ -264,7 +270,7 @@ def splot_bands(path_evr=None,ax=None,skipk=None,kseg_inds=[],elim=[],ktick_inds
         - txt,xytxt and ctxt are extra arguments for text on figure.
         - interp_nk   : Dictionary with keys 'n' and 'k' for interpolation.
 
-    kwargs are passed to matplotlib.lines.Lin2D. For passing a keyword to spindown channel, append an underscore, e.g 'lw' goes to SpinUp and 'lw_' goes to SpinDown.
+    Additional kwargs are passed to matplotlib.lines.Lin2D. For passing a keyword to spindown channel, append an underscore, e.g 'lw' goes to SpinUp and 'lw_' goes to SpinDown.
     - **Returns**
         - ax : matplotlib axes object with plotted bands.
     """

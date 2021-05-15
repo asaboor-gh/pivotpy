@@ -11,7 +11,7 @@ import json
 import glob
 from collections import namedtuple
 from subprocess import Popen, PIPE
-from inspect import getcallargs as gcargs
+from inspect import getcallargs as gcargs, signature
 from io import StringIO
 from itertools import islice # File generator for faster r
 
@@ -230,11 +230,13 @@ class DecodeToNumpy(json.JSONDecoder):
 # Cell
 def _g2f(f):
     """Add kwargs of `_g` as attribute to `f` and assing __doc__."""
+    from functools import wraps
     _map_d = { # Define inside function, otherwise will throw error in runtime.
     'sbands': sp.splot_bands, 'sdos'  : sp.splot_dos_lines, 'scolor': sp.splot_color_lines,
     'srgb'  : sp.splot_rgb_lines, 'irgb'  : ip.iplot_rgb_lines, 'idos'  : ip.iplot_dos_lines}
     f.__doc__ = '\n'.join(l for l in _map_d[f.__name__].__doc__.splitlines() if 'path_evr' not in l)
     f.kwargs = {k:v for k,v in gcargs(_map_d[f.__name__]).items() if 'path_evr' not in k}
+    f.__signature__ = signature(_map_d[f.__name__])
     return f
 
 class Vasprun:
@@ -305,7 +307,7 @@ class Vasprun:
         return sp.splot_color_lines(self.data,*args,**kwargs)
     @_g2f
     def idos(self,*args,**kwargs):
-        kwargs = self.__handle_kwargs(kwargs,dos=True)
+        kwargs = self.__handle_kwargs(kwargs, dos=True)
         return ip.iplot_dos_lines(self.data,*args,**kwargs)
     @_g2f
     def irgb(self,*args,**kwargs):

@@ -160,7 +160,7 @@ pp._show()
     [0;92m elements[0] = 0 is converted to range(0, 2) which picks all ions of 'C'.To just pick one ion at this index, wrap it in brackets [].[00m
     
 
-    E:\Research\pivotpy\pivotpy\s_plots.py:425: MatplotlibDeprecationWarning: shading='flat' when X and Y have the same dimensions as C is deprecated since 3.3.  Either specify the corners of the quadrilaterals with X and Y, or pass shading='auto', 'nearest' or 'gouraud', or set rcParams['pcolor.shading'].  This will become an error two minor releases later.
+    E:\Research\pivotpy\pivotpy\s_plots.py:431: MatplotlibDeprecationWarning: shading='flat' when X and Y have the same dimensions as C is deprecated since 3.3.  Either specify the corners of the quadrilaterals with X and Y, or pass shading='auto', 'nearest' or 'gouraud', or set rcParams['pcolor.shading'].  This will become an error two minor releases later.
       cax.pcolormesh(t,r,tg.T,norm=norm,cmap=colormap,edgecolor='face')
     
 
@@ -269,11 +269,11 @@ pp.ps2std(ps_command='(Get-Process)[0..4]')
 
     NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
     ------    -----      -----     ------      --  -- -----------
-    51    42.12      59.57      90.41   13740   1 AltC
-    25    15.98      54.99       1.88   10560   1 ApplicationFrameHost
-    8     1.55       5.73       0.00    5280   0 armsvc
-    43    30.43      52.33       8.20    6580   1 BingWallpaperApp
-    38   455.11     489.07      26.61    1804   1 Code
+    51    42.11      28.18     375.36   13740   1 AltC
+    27    15.53      31.17      12.75   10560   1 ApplicationFrameHost
+    19     4.70      12.07       0.00    5280   0 armsvc
+    10     7.16       9.53       0.08   25020   0 audiodg
+    43    34.19      32.24      23.52    6580   1 BingWallpaperApp
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
