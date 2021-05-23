@@ -290,29 +290,29 @@ class Vasprun:
         return kwargs
 
     @_g2f
-    def sbands(self,*args,**kwargs):
+    def sbands(self,ax = None,**kwargs):
         kwargs = self.__handle_kwargs(kwargs)
-        return sp.splot_bands(self.data,*args,**kwargs)
+        return sp.splot_bands(self.data,ax = ax, **kwargs)
     @_g2f
-    def sdos(self,*args,**kwargs):
+    def sdos(self,elements = [[0],], orbs = [[0],], labels = ['s',], ax = None,**kwargs):
         kwargs = self.__handle_kwargs(kwargs,dos=True)
-        return sp.splot_dos_lines(self.data,*args,**kwargs)
+        return sp.splot_dos_lines(self.data,elements = elements, orbs = orbs, labels = labels, ax = ax, **kwargs)
     @_g2f
-    def srgb(self,*args,**kwargs):
+    def srgb(self,elements = [[],[],[]], orbs = [[],[],[]], labels = ['','',''], ax = None, **kwargs):
         kwargs = self.__handle_kwargs(kwargs)
-        return sp.splot_rgb_lines(self.data,*args,**kwargs)
+        return sp.splot_rgb_lines(self.data,elements = elements, orbs = orbs, labels = labels, ax = ax, **kwargs)
     @_g2f
-    def scolor(self,*args,**kwargs):
+    def scolor(self,elements = [[0],], orbs = [[0],], labels = ['s',],axes = None,**kwargs):
         kwargs = self.__handle_kwargs(kwargs)
-        return sp.splot_color_lines(self.data,*args,**kwargs)
+        return sp.splot_color_lines(self.data,elements = elements, orbs = orbs, labels = labels, axes = axes, **kwargs)
     @_g2f
-    def idos(self,*args,**kwargs):
+    def idos(self,elements = [[0],], orbs = [[0],], labels = ['s',],**kwargs):
         kwargs = self.__handle_kwargs(kwargs, dos=True)
-        return ip.iplot_dos_lines(self.data,*args,**kwargs)
+        return ip.iplot_dos_lines(self.data,elements = elements, orbs = orbs, labels = labels, **kwargs)
     @_g2f
-    def irgb(self,*args,**kwargs):
+    def irgb(self,elements = [[],[],[]], orbs = [[],[],[]], labels = ['','',''],**kwargs):
         kwargs = self.__handle_kwargs(kwargs)
-        return ip.iplot_rgb_lines(self.data,*args,**kwargs)
+        return ip.iplot_rgb_lines(self.data,elements = elements, orbs = orbs, labels = labels, **kwargs)
 
 # Cell
 def nav_links(current_index=0,
