@@ -182,11 +182,12 @@ def _plot_bands(ax=None,kpath=None,bands=None,showlegend=False,E_Fermi=None,inte
     # Plotting
     kws_u = {k:v for k,v in kwargs.items() if not k.endswith('_')}
     kws_d = {k.rstrip('_'):v for k,v in kwargs.items() if k.endswith('_')}
-
+    kws_u = {'label':'SpinUp',**kws_u} #Update label if not given
+    kws_d = {'label':'SpinDown',**kws_d}
     # Set color and linewidth if not provided
     ax.set_prop_cycle(color = [((0,0,0.8)),], linewidth = [1.5,]) #For spinup and simple if not given
 
-    if bands.ISPIN==1:
+    if bands.ISPIN == 1:
         if not bands.evals.any():
             print(gu.color.y("Can not plot an empty eigenvalues object."))
             return print(gu.color.g("Try with large energy range."))
@@ -195,8 +196,9 @@ def _plot_bands(ax=None,kpath=None,bands=None,showlegend=False,E_Fermi=None,inte
         if interp_nk:
             kpath,en = gu.interpolate_data(kpath,en,**interp_nk)
 
-        ax.plot(kpath,en,**{k:v for k,v in kws_u.items() if k != 'label'})
-    if bands.ISPIN==2:
+        lines = ax.plot(kpath,en,**kws_u)
+        _ = [line.set_label(None) for line in lines[1:]]
+    if bands.ISPIN == 2:
         if not bands.evals.SpinUp.any():
             print(gu.color.y("Can not plot an empty eigenvalues object."))
             return print(gu.color.g("Try with large energy range."))
@@ -207,19 +209,14 @@ def _plot_bands(ax=None,kpath=None,bands=None,showlegend=False,E_Fermi=None,inte
             #Do not reassign kpath in first line, it will throw error in next
             kpath,enDown = gu.interpolate_data(kpath,enDown,**interp_nk)
 
-        ax.plot(kpath,enUp,**{k:v for k,v in kws_u.items() if k != 'label'})
-
+        lines_u = ax.plot(kpath,enUp,**kws_u)
+        _ = [line.set_label(None) for line in lines_u[1:]]
         ax.set_prop_cycle(color = ['red',], linewidth = [1.2,],linestyle =['dashed',]) #For spindown if not given
-        ax.plot(kpath,enDown,**{k:v for k,v in kws_d.items() if k != 'label'})
+        lines_d = ax.plot(kpath,enDown,**kws_d)
+        _ = [line.set_label(None) for line in lines_d[1:]]
 
         # Legend only for spin polarized
         if showlegend:
-            if 'label' not in kws_u:
-                kws_u['label'] = 'SpinUp'
-            if 'label' not in kws_d:
-                kws_d['label'] = 'SpinDown'
-            ax.plot([],[],**kws_u)
-            ax.plot([],[],**kws_d)
             ax.legend(fontsize='small',frameon=False,ncol=2, bbox_to_anchor=(0, 1), loc='lower left');
     return ax
 
