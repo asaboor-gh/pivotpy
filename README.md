@@ -160,8 +160,10 @@ pp._show()
     [0;92m elements[0] = 0 is converted to range(0, 2) which picks all ions of 'C'.To just pick one ion at this index, wrap it in brackets [].[00m
     
 
-    E:\Research\pivotpy\pivotpy\s_plots.py:428: MatplotlibDeprecationWarning: shading='flat' when X and Y have the same dimensions as C is deprecated since 3.3.  Either specify the corners of the quadrilaterals with X and Y, or pass shading='auto', 'nearest' or 'gouraud', or set rcParams['pcolor.shading'].  This will become an error two minor releases later.
-      cax.pcolormesh(t,r,tg.T,norm=norm,cmap=colormap,edgecolor='face')
+    E:\Research\pivotpy\pivotpy\s_plots.py:428: MatplotlibDeprecationWarning:
+    
+    shading='flat' when X and Y have the same dimensions as C is deprecated since 3.3.  Either specify the corners of the quadrilaterals with X and Y, or pass shading='auto', 'nearest' or 'gouraud', or set rcParams['pcolor.shading'].  This will become an error two minor releases later.
+    
     
 
 
@@ -269,11 +271,11 @@ pp.ps2std(ps_command='(Get-Process)[0..4]')
 
     NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
     ------    -----      -----     ------      --  -- -----------
-    51    42.03      28.70     635.78   13740   1 AltC
-    27    14.43      56.25      30.56   10560   1 ApplicationFrameHost
-    8     1.61       6.55       0.00   14176   0 AppVShNotify
-    9     1.85       7.21       0.05   19948   1 AppVShNotify
-    20     4.95      12.81       0.00    5280   0 armsvc
+    51    41.86      34.60     662.67   13740   1 AltC
+    27    15.04      55.43      31.42   10560   1 ApplicationFrameHost
+    8     1.58       6.55       0.00   14176   0 AppVShNotify
+    8     1.82       7.21       0.05   19948   1 AppVShNotify
+    19     4.73      12.75       0.00    5280   0 armsvc
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -314,12 +316,12 @@ Get-ChildItem 'E:\Research\graphene_example\'
         Directory: E:\Research\graphene_example
     
     
-    Mode                 LastWriteTime         Length Name                                         
-    ----                 -------------         ------ ----                                         
-    da----        10/31/2020   1:30 PM                ISPIN_1                                      
-    da----          5/9/2020   1:05 PM                ISPIN_2                                      
-    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                       
-    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                  
+    Mode                 LastWriteTime         Length Name                                          
+    ----                 -------------         ------ ----                                          
+    da----        10/31/2020   1:30 PM                ISPIN_1                                       
+    da----          5/9/2020   1:05 PM                ISPIN_2                                       
+    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                        
+    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                   
     
     
 
