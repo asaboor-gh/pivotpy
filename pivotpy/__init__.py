@@ -15,6 +15,8 @@ Usage:
 -----
     All modules are imported under a single namespace, you could do
     >>> import pivotpy as pp 
+    ... pp.docs() #See online docs
+    ... pp.example_notebook() #Opens Colab notebook
     ... pp.__all__ #To see what is available
     ... pp.generate_summary(paths)  # Get a dataframe for whole project after you used pp.VasprunApp
     
@@ -112,3 +114,11 @@ __mpl.rcParams.update(
     }
 )
 
+import webbrowser as __wb
+def docs():
+    __wb.open('https://massgh.github.io/pivotpy/',new=1)
+    
+def example_notebook():
+    __wb.open('https://colab.research.google.com/github/massgh/pivotpy/blob/master/test.ipynb',new=1)
+    
+    
