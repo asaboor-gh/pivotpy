@@ -25,6 +25,7 @@
 `pip install pivotpy`
 
 ## How to use
+- Use commnad `pivotpy` in regular terminal to quickly launch documentation any time. 
 - See [Full Documentation](https://massgh.github.io/pivotpy/).
 - For CLI, use [Vasp2Visual](https://github.com/massgh/Vasp2Visual).
 
@@ -271,11 +272,11 @@ pp.ps2std(ps_command='(Get-Process)[0..4]')
 
     NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
     ------    -----      -----     ------      --  -- -----------
-    51    41.86      34.60     662.67   13740   1 AltC
-    27    15.04      55.43      31.42   10560   1 ApplicationFrameHost
-    8     1.58       6.55       0.00   14176   0 AppVShNotify
-    8     1.82       7.21       0.05   19948   1 AppVShNotify
-    19     4.73      12.75       0.00    5280   0 armsvc
+    16     3.47       7.94       0.52   20612   1 AdobeARM
+    51    42.02      28.96     715.14   13740   1 AltC
+    27    18.79      34.33      36.41   10560   1 ApplicationFrameHost
+    9     1.72       7.18       0.05   14728   1 AppVShNotify
+    8     1.61       6.53       0.00   27132   0 AppVShNotify
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`

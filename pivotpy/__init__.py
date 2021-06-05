@@ -4,7 +4,7 @@ Licence: Apache License Version 2.0, January 2004 #See file
 
 Modules:
 -------
-    pivotpy.vr_parser #Parser for vasprun.xml
+    pivotpy.vr_parser # Parser for vasprun.xml
     pivotpy.g_utils   # general functions
     pivotpy.s_plots   # Matplotlib's plotting functions
     pivotpy.i_plots   # Plotly's interactive plotting functions
@@ -21,7 +21,15 @@ Usage:
     If you want to acess private functions/varaiables, you need to import a submodule itself, e.g.
     >>> import pivotpy.s_plots as sp 
     ... sp._plot_bands() #This is a private function, (see leading underscore)
+    
+Links:
+-----
+    [github](https://github.com/massgh/pivotpy)            
+    [docs](https://massgh.github.io/pivotpy/)     
 """
+
+links = """[github](https://github.com/massgh/pivotpy)             
+[docs](https://massgh.github.io/pivotpy/)"""
 
 __version__ = "1.0.3"
 
@@ -49,6 +57,7 @@ from .s_plots import *
 from .i_plots import *
 from .sio import *
 from .widgets import *
+    
 from matplotlib.pyplot import show as _show,savefig as _savefig
 
 mpl_imported=['_show','_savefig']
@@ -102,3 +111,4 @@ __mpl.rcParams.update(
         'mathtext.fontset': "stix"
     }
 )
+
