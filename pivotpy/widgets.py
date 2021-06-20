@@ -607,8 +607,8 @@ class VasprunApp:
         self.theme_colors = light_colors.copy() # Avoid Modification
         # Permeannet Parameters
         self.idos_kws   = dict(colormap='RGB',tdos_color=(0.5, 0.95, 0),linewidth=2,fill_area=True,
-                               spin='both',interpolate=False,n=5,k=3,title=None)
-        self.ibands_kws = dict(mode='markers',skipk=None,max_width=6,title=None,interpolate=False,n=5,k=3)
+                               spin='both',interp_nk={},title=None)
+        self.ibands_kws = dict(mode='markers',skipk=None,max_width=6,title=None,interp_nk={})
         self.evr_kws = dict(skipk=None,elim=[],try_pwsh = True)
         self.cache_data = True
 
