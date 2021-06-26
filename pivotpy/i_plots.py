@@ -184,6 +184,7 @@ def iplot2html(fig,filename=None,out_string=False,modebar=True):
     fig_json = fig.to_json()
     # a simple HTML template
     if filename:
+        _filename = gu.prevent_overwrite(filename)
         template = """<html>
         <head>
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -198,7 +199,7 @@ def iplot2html(fig,filename=None,out_string=False,modebar=True):
         </html>"""
 
         # write the JSON to the HTML template
-        with open(filename, 'w') as f:
+        with open(_filename, 'w') as f:
             f.write(template.format(div_id,fig_json,div_id))
         f.close()
     else:

@@ -161,7 +161,7 @@ pp._show()
     [0;92m elements[0] = 0 is converted to range(0, 2) which picks all ions of 'C'.To just pick one ion at this index, wrap it in brackets [].[00m
     
 
-    E:\Research\pivotpy\pivotpy\s_plots.py:428: MatplotlibDeprecationWarning:
+    E:\Research\pivotpy\pivotpy\s_plots.py:429: MatplotlibDeprecationWarning:
     
     shading='flat' when X and Y have the same dimensions as C is deprecated since 3.3.  Either specify the corners of the quadrilaterals with X and Y, or pass shading='auto', 'nearest' or 'gouraud', or set rcParams['pcolor.shading'].  This will become an error two minor releases later.
     
@@ -272,11 +272,11 @@ pp.ps2std(ps_command='(Get-Process)[0..4]')
 
     NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
     ------    -----      -----     ------      --  -- -----------
-    17     5.89       6.91       0.00   20580   0 AppHelperCap
-    31    27.74      28.13      14.80   11368   1 ApplicationFrameHost
-    8     1.57       4.75       0.00    1636   0 AppVShNotify
-    9     1.81       4.93       0.05    5912   1 AppVShNotify
-    17     4.64      10.37       0.00    5192   0 armsvc
+    17     6.20       9.79       0.00   20580   0 AppHelperCap
+    31    28.65      25.39      16.52   11368   1 ApplicationFrameHost
+    8     1.57       4.48       0.00    1636   0 AppVShNotify
+    9     1.81       4.63       0.05    5912   1 AppVShNotify
+    17     4.20       9.25       0.00    5192   0 armsvc
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`

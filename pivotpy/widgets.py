@@ -948,6 +948,7 @@ class VasprunApp:
     def __save_connected(self,btn):
         s_p = os.path.split(self.files_dd.value)[0]
         filename = os.path.join(s_p,'ConnectedFig.html')
+        filename = gu.prevent_overwrite(filename)
         self.buttons['save_fig'].description = 'Saving...'
         views = VBox([self.htmls['theme'],self.fig,self.htmls['table']],
                 layout=Layout(width='500px',height='490px')).add_class('borderless')
