@@ -54,7 +54,7 @@ Tip: Use file [matplotlib2terminal.py](https://gist.github.com/massgh/d5cc44ad32
 See GIF here:
 ![GIF](widget.gif) 
 
-```
+```python
 import os 
 os.chdir('E:/Research/graphene_example/ISPIN_1/bands')
 xml_data=pp.read_asxml()
@@ -139,7 +139,7 @@ vr
 - Add anything from legend,colorbar, colorwheel. In below figure, all three are shown.
 - Use aliases such as sbands, sdos,srgb,irgb,scolor,idos for plotting. 
 
-```
+```python
 #collapse_input
 import pivotpy as pp, numpy as np 
 import matplotlib.pyplot as plt 
@@ -173,7 +173,7 @@ pp._show()
 
 ## Interactive plots using plotly
 
-```
+```python
 args_dict['labels'] = ['s','p_z','p_x+p_y']
 fig1 = pp.iplot_rgb_lines(vr1,**args_dict)
 #pp.iplot2html(fig1) #Do inside Google Colab, fig1 inside Jupyter
@@ -195,7 +195,7 @@ Markdown("[See Interactive Plot](https://massgh.github.io/InteractiveHTMLs/iGrap
 #### Look the output of `pivotpy.sio.splot_bz`.
 ![BZ](docs\images\3bz.jpg)
 
-```
+```python
 import pivotpy as pp 
 pp.splot_bz([[1,0,0],[0,1,0],[0,0,1]],color=(1,1,1,0.2),light_from=(0.5,0,2),colormap='RGB').set_axis_off()
 #pp.iplot2html(fig2) #Do inside Google Colab, fig1 inside Jupyter
@@ -217,7 +217,7 @@ Markdown("[See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ
 ## Plotting Two Calculations Side by Side 
 - Here we will use `shift_kpath` to demonstrate plot of two calculations on same axes side by side
 
-```
+```python
 #nbdev_collapse_input
 import matplotlib.pyplot as plt
 import pivotpy as pp 
@@ -242,7 +242,7 @@ pp.modify_axes(ax=axs,xlim=[0,last_k],ylim=[-10,10],**ti_cks)
 ## Interpolation 
 Amost every bandstructure and DOS plot function has an argument `interp_nk` which is a dictionary with keys `n` (Number of additional points between adjacent points) and `k` (order of interpolation 0-3). `n > k` must hold.
 
-```
+```python
 #collapse_input
 import pivotpy as pp
 plt.style.use('ggplot')
@@ -266,17 +266,17 @@ check out the class `pivotpy.LOCPOT_CHG` to visulize local potential/charge and 
 ## Running powershell commands from python.
 Some tasks are very tideious in python while just a click way in powershell. See below, and try to list processes in python yourself to see the difference!
 
-```
+```python
 pp.ps2std(ps_command='(Get-Process)[0..4]')
 ```
 
     NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
     ------    -----      -----     ------      --  -- -----------
-    17     5.89       6.94       0.00   20580   0 AppHelperCap
-    32    23.54      30.79      14.56   11368   1 ApplicationFrameHost
-    8     1.57       4.53       0.00    1636   0 AppVShNotify
-    9     1.81       4.68       0.03    5912   1 AppVShNotify
-    17     4.15       3.91       0.00    5192   0 armsvc
+    17     5.89       6.91       0.00   20580   0 AppHelperCap
+    31    27.74      28.13      14.80   11368   1 ApplicationFrameHost
+    8     1.57       4.75       0.00    1636   0 AppVShNotify
+    9     1.81       4.93       0.05    5912   1 AppVShNotify
+    17     4.64      10.37       0.00    5192   0 armsvc
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -307,7 +307,7 @@ c.ScriptMagics.script_paths = {
 }
 ```
 
-```
+```python
 %%ps 
 Get-ChildItem 'E:\Research\graphene_example\'
 ```
@@ -317,17 +317,17 @@ Get-ChildItem 'E:\Research\graphene_example\'
         Directory: E:\Research\graphene_example
     
     
-    Mode                 LastWriteTime         Length Name                                                                                       
-    ----                 -------------         ------ ----                                                                                       
-    da----        10/31/2020   1:30 PM                ISPIN_1                                                                                    
-    da----          5/9/2020   1:05 PM                ISPIN_2                                                                                    
-    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                                                     
-    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                                                
+    Mode                 LastWriteTime         Length Name                                                                        
+    ----                 -------------         ------ ----                                                                        
+    da----        10/31/2020   1:30 PM                ISPIN_1                                                                     
+    da----          5/9/2020   1:05 PM                ISPIN_2                                                                     
+    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                                      
+    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                                 
     
     
 
 
-```
+```python
 x = %ps (Get-ChildItem 'E:\Research\graphene_example\').Name
 x
 ```
