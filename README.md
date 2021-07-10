@@ -5,6 +5,12 @@
 [![Run in Azure](https://notebooks.azure.com/launch.png)](https://testazurenotebooks-massaz.notebooks.azure.com/j/notebooks/test.ipynb)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/massgh/pivotpy/blob/master/test.ipynb)
 
+```python
+#hide_input
+import pivotpy as pp 
+pp.nav_links(0)
+```
+
 
 
 
@@ -24,25 +30,31 @@
 ## Install
 `pip install pivotpy`
 
-## How to use
-- Use commnad `pivotpy` in regular terminal to quickly launch documentation any time. 
-- See [Full Documentation](https://massgh.github.io/pivotpy/).
-- For CLI, use [Vasp2Visual](https://github.com/massgh/Vasp2Visual).
-
-## Changelog for version 0.9.5 onward
-- `pivotpy.s_plots.splot_rgb_lines` and `pivotpy.s_plots.splot_rgb_lines` are refactored and no more depnd on `create_rgb_lines`, so this function is dropped, If you still want to use it, use versions below 0.9.5. 
-- A class `pivotpy.g_utils.Vasprun` is added which provides shortcut for `export_vasprun` and plotting functions. Under this class or as aliases:
-    - `splot_bands`       --> `sbands`
-    - `splot_rgb_lines`   --> `srgb`
-    - `iplot_rgb_lines`  --> `irgb`
-    - `splot_color_lines` --> `scolor`
-    - `splot_dos_lines`   --> `sdos`
-    - `iplot_dos_lines`  --> `idos`
-- The plot functions starting with 'quick' or 'plotly' are still working but deprecated in favor of consistent names above starting from version 1.0.3.   
-- A class `pivotpy.g_utils.LOCPOT_CHG` is added which can be used to parse and visualize files like LOCPOT and CHG. 
-- A function `pivotpy.vr_parser.split_vasprun` is added which splits `vasprun.xml` file into a small file `_vasprun.xml` without projected data and creates text files `_set[1,2,3,4].txt` based on how many spin sets are there. 
-- A function `pivotpy.vr_parser.islice2array` is added which can reads data from text/csv/tsv files (even if text and numbers are mixed) accoridng to slices you provide, this does not load full file in memory and it is also useful in parsing EIGENVAL, PROCAR like files with a few lines of code only. 
+## How to use
+- Use commnad `pivotpy` in regular terminal to quickly launch documentation any time. 
+- See [Full Documentation](https://massgh.github.io/pivotpy/).
+- For CLI, use [Vasp2Visual](https://github.com/massgh/Vasp2Visual).
+
+## Changelog for version 0.9.5 onward
+- `pivotpy.s_plots.splot_rgb_lines` and `pivotpy.s_plots.splot_rgb_lines` are refactored and no more depnd on `create_rgb_lines`, so this function is dropped, If you still want to use it, use versions below 0.9.5. 
+- A class `pivotpy.g_utils.Vasprun` is added which provides shortcut for `export_vasprun` and plotting functions. Under this class or as aliases:
+    - `splot_bands`       --> `sbands`
+    - `splot_rgb_lines`   --> `srgb`
+    - `iplot_rgb_lines`  --> `irgb`
+    - `splot_color_lines` --> `scolor`
+    - `splot_dos_lines`   --> `sdos`
+    - `iplot_dos_lines`  --> `idos`
+- The plot functions starting with 'quick' or 'plotly' are still working but deprecated in favor of consistent names above starting from version 1.0.3.   
+- A class `pivotpy.g_utils.LOCPOT_CHG` is added which can be used to parse and visualize files like LOCPOT and CHG. 
+- A function `pivotpy.vr_parser.split_vasprun` is added which splits `vasprun.xml` file into a small file `_vasprun.xml` without projected data and creates text files `_set[1,2,3,4].txt` based on how many spin sets are there. 
+- A function `pivotpy.vr_parser.islice2array` is added which can reads data from text/csv/tsv files (even if text and numbers are mixed) accoridng to slices you provide, this does not load full file in memory and it is also useful in parsing EIGENVAL, PROCAR like files with a few lines of code only. 
 - Version 1.0.0 is updated with an overhaul of widgets module. `VasprunApp` is introduced as class to access internals of app easily. 
+
+## CLI commnds
+- Use `pivotpy` in system terminal to launch DOCS. 
+- Use `pivotpy_get_poscar` to download POSCAR.
+- Use `pivotpy_get_kpath` to create fine controlled KPATH.
+- More to come. 
 
 ## New: Plot in Terminal without GUI
 Use `pp.plt2text(colorful=True/False)` after matplotlib's code and your figure will appear in terminal. You need to zoom out alot to get a good view like below.
@@ -168,7 +180,7 @@ pp._show()
     
 
 
-![svg](docs/images/output_8_2.svg)
+![svg](docs/images/output_9_2.svg)
 
 
 ## Interactive plots using plotly
@@ -211,7 +223,7 @@ Markdown("[See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ
 
 
 
-![svg](docs/images/output_12_1.svg)
+![svg](docs/images/output_13_1.svg)
 
 
 ## Plotting Two Calculations Side by Side 
@@ -236,7 +248,7 @@ pp.modify_axes(ax=axs,xlim=[0,last_k],ylim=[-10,10],**ti_cks)
 ```
 
 
-![svg](docs/images/output_14_0.svg)
+![svg](docs/images/output_15_0.svg)
 
 
 ## Interpolation 
@@ -257,7 +269,7 @@ pp.add_text(ax=plt.gca(),txts='Graphene')
 ```
 
 
-![svg](docs/images/output_16_0.svg)
+![svg](docs/images/output_17_0.svg)
 
 
 ## LOCPOT,CHG Visualization
@@ -272,11 +284,11 @@ pp.ps2std(ps_command='(Get-Process)[0..4]')
 
     NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
     ------    -----      -----     ------      --  -- -----------
-    17     6.20       9.79       0.00   20580   0 AppHelperCap
-    31    28.65      25.39      16.52   11368   1 ApplicationFrameHost
-    8     1.57       4.48       0.00    1636   0 AppVShNotify
-    9     1.81       4.63       0.05    5912   1 AppVShNotify
-    17     4.20       9.25       0.00    5192   0 armsvc
+    22     7.12       9.34       0.59   12444   1 AcrobatNotificationClient
+    26     8.98      13.67      99.22    6912   1 AdobeCollabSync
+    16     4.28       7.11       2.45   20180   1 AdobeCollabSync
+    17     6.20      12.73       0.00    6564   0 AppHelperCap
+    35    36.02      46.34      64.44   11368   1 ApplicationFrameHost
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -317,12 +329,12 @@ Get-ChildItem 'E:\Research\graphene_example\'
         Directory: E:\Research\graphene_example
     
     
-    Mode                 LastWriteTime         Length Name                                                                        
-    ----                 -------------         ------ ----                                                                        
-    da----        10/31/2020   1:30 PM                ISPIN_1                                                                     
-    da----          5/9/2020   1:05 PM                ISPIN_2                                                                     
-    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                                      
-    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                                 
+    Mode                 LastWriteTime         Length Name                                                                                       
+    ----                 -------------         ------ ----                                                                                       
+    da----        10/31/2020   1:30 PM                ISPIN_1                                                                                    
+    da----          5/9/2020   1:05 PM                ISPIN_2                                                                                    
+    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                                                     
+    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                                                
     
     
 
