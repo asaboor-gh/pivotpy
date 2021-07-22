@@ -291,11 +291,11 @@ pp.ps2std(ps_command='(Get-Process)[0..4]')
 
     NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
     ------    -----      -----     ------      --  -- -----------
-    25     8.34      17.18     182.38    7932   2 AdobeCollabSync
-    15     4.19      10.74       2.56   10788   2 AdobeCollabSync
-    17     6.36      14.05       0.00    5340   0 AppHelperCap
-    43    38.87      97.14      12.42    3340   2 ApplicationFrameHost
-    8     1.57       6.33       0.00    9552   0 AppVShNotify
+    25     8.36      11.36     197.64    7932   2 AdobeCollabSync
+    15     4.19       6.59       2.66   10788   2 AdobeCollabSync
+    17     6.36      10.57       0.00    5340   0 AppHelperCap
+    39    32.79      45.22      12.94    3340   2 ApplicationFrameHost
+    8     1.62       5.83       0.00    9552   0 AppVShNotify
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -336,12 +336,12 @@ Get-ChildItem 'E:\Research\graphene_example\'
         Directory: E:\Research\graphene_example
     
     
-    Mode                 LastWriteTime         Length Name                                                                     
-    ----                 -------------         ------ ----                                                                     
-    da----        10/31/2020   1:30 PM                ISPIN_1                                                                  
-    da----          5/9/2020   1:05 PM                ISPIN_2                                                                  
-    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                                   
-    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                              
+    Mode                 LastWriteTime         Length Name                                                                 
+    ----                 -------------         ------ ----                                                                 
+    da----        10/31/2020   1:30 PM                ISPIN_1                                                              
+    da----          5/9/2020   1:05 PM                ISPIN_2                                                              
+    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                               
+    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                          
     
     
 

@@ -1334,12 +1334,16 @@ class KPathApp:
 
 
 # Cell
+from IPython.display import display, Markdown, HTML
+import ipywidgets as ipw
+from ipywidgets import Layout,Label,Button,Box,HBox,VBox
 class LiveSlides:
-    out = ipw.Output(layout= Layout(width='auto',height='auto',margin='auto',overflow='auto'))
     def __init__(self,func=None, iterable=None,title_page_md='# <center style="color:red"> Title',height=None):
         """Interactive Slides in IPython Notebook. Use `display(Markdown('text'))` instead of `print` in slides.
         - **Parameters**
-            - func : An outside defined function who act on elements of `iterable`  and handle required situations.
+            - func : An outside defined function which act on elements of `iterable`  and handle required situations.
+                    Return value is not guranteed for output rendering except for IPython.display.display object. Use display
+                    inside the function for rich formats rending as many time as you want.
             - iterable: Anything from list/tuple/dict etc whose each element is given as argument to `func`.
             - title_page_md: Title page as Markdown plain text.
             - height: int, If None, full `vh` as useful in voila. Provide in integer.
@@ -1351,7 +1355,6 @@ class LiveSlides:
                     display(Markdown(f'{x**2}'))
                 if isinstance(x, str):
                     display(Markdown(x*10))
-
             slides = LiveSlides(fn, [0,2,5,'Python '],height=200)
             slides.show()
             #See result as ![Slides](https://github.com/massgh/pivotpy/tree/master/slides.gif)
@@ -1361,6 +1364,7 @@ class LiveSlides:
         self.iterable = iterable
         self.height = height
         self.title_page_md = title_page_md
+        self.out = ipw.Output(layout= Layout(width='auto',height='auto',margin='auto',overflow='auto'))
 
         _max = len(self.iterable) if self.iterable else 1
         self.N = _max
@@ -1371,10 +1375,10 @@ class LiveSlides:
         self.btn_prev.style.button_color= 'transparent'
         self.btn_next.style.button_color= 'transparent'
         self.nav_bar =  HBox([self.progressbar,
-                                                      Label(f'/{self.N}',layout= Layout(min_width='30px')),
+                                                      ipw.HTML(f'/{self.N}',layout= Layout(min_width='30px')),
                                                      self.btn_prev,
                                                      self.btn_next
-                                ],layout= Layout(width='auto',height='auto',display='flex',justify_content='flex-end',padding='0px'))
+                                ],layout= Layout(width='100%',height='auto',display='flex',justify_content='flex-end',padding='0px'))
         self.style_html = ipw.HTML('''<style>
                                         .menu { color:#2196F3 ; font-size:180%}
                                         .textfonts { font-size:150%; align-items: center;}
@@ -1389,26 +1393,27 @@ class LiveSlides:
 
     def show(self):
         out_box =  VBox([self.style_html,
-                                              ipw.Box([LiveSlides.out.add_class('textfonts')
-                                                                ],layout= Layout(width='100%',height='calc(100% - 50px)',margin='auto')),
-                                             self.nav_bar
+                                        Box([self.out.add_class('textfonts')
+                                                        ],layout= Layout(width='100%',height='calc(100% - 50px)',margin='auto')),
+                                        self.nav_bar
                            ],layout= Layout(width='100%', height=f'{self.height}px' if self.height else 'calc(100vh - 55px)',margin='0px'))
         return out_box
 
-    @out.capture(clear_output=True,wait=True)
     def __shift_right(self,change):
         if self.iterable and change:
             self.progressbar.value = (self.progressbar.value + 1) % (self.N + 1)
 
-    @out.capture(clear_output=True,wait=True)
     def __shift_left(self,change):
         if self.iterable and change:
             self.progressbar.value = (self.progressbar.value - 1) % (self.N + 1)
 
-    @out.capture(clear_output=True,wait=True)
     def __update_content(self,change):
         if self.iterable and change:
-            if self.progressbar.value == 0:
-                display(Markdown(self.title_page_md))
-            else:
-                self.func(self.iterable[self.progressbar.value-1])
+            self.progressbar.description = 'Loading...'
+            self.out.clear_output(wait=True)
+            with self.out:
+                if self.progressbar.value == 0:
+                    display(Markdown(self.title_page_md))
+                else:
+                    self.func(self.iterable[self.progressbar.value-1])
+            self.progressbar.description = ''
