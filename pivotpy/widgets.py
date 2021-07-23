@@ -1338,7 +1338,7 @@ from IPython.display import display, Markdown, HTML
 import ipywidgets as ipw
 from ipywidgets import Layout,Label,Button,Box,HBox,VBox
 class LiveSlides:
-    def __init__(self,func=None, iterable=None,title_page_md='# <center style="color:red"> Title',height=None):
+    def __init__(self,func=None, iterable=None,title_page_md='# <center style="color:red"> Title',height=580):
         """Interactive Slides in IPython Notebook. Use `display(Markdown('text'))` instead of `print` in slides.
         - **Parameters**
             - func : An outside defined function which act on elements of `iterable`  and handle required situations.
@@ -1381,9 +1381,10 @@ class LiveSlides:
                                 ],layout= Layout(width='100%',height='auto',display='flex',justify_content='flex-end',padding='0px'))
         self.style_html = ipw.HTML('''<style>
                                         .menu { color:#2196F3 ; font-size:180%}
-                                        .textfonts { font-size:150%; align-items: center;}
+                                        .textfonts { font-size:120%; align-items: center;}
                                         .output {align-items: center;}
                                         .widget-inline-hbox .widget-readout {width:auto !important;}
+                                        a.jp-InternalAnchorLink {display: none !important;}
                                         <style>''')
 
         self.btn_prev.on_click(self.__shift_left)
