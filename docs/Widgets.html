@@ -475,7 +475,40 @@ ka.splot() #get matplotlib figure</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="LiveSlides" class="doc_header"><code>class</code> <code>LiveSlides</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L1340" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LiveSlides</code>(<strong><code>func</code></strong>=<em><code>None</code></em>, <strong><code>iterable</code></strong>=<em><code>None</code></em>, <strong><code>title_page_md</code></strong>=<em><code>'# &lt;center style="color:red"&gt; Title'</code></em>, <strong><code>height</code></strong>=<em><code>580</code></em>)</p>
+<h4 id="intslider_html" class="doc_header"><code>intslider_html</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L1337" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>intslider_html</code>(<strong><code>slider</code></strong>, <strong><code>fill_color</code></strong>=<em><code>'#61afef'</code></em>, <strong><code>empty_color</code></strong>=<em><code>'whitesmoke'</code></em>)</p>
+</blockquote>
+<p>Creates an html for a slider to make it like progressbar. You need ipywidgets.Box([slider,html]) for customization to take effect.</p>
+<ul>
+<li><strong>Parameters</strong><ul>
+<li>slider: IntSlider widget</li>
+<li>fill_color: Color of the bar displaying the slider value.</li>
+<li>empty_color: Background color of the bar.</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="LiveSlides" class="doc_header"><code>class</code> <code>LiveSlides</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L1371" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LiveSlides</code>(<strong><code>func</code></strong>=<em><code>&lt;lambda&gt;</code></em>, <strong><code>iterable</code></strong>=<em><code>['# First Slide', '# Second Slide']</code></em>, <strong><code>title_page_md</code></strong>=<em><code>'# &lt;center style="color:red"&gt; Title'</code></em>)</p>
 </blockquote>
 
 </div>
@@ -491,6 +524,40 @@ ka.splot() #get matplotlib figure</p>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ls</span> <span class="o">=</span> <span class="n">LiveSlides</span><span class="p">()</span>
+<span class="n">ls</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h1><center style="color:red"> Title</h1>
+
+</div>
+
+</div>
+
+</div>
+</div>
 
 </div>
     {% endraw %}
@@ -531,6 +598,6 @@ ka.splot() #get matplotlib figure</p>
  
 
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"2f0834a2db7a420db4228cff6743cb72": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "c23bd61b69324ea99bd86c809e3fc2ea": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_2f0834a2db7a420db4228cff6743cb72", "msg_id": "", "outputs": []}}, "566d622af34a427da73b7d68c2f92fff": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "f5b64783600a43589a71a6d3f555737e": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_566d622af34a427da73b7d68c2f92fff", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
+{"state": {"74562733785941c28f90258b5151e218": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "7c8cfc9de712400380ee5ee4f2eabaad": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_74562733785941c28f90258b5151e218", "msg_id": "", "outputs": []}}, "dc7211b8bda746d6b7183c8d5cf8fc19": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "8c3b7f7fbf9140d28e3d3b2dab165c8b": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_dc7211b8bda746d6b7183c8d5cf8fc19", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
 </script>
 
