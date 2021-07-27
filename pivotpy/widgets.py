@@ -34,77 +34,77 @@ except:
     import pivotpy.sio as sio
 
 # Cell
-def css_style(colors_dict):
+def css_style(colors_dict,_class = 'main_wrapper'):
     """Return style based on colors_dict available as pp.light_colors, pp.dark_colors etc"""
     return """<style>
-    .widget-label-basic {{
+    .{_class} .widget-label-basic {{
         background-color: transparent !important;
         color: {text} !important;
     }}
-    .widget-text input {{
+    .{_class} .widget-text input {{
         background-color: {input_bg} !important;
         border-radius:20px !important;
         padding: 0px 10px 0px 10px !important;
         border: 1px solid {input_border} !important;
         color: {input_fg} !important;
         }}
-    .widget-text input:focus {{
+    .{_class} .widget-text input:focus {{
         border: 1px solid {input_hover} !important;
         }}
-    .widget-text input:hover {{
+    .{_class} .widget-text input:hover {{
         border: 1px solid {input_hover} !important;
         }}
-    .widget-dropdown > select {{
+    .{_class} .widget-dropdown > select {{
         background-color: {dd_select_bg} !important;
         border:none !important;
         border-bottom: 1px solid {input_hover} !important;
         box-shadow: inset 0 -20px 10px -20px {input_hover};
         color: {dd_select_fg} !important;
     }}
-    .widget-dropdown > select:hover {{
+    .{_class} .widget-dropdown > select:hover {{
         background-color: {dd_hover} !important;
     }}
-    .widget-dropdown > select > option {{
+    .{_class} .widget-dropdown > select > option {{
         color: {dd_opt_fg} !important;
         background-color: {dd_opt_bg} !important;
     }}
-    .widget-dropdown > select > option:focus {{
+    .{_class} .widget-dropdown > select > option:focus {{
         background-color: {dd_focus_bg} !important;
     }}
-    .widget-label {{
+    .{_class} .widget-label {{
         color: {text} !important;
     }}
-    .widget-html {{
+    .{_class} .widget-html {{
         color: {text} !important;
     }}
-    .widget-box {{
+    .{_class} .widget-box, .{_class}.widget-box {{
         background-color: {box_bg} !important;
         border-radius:5px !important;
         padding:1px !important;
         border: 1px solid {box_border} !important;
         box-shadow: 1px 1px 1px 1px {box_border} !important;
     }}
-    .borderless {{
+    .{_class} .borderless, .{_class}.borderless {{
         border: 1px solid transparent !important;
         box-shadow: none !important;
         border-radius: 4px !important;
         margin:4px !important;
     }}
-    .marginless {{
+    .{_class} .marginless, .{_class}.marginless {{
         margin: 0px !important;
         border-radius: 0px !important;
     }}
-    .output {{
+    .{_class} .output, .{_class}.output {{
         color: {text} !important;
         background-color: inherit !important;
     }}
-    .widget-tab {{
+    .{_class} .widget-tab, .{_class}.widget-tab {{
         background-color: {tab_bg} !important;
         border: none !important;
         box-shadow: 1px 1px 1px 1px {tab_shadow} !important;
         padding: 0px 2px 2px 2px !important;
     }}
-    .widget-tab-contents, .widget-tab > .widget-tab-contents {{
+    .{_class} .widget-tab-contents, .{_class}.widget-tab > .widget-tab-contents {{
         width: 100%;
         box-sizing: border-box;
         margin: 0px !important;
@@ -114,7 +114,7 @@ def css_style(colors_dict):
         border: none !important;
         background-color: {tab_bg} !important;
     }}
-    .widget-tab > .p-TabBar .p-TabBar-tab {{
+    .{_class} .widget-tab > .p-TabBar .p-TabBar-tab, .{_class}.widget-tab > .p-TabBar .p-TabBar-tab {{
         background-color:{tab_bg} !important;
         border: none !important;
         color: {tab_fg} !important;
@@ -123,26 +123,26 @@ def css_style(colors_dict):
         font-family: "Times","serif" !important;
         text-align: center !important;
     }}
-    table {{
+    .{_class} table {{
         color: {table_fg} !important;
         }}
-    tr:nth-child(odd) {{
+    .{_class} tr:nth-child(odd) {{
         background-color: {tr_odd_bg} !important;
         }}
-    tr:nth-child(even) {{
+    .{_class} tr:nth-child(even) {{
         background-color: {tr_even_bg} !important;
         }}
-    .widget-button,.widget-toggle-button {{
-        color: 	{btn_fg} !important;
+    .{_class} .widget-button,.widget-toggle-button {{
+        color:  {btn_fg} !important;
         min-width: max-content !important;
         background-color: {btn_bg};
         border-radius: 5px !important;
     }}
-    tr:hover {{
+    .{_class} tr:hover {{
         background-color: {tr_hover_bg} !important;
         }}
     </style>
-    """.format(**colors_dict)
+    """.format(**colors_dict,_class= _class)
 
 dark_colors = {
  'table_fg': '#ABB2BF',
@@ -218,12 +218,12 @@ simple_colors = {
 }
 
 # Cell
-def get_files_gui(auto_fill = 'vasprun.xml',html_style=None,height=320):
+def get_files_gui(auto_fill = 'vasprun.xml', theme_colors = None, height=320):
     """
     - Creates a GUI interface for files/folders filtering.
     - **Parmeters**
         - auto_fill  : Default is `vasprun.xml`, any file/folder.
-        - html_style : None,Output of `css_style`.
+        - theme_colors : None,Any of pivotpy.[dark,light,simple]_colors.
         - height     : Height of Grid box.
     - **Returns**
         - Tuple(GUI_gridbox,Files_Dropdown). Access second one by item itself.
@@ -302,28 +302,28 @@ def get_files_gui(auto_fill = 'vasprun.xml',html_style=None,height=320):
         ipw.Label('Items to Exclude (separate by |)',layout=i_layout),excldue_w,
         item_box,
         applybtn_w],layout=Layout(width='330px'))
-    if not html_style:
-        html_style = ''
+
+    _class = 'custom-'+''.join(np.random.randint(9,size=(23,)).astype(str)) #Random class
+    html_style = css_style(theme_colors,_class = _class) if theme_colors else ''
     full_box = ipw.HBox([ipw.HTML(html_style),input_box, right_box],
-                        layout=Layout(height='{}px'.format(height)))
-    full_box.add_class('borderless')
-    full_box.add_class('marginless')
+                        layout=Layout(height='{}px'.format(height))).add_class(_class)
+
+    full_box.add_class('borderless').add_class('marginless')
     return full_box, files_w
 
 # Cell
 class InputGui:
-    def __init__(self,sys_info=None,html_style=None,height=400):
+    def __init__(self,sys_info=None,theme_colors = None,height=400):
         """
         - Creates a GUI interface for input/selection of orbitals/elms projection.
         - **Parmeters**
-            - html_style : None,Output of `css_style`.
+            - theme_colors : None,Any of pivotpy.[dark,light,simple]_colors.
             - height     : Height of Grid box, Can set to None for auto-resizing.
             - sys_info   : `export_vasprun().sys_info`. Can change later using `self.update_options` mthod.
         - **Output Parameters**
             - output: Dictionary that contains kwargs for plot functions.
             - html  : A widget which can be used to bserve change in output, used in `VasprunApp`.
         """
-        html_style = html_style if html_style else '' # Not self
         self.sys_info = sys_info if sys_info else vp.Dict2Data({'fields':['s'],
                                                 'ElemIndex':[0,1],'ElemName':['A']})
         self.output = dict(elements = [[],[],[]],orbs = [[],[],[]],labels = ['','',''])
@@ -343,6 +343,8 @@ class InputGui:
             }
         self.update_options(self.sys_info) # In start if given
 
+        _class = 'custom-'+''.join(np.random.randint(9,size=(23,)).astype(str)) #Random class
+        html_style = css_style(theme_colors,_class = _class) if theme_colors else ''
         self.box = VBox([ipw.HTML(html_style),
                 self.html,
                 HBox([Label('Color: ',layout=l_width), self.dds['rgb'],
@@ -355,7 +357,8 @@ class InputGui:
                       Label('::>>:: ',layout=l_width),self.texts['orbs']
                     ]).add_class('borderless').add_class('marginless')
                 ],layout=Layout(height="{}px".format(height))
-                ).add_class('marginless')
+                ).add_class(_class).add_class('marginless')
+
 
         #Obsever
         self.dds['rgb'].observe(self.__see_input,'value')
@@ -590,8 +593,8 @@ class VasprunApp:
 
         for i,item in enumerate(['Home','Graphs','STD(out/err)']):
             tab.set_title(i,item)
-
-        self.tab    = tab # Main layout
+        self.main_class = 'custom-'+''.join(np.random.randint(9,size=(22,)).astype(str)) #Random class
+        self.tab     = tab.add_class(self.main_class) # Main layout
         self.data   = None # Export vasprun object.
         self.__path = None # current path
         self.fig    = go.FigureWidget() # plotly's figure widget
@@ -642,8 +645,7 @@ class VasprunApp:
                       'fermi' : Text(value='',layout=b_out,continuous_update=False),
                       'xyt'   : Text(value='',continuous_update=False)
                       }
-
-        self.htmls = {'theme': ipw.HTML(css_style(light_colors)),
+        self.htmls = {'theme': ipw.HTML(css_style(light_colors,_class = self.main_class)),
                       'table': ipw.HTML()}
 
         # Observing
@@ -792,15 +794,15 @@ class VasprunApp:
 
     def __update_theme(self,change):
         if self.dds['theme'].value == 'Dark':
-            self.htmls['theme'].value = css_style(dark_colors)
+            self.htmls['theme'].value = css_style(dark_colors,_class=self.main_class)
             self.fig.update_layout(template='plotly_dark')
             self.dds['style'].value = 'plotly_dark'
         elif self.dds['theme'].value == 'Light':
-            self.htmls['theme'].value = css_style(light_colors)
+            self.htmls['theme'].value = css_style(light_colors,_class=self.main_class)
             self.fig.update_layout(template='ggplot2')
             self.dds['style'].value = 'ggplot2'
         elif self.dds['theme'].value == 'Custom':
-            self.htmls['theme'].value = css_style(simple_colors)
+            self.htmls['theme'].value = css_style(simple_colors,_class=self.main_class)
             self.fig.update_layout(template='none')
             self.dds['style'].value = 'none'
         else:
@@ -1055,7 +1057,8 @@ class KPathApp:
         self.path = path
         self.files_gui, self.files_dd = get_files_gui(auto_fill='POSCAR')
         self.files_dd.layout.width = '50%'
-        self.tab = ipw.Tab([self.files_gui,Box([]),KPathApp.output])
+        self.main_class = 'custom-'+''.join(np.random.randint(9,size=(21,)).astype(str)) #Random class
+        self.tab = ipw.Tab([self.files_gui,Box([]),KPathApp.output]).add_class(self.main_class)
         self.tab.add_class('marginless').add_class('borderless')
         self.tab.set_title(0,'Home')
         self.tab.set_title(1,'Main')
@@ -1078,7 +1081,7 @@ class KPathApp:
         self.views = VBox(self.checks.children)
         self.texts = {'label':Text(description='Label, N',indent=False),
                       'kxyz':Text(description='kx, ky, kz',indent=False)}
-        self.theme_html = ipw.HTML(css_style(light_colors))
+        self.theme_html = ipw.HTML(css_style(light_colors,_class=self.main_class))
 
         self.buttons['delete'].on_click(self.__delete)
         self.buttons['check'].observe(self.__check_all)
@@ -1094,11 +1097,11 @@ class KPathApp:
     @output.capture(clear_output=True,wait=True)
     def __toggle_theme(self,change):
         if self.buttons['theme'].value:
-            self.theme_html.value = css_style(dark_colors)
+            self.theme_html.value = css_style(dark_colors,_class = self.main_class)
             self.fig.layout.template = 'plotly_dark'
             self.fig.layout.paper_bgcolor = dark_colors['box_bg'] #important
         else:
-            self.theme_html.value = css_style(light_colors)
+            self.theme_html.value = css_style(light_colors,_class=self.main_class)
             self.fig.layout.template = 'plotly_white'
             self.fig.layout.paper_bgcolor = light_colors['box_bg']
 
@@ -1369,7 +1372,8 @@ def intslider_html(slider, fill_color = '#61afef', empty_color = 'whitesmoke'):
     return html
 
 class LiveSlides:
-    def __init__(self,func=lambda x: display(Markdown(x)), iterable=['# First Slide','# Second Slide'],title_page_md='# <center style="color:red"> Title'):
+    def __init__(self,func=lambda x: display(Markdown(x)), iterable=['# First Slide','# Second Slide'],
+                 title_page_md='# <center style="color:red"> Title',accent_color='#2196F3'):
         """Interactive Slides in IPython Notebook. Use `display(Markdown('text'))` instead of `print` in slides.
         - **Parameters**
             - func : An outside defined function which act on elements of `iterable`  and handle required situations.
@@ -1377,7 +1381,7 @@ class LiveSlides:
                     inside the function for rich formats rending as many time as you want.
             - iterable: Anything from list/tuple/dict etc whose each element is given as argument to `func`.
             - title_page_md: Title page as Markdown plain text.
-            - height: int, If None, full `vh` as useful in voila. Provide in integer.
+            - accent_color: Valid CSS color. Applies to buttons, progressbar etc.
         - **Example**
             ```python
             from IPython.display import display, Markdown
@@ -1407,17 +1411,17 @@ class LiveSlides:
             btn.style.button_color= 'transparent'
             btn.layout.min_width = 'max-content' #very important parameter
 
-        self.slider_html = intslider_html(self.progressbar,'#2196F3','whitesmoke')
+        self.slider_html = intslider_html(self.progressbar,fill_color=accent_color,empty_color='whitesmoke')
         self.count_label = ipw.HTML(f'/ {self.N}', layout= Layout(min_width='30px'))
         self.nav_bar_children = (self.progressbar, self.slider_html, self.count_label, self.btn_prev, self.btn_next)
         self.nav_bar =  HBox(self.nav_bar_children ,layout= Layout(width='100%',min_height='40px',display='flex',justify_content='flex-end'))
         self.style_html = ipw.HTML('''<style>
-                                        .menu { color:#2196F3 ; font-size:180%}
-                                        .textfonts { font-size:120%; align-items: center;}
-                                        .centerslide {align-items: center;}
-                                        a.jp-InternalAnchorLink {display: none !important;}
-                                        .widget-inline-hbox .widget-readout  {min-width:auto !important;}
-                                        <style>''')
+                                        .menu {{ color:{accent_color} ; font-size:180%}}
+                                        .textfonts {{ font-size:120%; align-items: center;}}
+                                        .centerslide {{align-items: center;}}
+                                        a.jp-InternalAnchorLink {{display: none !important;}}
+                                        .widget-inline-hbox .widget-readout  {{min-width:auto !important;}}
+                                        <style>'''.format(accent_color=accent_color))
         self.height_slider = ipw.IntSlider(min=200,max=1000, value = 480,continuous_update=False,description='Height (px)')
         self.width_slider = ipw.IntSlider(min=40,max=100, value = 60,continuous_update=False,description='Width (vw)')
 
