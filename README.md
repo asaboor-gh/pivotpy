@@ -62,16 +62,10 @@ See GIF here:
 
 # New: Live Slides in Jupyter/Voila
 ```python
-from IPython.display import display, Markdown
-def fn(x):
-    if isinstance(x,int):
-        display(Markdown(f'{x**2}'))
-    if isinstance(x, str):
-        display(Markdown(x*10))
-slides = LiveSlides(fn, [0,2,5,'Python '],height=200)
-slides.show()
+import pivotpy as pp 
+pp.init_slides(2)
 ```
-![Slides](slides.gif)
+![Slides](init_slides.gif)
 
 ```python
 import os 
@@ -291,11 +285,11 @@ pp.ps2std(ps_command='(Get-Process)[0..4]')
 
     NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
     ------    -----      -----     ------      --  -- -----------
-    23     7.34      11.94       0.53    1408   2 AcrobatNotificationClient
-    25     8.38      10.17     381.83    7932   2 AdobeCollabSync
-    15     4.29       6.49       5.67   10788   2 AdobeCollabSync
-    17     6.35      10.37       0.00    5340   0 AppHelperCap
-    38    40.93      42.66      33.48    3340   2 ApplicationFrameHost
+    23     7.35       2.44       0.36   16032   1 AcrobatNotificationClient
+    15     6.62       9.92       0.00    5364   0 AppHelperCap
+    39    32.25      46.09       4.30   16336   1 ApplicationFrameHost
+    8     1.83       7.39       0.03   21104   1 AppVShNotify
+    8     1.57       6.71       0.00   23128   0 AppVShNotify
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
