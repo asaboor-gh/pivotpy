@@ -285,11 +285,11 @@ pp.ps2std(ps_command='(Get-Process)[0..4]')
 
     NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
     ------    -----      -----     ------      --  -- -----------
-    23     7.35       2.44       0.36   16032   1 AcrobatNotificationClient
-    15     6.62       9.92       0.00    5364   0 AppHelperCap
-    39    32.25      46.09       4.30   16336   1 ApplicationFrameHost
-    8     1.83       7.39       0.03   21104   1 AppVShNotify
-    8     1.57       6.71       0.00   23128   0 AppVShNotify
+    23     7.30       4.15       0.22   15892   1 AcrobatNotificationClient
+    16     4.36      11.53       0.47   15120   1 AdobeCollabSync
+    20     6.59      13.45      26.41   15204   1 AdobeCollabSync
+    10     1.71       6.40       0.00    5372   0 AppHelperCap
+    38    34.66     100.56       2.50    1988   1 ApplicationFrameHost
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
