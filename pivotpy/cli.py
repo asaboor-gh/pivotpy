@@ -1,6 +1,5 @@
 from . import __version__, __doc__, docs
 from .sio import str2kpath, get_poscar, save_mp_API
-from .widgets import new_slides_notebook
 import argparse, os
 from argparse import RawTextHelpFormatter
 def main():
@@ -51,10 +50,3 @@ def api_key_save():
     parser.add_argument('api_key',type=str, help='Get API key from Materilas Project website and enter here.')
     args = parser.parse_args()
     return save_mp_API(api_key=args.api_key)
-
-def slides_notebook():
-    parser = argparse.ArgumentParser(description='Create notebook with template slides')
-    parser.add_argument('N',type=int, help='Number of Slides to insert in notebook')
-    args = parser.parse_args()
-    new_slides_notebook(number_of_slides = args.N)
-    print("Notebook 'live-presentation*.ipynb' created. Try to run jupyter-lab or jupyter-notebook to load it and proceed")
