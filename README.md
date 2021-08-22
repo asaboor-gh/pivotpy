@@ -63,7 +63,7 @@ See GIF here:
 # New: Live Slides in Jupyter Notebook
 Navigate to  [ipyslides](https://github.com/massgh/ipyslides) or do `pip install ipyslides` to create beautiful data driven presentation in Jupyter Notebook.
 
-```
+```python
 import os 
 os.chdir('E:/Research/graphene_example/ISPIN_1/bands')
 xml_data=pp.read_asxml()
@@ -148,7 +148,7 @@ vr
 - Add anything from legend,colorbar, colorwheel. In below figure, all three are shown.
 - Use aliases such as sbands, sdos,srgb,irgb,scolor,idos for plotting. 
 
-```
+```python
 #collapse_input
 import pivotpy as pp, numpy as np 
 import matplotlib.pyplot as plt 
@@ -182,7 +182,7 @@ pp._show()
 
 ## Interactive plots using plotly
 
-```
+```python
 args_dict['labels'] = ['s','p_z','p_x+p_y']
 fig1 = pp.iplot_rgb_lines(vr1,**args_dict)
 #pp.iplot2html(fig1) #Do inside Google Colab, fig1 inside Jupyter
@@ -204,7 +204,7 @@ Markdown("[See Interactive Plot](https://massgh.github.io/InteractiveHTMLs/iGrap
 #### Look the output of `pivotpy.sio.splot_bz`.
 ![BZ](docs\images\3bz.jpg)
 
-```
+```python
 import pivotpy as pp 
 pp.splot_bz([[1,0,0],[0,1,0],[0,0,1]],color=(1,1,1,0.2),light_from=(0.5,0,2),colormap='RGB').set_axis_off()
 #pp.iplot2html(fig2) #Do inside Google Colab, fig1 inside Jupyter
@@ -226,7 +226,7 @@ Markdown("[See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ
 ## Plotting Two Calculations Side by Side 
 - Here we will use `shift_kpath` to demonstrate plot of two calculations on same axes side by side
 
-```
+```python
 #nbdev_collapse_input
 import matplotlib.pyplot as plt
 import pivotpy as pp 
@@ -251,7 +251,7 @@ pp.modify_axes(ax=axs,xlim=[0,last_k],ylim=[-10,10],**ti_cks)
 ## Interpolation 
 Amost every bandstructure and DOS plot function has an argument `interp_nk` which is a dictionary with keys `n` (Number of additional points between adjacent points) and `k` (order of interpolation 0-3). `n > k` must hold.
 
-```
+```python
 #collapse_input
 import pivotpy as pp
 plt.style.use('ggplot')
@@ -275,17 +275,17 @@ check out the class `pivotpy.LOCPOT_CHG` to visulize local potential/charge and 
 ## Running powershell commands from python.
 Some tasks are very tideious in python while just a click way in powershell. See below, and try to list processes in python yourself to see the difference!
 
-```
+```python
 pp.ps2std(ps_command='(Get-Process)[0..4]')
 ```
 
     NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
     ------    -----      -----     ------      --  -- -----------
-    16     4.25       5.05       1.44   15120   1 AdobeCollabSync
-    20     6.54       7.32      71.83   15204   1 AdobeCollabSync
-    15     5.60      11.57       0.00    5372   0 AppHelperCap
-    38    31.88      31.47       6.72    1988   1 ApplicationFrameHost
-    17     4.11       4.29       0.00    5128   0 armsvc
+    23     7.22       5.35       0.47    5376   1 AcrobatNotificationClient
+    16     4.36      10.71       0.75   17256   1 AdobeCollabSync
+    20     6.67      12.97      57.80   17292   1 AdobeCollabSync
+    15     6.33      13.45       0.00    5416   0 AppHelperCap
+    30    21.96      68.80       4.75    2524   1 ApplicationFrameHost
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -316,7 +316,7 @@ c.ScriptMagics.script_paths = {
 }
 ```
 
-```
+```python
 %%ps 
 Get-ChildItem 'E:\Research\graphene_example\'
 ```
@@ -326,17 +326,17 @@ Get-ChildItem 'E:\Research\graphene_example\'
         Directory: E:\Research\graphene_example
     
     
-    Mode                 LastWriteTime         Length Name                                                                     
-    ----                 -------------         ------ ----                                                                     
-    da----        10/31/2020   1:30 PM                ISPIN_1                                                                  
-    da----          5/9/2020   1:05 PM                ISPIN_2                                                                  
-    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                                   
-    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                              
+    Mode                 LastWriteTime         Length Name                                                                        
+    ----                 -------------         ------ ----                                                                        
+    da----        10/31/2020   1:30 PM                ISPIN_1                                                                     
+    da----          5/9/2020   1:05 PM                ISPIN_2                                                                     
+    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                                      
+    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                                 
     
     
 
 
-```
+```python
 x = %ps (Get-ChildItem 'E:\Research\graphene_example\').Name
 x
 ```

@@ -118,7 +118,7 @@ nb_path: "Widgets.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_files_gui" class="doc_header"><code>get_files_gui</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L222" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_files_gui</code>(<strong><code>auto_fill</code></strong>=<em><code>'vasprun.xml'</code></em>, <strong><code>theme_colors</code></strong>=<em><code>None</code></em>, <strong><code>height</code></strong>=<em><code>320</code></em>)</p>
+<h4 id="get_files_gui" class="doc_header"><code>get_files_gui</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L182" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_files_gui</code>(<strong><code>auto_fill</code></strong>=<em><code>'vasprun.xml'</code></em>, <strong><code>theme_colors</code></strong>=<em><code>None</code></em>, <strong><code>height</code></strong>=<em><code>320</code></em>)</p>
 </blockquote>
 <ul>
 <li>Creates a GUI interface for files/folders filtering.</li>
@@ -179,7 +179,7 @@ nb_path: "Widgets.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="InputGui" class="doc_header"><code>class</code> <code>InputGui</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L316" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>InputGui</code>(<strong><code>sys_info</code></strong>=<em><code>None</code></em>, <strong><code>theme_colors</code></strong>=<em><code>None</code></em>, <strong><code>height</code></strong>=<em><code>400</code></em>)</p>
+<h2 id="InputGui" class="doc_header"><code>class</code> <code>InputGui</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L276" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>InputGui</code>(<strong><code>sys_info</code></strong>=<em><code>None</code></em>, <strong><code>theme_colors</code></strong>=<em><code>None</code></em>, <strong><code>height</code></strong>=<em><code>400</code></em>)</p>
 </blockquote>
 
 </div>
@@ -224,7 +224,7 @@ nb_path: "Widgets.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="generate_summary" class="doc_header"><code>generate_summary</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L523" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>generate_summary</code>(<strong><code>paths_list</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="generate_summary" class="doc_header"><code>generate_summary</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L483" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>generate_summary</code>(<strong><code>paths_list</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -255,7 +255,7 @@ nb_path: "Widgets.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="VasprunApp" class="doc_header"><code>class</code> <code>VasprunApp</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L569" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>VasprunApp</code>(<strong><code>height</code></strong>=<em><code>580</code></em>)</p>
+<h2 id="VasprunApp" class="doc_header"><code>class</code> <code>VasprunApp</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L529" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>VasprunApp</code>(<strong><code>height</code></strong>=<em><code>580</code></em>)</p>
 </blockquote>
 <p>Display a GUI for vasp output analysis. <code>self.theme_colors</code> can be used to edit custom theme.</p>
 <ul>
@@ -299,7 +299,7 @@ nb_path: "Widgets.ipynb"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">va</span> <span class="o">=</span> <span class="n">VasprunApp</span><span class="p">()</span>
-<span class="c1"># va.cache_data = False </span>
+<span class="c1"># va.cache_data = False  </span>
 <span class="c1"># va.evr_kws[&#39;try_pwsh&#39;] = False</span>
 <span class="c1"># va.evr_kws[&#39;elim&#39;] = [-2,2]</span>
 <span class="c1"># va.show()</span>
@@ -319,29 +319,11 @@ nb_path: "Widgets.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">va</span><span class="o">.</span><span class="n">theme_colors</span> <span class="o">=</span> <span class="p">{</span>
- <span class="s1">&#39;table_fg&#39;</span><span class="p">:</span> <span class="s1">&#39;#ABB2BF&#39;</span><span class="p">,</span>
- <span class="s1">&#39;tr_odd_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;gray&#39;</span><span class="p">,</span>
- <span class="s1">&#39;tr_even_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;#21252B&#39;</span><span class="p">,</span>
- <span class="s1">&#39;tr_hover_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;#414855&#39;</span><span class="p">,</span>
- <span class="s1">&#39;btn_fg&#39;</span><span class="p">:</span> <span class="s1">&#39;green&#39;</span><span class="p">,</span>
- <span class="s1">&#39;btn_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;#3D4450&#39;</span><span class="p">,</span>
- <span class="s1">&#39;tab_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;gray&#39;</span><span class="p">,</span>
- <span class="s1">&#39;tab_fg&#39;</span><span class="p">:</span> <span class="s1">&#39;#61AFEF&#39;</span><span class="p">,</span>
- <span class="s1">&#39;tab_shadow&#39;</span><span class="p">:</span> <span class="s1">&#39;#282C34&#39;</span><span class="p">,</span>
- <span class="s1">&#39;box_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;gray&#39;</span><span class="p">,</span>
- <span class="s1">&#39;box_border&#39;</span><span class="p">:</span> <span class="s1">&#39;#282C34&#39;</span><span class="p">,</span>
- <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;#ABB2BF&#39;</span><span class="p">,</span>
- <span class="s1">&#39;input_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;#282C34&#39;</span><span class="p">,</span>
- <span class="s1">&#39;input_fg&#39;</span><span class="p">:</span> <span class="s1">&#39;#ABB2BF&#39;</span><span class="p">,</span>
- <span class="s1">&#39;input_border&#39;</span><span class="p">:</span> <span class="s1">&#39;#282C34&#39;</span><span class="p">,</span>
- <span class="s1">&#39;input_hover&#39;</span><span class="p">:</span> <span class="s1">&#39;#414855&#39;</span><span class="p">,</span>
- <span class="s1">&#39;dd_select_fg&#39;</span><span class="p">:</span> <span class="s1">&#39;#ABB2BF&#39;</span><span class="p">,</span>
- <span class="s1">&#39;dd_select_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;transparent&#39;</span><span class="p">,</span>
- <span class="s1">&#39;dd_hover&#39;</span><span class="p">:</span> <span class="s1">&#39;#3D4450&#39;</span><span class="p">,</span>
- <span class="s1">&#39;dd_opt_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;#282C34&#39;</span><span class="p">,</span>
- <span class="s1">&#39;dd_opt_fg&#39;</span><span class="p">:</span> <span class="s1">&#39;whitesmoke&#39;</span><span class="p">,</span>
- <span class="s1">&#39;dd_focus_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;green&#39;</span><span class="p">}</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">va</span><span class="o">.</span><span class="n">set_theme_colors</span><span class="p">({</span><span class="s1">&#39;next_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;whitesmoke&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;hover_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;skyblue&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;accent&#39;</span><span class="p">:</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;main_bg&#39;</span><span class="p">:</span> <span class="s1">&#39;white&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;main_fg&#39;</span><span class="p">:</span> <span class="s1">&#39;black&#39;</span><span class="p">})</span>
 </pre></div>
 
     </div>
@@ -363,7 +345,7 @@ nb_path: "Widgets.ipynb"
 <li><code>va.result</code> is what you see in table. </li>
 <li><code>va.data</code> is output of <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a>. You can tweak <code>va.evr_kws</code> that are passed to <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a>. </li>
 <li><code>va.fig</code> is current figure. </li>
-<li><code>va.theme_colors</code> could be used to change theme, e.g <code>va.theme_colors = pp.dark_colors</code> will change theme to Dark. This is useful to create new themes, you can edit color values in <code>dark_colors/light_colors</code> and assign it to <code>va.theme_colors</code> as you prefer. Do not modify keys, just values!.  </li>
+<li><code>va.set_theme_colors</code> could be used to change theme, e.g <code>va.set_theme_colors(pp.dark_colors)</code> will change theme to Dark. This is useful to create new themes, you can edit color values in <code>dark_colors/light_colors</code> and apply back. Do not modify keys, just values!.  </li>
 <li><code>va.InGui</code> is instance of <a href="/pivotpy/Widgets.html#InputGui"><code>InputGui</code></a> class and <code>va.InGui.out</code> is used as <code>va.input</code>. <code>va.html</code> is used to observe <code>self.__updata_input</code> internally.</li>
 <li><code>va.iplot</code> and <code>va.splot</code> give current figure(detached) and its matplotlib figure respectively. Their <code>kwargs</code> correspond to current figure's command e.g if <code>Bands</code> figure is there, <code>kwargs</code> are passed to <a href="/pivotpy/InteractivePlots.html#iplot_rgb_lines"><code>iplot_rgb_lines</code></a> for <code>va.iplot</code> and to <a href="/pivotpy/StaticPlots.html#splot_rgb_lines"><code>splot_rgb_lines</code></a> for <code>va.splot</code>. </li>
 </ul>
@@ -374,7 +356,7 @@ nb_path: "Widgets.ipynb"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Edit-Custom-Theme">Edit Custom Theme<a class="anchor-link" href="#Edit-Custom-Theme"> </a></h3><p>You can set <code>va.theme_colors = Manually Edited(va.theme_colors)</code> and then apply <code>Custom</code> from theme dropdown to display theme of your choice. Used CSS-compatible color values only.</p>
+<h3 id="Edit-Custom-Theme">Edit Custom Theme<a class="anchor-link" href="#Edit-Custom-Theme"> </a></h3><p>You can set <code>va.set_theme_colors(&lt;va.theme_colors after edit&gt;)</code> and then apply <code>Custom</code> from theme dropdown to display theme of your choice. Used CSS-compatible color values only.</p>
 <h3 id="Extend-Functionality-(Example:-Save-Matplotlib's-figure-on-clicking-Load-Graph)">Extend Functionality (Example: Save Matplotlib's figure on clicking <code>Load Graph</code>)<a class="anchor-link" href="#Extend-Functionality-(Example:-Save-Matplotlib's-figure-on-clicking-Load-Graph)"> </a></h3><p>You can extend app as you choose, see how it saves a figure on button(within app) click.</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pivotpy</span> <span class="k">as</span> <span class="nn">pp</span>
 <span class="kn">import</span> <span class="nn">ipywidgets</span> <span class="k">as</span> <span class="nn">ipw</span><span class="o">,</span> <span class="nn">os</span>
@@ -411,7 +393,7 @@ nb_path: "Widgets.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="KPathApp" class="doc_header"><code>class</code> <code>KPathApp</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L1049" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>KPathApp</code>(<strong><code>path</code></strong>=<em><code>'POSCAR'</code></em>)</p>
+<h2 id="KPathApp" class="doc_header"><code>class</code> <code>KPathApp</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L1016" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>KPathApp</code>(<strong><code>path</code></strong>=<em><code>'POSCAR'</code></em>)</p>
 </blockquote>
 <p>View and trace path on BZ.</p>
 <ul>
@@ -466,23 +448,6 @@ ka.splot() #get matplotlib figure</p>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#ls.show()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 <div class="output_wrapper">
 <div class="output">
@@ -516,6 +481,6 @@ ka.splot() #get matplotlib figure</p>
  
 
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"61fed265f52a4eba85d200a7fd137a58": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "a00414bb88d5495da8fd063e020aa441": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_61fed265f52a4eba85d200a7fd137a58", "msg_id": "", "outputs": []}}, "ff73894584c7466c8423fa8b0f3174e1": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "96d011246f6a47b5a8ff8b614f306a49": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_ff73894584c7466c8423fa8b0f3174e1", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
+{"state": {"1784079f91e0499295885f3b2d68f0bc": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "b67c7bf93bd84a7d885502d6600c14a5": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_1784079f91e0499295885f3b2d68f0bc", "msg_id": "", "outputs": []}}, "f23fe6cd20514754aca3fef98997a56f": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "644a393511024a27876f7d28697569ea": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_f23fe6cd20514754aca3fef98997a56f", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
 </script>
 
