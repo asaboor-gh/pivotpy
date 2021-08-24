@@ -12,7 +12,7 @@ from time import sleep
 from IPython.display import display, Markdown
 from IPython import get_ipython #For SLides
 import ipywidgets as ipw
-from ipywidgets import Layout,Label,Button,Box,HBox,VBox,Dropdown,Text,Checkbox
+from ipywidgets import Layout,Label,Button,Box,HBox,VBox,Dropdown,Text,Checkbox, SelectMultiple
 from ipywidgets.embed import embed_minimal_html, dependency_state
 
 # More exports
@@ -1028,6 +1028,7 @@ class KPathApp:
         self.main_class = 'custom-'+''.join(np.random.randint(9,size=(21,)).astype(str)) #Random class
         self.tab = ipw.Tab(children=[self.files_gui,Box([]),KPathApp.output]).add_class(self.main_class)
         self.tab.add_class('marginless').add_class('borderless')
+        self.tab.layout = Layout(width='100%',min_width='100%',height='450px',min_height='450px')
         try:
             for i,title in enumerate(['Home','Main','STDERR']):
                 self.tab.set_title(i,title)
@@ -1037,28 +1038,21 @@ class KPathApp:
         self.fig = go.FigureWidget()
         self.fig.layout.template = 'plotly_white' #Forces to avoid colored patch in background
         self.bz = None
-        self.kpoints = []
-        self.coords = []
-        self.labels = []
-        self.nkpts = []
-        self.patches = []
-        self.buttons = {'delete':Button(description='Delete Selected'),
+        self.kcsn = [] #KPOINTS, COORDS,SYMBOLS, N_per_interval and box symbol in dictionary per item
+        self.buttons = {'delete':Button(description='Delete Selection'),
                         'add':Button(description='Add Point'),
                         'patch':Button(description='Split Path'),
-                        'check':Checkbox(description='Toggle Selection',indent=False),
                         'fig_up': Button(description='Update Figure'),
-                        'theme': Checkbox(description='Dark Theme',indent=False)}
-        self.checks = VBox([Checkbox() for k in self.kpoints],layout=Layout(min_height='200px'))
-        self.views = VBox(self.checks.children)
+                        'theme': Button(description='Dark Theme')}
+        self.sm = SelectMultiple(layout=Layout(width='100%'))
         self.texts = {'label':Text(description='Label, N',indent=False),
                       'kxyz':Text(description='kx, ky, kz',indent=False)}
         self.theme_html = ipw.HTML(css_style(light_colors,_class=self.main_class))
 
         self.buttons['delete'].on_click(self.__delete)
-        self.buttons['check'].observe(self.__check_all)
         self.buttons['add'].on_click(self.__add)
         self.buttons['patch'].on_click(self.__add_patch)
-        self.buttons['theme'].observe(self.__toggle_theme)
+        self.buttons['theme'].on_click(self.__toggle_theme)
         self.buttons['fig_up'].on_click(self.__update_fig)
         self.texts['label'].on_submit(self.__label)
         self.texts['kxyz'].on_submit(self.__manual_k)
@@ -1068,31 +1062,51 @@ class KPathApp:
 
     @output.capture(clear_output=True,wait=True)
     def __toggle_theme(self,change):
-        if self.buttons['theme'].value:
-            self.theme_html.value = css_style(dark_colors,_class = self.main_class)
+        _style = '''<style>.widget-select-multiple>select {{
+            font-family: "Cascadia Code","Ubuntu Mono","SimSun-ExtB","Courier New";
+            background:{next_bg};border-radius:0;color:{accent};border:none;
+            height:auto;min-height:160px;padding:5px;margin:0px;overflow:auto;}}
+        .widget-select-multiple>select>option:hover,
+        .widget-select-multiple>select>option:focus{{background:{hover_bg};}}</style>'''
+        if self.buttons['theme'].description == 'Dark Theme':
+            self.theme_html.value = css_style(dark_colors,_class = self.main_class) + _style.format(**dark_colors)
             self.fig.layout.template = 'plotly_dark'
             self.fig.layout.paper_bgcolor = dark_colors['main_bg'] #important
+            self.buttons['theme'].description = 'Light Theme'
         else:
-            self.theme_html.value = css_style(light_colors,_class=self.main_class)
+            self.theme_html.value = css_style(light_colors,_class=self.main_class) + _style.format(**light_colors)
             self.fig.layout.template = 'plotly_white'
             self.fig.layout.paper_bgcolor = light_colors['main_bg']
+            self.buttons['theme'].description = 'Dark Theme'
 
     @output.capture(clear_output=True,wait=True)
     def __manual_k(self,change):
-        for i,c in enumerate(self.checks.children):
-            if c.value:
-                self.kpoints[i] = [float(v) for v in self.texts['kxyz'].value.split(',') if v != ''][:3]
-                kp,n,l = self.kpoints[i], self.nkpts[i],self.labels[i]
-                c.description = "{0:>9.4f}{1:>9.4f}{2:>9.4f} -> {3}!{4}".format(*kp,n,l)
+        for i in self.sm.value:
+            self.kcsn[i]['k'] = [float(v) for v in self.texts['kxyz'].value.split(',') if v != ''][:3]
+
+        self.texts['kxyz'].value = '' # clean it
+        self.__update_label()
         self.__update_selection() #Change on graph too
 
-    @output.capture(clear_output=True,wait=True)
-    def __check_all(self,change):
-        for c in self.checks.children:
-            if self.buttons['check'].value:
-                c.value = True
-            else:
-                c.value = False
+    def __label_at(self,i):
+        self.kcsn[0]['b'], self.kcsn[-1]['b'] = '┌', '└'  #Avoid clashes
+        _ln_ = f"─ {self.kcsn[i]['n']}" if self.kcsn[i]['n'] and i < (len(self.sm.options) - 1) else ""
+        if self.kcsn[i]['k']:
+            return "{0} {1} {2:>8.4f}{3:>8.4f}{4:>8.4f} {5}".format(self.kcsn[i]['b'],self.kcsn[i]['s'],*self.kcsn[i]['k'],_ln_)
+        return f"{self.kcsn[i]['b']} {self.kcsn[i]['s']} {_ln_}"
+
+    def __update_label(self):
+        opt = list(self.sm.options)
+        vs = self.sm.value # get before it goes away
+        for i in vs:
+            opt[i] = (self.__label_at(i),i)
+
+        self.sm.options = tuple(opt)
+        if vs[-1:]:
+            try:
+                self.sm.value =  (vs[-1] + 1,)
+            except:pass
+
     @output.capture(clear_output=True,wait=True)
     def __build(self):
         for k,b in self.buttons.items():
@@ -1100,18 +1114,18 @@ class KPathApp:
         for k,t in self.texts.items():
             t.layout.width='85%'
         top_row = HBox([self.files_dd,self.buttons['fig_up']]).add_class('borderless')
-        _buttons1 = HBox([self.buttons[b] for b in ['add','delete','theme']]).add_class('borderless')
-        _buttons2 = HBox([self.buttons[b] for b in ['patch','check']]).add_class('borderless')
+        _buttons1 = HBox([self.buttons[b] for b in ['add','delete']]).add_class('borderless')
+        _buttons2 = HBox([self.buttons[b] for b in ['patch','theme']]).add_class('borderless')
         self.tab.children = [self.tab.children[0],
                             HBox([
                                   VBox([self.theme_html,
                                         VBox([top_row,_buttons1,_buttons2],
                                         layout = Layout(min_height='140px')),
-                                        Box([self.views]).add_class('marginless').add_class('borderless'),
+                                        Box([self.sm]).add_class('marginless').add_class('borderless'),
                                         *self.texts.values()],
                                   layout=Layout(min_width='320px')).add_class('borderless'),
                                   Box([self.fig]).add_class('borderless')],
-                            layout=Layout(height='400px')).add_class('borderless'),
+                            layout=Layout(height='400px',width='auto')).add_class('borderless'),
                             self.tab.children[-1]]
 
     def show(self):
@@ -1119,74 +1133,55 @@ class KPathApp:
 
     @output.capture(clear_output=True,wait=True)
     def __delete(self,change):
-        for i,c in enumerate(self.checks.children):
-            if self.patches and c.value:
-                for j,p in enumerate(self.patches):
-                    if i in p:
-                        self.patches[j] = range(p.start,p.stop-1)
-                    if p.start > i:
-                        self.patches[j] = range(p.start-1,p.stop-1)
-        self.patches = [p for p in self.patches if p] #Avoid empty patches.
-        self.patches = self.patches if len(self.patches) > 1 else [] # No single patch
-
-        current = [i for i,c in enumerate(self.checks.children) if c.value]
-        self.kpoints = [k for i,k in enumerate(self.kpoints) if i not in current]
-        self.coords  = [c for i,c in enumerate(self.coords) if i not in current]
-        self.labels  = [l for i,l in enumerate(self.labels) if i not in current]
-        self.nkpts = [n for i,n in enumerate(self.nkpts) if i not in current]
-        self.checks.children = [c for i,c in enumerate(self.checks.children) if i not in current]
-        # Finally Update view
-        self.__update_views()
+        v = self.sm.value
+        for i, kp in enumerate(self.kcsn):
+            self.kcsn[i]['b'] = '├' #Break Path Retrieve first
+        self.kcsn = [k for i,k in enumerate(self.kcsn) if i not in v]
+        self.sm.options = [(self.__label_at(i),i) for i,op in enumerate(self.kcsn)]
 
     @output.capture(clear_output=True,wait=True)
     def __add(self,change):
-        self.kpoints.append([])
-        self.coords.append([])
-        self.labels.append('')
-        self.nkpts.append('')
-        self.checks.children = [*self.checks.children, Checkbox(indent=False)]
-        self.checks.children[-1].value = True #Add and make available
-        for c in self.checks.children[:-1]: # Turn off others
-            c.value = False
-        if self.patches: #Update patches
-            start,stop = self.patches[-1].start, self.patches[-1].stop + 1
-            self.patches[-1] = range(start,stop)
-        # Update view finally
-        self.__update_views()
+        if self.kcsn:
+            self.kcsn.append({'k':[],'c':[],'s':'','n':'', 'b': '└'})
+        else:
+            self.kcsn.append({'k':[],'c':[],'s':'','n':'', 'b': '┌'})
+        for i, kp in enumerate(self.kcsn[1:-1]):
+            self.kcsn[i+1]['b'] = '├'
+
+        self.sm.options = [*self.sm.options,('You just added me',len(self.sm.options))]
+        self.sm.value = (len(self.sm.options) - 1,) # make available
 
     @output.capture(clear_output=True,wait=True)
     def __add_patch(self,change):
-        _splits = [0]
-        for i,c in enumerate(self.checks.children):
-            if c.value:
-                _splits.append(i)
-        if _splits[-1] != len(self.checks.children) - 1:
-            _splits.append((len(self.checks.children) - 1))
-        _patches = np.reshape(_splits,(-1,2))
-        self.patches = [range(p[0],p[1]+1) for p in _patches]
-        self.__update_views()
+        vs = [v for v in self.sm.value if v > 1 and v < len(self.sm.options) - 1]
+        opts = list(self.sm.options)
+        for i,v in enumerate(self.sm.options):
+            # Clean previous action
+            if i > 0 and i < len(opts) - 1: #Avoid end points
+                self.kcsn[i]['b'] = '├'
+                opts[i] = (self.__label_at(i),i)
+            #Patch before selection
+            if i in vs:
+                self.kcsn[i]['b'] = '┌'
+                self.kcsn[i-1]['b'] = '└'
+                opts[i] = (self.__label_at(i),i)
+                opts[i-1] = (self.__label_at(i-1),i-1)
 
-    @output.capture(clear_output=True,wait=True)
-    def __update_views(self):
-        if self.patches:
-            _childs = []
-            for p in self.patches:
-                _childs = [*_childs,*self.checks.children[p[0]:p[-1]+1]]
-                _childs.append(HTML(''.center(25,'-')))
-            self.views.children = _childs[:-1]
-        else:
-            self.views.children = self.checks.children
+        self.sm.options = opts
+        self.__update_selection()
+
 
     @output.capture(clear_output=True,wait=True)
     def get_coords_labels(self):
         "`coords` are calculated for current `bz` even if `kpoints` were from other one. Useful in case of same kind of Zones with just basis changed."
         if self.bz:
-            coords = [sio.to_R3(self.bz.basis,kp).tolist() if kp else [] for kp in self.kpoints]
-        else:
-            coords = self.coords.copy()
-        labels = self.labels.copy()
+            for i, kp in enumerate(self.kcsn):
+                self.kcsn[i]['c'] = sio.to_R3(self.bz.basis,kp['k']).tolist() if kp['k'] else []
+
+        coords = [kp['c'] for kp in self.kcsn]
+        labels = [kp['s'] for kp in self.kcsn]
         j = 0
-        for p in self.patches[:-1]:
+        for p in self.get_patches()[:-1]:
             labels.insert(p.stop+j,'NaN')
             coords.insert(p.stop+j,[np.nan,np.nan,np.nan])
             j += 1
@@ -1214,17 +1209,11 @@ class KPathApp:
                 kp = trace.hovertext[index]
                 kp = [float(k) for k in kp.split('[')[1].split(']')[0].split()]
                 cp = [trace.x[index],trace.y[index],trace.z[index]]
-                for i,c in enumerate(self.checks.children):
-                    if c.value:
-                        self.kpoints[i] = kp
-                        self.coords[i] = cp
-                        n,l = self.nkpts[i],self.labels[i]
-                        c.description = "{0:>9.4f}{1:>9.4f}{2:>9.4f} -> {3}!{4}".format(*kp,n,l)
-                        ind = (i+1) % len(self.kpoints) # Next Index
-                        for i,c in enumerate(self.checks.children):
-                            c.value = True if i == ind else False
-                        break # Must break to avoid loop overflow
+                for i in self.sm.value:
+                    self.kcsn[i]['k'] = kp
+                    self.kcsn[i]['c'] = cp
 
+                self.__update_label()
                 self.__update_selection()
 
         for trace in self.fig.data:
@@ -1256,40 +1245,40 @@ class KPathApp:
 
     @output.capture(clear_output=True,wait=True)
     def __label(self,change):
-        for i,c in enumerate(self.checks.children):
-            if c.value:
-                inbox = self.texts['label'].value.split(',')
-                self.labels[i] = inbox[0]
-                try: self.nkpts[i] = int(inbox[1])
-                except: pass
-                kp,n,l = self.kpoints[i] ,self.nkpts[i],self.labels[i]
-                if kp:
-                    c.description = "{0:>9.4f}{1:>9.4f}{2:>9.4f} -> {3}!{4}".format(*kp,n,l)
-                else:
-                    c.description = "____  ____  ____ -> {0}!{1}".format(n,l)
-                c.value = False
-                ind = (i+1) % len(self.kpoints) # Next Index
-                for i,c in enumerate(self.checks.children):
-                    c.value = True if i == ind else False
-                self.texts['label'].value = '' # Auto delete
-                self.__update_selection()
-                break # Must break to avoid loop overflow
+        for i in self.sm.value:
+            inbox = self.texts['label'].value.split(',')
+            self.kcsn[i]['s'] = 'Γ' if 'am' in inbox[0] else inbox[0] #fix gamma
+            try: self.kcsn[i]['n'] = int(inbox[1])
+            except: pass
+            self.texts['label'].value = '' # Clear it
+        self.__update_label()
+        self.__update_selection()
+
+    def get_patches(self):
+        bs = [kp['b'] for kp in self.kcsn]
+        patches = [*[i for i,b in enumerate(bs) if '┌' in b],len(self.kcsn)]
+        _patches = [range(i,j) for i,j in zip(patches[:-1],patches[1:])]
+        if _patches and len(_patches) <= 1:
+            return []
+        return _patches
+
+    def get_data(self):
+        obj = [{k:v for k,v in kp.items() if k != 'b'} for kp in self.kcsn]
+        patches = self.get_patches()
+        fmt_str = "{0:>16.10f}{1:>16.10f}{2:>16.10f} !{3} {4}"
+        if patches:
+            p_strs = ['\n'.join([fmt_str.format(
+                                *self.kcsn[p]['k'],self.kcsn[p]['s'],self.kcsn[p]['n']
+                                               ) for p in ps]) for ps in patches]
+            return obj, '\n\n'.join(p_strs)
+        else:
+            return obj,'\n'.join([fmt_str.format(*kp['k'],kp['s'],kp['n']) for kp in self.kcsn])
 
     def get_kpath(self,n=5,weight=None,ibzkpt=None,outfile=None):
-        "See Docs of pp.get_kpath for details."
+        "See Docs of pp.str2kpath for details."
         kws = dict(n=n,weight=weight,ibzkpt=ibzkpt,outfile=outfile)
-        if self.patches:
-            kps,ns = self.kpoints, self.nkpts
-            hsk_list = [[[*kps[p],ns[p]] if ns[p]!='' else kps[p] for p in ps] for ps in self.patches]
-            labels = self.labels.copy()
-            for p1,p2 in zip(self.patches[:-1], self.patches[1:]): #Join before last patch
-                labels[p1.stop - 1] = '{}|{}'.format(labels[p1.stop - 1],labels[p2.start])
-                labels[p2.start] = ''
-            labels = [l for l in labels if l!='']
-        else:
-            hsk_list = [[*kp,n] if n!='' else kp for kp,n in zip(self.kpoints,self.nkpts)]
-            labels = self.labels
-        return pp.get_kpath(hsk_list=hsk_list,labels=labels,**kws)
+        _, k_str = self.get_data()
+        return sio.str2kpath(k_str,**kws)
 
     def splot(self,**kwargs):
         "Same as `pp.splot_bz` except it also plots path on BZ. `kwargs` are passed to `pp.splot_bz`"

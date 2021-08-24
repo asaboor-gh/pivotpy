@@ -243,13 +243,18 @@ def get_poscar(formula ,api_key=None,mp_id=None,max_sites = None,min_sites=None)
 # Cell
 def get_kpath(hsk_list=[],labels=[], n = 5,weight= None ,ibzkpt = None,outfile=None):
     """
-    - Generate list of kpoints along high symmetry path. Options are write to file or return KPOINTS list. It generates uniformly spaced point with input `n` as just a scale factor of number of points per unit length. You can also specify custom number of kpoints in an interval by putting number of kpoints as 4th entry in left kpoint.
+    Generate list of kpoints along high symmetry path. Options are write to file or return KPOINTS list.
+    It generates uniformly spaced point with input `n` as just a scale factor of number of points per unit length.
+    You can also specify custom number of kpoints in an interval by putting number of kpoints as 4th entry in left kpoint.
     - **Parameters**
-        - hsk_list : N x 3 list of N high symmetry points, if broken path then [[N x 3],[M x 3],...]. Optionally you can put a 4 values point where 4th entry will decide number of kpoints in current interval. Make sure that points in a connected path patch are at least two i.e. `[[x1,y1,z1],[x2,y2,z2]]` or `[[x1,y1,z1,N],[x2,y2,z2]]`.
-        - n        ; int, number per unit length, this makes uniform steps based on distance between points.
+        - hsk_list : N x 3 list of N high symmetry points, if broken path then [[N x 3],[M x 3],...].
+                    Optionally you can put a 4 values point where 4th entry will decide number of kpoints in current interval.
+                    Make sure that points in a connected path patch are at least two i.e. `[[x1,y1,z1],[x2,y2,z2]]` or `[[x1,y1,z1,N],[x2,y2,z2]]`.
+        - n        : int, number per unit length, this makes uniform steps based on distance between points.
         - weight : Float, if None, auto generates weights.
         - ibzkpt : Path to ibzkpt file, required for HSE calculations.
-        - labels : Hight symmetry points labels. Good for keeping record of lables and points indices for later use.                - Note: If you do not want to label a point, label it as 'skip' at its index and it will be removed.
+        - labels : Hight symmetry points labels. Good for keeping record of lables and points indices for later use.
+                    > Note: If you do not want to label a point, label it as 'skip' at its index and it will be removed.
         - outfile: Path/to/file to write kpoints.
 
     If `outfile = None`, KPONITS file content is printed.
@@ -257,27 +262,42 @@ def get_kpath(hsk_list=[],labels=[], n = 5,weight= None ,ibzkpt = None,outfile=N
     if hsk_list:
         try: hsk_list[0][0][0]
         except: hsk_list = [hsk_list] # Make overall 3 dimensions to include breaks in path
+        if not labels:
+            ['' for ks in hsk_list for k in ks] #make flatten empty labels
+    else: return print('Give at least non empty first argument.')
+
     xs,ys,zs, inds,joinat = [],[],[],[0],[] # 0 in inds list is important
+    _labels = []
+    _len_prev = 0
     for j,a in enumerate(hsk_list):
         for i in range(len(a)-1):
             _vec = [_a-_b for _a,_b in zip(a[i][:3],a[i+1] )] # restruct point if 4 entries
-            _m = np.rint(np.linalg.norm(_vec)*n).astype(int)
-
+            _m = np.rint(np.linalg.norm(_vec)*n).astype(int) # Calculate
             try: _m = a[i][3] # number of points given explicitly.
             except: pass
 
-            inds.append(inds[-1]+_m)
-            if j !=0:
-                joinat.append(inds[-2]) # Add previous in joinpath
+            inds.append(inds[-1]+_m) #Append first then do next
+            _labels.append(labels[i+_len_prev])
+            if j !=0 and i == 0:
+                joinat.append(inds[-2]) # Add previous in joinpath and label
+                if 'skip' not in _labels[-2]:
+                    _labels[-1] = _labels[-2] + '|' + _labels[-1]
+                    _labels = [*_labels[:-2],_labels[-1]] # Drop the label we added before
 
             xs.append(list(np.linspace(a[i][0],a[i+1][0],_m)))
             ys.append(list(np.linspace(a[i][1],a[i+1][1],_m)))
             zs.append(list(np.linspace(a[i][2],a[i+1][2],_m)))
+
+        _labels.append(labels[len(a) -1 +_len_prev]) # Add last in current interval
+        _len_prev += len(a)
+
     xs = [y for z in xs for y in z] #flatten values.
     ys = [y for z in ys for y in z]
     zs = [y for z in zs for y in z]
-    if weight == None:
+
+    if weight == None and xs:
         weight = 1/len(xs)
+
     out_str = ["{0:>16.10f}{1:>16.10f}{2:>16.10f}{3:>12.6f}".format(x,y,z,weight) for x,y,z in zip(xs,ys,zs)]
     out_str = '\n'.join(out_str)
     N = np.size(xs)
@@ -292,10 +312,10 @@ def get_kpath(hsk_list=[],labels=[], n = 5,weight= None ,ibzkpt = None,outfile=N
             out_str = "{}\n{}".format(ibz_str,out_str) # Update out_str
     if inds:
         inds[-1] = -1 # last index to -1
-    # Remove indices and labels where 'skip' appears
-    inds = [i for i,l in zip(inds,labels) if 'skip' not in l]
-    labels = [l for l in labels if 'skip' not in l]
-    top_str = "Automatically generated using PivotPy with HSK-INDS = {}, LABELS = {}, SEG-INDS = {}\n\t{}\nReciprocal Lattice".format(inds,labels,joinat,N)
+
+    inds = [i for k,i in enumerate(inds) if 'skip' != _labels[k]]
+    _labels = [l.replace('|skip','') for l in _labels if l != 'skip']
+    top_str = "Automatically generated using PivotPy with HSK-INDS = {}, LABELS = {}, SEG-INDS = {}\n\t{}\nReciprocal Lattice".format(inds,_labels,joinat,N)
     out_str = "{}\n{}".format(top_str,out_str)
     if outfile != None:
         with open(outfile,'w') as f:
@@ -353,8 +373,8 @@ def str2kpath(kpath_str,n = 5, weight = None, ibzkpt = None, outfile = None):
 
     hsk_list, labels = [],[]
     for j,line in enumerate(lines[skipN:]):
-        if line:
-            _labs = re.findall('\$\\\\[a-zA-Z]+\$|[a-zA-Z]+', line)
+        if line.strip():
+            _labs = re.findall('\$\\\\[a-zA-Z]+\$|[a-zA-Z]+|[α-ωΑ-Ω]+|\|', line)
             labels.append(_labs[0] if _labs else '')
             _ks = re.findall('[-+\d]*[.][\d+]+|[-+]*\d+/\d+|[-+]*\d+',line)
             _ks = [[float(k) for k in w.split('/')] if '/' in w else float(w) for w in _ks]
@@ -372,7 +392,8 @@ def str2kpath(kpath_str,n = 5, weight = None, ibzkpt = None, outfile = None):
             hsk_list.append(_ks)
 
     if where_blanks:
-        where_blanks = np.unique([0,*where_blanks,len(hsk_list)]).tolist()
+        filtered = [w-i for i,w in enumerate(where_blanks)]
+        where_blanks = np.unique([0,*filtered,len(hsk_list)]).tolist()
 
     new_list = [] if where_blanks else hsk_list #Fix up both
     for a,b in zip(where_blanks[:-1], where_blanks[1:]):
