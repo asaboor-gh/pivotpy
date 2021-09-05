@@ -730,73 +730,68 @@ def load_export(path= './vasprun.xml',
             - pro_dos   : Data containing dos projections.
             - poscar    : Data containing basis,positions, rec_basis and volume.
     """
-    this_loc = os.getcwd()
-    split_path= os.path.split(os.path.abspath(path)) # abspath is important to split.
-    file_name = split_path[1]
-    that_loc = split_path[0]
-    # Go there.
-    os.chdir(that_loc)
-    # Work Here
-    i = 0
-    required_files = ['Bands.txt','tDOS.txt','pDOS.txt','Projection.txt','SysInfo.py']
-    for _file in required_files:
-        if(os.path.isfile(_file)):
-           i=i+1
-    if(i<5):
-        if (skipk != None):
-            gu.ps2std(path_to_ps=path_to_ps,ps_command='Import-Module Vasp2Visual; Export-VR -InputFile {} -MaxFilled {} -MaxEmpty {} -SkipK {}'.format(path,max_filled,max_empty,skipk))
-        else:
-            gu.ps2std(path_to_ps=path_to_ps,ps_command='Import-Module Vasp2Visual; Export-VR -InputFile {} -MaxFilled {} -MaxEmpty {}'.format(path,max_filled,max_empty))
+    that_loc, file_name = os.path.split(os.path.abspath(path)) # abspath is important to split.
+    with gu.set_dir(that_loc):
+        # Goes there and work
+        i = 0
+        required_files = ['Bands.txt','tDOS.txt','pDOS.txt','Projection.txt','SysInfo.py']
+        for _file in required_files:
+            if os.path.isfile(_file):
+               i = i + 1
+        if i < 5:
+            if skipk != None:
+                gu.ps2std(path_to_ps=path_to_ps,ps_command='Import-Module Vasp2Visual; Export-VR -InputFile {} -MaxFilled {} -MaxEmpty {} -SkipK {}'.format(path,max_filled,max_empty,skipk))
+            else:
+                gu.ps2std(path_to_ps=path_to_ps,ps_command='Import-Module Vasp2Visual; Export-VR -InputFile {} -MaxFilled {} -MaxEmpty {}'.format(path,max_filled,max_empty))
 
-    # Enable loading SysInfo.py file as source.
-    _vars = SourceFileLoader("SysInfo", "./SysInfo.py").load_module()
+        # Enable loading SysInfo.py file as source.
+        _vars = SourceFileLoader("SysInfo", "./SysInfo.py").load_module()
 
-    SYSTEM            = _vars.SYSTEM
-    NKPTS             = _vars.NKPTS
-    NBANDS            = _vars.NBANDS
-    NFILLED           = _vars.NFILLED
-    TypeION           = _vars.TypeION
-    NION              = _vars.NION
-    NELECT            = _vars.NELECT
-    nField_Projection = _vars.nField_Projection
-    E_Fermi           = _vars.E_Fermi
-    ISPIN             = _vars.ISPIN
-    ElemIndex         = _vars.ElemIndex
-    ElemName          = _vars.ElemName
-    poscar            = {'SYSTEM': SYSTEM,
-                        'volume':_vars.volume,
-                        'basis' : np.array(_vars.basis),
-                        'rec_basis': np.array(_vars.rec_basis),
-                        'positions': np.array(_vars.positions)
-                        }
-    fields            = _vars.fields
-    incar             = _vars.INCAR
+        SYSTEM            = _vars.SYSTEM
+        NKPTS             = _vars.NKPTS
+        NBANDS            = _vars.NBANDS
+        NFILLED           = _vars.NFILLED
+        TypeION           = _vars.TypeION
+        NION              = _vars.NION
+        NELECT            = _vars.NELECT
+        nField_Projection = _vars.nField_Projection
+        E_Fermi           = _vars.E_Fermi
+        ISPIN             = _vars.ISPIN
+        ElemIndex         = _vars.ElemIndex
+        ElemName          = _vars.ElemName
+        poscar            = {'SYSTEM': SYSTEM,
+                            'volume':_vars.volume,
+                            'basis' : np.array(_vars.basis),
+                            'rec_basis': np.array(_vars.rec_basis),
+                            'positions': np.array(_vars.positions)
+                            }
+        fields            = _vars.fields
+        incar             = _vars.INCAR
 
-    # Elements Labels
-    elem_labels = []
-    for i, name in enumerate(ElemName):
-        for ind in range(ElemIndex[i],ElemIndex[i+1]):
-            elem_labels.append(f"{name} {str(ind - ElemIndex[i] + 1)}")
-    poscar.update({'labels': elem_labels})
-    # Unique Elements Ranges
-    unique_d = {}
-    for i,e in enumerate(ElemName):
-        unique_d.update({e:range(ElemIndex[i],ElemIndex[i+1])})
-    poscar.update({'unique': unique_d})
+        # Elements Labels
+        elem_labels = []
+        for i, name in enumerate(ElemName):
+            for ind in range(ElemIndex[i],ElemIndex[i+1]):
+                elem_labels.append(f"{name} {str(ind - ElemIndex[i] + 1)}")
+        poscar.update({'labels': elem_labels})
+        # Unique Elements Ranges
+        unique_d = {}
+        for i,e in enumerate(ElemName):
+            unique_d.update({e:range(ElemIndex[i],ElemIndex[i+1])})
+        poscar.update({'unique': unique_d})
 
-    # Load Data
-    bands= np.loadtxt('Bands.txt').reshape((-1,NBANDS+4)) #Must be read in 2D even if one row only.
-    start = int(open('Bands.txt').readline().split()[4][1:])
-    pro_bands= np.loadtxt('Projection.txt').reshape((-1,NBANDS*nField_Projection))
-    pro_dos = np.loadtxt('pDOS.txt')
-    dos= np.loadtxt('tDOS.txt')
+        # Load Data
+        bands= np.loadtxt('Bands.txt').reshape((-1,NBANDS+4)) #Must be read in 2D even if one row only.
+        start = int(open('Bands.txt').readline().split()[4][1:])
+        pro_bands= np.loadtxt('Projection.txt').reshape((-1,NBANDS*nField_Projection))
+        pro_dos = np.loadtxt('pDOS.txt')
+        dos= np.loadtxt('tDOS.txt')
 
-    # Keep or delete only if python generates files (i < 5 case.)
-    if(keep_files==False and i==5):
-        for file in required_files:
-            os.remove(file)
-    # Return back
-    os.chdir(this_loc)
+        # Keep or delete only if python generates files (i < 5 case.)
+        if(keep_files==False and i==5):
+            for file in required_files:
+                os.remove(file)
+        # Returns back
 
     # Work now!
     sys_info = {'SYSTEM': SYSTEM,'NION': NION,'NELECT':NELECT,'TypeION': TypeION,'ElemName': ElemName,
@@ -868,16 +863,14 @@ def dump_dict(dict_data = None, dump_to = 'pickle',outfile = None,indent=1):
         if outfile == None:
             return pickle.dumps(dict_obj)
         outfile = outfile.split('.')[0] + '.pickle'
-        f = open(outfile,'wb')
-        pickle.dump(dict_obj,f)
-        f.close()
+        with open(outfile,'wb') as f:
+            pickle.dump(dict_obj,f)
     if dump_to == 'json':
         if outfile == None:
             return json.dumps(dict_obj,cls = gu.EncodeFromNumpy,indent=indent)
         outfile = outfile.split('.')[0] + '.json'
-        f = open(outfile,'w')
-        json.dump(dict_obj,f,cls = gu.EncodeFromNumpy,indent=indent)
-        f.close()
+        with open(outfile,'w') as f:
+            json.dump(dict_obj,f,cls = gu.EncodeFromNumpy,indent=indent)
     return None
 
 # Cell
@@ -895,11 +888,11 @@ def load_from_dump(file_or_str,keep_as_dict=False):
                 if '.pickle' in file_or_str:
                     with open(file_or_str,'rb') as f:
                         out = pickle.load(f)
-                    f.close()
+
                 elif '.json' in file_or_str:
                     with open(file_or_str,'r') as f:
                         out = json.load(f,cls = gu.DecodeToNumpy)
-                    f.close()
+
             else: out = json.loads(file_or_str,cls = gu.DecodeToNumpy)
             # json.loads required in else and except both as long str > 260 causes issue in start of try block
         except: out = json.loads(file_or_str,cls = gu.DecodeToNumpy)
@@ -943,57 +936,58 @@ def islice2array(path_or_islice,dtype=float,delimiter='\s+',
         print("`nlines = None` with `start = array/list` is useless combination.")
         return np.array([]) # return empty array.
 
-    if isinstance(path_or_islice,str) and os.path.isfile(path_or_islice):
-        f = open(path_or_islice,'r')
-        _islice = islice(f,0,None) # Read full, Will fix later.
-    else:
-        _islice = path_or_islice
+    def _fixing(_islice,include=include, exclude=exclude,fix_format=fix_format,nlines=nlines,start=start):
+        if include:
+            _islice = (l for l in _islice if re.search(include,l))
 
-    if include:
-        _islice = (l for l in _islice if re.search(include,l))
+        if exclude:
+            _islice = (l for l in _islice if not re.search(exclude,l))
 
-    if exclude:
-        _islice = (l for l in _islice if not re.search(exclude,l))
+        # Make slices here after comment excluding.
+        if isinstance(nlines,int) and isinstance(start,(list,np.ndarray)):
+            #As islice moves the pointer as it reads, start[1:]-nlines-1
+            # This confirms spacing between two indices in start >= nlines
+            start = [start[0],*[s2-s1-nlines for s1,s2 in zip(start,start[1:])]]
+            _islice = chain(*(islice(_islice,s,s+nlines) for s in start))
+        elif isinstance(nlines,int) and isinstance(start,int):
+            _islice = islice(_islice,start,start+nlines)
+        elif nlines is None and isinstance(start,int):
+            _islice = islice(_islice,start,None)
 
-    # Make slices here after comment excluding.
-    if isinstance(nlines,int) and isinstance(start,(list,np.ndarray)):
-        #As islice moves the pointer as it reads, start[1:]-nlines-1
-        # This confirms spacing between two indices in start >= nlines
-        start = [start[0],*[s2-s1-nlines for s1,s2 in zip(start,start[1:])]]
-        _islice = chain(*(islice(_islice,s,s+nlines) for s in start))
-    elif isinstance(nlines,int) and isinstance(start,int):
-        _islice = islice(_islice,start,start+nlines)
-    elif nlines is None and isinstance(start,int):
-        _islice = islice(_islice,start,None)
+        # Negative connected digits to avoid, especially in PROCAR
+        if fix_format:
+            _islice = (re.sub(r"(\d)-(\d)",r"\1 -\2",l) for l in _islice)
+        return _islice
 
-    # Negative connected digits to avoid, especially in PROCAR
-    if fix_format:
-        _islice = (re.sub(r"(\d)-(\d)",r"\1 -\2",l) for l in _islice)
-    if raw:
-        _lines = ''.join(_islice) # join is faster than making list
-        f.close()
-        return _lines
-
-    def _gen(_islice):
+    def _gen(_islice,cols=cols):
         for line in _islice:
             line = line.strip().replace(delimiter,'  ').split()
             if line and cols is not None: # if is must here.
                 line = [line[i] for i in cols]
             for chars in line:
                 yield dtype(chars)
-        try: # is must as if no data, it will raise error.
-            islice2array.ncols = len(line)
-        except: pass
-    data = np.fromiter(_gen(_islice),dtype=dtype,count=count)
-    f.close() # Do not close file before using islice
+
+    #Process Now
+    if isinstance(path_or_islice,str) and os.path.isfile(path_or_islice):
+        with open(path_or_islice,'r') as f:
+            _islice = islice(f,0,None) # Read full, Will fix later.
+            _islice = _fixing(_islice)
+            if raw:
+                return ''.join(_islice)
+            # Must to consume islice when file is open
+            data = np.fromiter(_gen(_islice),dtype=dtype,count=count)
+    else:
+        _islice = _fixing(path_or_islice)
+        if raw:
+            return ''.join(_islice)
+        data = np.fromiter(_gen(_islice),dtype=dtype,count=count)
+
     if new_shape:
-        try:
-            data = data.reshape(new_shape)
-        except:
-            try:
-                if islice2array.ncols > 1: #Otherwise single array.
-                    data = data.reshape((-1,islice2array.ncols))
-            except: pass
+        try: data = data.reshape(new_shape)
+        except: pass
+    elif cols: #Otherwise single array.
+        try: data = data.reshape((-1,len(cols)))
+        except: pass
     return data
 
 # Cell
@@ -1065,18 +1059,18 @@ def split_vasprun(path=None):
     base_dir = os.path.split(os.path.abspath(path))[0]
     out_file = os.path.join(base_dir,'_vasprun.xml')
     out_sets = [os.path.join(base_dir,'_set{}.txt'.format(i)) for i in range(1,5)]
-    outf = open(out_file,'w')
     # process
     with open(path,'r') as f:
         lines = islice(f,None)
         indices = [i for i,l in enumerate(lines) if re.search('projected|/eigenvalues',l)]
         f.seek(0)
         print("Writing {!r} ...".format(out_file),end=' ')
-        outf.write(''.join(islice(f,0,indices[1])))
-        f.seek(0)
-        outf.write(''.join(islice(f,indices[-1]+1,None)))
-        outf.close()
-        print('Done')
+        with open(out_file,'w') as outf:
+            outf.write(''.join(islice(f,0,indices[1])))
+            f.seek(0)
+            outf.write(''.join(islice(f,indices[-1]+1,None)))
+            print('Done')
+
         f.seek(0)
         middle = islice(f,indices[-2]+1,indices[-1]) #projected words excluded
         spin_inds = [i for i,l in enumerate(middle) if re.search('spin',l)][1:] #first useless.
@@ -1098,10 +1092,8 @@ def split_vasprun(path=None):
             print("Writing {!r} ...".format(out_sets[i]),end=' ')
             start = (indices[-2]+1+spin_inds[0] if i==0 else 0) # pointer is there next time.
             stop_ = start + set_length # Should move up to set length only.
-            setf = open(out_sets[i],'w')
-            setf.write("  # Set: {} Shape: (NKPTS[NBANDS[NIONS]],NORBS) = {},{},{},{}\n".format(i+1,NKPTS,NBANDS,NIONS,NORBS))
-            middle = islice(f,start,stop_)
-            setf.write(''.join(l.lstrip().replace('/','').replace('<r>','') for l in middle if '</r>' in l))
-            setf.close()
-            print('Done')
-        outf.close()
+            with open(out_sets[i],'w') as setf:
+                setf.write("  # Set: {} Shape: (NKPTS[NBANDS[NIONS]],NORBS) = {},{},{},{}\n".format(i+1,NKPTS,NBANDS,NIONS,NORBS))
+                middle = islice(f,start,stop_)
+                setf.write(''.join(l.lstrip().replace('/','').replace('<r>','') for l in middle if '</r>' in l))
+                print('Done')

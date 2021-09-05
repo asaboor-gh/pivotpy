@@ -63,13 +63,16 @@ See GIF here:
 # New: Live Slides in Jupyter Notebook
 Navigate to  [ipyslides](https://github.com/massgh/ipyslides) or do `pip install ipyslides` to create beautiful data driven presentation in Jupyter Notebook.
 
-```python
-import os 
+```
+import os, pivotpy as pp
 os.chdir('E:/Research/graphene_example/ISPIN_1/bands')
 xml_data=pp.read_asxml()
 vr=pp.export_vasprun(elim=[-5,5])
 vr
 ```
+
+    Loading from PowerShell Exported Data...
+    
 
 
 
@@ -81,9 +84,7 @@ vr
             NELECT = 8
             TypeION = 1
             ElemName = ['C']
-            ElemIndex = [0, 2]
-            E_Fermi = -3.35005822
-            ISPIN = 1
+            E_Fermi = -3.3501
             fields = ['s', 'py', 'pz', 'px', 'dxy', 'dyz', 'dz2', 'dxz', 'x2-y2']
             incar = Data(
                 SYSTEM = C2
@@ -94,9 +95,10 @@ vr
                 ISMEAR = 0
                 SIGMA = 0.10000000
                 LORBIT = 11
-                KPOINT_BSE = -1     0     0     0
                 GGA = PS
             )
+            ElemIndex = [0, 2]
+            ISPIN = 1
         )
         dim_info = Data(
             kpoints = (NKPTS,3)
@@ -109,25 +111,24 @@ vr
         kpoints = <ndarray:shape=(90, 3)>
         kpath = <list:len=90>
         bands = Data(
-            E_Fermi = -3.35005822
+            E_Fermi = -3.3501
             ISPIN = 1
-            NBANDS = 10
-            evals = <ndarray:shape=(90, 10)>
-            indices = range(4, 14)
+            NBANDS = 21
+            evals = <ndarray:shape=(90, 21)>
+            indices = range(1, 22)
         )
         tdos = Data(
-            E_Fermi = -3.35005822
+            E_Fermi = -3.3501
             ISPIN = 1
-            grid_range = range(124, 203)
-            tdos = <ndarray:shape=(79, 3)>
+            tdos = <ndarray:shape=(301, 3)>
         )
         pro_bands = Data(
             labels = ['s', 'py', 'pz', 'px', 'dxy', 'dyz', 'dz2', 'dxz', 'x2-y2']
-            pros = <ndarray:shape=(2, 90, 10, 9)>
+            pros = <ndarray:shape=(2, 90, 21, 9)>
         )
         pro_dos = Data(
-            labels = ['energy', 's', 'py', 'pz', 'px', 'dxy', 'dyz', 'dz2', 'dxz', 'x2-y2']
-            pros = <ndarray:shape=(2, 79, 10)>
+            labels = ['s', 'py', 'pz', 'px', 'dxy', 'dyz', 'dz2', 'dxz', 'x2-y2']
+            pros = <ndarray:shape=(2, 301, 10)>
         )
         poscar = Data(
             SYSTEM = C2
@@ -148,7 +149,7 @@ vr
 - Add anything from legend,colorbar, colorwheel. In below figure, all three are shown.
 - Use aliases such as sbands, sdos,srgb,irgb,scolor,idos for plotting. 
 
-```python
+```
 #collapse_input
 import pivotpy as pp, numpy as np 
 import matplotlib.pyplot as plt 
@@ -182,7 +183,7 @@ pp._show()
 
 ## Interactive plots using plotly
 
-```python
+```
 args_dict['labels'] = ['s','p_z','p_x+p_y']
 fig1 = pp.iplot_rgb_lines(vr1,**args_dict)
 #pp.iplot2html(fig1) #Do inside Google Colab, fig1 inside Jupyter
@@ -204,7 +205,7 @@ Markdown("[See Interactive Plot](https://massgh.github.io/InteractiveHTMLs/iGrap
 #### Look the output of `pivotpy.sio.splot_bz`.
 ![BZ](docs\images\3bz.jpg)
 
-```python
+```
 import pivotpy as pp 
 pp.splot_bz([[1,0,0],[0,1,0],[0,0,1]],color=(1,1,1,0.2),light_from=(0.5,0,2),colormap='RGB').set_axis_off()
 #pp.iplot2html(fig2) #Do inside Google Colab, fig1 inside Jupyter
@@ -226,7 +227,7 @@ Markdown("[See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ
 ## Plotting Two Calculations Side by Side 
 - Here we will use `shift_kpath` to demonstrate plot of two calculations on same axes side by side
 
-```python
+```
 #nbdev_collapse_input
 import matplotlib.pyplot as plt
 import pivotpy as pp 
@@ -244,14 +245,17 @@ pp.splot_bands(path_evr=vr2,ax=axs,txt='Graphene(Left: ISPIN=1, Right: ISPIN=2)'
 pp.modify_axes(ax=axs,xlim=[0,last_k],ylim=[-10,10],**ti_cks)
 ```
 
+    Loading from PowerShell Exported Data...
+    
 
-![svg](docs/images/output_15_0.svg)
+
+![svg](docs/images/output_15_1.svg)
 
 
 ## Interpolation 
 Amost every bandstructure and DOS plot function has an argument `interp_nk` which is a dictionary with keys `n` (Number of additional points between adjacent points) and `k` (order of interpolation 0-3). `n > k` must hold.
 
-```python
+```
 #collapse_input
 import pivotpy as pp
 plt.style.use('ggplot')
@@ -275,17 +279,17 @@ check out the class `pivotpy.LOCPOT_CHG` to visulize local potential/charge and 
 ## Running powershell commands from python.
 Some tasks are very tideious in python while just a click way in powershell. See below, and try to list processes in python yourself to see the difference!
 
-```python
+```
 pp.ps2std(ps_command='(Get-Process)[0..4]')
 ```
 
     NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
     ------    -----      -----     ------      --  -- -----------
-    22     7.19       7.85       0.59    5376   1 AcrobatNotificationClient
-    16     4.36       6.41       1.83   17256   1 AdobeCollabSync
-    20     6.75       7.82     216.33   17292   1 AdobeCollabSync
-    15     6.35       7.64       0.00    5416   0 AppHelperCap
-    30    21.76      48.86       7.55    2524   1 ApplicationFrameHost
+    23     7.19       3.71       0.47   18012   1 AcrobatNotificationClient
+    15     4.05      11.25       0.34   15776   1 AdobeCollabSync
+    20     6.30      13.31       7.86   15820   1 AdobeCollabSync
+    15     5.12      12.90       0.00    5424   0 AppHelperCap
+    23    41.73      48.20       0.52    3800   1 ApplicationFrameHost
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -316,7 +320,7 @@ c.ScriptMagics.script_paths = {
 }
 ```
 
-```python
+```
 %%ps 
 Get-ChildItem 'E:\Research\graphene_example\'
 ```
@@ -326,17 +330,17 @@ Get-ChildItem 'E:\Research\graphene_example\'
         Directory: E:\Research\graphene_example
     
     
-    Mode                 LastWriteTime         Length Name                                                                 
-    ----                 -------------         ------ ----                                                                 
-    da----        10/31/2020   1:30 PM                ISPIN_1                                                              
-    da----          5/9/2020   1:05 PM                ISPIN_2                                                              
-    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                               
-    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                          
+    Mode                 LastWriteTime         Length Name                                                                        
+    ----                 -------------         ------ ----                                                                        
+    da----        10/31/2020   1:30 PM                ISPIN_1                                                                     
+    da----          5/9/2020   1:05 PM                ISPIN_2                                                                     
+    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                                      
+    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                                 
     
     
 
 
-```python
+```
 x = %ps (Get-ChildItem 'E:\Research\graphene_example\').Name
 x
 ```

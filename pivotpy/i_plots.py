@@ -201,7 +201,7 @@ def iplot2html(fig,filename=None,out_string=False,modebar=True):
         # write the JSON to the HTML template
         with open(_filename, 'w') as f:
             f.write(template.format(div_id,fig_json,div_id))
-        f.close()
+
     else:
         if modebar==True: #Only for docs issue
             config = "{displayModeBar: true,scrollZoom: true}"

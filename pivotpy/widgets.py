@@ -496,11 +496,11 @@ def generate_summary(paths_list=None):
         try: _p_ = os.path.split(path)[0].split(common_prefix)[1]
         except: _p_ = '' #In current directory
         try:
-            f = open(path,'r')
-            l_d = json.load(f)
-            l_d.update({'rel_path':_p_})
-            result_dicts.append(l_d)
-            f.close()
+            with open(path,'r') as f:
+                l_d = json.load(f)
+                l_d.update({'rel_path':_p_})
+                result_dicts.append(l_d)
+
         except: pass
     out_dict = {} # placeholder
     if result_dicts:

@@ -6248,7 +6248,7 @@ z
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_crystal" class="doc_header"><code>get_crystal</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L150" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_crystal</code>(<strong><code>formula</code></strong>, <strong><code>api_key</code></strong>=<em><code>None</code></em>, <strong><code>mp_id</code></strong>=<em><code>None</code></em>, <strong><code>max_sites</code></strong>=<em><code>None</code></em>, <strong><code>min_sites</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_crystal" class="doc_header"><code>get_crystal</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L149" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_crystal</code>(<strong><code>formula</code></strong>, <strong><code>api_key</code></strong>=<em><code>None</code></em>, <strong><code>mp_id</code></strong>=<em><code>None</code></em>, <strong><code>max_sites</code></strong>=<em><code>None</code></em>, <strong><code>min_sites</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns crystal information dictionary including cif data format.</li>
@@ -6290,7 +6290,7 @@ z
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_poscar" class="doc_header"><code>get_poscar</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L173" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_poscar</code>(<strong><code>formula</code></strong>, <strong><code>api_key</code></strong>=<em><code>None</code></em>, <strong><code>mp_id</code></strong>=<em><code>None</code></em>, <strong><code>max_sites</code></strong>=<em><code>None</code></em>, <strong><code>min_sites</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_poscar" class="doc_header"><code>get_poscar</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L172" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_poscar</code>(<strong><code>formula</code></strong>, <strong><code>api_key</code></strong>=<em><code>None</code></em>, <strong><code>mp_id</code></strong>=<em><code>None</code></em>, <strong><code>max_sites</code></strong>=<em><code>None</code></em>, <strong><code>min_sites</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns poscar information dictionary including cif data format.</li>
@@ -6383,7 +6383,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_kpath" class="doc_header"><code>get_kpath</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L244" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_kpath</code>(<strong><code>hsk_list</code></strong>=<em><code>[]</code></em>, <strong><code>labels</code></strong>=<em><code>[]</code></em>, <strong><code>n</code></strong>=<em><code>5</code></em>, <strong><code>weight</code></strong>=<em><code>None</code></em>, <strong><code>ibzkpt</code></strong>=<em><code>None</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_kpath" class="doc_header"><code>get_kpath</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L243" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_kpath</code>(<strong><code>hsk_list</code></strong>=<em><code>[]</code></em>, <strong><code>labels</code></strong>=<em><code>[]</code></em>, <strong><code>n</code></strong>=<em><code>5</code></em>, <strong><code>weight</code></strong>=<em><code>None</code></em>, <strong><code>ibzkpt</code></strong>=<em><code>None</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Generate list of kpoints along high symmetry path. Options are write to file or return KPOINTS list.
 It generates uniformly spaced point with input <code>n</code> as just a scale factor of number of points per unit length.
@@ -6427,7 +6427,7 @@ You can also specify custom number of kpoints in an interval by putting number o
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="read_ticks" class="doc_header"><code>read_ticks</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L326" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>read_ticks</code>(<strong><code>kpoints_file_path</code></strong>)</p>
+<h4 id="read_ticks" class="doc_header"><code>read_ticks</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L325" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>read_ticks</code>(<strong><code>kpoints_file_path</code></strong>)</p>
 </blockquote>
 <p>Reads ticks values and labels in header of kpoint file. Returns dictionary of <code>ktick_inds</code>,<code>ktick_vals</code>,<code>kseg_inds</code> that can be unpacked to plotting functions. If not exist in header, returns empty values(still valid).</p>
 
@@ -6563,7 +6563,7 @@ Reciprocal Lattice
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="str2kpath" class="doc_header"><code>str2kpath</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L343" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>str2kpath</code>(<strong><code>kpath_str</code></strong>, <strong><code>n</code></strong>=<em><code>5</code></em>, <strong><code>weight</code></strong>=<em><code>None</code></em>, <strong><code>ibzkpt</code></strong>=<em><code>None</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="str2kpath" class="doc_header"><code>str2kpath</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L342" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>str2kpath</code>(<strong><code>kpath_str</code></strong>, <strong><code>n</code></strong>=<em><code>5</code></em>, <strong><code>weight</code></strong>=<em><code>None</code></em>, <strong><code>ibzkpt</code></strong>=<em><code>None</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Get Kpath from a string of kpoints (Line-Mode like). Useful in Terminal.</p>
 <ul>
@@ -6660,7 +6660,7 @@ Reciprocal Lattice
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="export_poscar" class="doc_header"><code>export_poscar</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L407" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_poscar</code>(<strong><code>path</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="export_poscar" class="doc_header"><code>export_poscar</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L406" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_poscar</code>(<strong><code>path</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Export POSCAR file to python objects.</p>
 <ul>
@@ -6755,7 +6755,7 @@ Reciprocal Lattice
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_kmesh" class="doc_header"><code>get_kmesh</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L459" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_kmesh</code>(<strong><code>n_xyz</code></strong>=<em><code>[5, 5, 5]</code></em>, <strong><code>weight</code></strong>=<em><code>None</code></em>, <strong><code>ibzkpt</code></strong>=<em><code>None</code></em>, <strong><code>path_pos</code></strong>=<em><code>None</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_kmesh" class="doc_header"><code>get_kmesh</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L458" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_kmesh</code>(<strong><code>n_xyz</code></strong>=<em><code>[5, 5, 5]</code></em>, <strong><code>weight</code></strong>=<em><code>None</code></em>, <strong><code>ibzkpt</code></strong>=<em><code>None</code></em>, <strong><code>path_pos</code></strong>=<em><code>None</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Generates uniform mesh of kpoints. Options are write to file, or return KPOINTS list.</li>
@@ -6839,7 +6839,7 @@ Reciprocal Lattice
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="order" class="doc_header"><code>order</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L545" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>order</code>(<strong><code>points</code></strong>, <strong><code>loop</code></strong>=<em><code>True</code></em>)</p>
+<h4 id="order" class="doc_header"><code>order</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L544" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>order</code>(<strong><code>points</code></strong>, <strong><code>loop</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns indices of counterclockwise ordered vertices of a plane in 3D.</li>
@@ -6938,7 +6938,7 @@ Angle with x-axis: 1.5707963267948966
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_bz" class="doc_header"><code>get_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L621" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_bz</code>(<strong><code>path_pos</code></strong>=<em><code>None</code></em>, <strong><code>loop</code></strong>=<em><code>True</code></em>, <strong><code>digits</code></strong>=<em><code>8</code></em>, <strong><code>primitive</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="get_bz" class="doc_header"><code>get_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L620" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_bz</code>(<strong><code>path_pos</code></strong>=<em><code>None</code></em>, <strong><code>loop</code></strong>=<em><code>True</code></em>, <strong><code>digits</code></strong>=<em><code>8</code></em>, <strong><code>primitive</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <ul>
 <li>Return required information to construct first Brillouin zone in form of tuple (basis, normals, vertices, faces).</li>
@@ -7049,7 +7049,7 @@ Angle with x-axis: 1.5707963267948966
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="splot_bz" class="doc_header"><code>splot_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L717" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>splot_bz</code>(<strong><code>path_pos_bz</code></strong>=<em><code>None</code></em>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>plane</code></strong>=<em><code>None</code></em>, <strong><code>color</code></strong>=<em><code>'blue'</code></em>, <strong><code>fill</code></strong>=<em><code>True</code></em>, <strong><code>vectors</code></strong>=<em><code>True</code></em>, <strong><code>v3</code></strong>=<em><code>False</code></em>, <strong><code>vname</code></strong>=<em><code>'b'</code></em>, <strong><code>colormap</code></strong>=<em><code>'plasma'</code></em>, <strong><code>light_from</code></strong>=<em><code>(1, 1, 1)</code></em>, <strong><code>alpha</code></strong>=<em><code>0.4</code></em>)</p>
+<h4 id="splot_bz" class="doc_header"><code>splot_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L716" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>splot_bz</code>(<strong><code>path_pos_bz</code></strong>=<em><code>None</code></em>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>plane</code></strong>=<em><code>None</code></em>, <strong><code>color</code></strong>=<em><code>'blue'</code></em>, <strong><code>fill</code></strong>=<em><code>True</code></em>, <strong><code>vectors</code></strong>=<em><code>True</code></em>, <strong><code>v3</code></strong>=<em><code>False</code></em>, <strong><code>vname</code></strong>=<em><code>'b'</code></em>, <strong><code>colormap</code></strong>=<em><code>'plasma'</code></em>, <strong><code>light_from</code></strong>=<em><code>(1, 1, 1)</code></em>, <strong><code>alpha</code></strong>=<em><code>0.4</code></em>)</p>
 </blockquote>
 <ul>
 <li>Plots matplotlib's static figure.</li>
@@ -8674,7 +8674,7 @@ z
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="iplot_bz" class="doc_header"><code>iplot_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L834" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>iplot_bz</code>(<strong><code>path_pos_bz</code></strong>=<em><code>None</code></em>, <strong><code>fill</code></strong>=<em><code>True</code></em>, <strong><code>color</code></strong>=<em><code>'rgba(168,204,216,0.4)'</code></em>, <strong><code>background</code></strong>=<em><code>'rgb(255,255,255)'</code></em>, <strong><code>vname</code></strong>=<em><code>'b'</code></em>, <strong><code>alpha</code></strong>=<em><code>0.4</code></em>, <strong><code>ortho3d</code></strong>=<em><code>True</code></em>, <strong><code>fig</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="iplot_bz" class="doc_header"><code>iplot_bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L833" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>iplot_bz</code>(<strong><code>path_pos_bz</code></strong>=<em><code>None</code></em>, <strong><code>fill</code></strong>=<em><code>True</code></em>, <strong><code>color</code></strong>=<em><code>'rgba(168,204,216,0.4)'</code></em>, <strong><code>background</code></strong>=<em><code>'rgb(255,255,255)'</code></em>, <strong><code>vname</code></strong>=<em><code>'b'</code></em>, <strong><code>alpha</code></strong>=<em><code>0.4</code></em>, <strong><code>ortho3d</code></strong>=<em><code>True</code></em>, <strong><code>fig</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Plots interactive figure showing axes,BZ surface, special points and basis, each of which could be hidden or shown.</li>
@@ -8785,7 +8785,7 @@ z
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="to_R3" class="doc_header"><code>to_R3</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L942" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>to_R3</code>(<strong><code>basis</code></strong>, <strong><code>points</code></strong>)</p>
+<h4 id="to_R3" class="doc_header"><code>to_R3</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L941" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>to_R3</code>(<strong><code>basis</code></strong>, <strong><code>points</code></strong>)</p>
 </blockquote>
 <p>Transforms coordinates of points (relative to non-othogonal basis) into orthogonal space.</p>
 <ul>
@@ -8858,7 +8858,7 @@ z
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="kpoints2bz" class="doc_header"><code>kpoints2bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L957" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>kpoints2bz</code>(<strong><code>bz</code></strong>, <strong><code>kpoints</code></strong>, <strong><code>primitive</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="kpoints2bz" class="doc_header"><code>kpoints2bz</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L956" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>kpoints2bz</code>(<strong><code>bz</code></strong>, <strong><code>kpoints</code></strong>, <strong><code>primitive</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Brings KPOINTS inside BZ. Applies <a href="/pivotpy/StructureIO.html#to_R3"><code>to_R3</code></a> only if <code>primitive=True</code>.</p>
 <ul>
@@ -23811,7 +23811,7 @@ L 409.105565 120.334524
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="BZ" class="doc_header"><code>class</code> <code>BZ</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L999" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>BZ</code>(<strong><code>path_pos</code></strong>=<em><code>None</code></em>, <strong><code>loop</code></strong>=<em><code>True</code></em>, <strong><code>digits</code></strong>=<em><code>8</code></em>, <strong><code>primitive</code></strong>=<em><code>False</code></em>)</p>
+<h2 id="BZ" class="doc_header"><code>class</code> <code>BZ</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L998" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>BZ</code>(<strong><code>path_pos</code></strong>=<em><code>None</code></em>, <strong><code>loop</code></strong>=<em><code>True</code></em>, <strong><code>digits</code></strong>=<em><code>8</code></em>, <strong><code>primitive</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <ul>
 <li>Return required information to construct first Brillouin zone in form of tuple (basis, normals, vertices, faces).</li>
@@ -24957,7 +24957,7 @@ z
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="fix_sites" class="doc_header"><code>fix_sites</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L1042" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fix_sites</code>(<strong><code>poscar</code></strong>, <strong><code>tol</code></strong>=<em><code>0.01</code></em>, <strong><code>eqv_sites</code></strong>=<em><code>True</code></em>, <strong><code>translate</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="fix_sites" class="doc_header"><code>fix_sites</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L1041" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fix_sites</code>(<strong><code>poscar</code></strong>, <strong><code>tol</code></strong>=<em><code>0.01</code></em>, <strong><code>eqv_sites</code></strong>=<em><code>True</code></em>, <strong><code>translate</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Add equivalent sites to make a full data shape of lattice. Returns same data after fixing.</p>
 <ul>
@@ -24991,7 +24991,7 @@ z
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_pairs" class="doc_header"><code>get_pairs</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L1099" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_pairs</code>(<strong><code>basis</code></strong>, <strong><code>positions</code></strong>, <strong><code>r</code></strong>, <strong><code>eps</code></strong>=<em><code>0.01</code></em>)</p>
+<h4 id="get_pairs" class="doc_header"><code>get_pairs</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L1098" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_pairs</code>(<strong><code>basis</code></strong>, <strong><code>positions</code></strong>, <strong><code>r</code></strong>, <strong><code>eps</code></strong>=<em><code>0.01</code></em>)</p>
 </blockquote>
 <p>Returns a tuple of Lattice (coords,pairs), so coords[pairs] given nearest site bonds.</p>
 <ul>
@@ -25038,7 +25038,7 @@ z
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="iplot_lat" class="doc_header"><code>iplot_lat</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L1122" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>iplot_lat</code>(<strong><code>poscar</code></strong>, <strong><code>sizes</code></strong>=<em><code>10</code></em>, <strong><code>colors</code></strong>=<em><code>'blue'</code></em>, <strong><code>bond_length</code></strong>=<em><code>None</code></em>, <strong><code>tol</code></strong>=<em><code>0.1</code></em>, <strong><code>eps</code></strong>=<em><code>0.01</code></em>, <strong><code>eqv_sites</code></strong>=<em><code>True</code></em>, <strong><code>translate</code></strong>=<em><code>None</code></em>, <strong><code>line_width</code></strong>=<em><code>4</code></em>, <strong><code>edge_color</code></strong>=<em><code>'black'</code></em>, <strong><code>fill</code></strong>=<em><code>False</code></em>, <strong><code>alpha</code></strong>=<em><code>0.4</code></em>, <strong><code>ortho3d</code></strong>=<em><code>True</code></em>, <strong><code>fig</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="iplot_lat" class="doc_header"><code>iplot_lat</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L1121" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>iplot_lat</code>(<strong><code>poscar</code></strong>, <strong><code>sizes</code></strong>=<em><code>10</code></em>, <strong><code>colors</code></strong>=<em><code>'blue'</code></em>, <strong><code>bond_length</code></strong>=<em><code>None</code></em>, <strong><code>tol</code></strong>=<em><code>0.1</code></em>, <strong><code>eps</code></strong>=<em><code>0.01</code></em>, <strong><code>eqv_sites</code></strong>=<em><code>True</code></em>, <strong><code>translate</code></strong>=<em><code>None</code></em>, <strong><code>line_width</code></strong>=<em><code>4</code></em>, <strong><code>edge_color</code></strong>=<em><code>'black'</code></em>, <strong><code>fill</code></strong>=<em><code>False</code></em>, <strong><code>alpha</code></strong>=<em><code>0.4</code></em>, <strong><code>ortho3d</code></strong>=<em><code>True</code></em>, <strong><code>fig</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Interactive plot of lattice.</p>
 <ul>
@@ -25122,7 +25122,7 @@ Other parameters just mean what they seem to be.</li>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="splot_lat" class="doc_header"><code>splot_lat</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L1199" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>splot_lat</code>(<strong><code>poscar</code></strong>, <strong><code>sizes</code></strong>=<em><code>50</code></em>, <strong><code>colors</code></strong>=<em><code>[]</code></em>, <strong><code>colormap</code></strong>=<em><code>None</code></em>, <strong><code>bond_length</code></strong>=<em><code>None</code></em>, <strong><code>tol</code></strong>=<em><code>0.1</code></em>, <strong><code>eps</code></strong>=<em><code>0.01</code></em>, <strong><code>eqv_sites</code></strong>=<em><code>True</code></em>, <strong><code>translate</code></strong>=<em><code>None</code></em>, <strong><code>line_width</code></strong>=<em><code>1</code></em>, <strong><code>edge_color</code></strong>=<em><code>(1, 0.5, 0, 0.4)</code></em>, <strong><code>vectors</code></strong>=<em><code>True</code></em>, <strong><code>v3</code></strong>=<em><code>False</code></em>, <strong><code>plane</code></strong>=<em><code>None</code></em>, <strong><code>light_from</code></strong>=<em><code>(1, 1, 1)</code></em>, <strong><code>fill</code></strong>=<em><code>False</code></em>, <strong><code>alpha</code></strong>=<em><code>0.4</code></em>, <strong><code>ax</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="splot_lat" class="doc_header"><code>splot_lat</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L1198" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>splot_lat</code>(<strong><code>poscar</code></strong>, <strong><code>sizes</code></strong>=<em><code>50</code></em>, <strong><code>colors</code></strong>=<em><code>[]</code></em>, <strong><code>colormap</code></strong>=<em><code>None</code></em>, <strong><code>bond_length</code></strong>=<em><code>None</code></em>, <strong><code>tol</code></strong>=<em><code>0.1</code></em>, <strong><code>eps</code></strong>=<em><code>0.01</code></em>, <strong><code>eqv_sites</code></strong>=<em><code>True</code></em>, <strong><code>translate</code></strong>=<em><code>None</code></em>, <strong><code>line_width</code></strong>=<em><code>1</code></em>, <strong><code>edge_color</code></strong>=<em><code>(1, 0.5, 0, 0.4)</code></em>, <strong><code>vectors</code></strong>=<em><code>True</code></em>, <strong><code>v3</code></strong>=<em><code>False</code></em>, <strong><code>plane</code></strong>=<em><code>None</code></em>, <strong><code>light_from</code></strong>=<em><code>(1, 1, 1)</code></em>, <strong><code>fill</code></strong>=<em><code>False</code></em>, <strong><code>alpha</code></strong>=<em><code>0.4</code></em>, <strong><code>ax</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Static plot of lattice.</p>
 <ul>
@@ -26639,7 +26639,7 @@ z
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="join_poscars" class="doc_header"><code>join_poscars</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L1279" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>join_poscars</code>(<strong><code>poscar1</code></strong>, <strong><code>poscar2</code></strong>, <strong><code>direction</code></strong>=<em><code>'z'</code></em>, <strong><code>tol</code></strong>=<em><code>0.01</code></em>)</p>
+<h4 id="join_poscars" class="doc_header"><code>join_poscars</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L1278" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>join_poscars</code>(<strong><code>poscar1</code></strong>, <strong><code>poscar2</code></strong>, <strong><code>direction</code></strong>=<em><code>'z'</code></em>, <strong><code>tol</code></strong>=<em><code>0.01</code></em>)</p>
 </blockquote>
 <p>Joins two POSCARs in a given direction. In-plane lattice parameters are kept from <code>poscar1</code> and basis of <code>poscar2</code> parallel to <code>direction</code> is modified while volume is kept same.</p>
 <ul>
@@ -26679,7 +26679,7 @@ z
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="write_poscar" class="doc_header"><code>write_poscar</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L1351" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>write_poscar</code>(<strong><code>poscar</code></strong>, <strong><code>sd_list</code></strong>=<em><code>None</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>, <strong><code>overwrite</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="write_poscar" class="doc_header"><code>write_poscar</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L1350" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>write_poscar</code>(<strong><code>poscar</code></strong>, <strong><code>sd_list</code></strong>=<em><code>None</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>, <strong><code>overwrite</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Writes poscar data object to a file or returns string</p>
 <ul>
@@ -26779,7 +26779,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="scale_poscar" class="doc_header"><code>scale_poscar</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L1388" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>scale_poscar</code>(<strong><code>path_poscar</code></strong>, <strong><code>scale</code></strong>=<em><code>(1, 1, 1)</code></em>, <strong><code>tol</code></strong>=<em><code>0.01</code></em>)</p>
+<h4 id="scale_poscar" class="doc_header"><code>scale_poscar</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L1389" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>scale_poscar</code>(<strong><code>path_poscar</code></strong>, <strong><code>scale</code></strong>=<em><code>(1, 1, 1)</code></em>, <strong><code>tol</code></strong>=<em><code>0.01</code></em>)</p>
 </blockquote>
 <p>Create larger/smaller cell from a given POSCAR.</p>
 <ul>
@@ -27568,6 +27568,6 @@ z
  
 
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"f3df86db4ebb4ddb91339ccf7baf3ca1": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "8703c59aa5c747fc9bce75d49fe14169": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_f3df86db4ebb4ddb91339ccf7baf3ca1", "msg_id": "", "outputs": []}}, "81650723eecc4fbdaa86769e7569bd74": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "3abe45c7475f4cc8a2abd3034896a136": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_81650723eecc4fbdaa86769e7569bd74", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
+{"state": {"70ce046f225c4311b753bd59e210cd48": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "fdd33b027f424a1c8a8f14bf0718b0d0": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_70ce046f225c4311b753bd59e210cd48", "msg_id": "", "outputs": []}}, "53ead1cfc47d477ea532a42a4b579f73": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "7902d43e742d42c0999abe0ebace58f6": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_53ead1cfc47d477ea532a42a4b579f73", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
 </script>
 

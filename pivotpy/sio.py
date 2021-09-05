@@ -84,12 +84,11 @@ def save_mp_API(api_key):
         with open(file,'r') as fr:
             lines = fr.readlines()
             lines = [line for line in lines if 'MP_API_KEY' not in line]
-        fr.close()
+
     with open(file,'w') as fw:
         fw.write("MP_API_KEY = {}".format(api_key))
         for line in lines:
             fw.write(line)
-        fw.close()
 
 # Cell
 def _load_mp_data(formula,api_key=None,mp_id=None,max_sites = None, min_sites = None):
@@ -303,9 +302,9 @@ def get_kpath(hsk_list=[],labels=[], n = 5,weight= None ,ibzkpt = None,outfile=N
     N = np.size(xs)
     if ibzkpt != None:
         if os.path.isfile(ibzkpt):
-            f = open(ibzkpt,'r')
-            lines = f.readlines()
-            f.close()
+            with open(ibzkpt,'r') as f:
+                lines = f.readlines()
+
             N = int(lines[1].strip())+N # Update N.
             slines = lines[3:N+4]
             ibz_str = ''.join(slines)
@@ -496,9 +495,9 @@ def get_kmesh(n_xyz=[5,5,5],weight = None, ibzkpt= None,path_pos=None,outfile=No
     N = len(points)
     if ibzkpt != None:
         if os.path.isfile(ibzkpt):
-            f = open(ibzkpt,'r')
-            lines = f.readlines()
-            f.close()
+            with open(ibzkpt,'r') as f:
+                lines = f.readlines()
+
             N = int(lines[1].strip())+N # Update N.
             slines = lines[3:N+4]
             ibz_str = ''.join(slines)
@@ -1374,10 +1373,12 @@ def write_poscar(poscar,sd_list=None,outfile=None,overwrite=False):
     out_str += '\n'.join(pos_list)
     if outfile:
         if not os.path.isfile(outfile):
-            open(outfile,'w').write(out_str)
+            with open(outfile,'w') as f:
+                f.write(out_str)
             return
         elif overwrite and os.path.isfile(outfile):
-            open(outfile,'w').write(out_str)
+            with open(outfile,'w') as f:
+                f.write(out_str)
             return
         else:
             return print(f"{outfile!r} exists, can not overwrite, \nuse overwrite=True if you want to chnage.")
