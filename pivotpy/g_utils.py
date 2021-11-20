@@ -351,7 +351,8 @@ def nav_links(current_index=0,
                        "InteractivePlots",
                        "Utilities",
                        "StructureIO",
-                       "Widgets"
+                       "Widgets",
+                       "MainAPI"
                        ],
             horizontal = False,
             out_string = False):
