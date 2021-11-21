@@ -17,6 +17,7 @@
 > [&nbsp;`▶` Utilities&nbsp;](https://massgh.github.io/pivotpy/Utilities)  
 > [&nbsp;`▶` StructureIO&nbsp;](https://massgh.github.io/pivotpy/StructureIO)  
 > [&nbsp;`▶` Widgets&nbsp;](https://massgh.github.io/pivotpy/Widgets)  
+> [&nbsp;`▶` MainAPI&nbsp;](https://massgh.github.io/pivotpy/MainAPI)  
 
 
 
@@ -29,20 +30,9 @@
 - See [Full Documentation](https://massgh.github.io/pivotpy/).
 - For CLI, use [Vasp2Visual](https://github.com/massgh/Vasp2Visual).
 
-## Changelog for version 0.9.5 onward
-- `pivotpy.s_plots.splot_rgb_lines` and `pivotpy.s_plots.splot_rgb_lines` are refactored and no more depnd on `create_rgb_lines`, so this function is dropped, If you still want to use it, use versions below 0.9.5. 
-- A class `pivotpy.g_utils.Vasprun` is added which provides shortcut for `export_vasprun` and plotting functions. Under this class or as aliases:
-    - `splot_bands`       --> `sbands`
-    - `splot_rgb_lines`   --> `srgb`
-    - `iplot_rgb_lines`  --> `irgb`
-    - `splot_color_lines` --> `scolor`
-    - `splot_dos_lines`   --> `sdos`
-    - `iplot_dos_lines`  --> `idos`
-- The plot functions starting with 'quick' or 'plotly' are still working but deprecated in favor of consistent names above starting from version 1.0.3.   
-- A class `pivotpy.g_utils.LOCPOT_CHG` is added which can be used to parse and visualize files like LOCPOT and CHG. 
-- A function `pivotpy.vr_parser.split_vasprun` is added which splits `vasprun.xml` file into a small file `_vasprun.xml` without projected data and creates text files `_set[1,2,3,4].txt` based on how many spin sets are there. 
-- A function `pivotpy.vr_parser.islice2array` is added which can reads data from text/csv/tsv files (even if text and numbers are mixed) accoridng to slices you provide, this does not load full file in memory and it is also useful in parsing EIGENVAL, PROCAR like files with a few lines of code only. 
-- Version 1.0.0 is updated with an overhaul of widgets module. `VasprunApp` is introduced as class to access internals of app easily. 
+## Changelog for version 1.0.10 onward
+A new module `api` is added which consists of selective functions and classes and it is enough for common user. 
+Now `import pivotpy as pp` exports only whaterver is inside `api`, access other modules separately.
 
 ## CLI commnds
 - Use `pivotpy` in system terminal to launch DOCS. 
@@ -63,12 +53,11 @@ See GIF here:
 # New: Live Slides in Jupyter Notebook
 Navigate to  [ipyslides](https://github.com/massgh/ipyslides) or do `pip install ipyslides` to create beautiful data driven presentation in Jupyter Notebook.
 
-```
+```python
 import os, pivotpy as pp
-os.chdir('E:/Research/graphene_example/ISPIN_1/bands')
-xml_data=pp.read_asxml()
-vr=pp.export_vasprun(elim=[-5,5])
-vr
+with pp.set_dir('E:/Research/graphene_example/ISPIN_1/bands'):
+    vr=pp.Vasprun(elim=[-5,5])
+vr.data
 ```
 
     Loading from PowerShell Exported Data...
@@ -149,43 +138,37 @@ vr
 - Add anything from legend,colorbar, colorwheel. In below figure, all three are shown.
 - Use aliases such as sbands, sdos,srgb,irgb,scolor,idos for plotting. 
 
-```
+```python
 #collapse_input
-import pivotpy as pp, numpy as np 
+import pivotpy as pp, numpy as np
 import matplotlib.pyplot as plt 
-vr1=pp.export_vasprun('E:/Research/graphene_example/ISPIN_2/bands/vasprun.xml')
-vr2=pp.export_vasprun('E:/Research/graphene_example/ISPIN_2/dos/vasprun.xml')
-axs=pp.init_figure(ncols=3,widths=[2,1,2.2],sharey=True,wspace=0.05,figsize=(8,2.6))
+vr1=pp.Vasprun('E:/Research/graphene_example/ISPIN_2/bands/vasprun.xml')
+vr2=pp.Vasprun('E:/Research/graphene_example/ISPIN_2/dos/vasprun.xml')
+axs = pp.get_axes(ncols=3,widths=[2,1,2.2],sharey=True,wspace=0.05,figsize=(8,2.6))
 elements=[0,[0],[0,1]]
 orbs=[[0],[1],[2,3]]
 labels=['s','$p_z$','$(p_x+p_y)$']
 ti_cks=dict(ktick_inds=[0,30,60,-1],ktick_vals=['Γ','M','K','Γ'])
 args_dict=dict(elements=elements,orbs=orbs,labels=labels,elim=[-20,15])
-pp.splot_bands(path_evr=vr1,ax=axs[0],**ti_cks,elim=[-20,15])
-pp.splot_rgb_lines(path_evr=vr1,ax=axs[2],**args_dict,**ti_cks,colorbar=True,)
-pp.splot_dos_lines(path_evr=vr2,ax=axs[1],vertical=True,spin='both',include_dos='pdos',**args_dict,legend_kwargs={'ncol': 3},colormap='RGB_m')
-pp.color_wheel(axs[2],xy=(0.7,1.15),scale=0.2,labels=[l+'$^{⇅}$' for l in labels])
+vr1.splot_bands(ax=axs[0],**ti_cks,elim=[-20,15])
+vr1.splot_rgb_lines(ax=axs[2],**args_dict,**ti_cks,colorbar=True,)
+vr2.splot_dos_lines(ax=axs[1],vertical=True,spin='both',include_dos='pdos',**args_dict,legend_kwargs={'ncol': 3},colormap='RGB_m')
+axs[2].color_wheel(xy=(0.7,1.15),scale=0.2,labels=[l+'$^{⇅}$' for l in labels])
 pp._show() 
 ```
 
     [0;92m elements[0] = 0 is converted to range(0, 2) which picks all ions of 'C'.To just pick one ion at this index, wrap it in brackets [].[00m
     
 
-    E:\Research\pivotpy\pivotpy\s_plots.py:457: MatplotlibDeprecationWarning:
-    
-    shading='flat' when X and Y have the same dimensions as C is deprecated since 3.3.  Either specify the corners of the quadrilaterals with X and Y, or pass shading='auto', 'nearest' or 'gouraud', or set rcParams['pcolor.shading'].  This will become an error two minor releases later.
-    
-    
 
-
-![svg](docs/images/output_9_2.svg)
+![svg](docs/images/output_9_1.svg)
 
 
 ## Interactive plots using plotly
 
-```
+```python
 args_dict['labels'] = ['s','p_z','p_x+p_y']
-fig1 = pp.iplot_rgb_lines(vr1,**args_dict)
+fig1 = vr1.iplot_rgb_lines(**args_dict)
 #pp.iplot2html(fig1) #Do inside Google Colab, fig1 inside Jupyter
 from IPython.display import Markdown
 Markdown("[See Interactive Plot](https://massgh.github.io/InteractiveHTMLs/iGraphene.html)")
@@ -199,15 +182,15 @@ Markdown("[See Interactive Plot](https://massgh.github.io/InteractiveHTMLs/iGrap
 
 
 ## Brillouin Zone (BZ) Processing
-- Look in `pivotpy.sio` module for details on generating mesh and path of KPOINTS as well as using Materials Projects' API to get POSCAR right in the working folder with command `get_poscar`. Below is a screenshot of interactive BZ plot. You can `double click` on blue points and hit `Ctrl + C` to copy the high symmetry points relative to reciprocal lattice basis vectors. (You will be able to draw kpath in `Pivotpy-Dash` application and generate KPOINTS automatically from a web interface later on!). 
+- Look in `pivotpy.sio` module or `pivotpy.api.POSCAR` class for details on generating mesh and path of KPOINTS as well as using Materials Projects' API to get POSCAR right in the working folder. Below is a screenshot of interactive BZ plot. You can `double click` on blue points and hit `Ctrl + C` to copy the high symmetry points relative to reciprocal lattice basis vectors. 
 - Same color points lie on a sphere, with radius decreasing as red to blue and  gamma point in gold color. These color help distinguishing points but the points not always be equivalent, for example in FCC, there are two points on mid of edges connecting square-hexagon and hexagon-hexagon at equal distance from center but not the same points. 
 - Any colored point's hover text is in gold background.      
 #### Look the output of `pivotpy.sio.splot_bz`.
 ![BZ](docs\images\3bz.jpg)
 
-```
+```python
 import pivotpy as pp 
-pp.splot_bz([[1,0,0],[0,1,0],[0,0,1]],color=(1,1,1,0.2),light_from=(0.5,0,2),colormap='RGB').set_axis_off()
+pp.sio.splot_bz([[1,0,0],[0,1,0],[0,0,1]],color=(1,1,1,0.2),light_from=(0.5,0,2),colormap='RGB').set_axis_off()
 #pp.iplot2html(fig2) #Do inside Google Colab, fig1 inside Jupyter
 from IPython.display import Markdown
 Markdown("[See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ.html)")
@@ -227,22 +210,23 @@ Markdown("[See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ
 ## Plotting Two Calculations Side by Side 
 - Here we will use `shift_kpath` to demonstrate plot of two calculations on same axes side by side
 
-```
+```python
 #nbdev_collapse_input
 import matplotlib.pyplot as plt
 import pivotpy as pp 
 plt.style.use('bmh')
-vr1=pp.export_vasprun('E:/Research/graphene_example/ISPIN_1/bands/vasprun.xml')
-shift_kpath=vr1.kpath[-1] # Add last point from first export in second one.
-vr2=pp.export_vasprun('E:/Research/graphene_example/ISPIN_2/bands/vasprun.xml',shift_kpath=shift_kpath,try_pwsh=False)
-last_k=vr2.kpath[-1]
-axs=pp.init_figure(figsize=(5,2.6))
-K_all=[*vr1.kpath,*vr2.kpath] # Merge kpath for ticks
+vr1=pp.Vasprun('E:/Research/graphene_example/ISPIN_1/bands/vasprun.xml')
+shift_kpath=vr1.data.kpath[-1] # Add last point from first export in second one.
+vr2=pp.Vasprun('E:/Research/graphene_example/ISPIN_2/bands/vasprun.xml',shift_kpath=shift_kpath,try_pwsh=False)
+last_k=vr2.data.kpath[-1]
+axs=pp.get_axes(figsize=(5,2.6))
+K_all=[*vr1.data.kpath,*vr2.data.kpath] # Merge kpath for ticks
 kticks=[K_all[i] for i in [0,30,60,90,120,150,-1]]
 ti_cks=dict(xticks=kticks,xt_labels=['Γ','M','K','Γ','M','K','Γ'])
-pp.splot_bands(path_evr=vr1,ax=axs)
-pp.splot_bands(path_evr=vr2,ax=axs,txt='Graphene(Left: ISPIN=1, Right: ISPIN=2)',ctxt='m')
-pp.modify_axes(ax=axs,xlim=[0,last_k],ylim=[-10,10],**ti_cks)
+vr1.splot_bands(ax=axs)
+vr2.splot_bands(ax=axs,txt='Graphene(Left: ISPIN=1, Right: ISPIN=2)',ctxt='m')
+axs.modify_axes(xlim=[0,last_k],ylim=[-10,10],**ti_cks)
+pp._show()
 ```
 
     Loading from PowerShell Exported Data...
@@ -255,18 +239,18 @@ pp.modify_axes(ax=axs,xlim=[0,last_k],ylim=[-10,10],**ti_cks)
 ## Interpolation 
 Amost every bandstructure and DOS plot function has an argument `interp_nk` which is a dictionary with keys `n` (Number of additional points between adjacent points) and `k` (order of interpolation 0-3). `n > k` must hold.
 
-```
+```python
 #collapse_input
-import pivotpy as pp
+import pivotpy as pp, matplotlib.pyplot as plt
 plt.style.use('ggplot')
-k=vr1.kpath
-ef=vr1.bands.E_Fermi
-evals=vr1.bands.evals-ef
+k = vr1.data.kpath
+ef = vr1.data.bands.E_Fermi
+evals = vr1.data.bands.evals-ef
 #Let's interpolate our graph to see effect. It is useful for colored graphs.
 knew,enew=pp.interpolate_data(x=k,y=evals,n=10,k=3)
-plot=plt.plot(k,evals,'m',lw=5,label='real data')
-plot=plt.plot(k,evals,'w',lw=1,label='interpolated',ls='dashed')
-pp.add_text(ax=plt.gca(),txts='Graphene')
+plot = plt.plot(k,evals,'m',lw=5,label='real data')
+plot = plt.plot(k,evals,'w',lw=1,label='interpolated',ls='dashed')
+pp.s_plots.add_text(ax=plt.gca(),txts='Graphene')
 ```
 
 
@@ -274,22 +258,22 @@ pp.add_text(ax=plt.gca(),txts='Graphene')
 
 
 ## LOCPOT,CHG Visualization
-check out the class `pivotpy.LOCPOT_CHG` to visulize local potential/charge and magnetization in a given direction.
+check out the class `pivotpy.LOCPOT` to visulize local potential/charge and magnetization in a given direction.
 
 ## Running powershell commands from python.
 Some tasks are very tideious in python while just a click way in powershell. See below, and try to list processes in python yourself to see the difference!
 
-```
-pp.ps2std(ps_command='(Get-Process)[0..4]')
+```python
+pp.g_utils.ps2std(ps_command='(Get-Process)[0..4]')
 ```
 
     NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
     ------    -----      -----     ------      --  -- -----------
-    23     7.19       3.71       0.47   18012   1 AcrobatNotificationClient
-    15     4.05      11.25       0.34   15776   1 AdobeCollabSync
-    20     6.30      13.31       7.86   15820   1 AdobeCollabSync
-    15     5.12      12.90       0.00    5424   0 AppHelperCap
-    23    41.73      48.20       0.52    3800   1 ApplicationFrameHost
+    21     6.91       3.04       0.38   28364   1 AcrobatNotificationClient
+    6     1.40       5.31       0.00    7800   0 AggregatorHost
+    16     5.88      14.32       0.00    5496   0 AppHelperCap
+    33    57.36      70.96      14.19   18740   1 ApplicationFrameHost
+    8     1.81       7.30       0.06   18888   1 AppVShNotify
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -320,7 +304,7 @@ c.ScriptMagics.script_paths = {
 }
 ```
 
-```
+```python
 %%ps 
 Get-ChildItem 'E:\Research\graphene_example\'
 ```
@@ -330,17 +314,17 @@ Get-ChildItem 'E:\Research\graphene_example\'
         Directory: E:\Research\graphene_example
     
     
-    Mode                 LastWriteTime         Length Name                                                                        
-    ----                 -------------         ------ ----                                                                        
-    da----        10/31/2020   1:30 PM                ISPIN_1                                                                     
-    da----          5/9/2020   1:05 PM                ISPIN_2                                                                     
-    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                                      
-    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                                 
+    Mode                 LastWriteTime         Length Name                              
+    ----                 -------------         ------ ----                              
+    da----        10/31/2020   1:30 PM                ISPIN_1                           
+    da----          5/9/2020   1:05 PM                ISPIN_2                           
+    -a----          5/9/2020   1:01 PM          75331 OUTCAR                            
+    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                       
     
     
 
 
-```
+```python
 x = %ps (Get-ChildItem 'E:\Research\graphene_example\').Name
 x
 ```
@@ -366,6 +350,7 @@ x
 > [&nbsp;`▶` Utilities&nbsp;](https://massgh.github.io/pivotpy/Utilities)  
 > [&nbsp;`▶` StructureIO&nbsp;](https://massgh.github.io/pivotpy/StructureIO)  
 > [&nbsp;`▶` Widgets&nbsp;](https://massgh.github.io/pivotpy/Widgets)  
+> [&nbsp;`▶` MainAPI&nbsp;](https://massgh.github.io/pivotpy/MainAPI)  
 
 
 

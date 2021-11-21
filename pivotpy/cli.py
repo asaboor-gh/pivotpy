@@ -1,5 +1,5 @@
 from . import __version__, __doc__, docs
-from .sio import str2kpath, get_poscar, save_mp_API
+from .sio import str2kpath, InvokeMaterialsProject, _save_mp_API
 import argparse, os
 from argparse import RawTextHelpFormatter
 def main():
@@ -34,14 +34,16 @@ def poscar():
     parser.add_argument('-k','--api_key',type=str, help= 'Materials project API key. Save it using `pivotpy_save_mp_key` just once.')
     
     args = parser.parse_args()
+    mp = InvokeMaterialsProject(api_key=args.api_key)
+    mp.request(args.formula,mp_id=args.mp_id,max_sites=args.max_sites, min_sites=args.min_sites)
     
-    poscars = get_poscar(args.formula,mp_id=args.mp_id,max_sites=args.max_sites, min_sites=args.min_sites,api_key=args.api_key)
+    poscars = mp.poscars
     
     if poscars:
         for car in poscars:
             if len(poscars) > 1: #Do not print anything else for one POSCAR
                 print(f" mp_id: {car.mp_id}, symbol: {car.symbol}, crystal: {car.crystal} ".center(75,u"\u2588"))
-            print(car.poscar)
+            print(car.content)
     else:
         print('No POSCAR found with provided input, try increasing range')
         
@@ -49,4 +51,4 @@ def api_key_save():
     parser = argparse.ArgumentParser(description='Saves API key from Materials Project website on your local machine for every time use.')
     parser.add_argument('api_key',type=str, help='Get API key from Materilas Project website and enter here.')
     args = parser.parse_args()
-    return save_mp_API(api_key=args.api_key)
+    return _save_mp_API(api_key=args.api_key)

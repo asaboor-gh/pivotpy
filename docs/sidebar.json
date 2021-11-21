@@ -2,7 +2,7 @@
   "pivotpy": {
     "Overview": "/",
     "Interactive Plots": "InteractivePlots.html",
-    "Title": "MainAPI.html",
+    "API": "MainAPI.html",
     "Static Plots": "StaticPlots.html",
     "Structure IO": "StructureIO.html",
     "Pivotpy Module": "test.html",

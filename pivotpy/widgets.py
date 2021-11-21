@@ -750,6 +750,9 @@ class VasprunApp:
     def show(self):
         return display(self.tab)
 
+    def _ipython_display_(self):
+        self.show()
+
     def __fill_ticks(self):
         kpath = os.path.join(os.path.split(self.files_dd.value)[0],'KPOINTS')
         tvs = sio.read_ticks(kpath) #ticks values segments
@@ -875,7 +878,7 @@ class VasprunApp:
         print('Get above DataFrame by app_name.df\nNote: app_name is variable name assigned to VasprunApp()')
         print('==================== OR =========================')
         _code = "import pivotpy as pp\npaths = ['{}']\ndf = pp.generate_summary(paths_list=paths)\ndf".format("',\n         '".join([str(p).replace('\\','/') for p in paths]))
-        _code += "\n#ax = pp.init_figure()\n#df.plot(ax=ax,x='sys',y=['V','a'])"
+        _code += "\n#ax = pp.get_axes()\n#df.plot(ax=ax,x='sys',y=['V','a'])"
         display(Markdown("```python\n{}\n```".format(_code)))
         self.buttons['summary'].description = 'Project Summary'
 
@@ -1028,7 +1031,7 @@ class KPathApp:
         self.main_class = 'custom-'+''.join(np.random.randint(9,size=(21,)).astype(str)) #Random class
         self.tab = ipw.Tab(children=[self.files_gui,Box([]),KPathApp.output]).add_class(self.main_class)
         self.tab.add_class('marginless').add_class('borderless')
-        self.tab.layout = Layout(width='100%',min_width='100%',height='450px',min_height='450px')
+        self.tab.layout = Layout(width='100%',min_width='600px',height='450px',min_height='450px')
         try:
             for i,title in enumerate(['Home','Main','STDERR']):
                 self.tab.set_title(i,title)
@@ -1102,10 +1105,6 @@ class KPathApp:
             opt[i] = (self.__label_at(i),i)
 
         self.sm.options = tuple(opt)
-        if vs[-1:]:
-            try:
-                self.sm.value =  (vs[-1] + 1,)
-            except:pass
 
     @output.capture(clear_output=True,wait=True)
     def __build(self):
@@ -1130,6 +1129,9 @@ class KPathApp:
 
     def show(self):
         return display(self.tab)
+
+    def _ipython_display_(self):
+        self.show()
 
     @output.capture(clear_output=True,wait=True)
     def __delete(self,change):

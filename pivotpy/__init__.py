@@ -33,32 +33,18 @@ Links:
 links = """[github](https://github.com/massgh/pivotpy)             
 [docs](https://massgh.github.io/pivotpy/)"""
 
-__version__ = "1.0.9"
+__version__ = "1.0.10"
 
 __all__ = []
 
-from .g_utils import __all__ as gu_all
-from .vr_parser import __all__ as vp_all
-from .s_plots import __all__ as sp_all
-from .i_plots import __all__ as ip_all
-from .sio import __all__ as si_all
-from .widgets import __all__ as wg_all
-__all__.extend(vp_all)
-__all__.extend(gu_all)
-__all__.extend(sp_all)
-__all__.extend(ip_all)
-__all__.extend(si_all)
-__all__.extend(wg_all)
+from .api import __all__ as api_all
+
+__all__.extend(api_all)
 
 
 
 # Access all functions through root modile pivotpy
-from .g_utils import *
-from .vr_parser import *
-from .s_plots import *
-from .i_plots import *
-from .sio import *
-from .widgets import *
+from .api import *
     
 from matplotlib.pyplot import show as _show,savefig as _savefig
 
@@ -91,13 +77,6 @@ for k,v in __mapping.items():
     return {v}(*args,**kwargs)"""
     exec(_code)
 
-#Aliases
-sbands = splot_bands 
-srgb   = splot_rgb_lines
-scolor = splot_color_lines
-sdos   = splot_dos_lines
-idos   = iplot_dos_lines
-irgb   = iplot_rgb_lines
 
 # Edit rcParams here
 import matplotlib as __mpl
