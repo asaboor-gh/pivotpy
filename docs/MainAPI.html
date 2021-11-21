@@ -83,46 +83,396 @@ nb_path: "MainAPI.ipynb"
 </div>
     {% endraw %}
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Imported-namespaces">Imported namespaces<a class="anchor-link" href="#Imported-namespaces"> </a></h2><p>fancy_quiver3d<br>
-InvokeMaterialsProject
-get_kpath<br>
-str2kpath<br>
-generate_summary<br>
-VasprunApp<br>
-KPathApp<br>
-set_dir<br>
-get_child_items<br>
-color<br>
-transform_color<br>
-interpolate_data<br>
-nav_links<br>
-split_vasprun 
-iplot2html<br>
-plt2html<br>
-plt2text<br>
-show<br>
-savefig</p>
-
-</div>
-</div>
-</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
 
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<div class="output_wrapper">
+<div class="output">
 
-<span class="n">thismodule</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="vm">__name__</span><span class="p">]</span>
+<div class="output_area">
 
-<span class="nb">setattr</span><span class="p">(</span><span class="n">thismodule</span><span class="p">,</span> <span class="s1">&#39;SET_DIR&#39;</span><span class="p">,</span> <span class="n">set_dir</span><span class="p">)</span>
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="fancy_quiver3d" class="doc_header"><code>fancy_quiver3d</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L51" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>fancy_quiver3d</code>(<strong><code>X</code></strong>, <strong><code>Y</code></strong>, <strong><code>Z</code></strong>, <strong><code>U</code></strong>, <strong><code>V</code></strong>, <strong><code>W</code></strong>, <strong><code>ax</code></strong>=<em><code>None</code></em>, <strong><code>C</code></strong>=<em><code>'r'</code></em>, <strong><code>L</code></strong>=<em><code>0.7</code></em>, <strong><code>mutation_scale</code></strong>=<em><code>10</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+</blockquote>
+<p>Plots 3D arrows on a given ax. See <a href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.patches.FancyArrowPatch.html">FancyArrowPatch</a>.</p>
+<ul>
+<li><strong>Parameters</strong><ul>
+<li>X, Y, Z : 1D arrays of coordinates of arrows' tail point.</li>
+<li>U, V, W : 1D arrays of dx,dy,dz of arrows.</li>
+<li>ax: 3D axes, if not given, auto created.</li>
+<li>C : 1D colors array mapping for arrows. Could be one color.</li>
+<li>L : 1D linwidths array mapping for arrows. Could be one linewidth.</li>
+<li>mutation_scale: Arrow head width/size scale. Default is 10.</li>
+<li>kwargs: FancyArrowPatch's keyword arguments excluding positions,color, lw and mutation_scale, shrinkA, shrinkB which are already used. An important keyword argument is <code>arrowstyle</code> which could be '-&gt;','-|&gt;', their inverted forms and many more. See on matplotlib.</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="InvokeMaterialsProject" class="doc_header"><code>class</code> <code>InvokeMaterialsProject</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L191" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>InvokeMaterialsProject</code>(<strong><code>api_key</code></strong>=<em><code>None</code></em>)</p>
+</blockquote>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="get_kpath" class="doc_header"><code>get_kpath</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L310" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_kpath</code>(<strong><code>hsk_list</code></strong>=<em><code>[]</code></em>, <strong><code>labels</code></strong>=<em><code>[]</code></em>, <strong><code>n</code></strong>=<em><code>5</code></em>, <strong><code>weight</code></strong>=<em><code>None</code></em>, <strong><code>ibzkpt</code></strong>=<em><code>None</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
+</blockquote>
+<p>Generate list of kpoints along high symmetry path. Options are write to file or return KPOINTS list.
+It generates uniformly spaced point with input <code>n</code> as just a scale factor of number of points per unit length.
+You can also specify custom number of kpoints in an interval by putting number of kpoints as 4th entry in left kpoint.</p>
+<ul>
+<li><strong>Parameters</strong><ul>
+<li>hsk_list : N x 3 list of N high symmetry points, if broken path then [[N x 3],[M x 3],...].
+<pre><code>      Optionally you can put a 4 values point where 4th entry will decide number of kpoints in current interval.
+      Make sure that points in a connected path patch are at least two i.e. `[[x1,y1,z1],[x2,y2,z2]]` or `[[x1,y1,z1,N],[x2,y2,z2]]`.</code></pre>
+</li>
+<li>n        : int, number per unit length, this makes uniform steps based on distance between points.</li>
+<li>weight : Float, if None, auto generates weights.</li>
+<li>ibzkpt : Path to ibzkpt file, required for HSE calculations.</li>
+<li>labels : Hight symmetry points labels. Good for keeping record of lables and points indices for later use.
+<pre><code>      &gt; Note: If you do not want to label a point, label it as 'skip' at its index and it will be removed.</code></pre>
+</li>
+<li>outfile: Path/to/file to write kpoints.</li>
+</ul>
+</li>
+</ul>
+<p>If <code>outfile = None</code>, KPONITS file content is printed.</p>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="str2kpath" class="doc_header"><code>str2kpath</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/sio.py#L409" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>str2kpath</code>(<strong><code>kpath_str</code></strong>, <strong><code>n</code></strong>=<em><code>5</code></em>, <strong><code>weight</code></strong>=<em><code>None</code></em>, <strong><code>ibzkpt</code></strong>=<em><code>None</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
+</blockquote>
+<p>Get Kpath from a string of kpoints (Line-Mode like). Useful in Terminal.</p>
+<ul>
+<li><p><strong>Parameters</strong></p>
+<ul>
+<li>kpath_str: str, a multiline string similiar to line mode of KPOINTS, initial 4 lines are not required.<ul>
+<li>If you do not want to label a point, label it as 'skip' and it will be removed.</li>
+<li>You can add an interger at end of a line to customize number of points in a given patch.</li>
+<li>Each empty line breaks the path, so similar points before and after empty line are useless here.</li>
+</ul>
+</li>
+<li>n      : int, number per unit length, this makes uniform steps based on distance between points.</li>
+<li>weight : Float, if None, auto generates weights.</li>
+<li>ibzkpt : Path to ibzkpt file, required for HSE calculations.</li>
+<li>outfile: Path/to/file to write kpoints.</li>
+</ul>
+</li>
+<li><p><strong>Example</strong></p>
+<blockquote><p>str2kpath('''0 0 0 !$\Gamma$ 3
+              0.25 0.25 0.25 !L''')
+Automatically generated using PivotPy with HSK-INDS = [0, -1], LABELS = ['$\Gamma$', 'L'], SEG-INDS = []
+  3
+Reciprocal Lattice
+  0.0000000000    0.0000000000    0.0000000000    0.333333
+  0.1250000000    0.1250000000    0.1250000000    0.333333
+  0.2500000000    0.2500000000    0.2500000000    0.333333</p>
+</blockquote>
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="generate_summary" class="doc_header"><code>generate_summary</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L483" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>generate_summary</code>(<strong><code>paths_list</code></strong>=<em><code>None</code></em>)</p>
+</blockquote>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="VasprunApp" class="doc_header"><code>class</code> <code>VasprunApp</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L529" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>VasprunApp</code>(<strong><code>height</code></strong>=<em><code>580</code></em>)</p>
+</blockquote>
+<p>Display a GUI for vasp output analysis. <code>self.theme_colors</code> can be used to edit custom theme.</p>
+<ul>
+<li><strong>Usage Example</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pivotpy</span> <span class="k">as</span> <span class="nn">pp</span>
+<span class="n">va</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">VasprunApp</span><span class="p">()</span>
+<span class="n">va</span><span class="o">.</span><span class="n">cache_data</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#Turn off cache globally.</span>
+<span class="n">va</span><span class="o">.</span><span class="n">evr_kws</span><span class="p">[</span><span class="s1">&#39;elim&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="c1">#Only Bands in this range will be included. Global accross project, can change anytime.</span>
+<span class="n">va</span><span class="o">.</span><span class="n">evr_kws</span><span class="p">[</span><span class="s1">&#39;try_pwsh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#Defult is True. Tries to load Powershell exported data.</span>
+<span class="n">va</span><span class="o">.</span><span class="n">ibands_kws</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;bands&#39;</span> <span class="c1">#Change graph mode from &#39;markers&#39; to &#39;bands&#39;. Setting it to &#39;lines&#39; is not recommended in live graph, it could hang all UI.</span>
+<span class="n">va</span><span class="o">.</span><span class="n">show</span><span class="p">()</span> <span class="c1">#Displays App and do work!</span>
+<span class="n">va</span><span class="o">.</span><span class="n">theme_colors</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">dark_colors</span> <span class="c1">#Set theme to dark externally and edit dictionary values to make your own theme</span>
+<span class="n">va</span><span class="o">.</span><span class="n">splot</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1">#Get matplotlib plot of current data.</span>
+<span class="n">va</span><span class="o">.</span><span class="n">df</span> <span class="c1">#After you do some analysis and hit `Project Summary` button, get DataFrame.</span>
+<span class="n">va</span><span class="o">.</span><span class="n">fig</span> <span class="c1">#Get current fig in Notebook cell.</span>
 </pre></div>
 
-    </div>
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="KPathApp" class="doc_header"><code>class</code> <code>KPathApp</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/widgets.py#L1019" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>KPathApp</code>(<strong><code>path</code></strong>=<em><code>'POSCAR'</code></em>)</p>
+</blockquote>
+<p>View and trace path on BZ.</p>
+<ul>
+<li><strong>Usage</strong><blockquote><p>ka = KPathApp()
+ka.show() #Display app
+ka.splot() #get matplotlib figure</p>
+</blockquote>
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="set_dir" class="doc_header"><code>set_dir</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L45" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>set_dir</code>(<strong><code>path</code></strong>)</p>
+</blockquote>
+<p>work in some directory and come back</p>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="get_child_items" class="doc_header"><code>get_child_items</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L133" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_child_items</code>(<strong><code>path</code></strong>=<em><code>'e:\\Research\\pivotpy'</code></em>, <strong><code>depth</code></strong>=<em><code>None</code></em>, <strong><code>recursive</code></strong>=<em><code>True</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>, <strong><code>exclude</code></strong>=<em><code>None</code></em>, <strong><code>filesOnly</code></strong>=<em><code>False</code></em>, <strong><code>dirsOnly</code></strong>=<em><code>False</code></em>)</p>
+</blockquote>
+<ul>
+<li>Returns selected directories/files recursively from a parent directory.</li>
+<li><strong>Parameters</strong><ul>
+<li>path    : path to a parent directory, default is <code>"."</code></li>
+<li>depth   : int, subdirectories depth to get recursively, default is None to list all down.</li>
+<li>recursive : If False, only list current directory items, if True,list all items recursively down the file system.</li>
+<li>include: Default is None and includes everything. String of patterns separated by | to keep, could be a regular expression.</li>
+<li>exclude: Default is None and removes nothing. String of patterns separated by | to drop,could be a regular expression.</li>
+<li>filesOnly : Boolean, if True, returns only files.</li>
+<li>dirsOnly  : Boolean, if True, returns only directories.</li>
+</ul>
+</li>
+<li><strong>Returns</strong><ul>
+<li>GLOB : Tuple (children,parent), children is list of selected directories/files and parent is given path. Access by index of by <code>get_child_items().{children,path}</code>.</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="color" class="doc_header"><code>class</code> <code>color</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L188" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>color</code>()</p>
+</blockquote>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="transform_color" class="doc_header"><code>transform_color</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L416" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>transform_color</code>(<strong><code>arr</code></strong>, <strong><code>s</code></strong>=<em><code>1</code></em>, <strong><code>c</code></strong>=<em><code>1</code></em>, <strong><code>b</code></strong>=<em><code>0</code></em>, <strong><code>mixing_matrix</code></strong>=<em><code>None</code></em>)</p>
+</blockquote>
+<ul>
+<li>Color transformation such as brightness, contrast, saturation and mixing of an input color array. <code>c = -1</code> would invert color,keeping everything else same.</li>
+<li><strong>Parameters</strong><ul>
+<li>arr: input array, a single RGB/RGBA color or an array with inner most dimension equal to 3 or 4. e.g. [[[0,1,0,1],[0,0,1,1]]].</li>
+<li>c  : contrast, default is 1. Can be a float in [-1,1].</li>
+<li>s  : saturation, default is 1. Can be a float in [-1,1]. If s = 0, you get a gray scale image.</li>
+<li>b  : brightness, default is 0. Can be a float in [-1,1] or list of three brightnesses for RGB components.</li>
+<li>mixing_matrix: A 3x3 matrix to mix RGB values, such as <code>pp.color_matrix</code>.</li>
+</ul>
+</li>
+</ul>
+<p><a href="https://docs.microsoft.com/en-us/windows/win32/gdiplus/-gdiplus-recoloring-use?redirectedfrom=MSDN">Recoloring</a>
+<a href="https://docs.rainmeter.net/tips/colormatrix-guide/">Rainmeter</a></p>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="interpolate_data" class="doc_header"><code>interpolate_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/g_utils.py#L57" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>interpolate_data</code>(<strong><code>x</code></strong>, <strong><code>y</code></strong>, <strong><code>n</code></strong>=<em><code>10</code></em>, <strong><code>k</code></strong>=<em><code>3</code></em>)</p>
+</blockquote>
+<ul>
+<li>Returns interpolated xnew,ynew. If two points are same, it will add 0.1*min(dx&gt;0) to compensate it.</li>
+<li><p><strong>Parameters</strong></p>
+<ul>
+<li>x: 1D array of size p,</li>
+<li>y: ndarray of size p<em>q</em>r,....</li>
+<li>n: Number of points to add between two given points.</li>
+<li>k: Polynomial order to interpolate.</li>
+</ul>
+</li>
+<li><p>Only axis 0 will be interpolated. If you want general interploation, use <code>from scipy.interpolate import make_interp_spline, BSpline</code></p>
+</li>
+<li><p><strong>General Usage</strong>: K(p),E(p,q) input from bandstructure.</p>
+<ul>
+<li><code>Knew,Enew= interpolate_data(K,E,n=10,k=3)</code>. cubic interploation</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="split_vasprun" class="doc_header"><code>split_vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L1044" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>split_vasprun</code>(<strong><code>path</code></strong>=<em><code>None</code></em>)</p>
+</blockquote>
+<ul>
+<li>Splits a given vasprun.xml file into a smaller _vasprun.xml file plus _set[1,2,3,4].txt files which contain projected data for each spin set.</li>
+<li><strong>Parameters</strong><ul>
+<li>path: path/to/vasprun.xml file.</li>
+</ul>
+</li>
+<li><strong>Output</strong><ul>
+<li>_vasprun.xml file with projected data.</li>
+<li>_set1.txt for projected data of colinear calculation.</li>
+<li>_set1.txt for spin up data and _set2.txt for spin-polarized case.</li>
+<li>_set[1,2,3,4].txt for each spin set of non-colinear calculations.</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="iplot2html" class="doc_header"><code>iplot2html</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/i_plots.py#L174" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>iplot2html</code>(<strong><code>fig</code></strong>, <strong><code>filename</code></strong>=<em><code>None</code></em>, <strong><code>out_string</code></strong>=<em><code>False</code></em>, <strong><code>modebar</code></strong>=<em><code>True</code></em>)</p>
+</blockquote>
+<ul>
+<li>Writes plotly's figure as HTML file or display in IPython which is accessible when online. It is different than plotly's <code>fig.to_html</code> as it is minimal in memory. If you need to have offline working file, just use <code>fig.write_html('file.html')</code> which will be larger in size.</li>
+<li><strong>Parameters</strong><ul>
+<li>fig      : A plotly's figure object.</li>
+<li>filename : Name of file to save fig. Defualt is None and show plot in Colab/Online or return hrml string.</li>
+<li>out_string: If True, returns HTML string, if False displays graph if possible.</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="plt2html" class="doc_header"><code>plt2html</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L1249" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>plt2html</code>(<strong><code>plt_fig</code></strong>=<em><code>None</code></em>, <strong><code>transparent</code></strong>=<em><code>True</code></em>, <strong><code>dash_html</code></strong>=<em><code>None</code></em>)</p>
+</blockquote>
+<ul>
+<li>Returns base64 encoded Image to display in notebook or HTML <svg> or plotly's dash_html_components.Img object.</li>
+<li><strong>Parameters</strong><ul>
+<li>plt_fig    : Matplotlib's figure instance, auto picks as well.</li>
+<li>transparent: True of False for fig background.</li>
+<li>dash_html  : Default is None which results in an image display in jupyter notebook.<ul>
+<li>If True, returns html.Img object for plotly's dash.</li>
+<li>If False, returns <svg> object to embed in HTML DOM.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="plt2text" class="doc_header"><code>plt2text</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L1305" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>plt2text</code>(<strong><code>plt_fig</code></strong>=<em><code>None</code></em>, <strong><code>width</code></strong>=<em><code>144</code></em>, <strong><code>vscale</code></strong>=<em><code>0.96</code></em>, <strong><code>colorful</code></strong>=<em><code>True</code></em>, <strong><code>invert</code></strong>=<em><code>False</code></em>, <strong><code>crop</code></strong>=<em><code>False</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
+</blockquote>
+<p>Displays matplotlib figure in terminal as text. You should use a monospcae font like <code>Cascadia Code PL</code> to display image correctly. Use before plt.show().</p>
+<ul>
+<li><strong>Parameters</strong><ul>
+<li>plt_fig: Matplotlib's figure instance. Auto picks if not given.</li>
+<li>width  : Character width in terminal, default is 144. Decrease font size when width increased.</li>
+<li>vscale : Useful to tweek aspect ratio. Default is 0.96 and prints actual aspect in <code>Cascadia Code PL</code>. It is approximately <code>2*width/height</code> when you select a single space in terminal.</li>
+<li>colorful: Default is False, prints colored picture if terminal supports it, e.g Windows Terminal.</li>
+<li>invert  : Defult is False, could be useful for grayscale image.</li>
+<li>crop    : Default is False. Crops extra background, can change image color if top left pixel is not in background, in that case set this to False.</li>
+<li>outfile: If None, prints to screen. Writes on a file.</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="show" class="doc_header"><code>show</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L1283" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show</code>(<strong><code>transparent</code></strong>=<em><code>False</code></em>)</p>
+</blockquote>
+<p>Displays all available figures in browser without blocking terminal</p>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="savefig" class="doc_header"><code>savefig</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/s_plots.py#L1299" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>savefig</code>(<strong><code>filename</code></strong>, <strong><code>dpi</code></strong>=<em><code>600</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+</blockquote>
+<p>Save matplotlib's figure while handling existing files. <code>kwargs</code> are passed to <code>plt.savefig</code></p>
+
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -164,16 +514,6 @@ savefig</p>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">_doc_class_memebers</span><span class="p">(</span><span class="n">POSCAR</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
 
 <div class="output_wrapper">
 <div class="output">
@@ -1674,16 +2014,6 @@ z
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">_doc_class_memebers</span><span class="p">(</span><span class="n">LOCPOT</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
 
 <div class="output_wrapper">
 <div class="output">
@@ -23582,16 +23912,6 @@ z
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">_doc_class_memebers</span><span class="p">(</span><span class="n">Vasprun</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
 
 <div class="output_wrapper">
 <div class="output">
@@ -34961,6 +35281,6 @@ z
  
 
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"f2662c01be5f472fb9abea809aff1468": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "af637274c9094001a524dba72e6b91a2": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_f2662c01be5f472fb9abea809aff1468", "msg_id": "", "outputs": []}}, "4c15d80c72b649b49f3c3cf02e9e65f5": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "1a1358ac69af45e1a92c5211cbffe478": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_4c15d80c72b649b49f3c3cf02e9e65f5", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
+{"state": {"82ee550d746b4aba9b46a96e6cc01eec": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "8143a2ab52664e5080ea4bcd0db7970f": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_82ee550d746b4aba9b46a96e6cc01eec", "msg_id": "", "outputs": []}}, "56e5b4585ae342088be9bc1ef7aed54f": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "fc5343ee6409400ab4c7c3607230d36e": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_56e5b4585ae342088be9bc1ef7aed54f", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
 </script>
 
