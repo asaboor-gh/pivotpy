@@ -4,6 +4,7 @@ Licence: Apache License Version 2.0, January 2004 #See file
 
 Modules:
 -------
+    pivotpy.api:      # API for general use
     pivotpy.vr_parser # Parser for vasprun.xml
     pivotpy.g_utils   # general functions
     pivotpy.s_plots   # Matplotlib's plotting functions
@@ -17,7 +18,7 @@ Usage:
     >>> import pivotpy as pp 
     ... pp.docs() #See online docs
     ... pp.example_notebook() #Opens Colab notebook
-    ... pp.__all__ #To see what is available
+    ... pp.__all__ #To see what is available, only exposes common functionality
     ... pp.generate_summary(paths)  # Get a dataframe for whole project after you used pp.VasprunApp
     
     If you want to acess private functions/varaiables, you need to import a submodule itself, e.g.
@@ -45,6 +46,7 @@ __all__.extend(api_all)
 
 # Access all functions through root modile pivotpy
 from .api import *
+from .g_utils import nav_links # For use in Jupyter Notebooks
     
 from matplotlib.pyplot import show as _show,savefig as _savefig
 
@@ -99,5 +101,7 @@ def docs():
     
 def example_notebook():
     __wb.open('https://colab.research.google.com/github/massgh/pivotpy/blob/master/test.ipynb',new=1)
+    
+__all__ = ['docs','example_notebook', *__all__]
     
     

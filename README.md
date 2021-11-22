@@ -53,7 +53,7 @@ See GIF here:
 # New: Live Slides in Jupyter Notebook
 Navigate to  [ipyslides](https://github.com/massgh/ipyslides) or do `pip install ipyslides` to create beautiful data driven presentation in Jupyter Notebook.
 
-```
+```python
 import os, pivotpy as pp
 with pp.set_dir('E:/Research/graphene_example/ISPIN_1/bands'):
     vr=pp.Vasprun(elim=[-5,5])
@@ -138,7 +138,7 @@ vr.data
 - Add anything from legend,colorbar, colorwheel. In below figure, all three are shown.
 - Use aliases such as sbands, sdos,srgb,irgb,scolor,idos for plotting. 
 
-```
+```python
 #collapse_input
 import pivotpy as pp, numpy as np
 import matplotlib.pyplot as plt 
@@ -166,7 +166,7 @@ pp._show()
 
 ## Interactive plots using plotly
 
-```
+```python
 args_dict['labels'] = ['s','p_z','p_x+p_y']
 fig1 = vr1.iplot_rgb_lines(**args_dict)
 #pp.iplot2html(fig1) #Do inside Google Colab, fig1 inside Jupyter
@@ -188,7 +188,7 @@ Markdown("[See Interactive Plot](https://massgh.github.io/InteractiveHTMLs/iGrap
 #### Look the output of `pivotpy.sio.splot_bz`.
 ![BZ](docs\images\3bz.jpg)
 
-```
+```python
 import pivotpy as pp 
 pp.sio.splot_bz([[1,0,0],[0,1,0],[0,0,1]],color=(1,1,1,0.2),light_from=(0.5,0,2),colormap='RGB').set_axis_off()
 #pp.iplot2html(fig2) #Do inside Google Colab, fig1 inside Jupyter
@@ -210,7 +210,7 @@ Markdown("[See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ
 ## Plotting Two Calculations Side by Side 
 - Here we will use `shift_kpath` to demonstrate plot of two calculations on same axes side by side
 
-```
+```python
 #nbdev_collapse_input
 import matplotlib.pyplot as plt
 import pivotpy as pp 
@@ -239,7 +239,7 @@ pp._show()
 ## Interpolation 
 Amost every bandstructure and DOS plot function has an argument `interp_nk` which is a dictionary with keys `n` (Number of additional points between adjacent points) and `k` (order of interpolation 0-3). `n > k` must hold.
 
-```
+```python
 #collapse_input
 import pivotpy as pp, matplotlib.pyplot as plt
 plt.style.use('ggplot')
@@ -263,17 +263,17 @@ check out the class `pivotpy.LOCPOT` to visulize local potential/charge and magn
 ## Running powershell commands from python.
 Some tasks are very tideious in python while just a click way in powershell. See below, and try to list processes in python yourself to see the difference!
 
-```
+```python
 pp.g_utils.ps2std(ps_command='(Get-Process)[0..4]')
 ```
 
     NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
     ------    -----      -----     ------      --  -- -----------
-    21     6.91       3.04       0.38   28364   1 AcrobatNotificationClient
-    6     1.40       5.31       0.00    7800   0 AggregatorHost
-    16     5.88      14.32       0.00    5496   0 AppHelperCap
-    33    57.36      70.96      14.19   18740   1 ApplicationFrameHost
-    8     1.81       7.30       0.06   18888   1 AppVShNotify
+    21     6.96       7.81       0.42   28364   1 AcrobatNotificationClient
+    5     1.34       5.25       0.00    7800   0 AggregatorHost
+    16     5.88      14.48       0.00    5496   0 AppHelperCap
+    33    63.65      70.66      14.31   18740   1 ApplicationFrameHost
+    8     1.81       7.30       0.09   18888   1 AppVShNotify
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -304,7 +304,7 @@ c.ScriptMagics.script_paths = {
 }
 ```
 
-```
+```python
 %%ps 
 Get-ChildItem 'E:\Research\graphene_example\'
 ```
@@ -324,7 +324,7 @@ Get-ChildItem 'E:\Research\graphene_example\'
     
 
 
-```
+```python
 x = %ps (Get-ChildItem 'E:\Research\graphene_example\').Name
 x
 ```
