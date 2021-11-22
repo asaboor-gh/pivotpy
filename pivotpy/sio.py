@@ -189,7 +189,13 @@ def _load_mp_data(formula,api_key=None,mp_id=None,max_sites = None, min_sites = 
 
 # Cell
 class InvokeMaterialsProject:
-    """
+    """Connect to materials project and get data using api_key from their site.
+    Usage:
+        >>> from pivotpyr.sio import InvokeMaterialsProject # or import pivotpy.InvokeMaterialsProject as InvokeMaterialsProject
+        >>> mp = InvokeMaterialsProject(api_key='your_api_key')
+        >>> mp.request(formula='NaCl') #returns nothing but saves response
+        >>> mp.poscars #returns poscars data
+        >>> mp.cifs #returns cifs data
     """
     def __init__(self,api_key=None):
         "Request Materials Project acess. api_key is on their site. Your only need once and it is saved for later."
@@ -214,7 +220,7 @@ class InvokeMaterialsProject:
 
     @lru_cache(maxsize=2) #cache for 2 calls
     def request(self,formula,mp_id=None,max_sites = None,min_sites=None):
-        """Fetch data using request api of python form materials project website. After request, you can access cifs and poscars.
+        """Fetch data using request api of python form materials project website. After request, you can access `cifs` and `poscars`.
         - **Parameters**
             - formula  : Material formula such as 'NaCl'.
             - mp_id     : Optional, you can specify material ID to filter results.
@@ -303,6 +309,7 @@ class InvokeMaterialsProject:
 
         for pos in [*self.__poscars, *self.__cifs]:
             pos.write = write.__get__(pos,type(pos)) # Attch method to poscar and cifs
+
 
 
 
@@ -748,11 +755,7 @@ def splot_bz(path_pos_bz = None, ax = None, plane=None,color='blue',fill=True,ve
     """
     - Plots matplotlib's static figure.
     - **Parameters**
-        - path_pos_bz: Auto picks in CWD if POSCAR file found. This accept three kind of objects:
-            - List of 3 basis vectors in real space.
-            - Path/to/POSCAR.
-            - Output of `get_bz` function.
-
+        - path_pos_bz: Path/to/POSCAR or List of 3 basis vectors or output of `get_zb`. Auto picks POSCAR from current directory.
         - fill       : True by defult, determines whether to fill surface of BZ or not.
         - color      : color to fill surface and stroke color.
         - vectors    : Plots basis vectors, default is True.
@@ -865,11 +868,7 @@ def iplot_bz(path_pos_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',back
     """
     - Plots interactive figure showing axes,BZ surface, special points and basis, each of which could be hidden or shown.
     - **Parameters**
-        - path_pos_bz: Auto picks in CWD if POSCAR file found. This accept three kind of objects:
-            - List of 3 basis vectors in real space.
-            - Path/to/POSCAR.
-            - Output of `get_bz` function.
-
+        - path_pos_bz: Path/to/POSCAR or List of 3 basis vectors or output of `get_zb`. Auto picks POSCAR from current directory.
         - fill       : True by defult, determines whether to fill surface of BZ or not.
         - color      : color to fill surface 'rgba(168,204,216,0.4)` by default.
         - background : Plot background color, default is 'rgb(255,255,255)'.

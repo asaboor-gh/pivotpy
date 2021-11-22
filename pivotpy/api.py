@@ -93,9 +93,6 @@ class POSCAR:
         return self.cell
 
     @_sub_doc(sio.splot_bz,'- path_pos_bz')
-    @_sub_doc(sio.splot_bz,'- List')
-    @_sub_doc(sio.splot_bz,'- Path')
-    @_sub_doc(sio.splot_bz,'- Output')
     def splot_bz(self, ax=None, plane=None, color='blue', fill=True, vectors=True, v3=False, vname='b', colormap='plasma', light_from=(1, 1, 1), alpha=0.4):
         return sio.splot_bz(path_pos_bz = self.data.basis, ax=ax, plane=plane, color=color, fill=fill, vectors=vectors, v3=v3, vname=vname, colormap=colormap, light_from=light_from, alpha=alpha)
 
@@ -104,9 +101,6 @@ class POSCAR:
         return sio.splot_bz(path_pos_bz = self.data.rec_basis, ax=ax, plane=plane, color=color, fill=fill, vectors=vectors, v3=v3, vname=vname, colormap=colormap, light_from=light_from, alpha=alpha)
 
     @_sub_doc(sio.iplot_bz,'- path_pos_bz')
-    @_sub_doc(sio.iplot_bz,'- List')
-    @_sub_doc(sio.iplot_bz,'- Path')
-    @_sub_doc(sio.iplot_bz,'- Output')
     def iplot_bz(self, fill=True, color='rgba(168,204,216,0.4)', background='rgb(255,255,255)', vname='b', alpha=0.4, ortho3d=True, fig=None):
         return sio.iplot_bz(path_pos_bz = self.data.basis, fill=fill, color=color, background=background, vname=vname, alpha=alpha, ortho3d=ortho3d, fig=fig)
 
