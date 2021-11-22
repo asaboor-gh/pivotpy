@@ -68,13 +68,14 @@ class POSCAR:
         Prefrence order: _other_data, content, path"""
         self.path = path
         self.content = content
-        self.bz = None
-        self.primitive = False
-        self.cell = None
         if _other_data:
             self._data = _other_data
         else:
             self._data = sio.export_poscar(path=path,content=content)
+        # These after data to work with data
+        self.primitive = False
+        self._bz = self.get_bz(primitive = False) # Get defualt regular BZ
+        self._cell = self.get_cell() # Get defualt cell
 
     @property
     def data(self):
@@ -83,30 +84,34 @@ class POSCAR:
 
     @_sub_doc(sio.get_bz,'- path_pos')
     def get_bz(self, loop=True, digits=8, primitive=False):
-        self.bz = sio.get_bz(path_pos=self.data.basis, loop=loop, digits=digits, primitive=primitive)
+        self._bz = sio.get_bz(path_pos=self.data.basis, loop=loop, digits=digits, primitive=primitive)
         self.primitive = primitive
-        return self.bz
+        return self._bz
+
+    def set_bz(self,primitive=False,loop=True,digits=8):
+        """Set BZ in primitive or regular shape. returns None, just set self._bz"""
+        self.get_bz(primitive=primitive,loop=loop,digits=digits)
 
     def get_cell(self, loop=True, digits=8):
         "See docs of `get_bz`, same except space is inverted."
-        self.cell = sio.get_bz(path_pos=self.data.rec_basis,loop=loop, digits=digits, primitive=True)
-        return self.cell
+        self._cell = sio.get_bz(path_pos=self.data.rec_basis,loop=loop, digits=digits, primitive=True) # cell must be primitive
+        return self._cell
 
     @_sub_doc(sio.splot_bz,'- path_pos_bz')
     def splot_bz(self, ax=None, plane=None, color='blue', fill=True, vectors=True, v3=False, vname='b', colormap='plasma', light_from=(1, 1, 1), alpha=0.4):
-        return sio.splot_bz(path_pos_bz = self.data.basis, ax=ax, plane=plane, color=color, fill=fill, vectors=vectors, v3=v3, vname=vname, colormap=colormap, light_from=light_from, alpha=alpha)
+        return sio.splot_bz(path_pos_bz = self._bz, ax=ax, plane=plane, color=color, fill=fill, vectors=vectors, v3=v3, vname=vname, colormap=colormap, light_from=light_from, alpha=alpha)
 
     def splot_cell(self, ax=None, plane=None, color='blue', fill=True, vectors=True, v3=False, vname='a', colormap='plasma', light_from=(1, 1, 1), alpha=0.4):
         "See docs of `splot_bz`, everything is same except space is inverted."
-        return sio.splot_bz(path_pos_bz = self.data.rec_basis, ax=ax, plane=plane, color=color, fill=fill, vectors=vectors, v3=v3, vname=vname, colormap=colormap, light_from=light_from, alpha=alpha)
+        return sio.splot_bz(path_pos_bz = self._cell, ax=ax, plane=plane, color=color, fill=fill, vectors=vectors, v3=v3, vname=vname, colormap=colormap, light_from=light_from, alpha=alpha)
 
     @_sub_doc(sio.iplot_bz,'- path_pos_bz')
     def iplot_bz(self, fill=True, color='rgba(168,204,216,0.4)', background='rgb(255,255,255)', vname='b', alpha=0.4, ortho3d=True, fig=None):
-        return sio.iplot_bz(path_pos_bz = self.data.basis, fill=fill, color=color, background=background, vname=vname, alpha=alpha, ortho3d=ortho3d, fig=fig)
+        return sio.iplot_bz(path_pos_bz = self._bz, fill=fill, color=color, background=background, vname=vname, alpha=alpha, ortho3d=ortho3d, fig=fig)
 
     def iplot_cell(self, fill=True, color='rgba(168,204,216,0.4)', background='rgb(255,255,255)', vname='a', alpha=0.4, ortho3d=True, fig=None):
         "See docs of `iplot_bz`, everything is same except space is iverted."
-        return sio.iplot_bz(path_pos_bz = self.data.rec_basis, fill=fill, color=color, background=background, vname=vname, alpha=alpha, ortho3d=ortho3d, fig=fig)
+        return sio.iplot_bz(path_pos_bz = self._cell, fill=fill, color=color, background=background, vname=vname, alpha=alpha, ortho3d=ortho3d, fig=fig)
 
     @_sub_doc(sio.splot_lat,'- poscar')
     def splot_lat(self, sizes=50, colors=[], colormap=None, bond_length=None, tol=0.1, eps=0.01, eqv_sites=True, translate=None, line_width=1, edge_color=(1, 0.5, 0, 0.4), vectors=True, v3=False, plane=None, light_from=(1, 1, 1), fill=False, alpha=0.4, ax=None):
@@ -142,9 +147,9 @@ class POSCAR:
 
     @_sub_doc(sio.kpoints2bz,'- bz')
     def bring_in_bz(self,kpoints):
-        if not self.bz:
+        if not self._bz:
             return print('No BZ found. Please run get_bz() first.')
-        return sio.kpoints2bz(self.bz, kpoints= kpoints,primitive = self.primitive)
+        return sio.kpoints2bz(self._bz, kpoints= kpoints,primitive = self.primitive)
 
 
 # Cell

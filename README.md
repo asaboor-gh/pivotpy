@@ -270,10 +270,10 @@ pp.g_utils.ps2std(ps_command='(Get-Process)[0..4]')
     NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
     ------    -----      -----     ------      --  -- -----------
     21     6.96       7.81       0.42   28364   1 AcrobatNotificationClient
-    15     3.47       3.95       1.88   27060   1 AdobeARM
-    6     1.42       5.46       0.00    7800   0 AggregatorHost
-    16     5.88      14.40       0.00    5496   0 AppHelperCap
-    33    64.06      71.02      14.41   18740   1 ApplicationFrameHost
+    5     1.36       5.44       0.00    7800   0 AggregatorHost
+    16     5.64      15.12       0.00    5496   0 AppHelperCap
+    33    64.69      71.07      14.52   18740   1 ApplicationFrameHost
+    8     1.81       7.54       0.11   18888   1 AppVShNotify
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`

@@ -1243,6 +1243,7 @@ class KPathApp:
 
             self.__click()
         self.__toggle_theme(None) #Important to let text appear correctly
+        self.__toggle_theme(None) # Bring back to previous
 
 
     @output.capture(clear_output=True,wait=True)
