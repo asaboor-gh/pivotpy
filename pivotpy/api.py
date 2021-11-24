@@ -381,7 +381,7 @@ class Vasprun:
 
     @property
     def data(self):
-        return self.data
+        return self._data
 
     @_sub_doc(sp.splot_bands,'- path_evr')
     def splot_bands(self,ax = None,**kwargs):
