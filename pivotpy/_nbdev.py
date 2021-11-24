@@ -5,6 +5,7 @@ __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 index = {"iplot2html": "InteractivePlots.ipynb",
          "iplot_rgb_lines": "InteractivePlots.ipynb",
          "iplot_dos_lines": "InteractivePlots.ipynb",
+         "download_structure": "MainAPI.ipynb",
          "__all__": "MainAPI.ipynb",
          "parse_text": "MainAPI.ipynb",
          "POSCAR": "MainAPI.ipynb",

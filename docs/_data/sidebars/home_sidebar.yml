@@ -13,7 +13,7 @@ entries:
       title: Interactive Plots
       url: InteractivePlots.html
     - output: web,pdf
-      title: API
+      title: User API
       url: MainAPI.html
     - output: web,pdf
       title: Static Plots

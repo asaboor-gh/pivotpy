@@ -139,7 +139,7 @@ def _load_mp_data(formula,api_key=None,mp_id=None,max_sites = None, min_sites = 
     - Returns fetched data using request api of python form materials project website.
     - **Parameters**
         - formula  : Material formula such as 'NaCl'.
-        - api_key  : API key for your account from material project site. Auto picks if you already used `save_mp_API` function.
+        - api_key  : API key for your account from material project site. Auto picks if you already used `_save_mp_API` function.
         - mp_id     : Optional, you can specify material ID to filter results.
         - max_sites : Maximum number of sites. If None, sets `min_sites + 1`, if `min_sites = None`, gets all data.
         - min_sites : Minimum number of sites. If None, sets `max_sites + 1`, if `max_sites = None`, gets all data.
@@ -154,7 +154,7 @@ def _load_mp_data(formula,api_key=None,mp_id=None,max_sites = None, min_sites = 
                     if 'MP_API_KEY' in line:
                         api_key = line.split('=')[1].strip()
         except:
-            return print("api_key not given. provide in argument or generate in file using `save_mp_API(your_mp_api_key)")
+            return print("api_key not given. provide in argument or generate in file using `_save_mp_API(your_mp_api_key)")
 
     #url must be a raw string
     url = r"https://www.materialsproject.org/rest/v2/materials/{}/vasp?API_KEY={}".format(formula,api_key)
@@ -204,6 +204,7 @@ class InvokeMaterialsProject:
         self.__cifs = None
         self.__poscars = None
         self.__response = None
+        self.success = False
 
     def save_api_key(self,api_key):
         "Save api_key for auto reloading later."
@@ -212,11 +213,15 @@ class InvokeMaterialsProject:
     @property
     def poscars(self):
         "Get all loaded poscars as list. Any item in list can be written to file using `item.write`"
+        if self.__poscars is None: # empty means still got it
+            raise Exception("No poscars loaded. Use `request` function to load data and then access.")
         return self.__poscars
 
     @property
     def cifs(self):
         "Get all loaded cifs as list. Any item in list can be written to file using `item.write`"
+        if self.__cifs is None: # empty means still got it
+            raise Exception("No cifs loaded. Use `request` function to load data and then access.")
         return self.__cifs
 
     @lru_cache(maxsize=2) #cache for 2 calls
@@ -310,6 +315,8 @@ class InvokeMaterialsProject:
 
         for pos in [*self.__poscars, *self.__cifs]:
             pos.write = write.__get__(pos,type(pos)) # Attch method to poscar and cifs
+
+        self.success = True # set success flag
 
 
 # Cell
