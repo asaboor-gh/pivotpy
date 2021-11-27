@@ -353,13 +353,13 @@ def get_axes(figsize=(3.4, 2.6), nrows=1, ncols=1, widths=[], heights=[], axes_o
                 setattr(ax,f.__name__,f.__get__(ax,type(ax)))
     return axes
 get_axes.__doc__ = get_axes.__doc__ + '''
-    **There are extra methods added to each axes (only 2D) object.**
-        - add_text
-        - add_legend
-        - add_colorbar
-        - color_wheel
-        - break_spines
-        - modify_axes
+**There are extra methods added to each axes (only 2D) object.**
+    - add_text
+    - add_legend
+    - add_colorbar
+    - color_wheel
+    - break_spines
+    - modify_axes
 '''
 
 # Cell
@@ -460,3 +460,125 @@ class Vasprun:
     def iplot_rgb_lines(self,elements = [[],[],[]], orbs = [[],[],[]], labels = ['','',''],**kwargs):
         kwargs = self.__handle_kwargs(kwargs)
         return ip.iplot_rgb_lines(self._data,elements = elements, orbs = orbs, labels = labels, **kwargs)
+
+    def get_band_info(self,b_i,k_i=None):
+        "Get band information for given band index `b_i`. If `k_i` is given, returns info at that point"
+        def at_minmax(_bands,_pros,func,k_i=None):
+            _bands_ = _bands.flatten()
+            if isinstance(k_i,int):
+                extrema = _bands_[k_i]
+                k = float(self._data.kpath[k_i])
+                kp = self._data.kpoints[k_i]
+                pros = _pros[:,k_i,:].sum(axis=0).flatten()
+            else:
+                extrema = func(_bands_)
+                where, = np.where(_bands_ == extrema) # unpack singelton
+                k, kp = [float(self._data.kpath[w]) for w in where], self._data.kpoints[where]
+                pros = _pros[:,where[0],:].sum(axis=0).flatten()
+            return vp.Dict2Data({'e':float(extrema),'k':k,'kp':kp.tolist(),
+                    'pros':{l.replace('-',''):float(p) for p,l in zip(pros,self._data.pro_bands.labels)}})
+
+        if self._data.bands.ISPIN == 1:
+            b = self._data.bands.evals[:,b_i]
+            p = self._data.pro_bands.pros[:,:,b_i,:]
+
+            if isinstance(k_i,int): # single kpoint
+                return at_minmax(b,p,np.min,k_i=k_i)
+
+            return vp.Dict2Data({'min':at_minmax(b,p,np.min,k_i=k_i),'max':at_minmax(b,p,np.max,k_i=k_i)})
+
+        else: # spin-polarized
+            bu = self._data.bands.evals.SpinUp[:,b_i]
+            pu = self._data.pro_bands.pros.SpinUp[:,:,b_i,:]
+
+            _minu = at_minmax(bu,pu,np.min,k_i=k_i)
+            _maxu = at_minmax(bu,pu,np.max,k_i=k_i)
+
+            bd = self._data.bands.evals.SpinDown[:,b_i]
+            pd = self._data.pro_bands.pros.SpinDown[:,:,b_i,:]
+
+            _mind = at_minmax(bd,pd,np.min,k_i=k_i)
+            _maxd = at_minmax(bd,pd,np.max,k_i=k_i)
+
+            if isinstance(k_i,int): # single kpoint
+                return vp.Dict2Data({'SpinUp':_minu,'SpinDown':_mind})
+
+            return vp.Dict2Data({'SpinUp':{'min':_minu,'max':_maxu},'SpinDown':{'min':_mind,'max':_maxd}})
+
+    def get_en_diff(self,b1_i,b2_i,k1_i=None,k2_i=None):
+        """Get energy difference between two bands at given two kpoints indices. Index 2 is considered at higher energy.
+        - b1_i, b2_i : band indices of the two bands, minimum energy difference is calculated.
+        - k1_i, k2_i : k-point indices of the two bands.
+
+        > If k1_i and k2_i are not provided, `min(b2_i) - max(b1_i)` is calculated which is equivalent to band gap.
+
+        Returns: Data with follwoing attributes which can be used to annotate the difference on plot.
+            de : energy difference
+            p1 : point on band 1
+                e : energy
+                k : k-point value
+                eqv_k : k-point value of the equivalent k-points with same energy. Only available if k1_i and k2_i are provided.
+            p2 : point on band 2
+                e,k,eqv_k as in p1
+
+        For spin-polarized case, 4 blocks of above data are returned which are accessible by
+        `u1u2, u1d2, d1u2, d1d2` and they collects energy difference between 2 given bands at 2 different spin.
+
+        """
+        if k1_i and k2_i == None:
+            raise ValueError('When you provide `k1_i`, `k2_i` cannot be None. They both can be None at same time.')
+        if k1_i == None and k2_i:
+            raise ValueError('When you provide `k2_i`, `k1_i` cannot be None. They both can be None at same time.')
+
+        if self._data.bands.ISPIN == 1:
+            if isinstance(k1_i,int):
+                b1 = self.get_band_info(b1_i,k_i=k1_i)
+                b2 = self.get_band_info(b2_i,k_i=k2_i)
+                return vp.Dict2Data({'de':b2.e - b1.e, 'p1':{'k':b1.k,'e':b1.e}, 'p2':{'k':b2.k,'e':b2.e}})
+            else:
+                b1 = self.get_band_info(b1_i,k_i=None)
+                b2 = self.get_band_info(b2_i,k_i=None)
+                return vp.Dict2Data({'de':b2.min.e - b1.max.e,
+                        'p1':{'k':b1.max.k[0],'e':b1.max.e,'eqv_k':b1.max.k[1:]}, 'p2':{'k':b2.min.k[0],'e': b2.min.e, 'eqv_k':b2.min.k[1:]}
+                        })
+        else:
+            if isinstance(k1_i,int):
+                b1u = self.get_band_info(b1_i,k_i=k1_i).SpinUp
+                b1d = self.get_band_info(b1_i,k_i=k1_i).SpinDown
+                b2u = self.get_band_info(b2_i,k_i=k2_i).SpinUp
+                b2d = self.get_band_info(b2_i,k_i=k2_i).SpinDown
+
+                return vp.Dict2Data({
+                    'u1u2':{'de':b2u.e - b1u.e, 'p1':{'k':b1u.k, 'e':b1u.e}, 'p2':{'k':b2u.k, 'e':b2u.e}},
+                    'd1d2':{'de':b2d.e - b1d.e, 'p1':{'k':b1d.k, 'e':b1d.e}, 'p2':{'k':b2d.k, 'e':b2d.e}},
+                    'd1u2':{'de':b2u.e - b1d.e, 'p1':{'k':b1d.k, 'e':b1d.e}, 'p2':{'k':b2u.k, 'e':b2u.e}},
+                    'u1d2':{'de':b2d.e - b1u.e, 'p1':{'k':b1u.k, 'e':b1u.e}, 'p2':{'k':b2d.k, 'e':b2d.e}}
+                })
+            else:
+                b1u = self.get_band_info(b1_i,k_i=None).SpinUp.max # max in lower band
+                b1d = self.get_band_info(b1_i,k_i=None).SpinDown.max
+                b2u = self.get_band_info(b2_i,k_i=None).SpinUp.min # min in upper band
+                b2d = self.get_band_info(b2_i,k_i=None).SpinDown.min
+
+                return vp.Dict2Data({
+                    'u1u2':{'de':b2u.e - b1u.e, 'p1':{'k':b1u.k[0], 'e':b1u.e, 'eqv_k':b1u.k[1:]}, 'p2':{'k':b2u.k[0],'e':b2u.e, 'eqv_k':b2u.k[1:]}},
+                    'd1d2':{'de':b2d.e - b1d.e, 'p1':{'k':b1d.k[0], 'e':b1d.e, 'eqv_k':b1d.k[1:]}, 'p2':{'k':b2d.k[0],'e':b2d.e, 'eqv_k':b2d.k[1:]}},
+                    'd1u2':{'de':b2u.e - b1d.e, 'p1':{'k':b1d.k[0], 'e':b1d.e, 'eqv_k':b1d.k[1:]}, 'p2':{'k':b2d.k[0],'e':b2d.e, 'eqv_k':b2d.k[1:]}},
+                    'u1d2':{'de':b2d.e - b1u.e, 'p1':{'k':b1u.k[0], 'e':b1u.e, 'eqv_k':b1u.k[1:]}, 'p2':{'k':b2u.k[0],'e':b2u.e, 'eqv_k':b2u.k[1:]}}
+                })
+
+    def splot_en_diff(self, en_diff, ax, E_Fermi=None, **kwargs):
+        """
+        Plot energy difference at given ax. Provide `en_diff` from output of `get_en_diff.
+        Provide `ax` on which bandstructure is plotted.
+        E_Fermi is the Fermi energy, if not provided, it will be taken from self.data.
+        kwargs are passed to `ax.step`.
+        Returns ax.
+        """
+        if E_Fermi == None:
+            E_Fermi = self.data.bands.E_Fermi
+
+        kwargs = {'marker':'.',**kwargs}
+        kwargs['where'] = 'mid' # override this
+        ax.step([en_diff.p1.k, en_diff.p2.k],[en_diff.p1.e - E_Fermi,en_diff.p2.e - E_Fermi],**kwargs)
+        return ax

@@ -269,11 +269,11 @@ pp.g_utils.ps2std(ps_command='(Get-Process)[0..4]')
 
     NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
     ------    -----      -----     ------      --  -- -----------
-    6     1.46       5.47       0.00    7800   0 AggregatorHost
-    16     5.99      17.42       0.00    5496   0 AppHelperCap
-    33    62.90      69.63      14.92   18740   1 ApplicationFrameHost
-    9     1.84       7.70       0.11   18888   1 AppVShNotify
-    8     1.60       6.98       0.00   19248   0 AppVShNotify
+    6     1.51       5.30       0.00    7800   0 AggregatorHost
+    16     5.82      14.39       0.00    5496   0 AppHelperCap
+    33    60.37      68.93      15.12   18740   1 ApplicationFrameHost
+    8     1.81       7.30       0.11   18888   1 AppVShNotify
+    8     1.57       6.61       0.00   19248   0 AppVShNotify
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -314,12 +314,12 @@ Get-ChildItem 'E:\Research\graphene_example\'
         Directory: E:\Research\graphene_example
     
     
-    Mode                 LastWriteTime         Length Name                              
-    ----                 -------------         ------ ----                              
-    da----        10/31/2020   1:30 PM                ISPIN_1                           
-    da----          5/9/2020   1:05 PM                ISPIN_2                           
-    -a----          5/9/2020   1:01 PM          75331 OUTCAR                            
-    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                       
+    Mode                 LastWriteTime         Length Name                                    
+    ----                 -------------         ------ ----                                    
+    da----        10/31/2020   1:30 PM                ISPIN_1                                 
+    da----          5/9/2020   1:05 PM                ISPIN_2                                 
+    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                  
+    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                             
     
     
 
