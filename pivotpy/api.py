@@ -354,12 +354,12 @@ def get_axes(figsize=(3.4, 2.6), nrows=1, ncols=1, widths=[], heights=[], axes_o
     return axes
 get_axes.__doc__ = get_axes.__doc__ + '''
 **There are extra methods added to each axes (only 2D) object.**
-    - add_text
-    - add_legend
-    - add_colorbar
-    - color_wheel
-    - break_spines
-    - modify_axes
+- add_text
+- add_legend
+- add_colorbar
+- color_wheel
+- break_spines
+- modify_axes
 '''
 
 # Cell
@@ -401,6 +401,8 @@ class Vasprun:
 
 
         self.elim = elim
+        self._kpath = self._data.kpath  # For info only, get updated with plot commands
+        self._efermi = self._data.bands.E_Fermi   # For info only, get updated with plot commands
 
         if path == None:
             self.kticks = sio.read_ticks('KPOINTS')
@@ -416,6 +418,12 @@ class Vasprun:
             return kwargs
         ticks = {k:self.kticks[k] for k in ['ktick_inds','ktick_vals','kseg_inds']}
         kwargs = {**ticks,**kwargs} #Prefer provided ones
+
+        # Set for info only in case of bandstructure
+        if  'kseg_inds' in kwargs and kwargs['kseg_inds']:
+            self._kpath =  vp.join_ksegments(self._data.kpath,kwargs['kseg_inds'])
+        if 'E_Fermi' in kwargs and kwargs['E_Fermi'] != None: #None is important to pick 0 as fermi as well
+            self._efermi = kwargs['E_Fermi']
         return kwargs
 
     @_sub_doc(vp.Dict2Data.to_json,'')
@@ -462,18 +470,20 @@ class Vasprun:
         return ip.iplot_rgb_lines(self._data,elements = elements, orbs = orbs, labels = labels, **kwargs)
 
     def get_band_info(self,b_i,k_i=None):
-        "Get band information for given band index `b_i`. If `k_i` is given, returns info at that point"
+        """Get band information for given band index `b_i`. If `k_i` is given, returns info at that point
+        Fermi energy is subtracted from all energies. When a plot commnad is called, the Fermi energy is updated if provided.
+        """
         def at_minmax(_bands,_pros,func,k_i=None):
-            _bands_ = _bands.flatten()
+            _bands_ = _bands.flatten() - self._efermi # subtract fermi energy
             if isinstance(k_i,int):
                 extrema = _bands_[k_i]
-                k = float(self._data.kpath[k_i])
+                k = float(self._kpath[k_i])
                 kp = self._data.kpoints[k_i]
                 pros = _pros[:,k_i,:].sum(axis=0).flatten()
             else:
                 extrema = func(_bands_)
                 where, = np.where(_bands_ == extrema) # unpack singelton
-                k, kp = [float(self._data.kpath[w]) for w in where], self._data.kpoints[where]
+                k, kp = [float(self._kpath[w]) for w in where], self._data.kpoints[where]
                 pros = _pros[:,where[0],:].sum(axis=0).flatten()
             return vp.Dict2Data({'e':float(extrema),'k':k,'kp':kp.tolist(),
                     'pros':{l.replace('-',''):float(p) for p,l in zip(pros,self._data.pro_bands.labels)}})
@@ -513,13 +523,9 @@ class Vasprun:
         > If k1_i and k2_i are not provided, `min(b2_i) - max(b1_i)` is calculated which is equivalent to band gap.
 
         Returns: Data with follwoing attributes which can be used to annotate the difference on plot.
-            de : energy difference
-            p1 : point on band 1
-                e : energy
-                k : k-point value
-                eqv_k : k-point value of the equivalent k-points with same energy. Only available if k1_i and k2_i are provided.
-            p2 : point on band 2
-                e,k,eqv_k as in p1
+            de     : energy difference
+            coords : np.array([[k1,e1],[k2,e2]]) #E_Fermi is subtracted either from system or when user provides in a plot command.
+            eqv_coords: list(coords) at equivalent k-points if exit. Do not appear if k1_i and k2_i are provided.
 
         For spin-polarized case, 4 blocks of above data are returned which are accessible by
         `u1u2, u1d2, d1u2, d1d2` and they collects energy difference between 2 given bands at 2 different spin.
@@ -530,17 +536,28 @@ class Vasprun:
         if k1_i == None and k2_i:
             raise ValueError('When you provide `k2_i`, `k1_i` cannot be None. They both can be None at same time.')
 
+        def format_coords(b1_max,b2_min):
+            "maximum of b1 and min of b2 is taken for energy difference of two bands when kpoint not given."
+            combs = []
+            for k1 in b1_max.k:
+                for k2 in b2_min.k:
+                    combs.append(np.array([[k1,b1_max.e],[k2,b2_min.e]]))
+
+            _out = {'coords':combs[0]}
+            if combs[1:]:
+                _out['eqv_coords'] = combs[1:]
+            return _out
+
         if self._data.bands.ISPIN == 1:
             if isinstance(k1_i,int):
                 b1 = self.get_band_info(b1_i,k_i=k1_i)
                 b2 = self.get_band_info(b2_i,k_i=k2_i)
-                return vp.Dict2Data({'de':b2.e - b1.e, 'p1':{'k':b1.k,'e':b1.e}, 'p2':{'k':b2.k,'e':b2.e}})
+                return vp.Dict2Data({'de':b2.e - b1.e, 'coords': np.array([[b1.k,b1.e],[b2.k, b2.e]])})
             else:
-                b1 = self.get_band_info(b1_i,k_i=None)
-                b2 = self.get_band_info(b2_i,k_i=None)
-                return vp.Dict2Data({'de':b2.min.e - b1.max.e,
-                        'p1':{'k':b1.max.k[0],'e':b1.max.e,'eqv_k':b1.max.k[1:]}, 'p2':{'k':b2.min.k[0],'e': b2.min.e, 'eqv_k':b2.min.k[1:]}
-                        })
+                b1 = self.get_band_info(b1_i,k_i=None).max
+                b2 = self.get_band_info(b2_i,k_i=None).min
+
+                return vp.Dict2Data({'de':b2.e - b1.e, **format_coords(b1,b2)})
         else:
             if isinstance(k1_i,int):
                 b1u = self.get_band_info(b1_i,k_i=k1_i).SpinUp
@@ -549,10 +566,10 @@ class Vasprun:
                 b2d = self.get_band_info(b2_i,k_i=k2_i).SpinDown
 
                 return vp.Dict2Data({
-                    'u1u2':{'de':b2u.e - b1u.e, 'p1':{'k':b1u.k, 'e':b1u.e}, 'p2':{'k':b2u.k, 'e':b2u.e}},
-                    'd1d2':{'de':b2d.e - b1d.e, 'p1':{'k':b1d.k, 'e':b1d.e}, 'p2':{'k':b2d.k, 'e':b2d.e}},
-                    'd1u2':{'de':b2u.e - b1d.e, 'p1':{'k':b1d.k, 'e':b1d.e}, 'p2':{'k':b2u.k, 'e':b2u.e}},
-                    'u1d2':{'de':b2d.e - b1u.e, 'p1':{'k':b1u.k, 'e':b1u.e}, 'p2':{'k':b2d.k, 'e':b2d.e}}
+                    'u1u2':{'de':b2u.e - b1u.e, 'coords':np.array([[b1u.k, b1u.e], [b2u.k, b2u.e]])},
+                    'd1d2':{'de':b2d.e - b1d.e, 'coords':np.array([[b1d.k, b1d.e], [b2d.k, b2d.e]])},
+                    'd1u2':{'de':b2u.e - b1d.e, 'coords':np.array([[b1d.k, b1d.e], [b2u.k, b2u.e]])},
+                    'u1d2':{'de':b2d.e - b1u.e, 'coords':np.array([[b1u.k, b1u.e], [b2d.k, b2d.e]])}
                 })
             else:
                 b1u = self.get_band_info(b1_i,k_i=None).SpinUp.max # max in lower band
@@ -561,24 +578,21 @@ class Vasprun:
                 b2d = self.get_band_info(b2_i,k_i=None).SpinDown.min
 
                 return vp.Dict2Data({
-                    'u1u2':{'de':b2u.e - b1u.e, 'p1':{'k':b1u.k[0], 'e':b1u.e, 'eqv_k':b1u.k[1:]}, 'p2':{'k':b2u.k[0],'e':b2u.e, 'eqv_k':b2u.k[1:]}},
-                    'd1d2':{'de':b2d.e - b1d.e, 'p1':{'k':b1d.k[0], 'e':b1d.e, 'eqv_k':b1d.k[1:]}, 'p2':{'k':b2d.k[0],'e':b2d.e, 'eqv_k':b2d.k[1:]}},
-                    'd1u2':{'de':b2u.e - b1d.e, 'p1':{'k':b1d.k[0], 'e':b1d.e, 'eqv_k':b1d.k[1:]}, 'p2':{'k':b2d.k[0],'e':b2d.e, 'eqv_k':b2d.k[1:]}},
-                    'u1d2':{'de':b2d.e - b1u.e, 'p1':{'k':b1u.k[0], 'e':b1u.e, 'eqv_k':b1u.k[1:]}, 'p2':{'k':b2u.k[0],'e':b2u.e, 'eqv_k':b2u.k[1:]}}
+                    'u1u2':{'de':b2u.e - b1u.e, **format_coords(b1u,b2u)},
+                    'd1d2':{'de':b2d.e - b1d.e, **format_coords(b1d,b2d)},
+                    'd1u2':{'de':b2u.e - b1d.e, **format_coords(b1d,b2u)},
+                    'u1d2':{'de':b2d.e - b1u.e, **format_coords(b1u,b2d)}
                 })
 
-    def splot_en_diff(self, en_diff, ax, E_Fermi=None, **kwargs):
-        """
-        Plot energy difference at given ax. Provide `en_diff` from output of `get_en_diff.
+    def splot_en_diff(self, coords, ax, **kwargs):
+        """Plot energy difference at given ax. Provide `coords` from output of `get_en_diff().coords` or `get_en_diff().eqv_coords[i]` if exist.
         Provide `ax` on which bandstructure is plotted.
-        E_Fermi is the Fermi energy, if not provided, it will be taken from self.data.
+        E_Fermi is already subtracted in `coords` from system or by user input when bandstructure plot commands are run.
         kwargs are passed to `ax.step`.
         Returns ax.
         """
-        if E_Fermi == None:
-            E_Fermi = self.data.bands.E_Fermi
-
         kwargs = {'marker':'.',**kwargs}
         kwargs['where'] = 'mid' # override this
-        ax.step([en_diff.p1.k, en_diff.p2.k],[en_diff.p1.e - E_Fermi,en_diff.p2.e - E_Fermi],**kwargs)
+        coords = np.array(coords) # make sure it is np.array
+        ax.step(*coords.T,**kwargs)
         return ax
