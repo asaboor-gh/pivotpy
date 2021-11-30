@@ -34,7 +34,7 @@ Links:
 links = """[github](https://github.com/massgh/pivotpy)             
 [docs](https://massgh.github.io/pivotpy/)"""
 
-__version__ = "1.0.13"
+__version__ = "1.1.0"
 
 __all__ = []
 
@@ -60,8 +60,9 @@ RGB = __LSC.from_list('RGB',[(0.9,0,0),(0.9,0.9,0),(0,0.9,0),(0,0.9,0.9),(0,0,0.
 __plt.register_cmap('RGB',RGB)
 
 # color_marices for quick_rgb_lines
-color_matrix = __np.array([[0.5, 0, 0.5, 1],[0.5, 0.5, 0., 1],[0., 0.5, 0.5,0 ]])
-gray_matrix = __np.array([[1,0,0,0],[0,1,0,1],[0,0,1,0]])
+color_matrix = __np.array([[0.5,0,0.5,1],[0.5,0.5,0,1],[0,0.5,0.5,0.2],[1,1,0.2,0]]) # lights up to see colors a little bit
+gray_matrix = __np.array([[1,0,0,0],[0,1,0,1],[0,0,1,0],[0,1,0,0]])
+swap_bg_matrix = __np.array([[1,0,0],[0,0,1],[0,1,0]])
 
 #Backward Compatibility
 __mapping = {

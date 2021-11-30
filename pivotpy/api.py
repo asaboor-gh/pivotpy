@@ -69,7 +69,6 @@ _memebers = (
     wdg.KPathApp,
     gu.set_dir,
     gu.get_child_items,
-    gu.color,
     gu.transform_color,
     gu.interpolate_data,
     vp.split_vasprun,
@@ -78,7 +77,8 @@ _memebers = (
     sp.plt2html,
     sp.plt2text,
     sp.show,
-    sp.savefig
+    sp.savefig,
+    sp.append_axes
 )
 
 # Subset of functions from modules in __all__ to make exportable as *
@@ -348,7 +348,7 @@ class LOCPOT:
 def get_axes(figsize=(3.4, 2.6), nrows=1, ncols=1, widths=[], heights=[], axes_off=[], axes_3d=[], sharex=False, sharey=False, azim=45, elev=15, ortho3d=True, **subplots_adjust_kwargs):
     axes = sp.get_axes(figsize=figsize, nrows=nrows, ncols=ncols, widths=widths, heights=heights, axes_off=axes_off, axes_3d=axes_3d, sharex=sharex, sharey=sharey, azim=azim, elev=elev, ortho3d=ortho3d, **subplots_adjust_kwargs)
     for ax in np.array([axes]).flatten():
-        for f in [sp.add_text,sp.add_legend,sp.add_colorbar,sp.color_wheel,sp.break_spines,sp.modify_axes]:
+        for f in [sp.add_text,sp.add_legend,sp.add_colorbar,sp.color_wheel,sp.break_spines,sp.modify_axes,sp.append_axes]:
             if ax.name != '3d':
                 setattr(ax,f.__name__,f.__get__(ax,type(ax)))
     return axes
@@ -360,6 +360,7 @@ get_axes.__doc__ = get_axes.__doc__ + '''
 - color_wheel
 - break_spines
 - modify_axes
+- append_axes
 '''
 
 # Cell
