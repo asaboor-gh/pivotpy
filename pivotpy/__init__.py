@@ -62,7 +62,9 @@ __plt.register_cmap('RGB',RGB)
 # color_marices for quick_rgb_lines
 color_matrix = __np.array([[0.5,0,0.5,1],[0.5,0.5,0,1],[0,0.5,0.5,0.2],[1,1,0.2,0]]) # lights up to see colors a little bit
 gray_matrix = __np.array([[1,0,0,0],[0,1,0,1],[0,0,1,0],[0,1,0,0]])
-swap_bg_matrix = __np.array([[1,0,0],[0,0,1],[0,1,0]])
+rbg_matrix= __np.array([[1,0,0],[0,0,1],[0,1,0]]) # Red, Blue, Green
+swap_bg_matrix = rbg_matrix # Alias for backward compatibility
+cmy_matrix = __np.array([[0,0.5,0.5,1],[0.5,0,0.5,1],[0.5,0.5,0,0.2],[1,1,0.2,0]]) # Generates CMYK color palette
 
 #Backward Compatibility
 __mapping = {
