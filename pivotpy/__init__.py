@@ -34,7 +34,7 @@ Links:
 links = """[github](https://github.com/massgh/pivotpy)             
 [docs](https://massgh.github.io/pivotpy/)"""
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 __all__ = []
 
@@ -58,6 +58,18 @@ from matplotlib.colors import LinearSegmentedColormap as __LSC
 import matplotlib.pyplot as __plt, numpy as __np
 RGB = __LSC.from_list('RGB',[(0.9,0,0),(0.9,0.9,0),(0,0.9,0),(0,0.9,0.9),(0,0,0.9)])
 __plt.register_cmap('RGB',RGB)
+
+def create_colormap(name='RB',colors=[(0.9,0,0),(0,0,0.9)]):
+    """
+    Create and register a custom colormap from a list of RGB colors. and then use it's name in plottoing functions to get required colors.
+    - name: str, name of the colormap
+    - colors: list of RGB colors, e.g. [(0.9,0,0),(0,0,0.9)] or named colors, e.g. ['red','blue'], add as many colors as you want.
+    
+    **Returns**: Colormap object which you can use to get colors from. like cm = create_colormap(); cm(0.5) which will return a color at center of map
+    """
+    __RGB = __LSC.from_list(name,colors)
+    __plt.register_cmap(name,__RGB)
+    return __RGB
 
 # color_marices for quick_rgb_lines
 color_matrix = __np.array([[0.5,0,0.5,1],[0.5,0.5,0,1],[0,0.5,0.5,0.2],[1,1,0.2,0]]) # lights up to see colors a little bit
@@ -105,6 +117,6 @@ def docs():
 def example_notebook():
     __wb.open('https://colab.research.google.com/github/massgh/pivotpy/blob/master/test.ipynb',new=1)
     
-__all__ = ['docs','example_notebook', *__all__]
+__all__ = ['docs','example_notebook', 'create_colormap' ,*__all__]
     
     

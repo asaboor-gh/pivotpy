@@ -9,6 +9,7 @@ import os
 import numpy as np
 from io import BytesIO
 import PIL #For text image.
+from collections import namedtuple
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -16,6 +17,7 @@ from matplotlib.colors import LinearSegmentedColormap as LSC
 from matplotlib.collections import LineCollection
 from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+
 
 # Inside packages import to work both with package and jupyter notebook.
 try:
@@ -152,7 +154,7 @@ def get_axes(figsize   = (3.4,2.6),
                 axs[inds] = fig.add_axes(pos,projection='3d',azim=azim,elev=elev,**proj)
     try:
         for ax in np.array([axs]).flatten():
-            for f in [add_text,add_legend,add_colorbar,color_wheel,break_spines,modify_axes]:
+            for f in [add_text,add_legend,add_colorbar,color_wheel,break_spines,modify_axes,append_axes]:
                 if ax.name != '3d':
                     setattr(ax,f.__name__,f.__get__(ax,type(ax)))
     except: pass
@@ -712,6 +714,54 @@ def _validate_input(elements,orbs,labels,sys_info,rgb=False):
 
     return (True,elements,orbs,labels)
 
+def _format_input(query_data,rgb=False,include_bands=False):
+    """
+    Format input elements, orbs and labels according to query_data.
+    query_data = {'Ga-s':(0,[1]),'Ga-p':(0,[1,2,3]),'Ga-d':(0,[4,5,6,7,8])} #for Ga in GaAs, to pick Ga-1, use [0] instead of 0 at first place
+    """
+    if not isinstance(query_data,dict):
+        raise TypeError("`query_data` must be a dictionary, with keys as labels and values from picked projection indices.")
+
+    # Set default values for different situations
+    if rgb:
+        bands, elements, orbs, labels = [[],[],[]], [[],[],[]], [[],[],[]], ['','','']
+    else:
+        bands, elements, orbs, labels = [[],],[[0],], [[0],], ['Element0-s',]
+
+    for i, (k, v) in enumerate(query_data.items()):
+        if include_bands and len(v) != 3:
+            raise ValueError(f"{k!r}: {v} expects 3 items (band, elements, orbs), got {len(v)}.")
+        elif include_bands == False and len(v) != 2:
+            raise ValueError(f"{k!r}: {v} expects 2 items (elements, orbs), got {len(v)}.")
+
+        if rgb and i <= 2:
+            labels[i] = k
+            elements[i], orbs[i] = v[-2:]
+        elif rgb and i > 2:
+            print("RGB plots can only have 3 items, skipping {}.".format(k))
+        elif rgb == False:
+            if i == 0:
+                labels[0] = k
+                elements[0], orbs[0] = v[-2:]
+            else:
+                labels.append(k)
+                elements.append(v[-2])
+                orbs.append(v[-1])
+
+        if include_bands:
+            if i == 0:
+                bands[0] = v[-3]
+            else:
+                bands.append(v[-3])
+
+    if include_bands:
+        nt = namedtuple('Selection',['bands','elements','orbs','labels'])
+        return nt(bands, elements, orbs, labels)
+    else:
+        nt = namedtuple('Selection',['elements','orbs','labels'])
+        return nt(elements, orbs, labels)
+
+
 # Cell
 def splot_rgb_lines(path_evr    = None,
                     elements    = [[],[],[]],
@@ -734,7 +784,8 @@ def splot_rgb_lines(path_evr    = None,
                     scale_color = True,
                     scale_data  = True,
                     colorbar    = True,
-                    color_matrix= None
+                    color_matrix= None,
+                    query_data  = {}
     ):
     """
     - Returns axes object and plot on which all matplotlib allowed actions could be performed. In this function,orbs,labels,elements all have list of length 3. Inside list, sublists or strings could be any length but should be there even if empty.
@@ -764,6 +815,8 @@ def splot_rgb_lines(path_evr    = None,
                         4th column, if given can be used to control the saturation,contrast and brightness as s,c,b = color_matrix[:,3]
                         For simply changing the color intensity use np.diag([r,g,b]) with r,g,b interval in [0,1].
                         Try `pivotpy.color_matrix` as suggested color matrix and modify, which at s=0 returns gray scale.!
+        - query_data : Dictionary with keys as label and values as list of length 2. Should be <= 3 for RGB plots. If given, used in place of elements, orbs and labels arguments.
+                        Example: {'s':([0,1],[0]),'p':([0,1],[1,2,3]),'d':([0,1],[4,5,6,7,8])} will pick up s,p,d orbitals of first two ions of system.
     - **Returns**
         - ax : matplotlib axes object with plotted projected bands.
         - Registers as colormap `RGB_m` to use in DOS to plot in same colors and `RGB_f` to display bands colorbar on another axes.
@@ -775,6 +828,9 @@ def splot_rgb_lines(path_evr    = None,
         return print("Check 'path_evr', something went wrong")
 
     # Fix orbitals, elements and labels lengths very early.
+    if query_data:
+        elements,orbs,labels = _format_input(query_data,rgb=True) # Preferred over elements,orbs,labels
+
     bool_, elements,orbs,labels = _validate_input(elements,orbs,labels,vr.sys_info,rgb=True)
     if bool_ == False:
         return print('Check any of elements,orbs,labels. Something went wrong')
@@ -903,6 +959,7 @@ def splot_color_lines(path_evr      = None,
                       legend_kwargs = {'ncol': 4, 'anchor': (0, 1.05),
                                      'handletextpad': 0.5, 'handlelength': 1,
                                      'fontsize': 'small', 'frameon': False},
+                      query_data    = {},
                        **subplots_adjust_kwargs):
     """
     - Returns axes object and plot on which all matplotlib allowed actions could be performed. If given, elements, orbs, and labels must have same length. If not given, zeroth ion is plotted with s-orbital.
@@ -927,6 +984,8 @@ def splot_color_lines(path_evr      = None,
         - spin       : Plot spin-polarized for spin {'up','down','both'}. Default is both.
         - interp_nk   : Dictionary with keys 'n' and 'k' for interpolation.
         - legend_kwargs: Dictionary containing legend arguments.
+        - query_data : Dictionary with keys as label and values as list of length 2. If given, used in place of elements, orbs and labels arguments.
+                        Example: {'s':([0,1],[0]),'p':([0,1],[1,2,3]),'d':([0,1],[4,5,6,7,8])} will pick up s,p,d orbitals of first two ions of system.
         - **subplots_adjust_kwargs : plt.subplots_adjust parameters.
     - **Returns**
         - axes : matplotlib axes object [one or list of axes] with plotted projected bands.
@@ -938,6 +997,9 @@ def splot_color_lines(path_evr      = None,
         return print("Check 'path_evr', something went wrong")
 
     # Fix orbitals, elements and labels lengths very early.
+    if query_data:
+        elements, orbs, labels = _format_input(query_data=query_data,rgb=False)# preferred over elements, orbs, labels
+
     bool_, elements,orbs,labels = _validate_input(elements,orbs,labels,vr.sys_info)
     if bool_ == False:
         return print('Check any of elements,orbs,labels. Something went wrong')
@@ -1149,7 +1211,8 @@ def splot_dos_lines(path_evr      = None,
                                    'handlelength'   : 1,
                                    'fontsize'       : 'small',
                                    'frameon'        : False
-                                   }
+                                   },
+                    query_data    = {},
 
                     ):
         """
@@ -1170,11 +1233,16 @@ def splot_dos_lines(path_evr      = None,
             - spin       : Plot spin-polarized for spin {'up','down','both'}. Default is both.
             - interp_nk   : Dictionary with keys 'n' and 'k' for interpolation.
             - legend_kwargs: Dictionary to contain legend arguments to fix.
+            - query_data : Dictionary with keys as label and values as list of length 2. If given, used in place of elements, orbs and labels arguments.
+                        Example: {'s':([0,1],[0]),'p':([0,1],[1,2,3]),'d':([0,1],[4,5,6,7,8])} will pick up s,p,d orbitals of first two ions of system.
         - **Returns**
             - ax         : Matplotlib axes.
         """
         if(include_dos not in ('both','pdos','tdos')):
             return print("`include_dos` expects one of ['both','pdos','tdos'], got {}.".format(include_dos))
+
+        if query_data:
+            elements,orbs,labels=_format_input(query_data,rgb=False) # prefer query_data over elements,orbs,labels
 
         en,tdos,pdos,vr=None,None,None,None # Placeholders for defining. must be here.
         cl_dos=_collect_dos(path_evr=path_evr,
