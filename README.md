@@ -29,6 +29,16 @@
 - Use commnad `pivotpy` in regular terminal to quickly launch documentation any time. 
 - See [Full Documentation](https://massgh.github.io/pivotpy/).
 - For CLI, use [Vasp2Visual](https://github.com/massgh/Vasp2Visual).
+- See [PDF Slides](https://github.com/massgh/InteractiveHTMLs/tree/master/docs/IPySlides.pdf) for detailed introduction.
+
+## Changelog for version 1.1.1
+`splot_[rgb,color,dos]_lines` and `iplot_[rgb,dos]_lines` now accept another arguement `query_data` which replaces `elements, orbs, labels` if provided. This argument is a dictionary whose keys are replaced by `labels`, last item in its values is in the form of (elements, orbs). It will be extend in future for fermi plots when you select individul bands as well.
+
+These two are equivalent and later one is simplified with each item showing a single color/line:
+```python
+plot_command(elements=[range(2),range(2)],orbs=[0,[1,2,3]],labels=['s','p'])  
+plot_command(query_data = {'s': (range(2),0),'p': (range(2),[1,2,3])}) # version >= 1.1.1
+```
 
 ## Changelog for version 1.0.10 onward
 A new module `api` is added which consists of selective functions and classes and it is enough for common user. 
