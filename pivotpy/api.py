@@ -166,6 +166,14 @@ class POSCAR:
         self.primitive = False
         self._bz = self.get_bz(primitive = False) # Get defualt regular BZ
         self._cell = self.get_cell() # Get defualt cell
+        self._plane = None # Get defualt plane, changed with splot_bz
+        self._ax = None # Get defualt axis, changed with splot_bz
+
+    def __repr__(self):
+        return self.write(outfile=None)   # Will write to stdout
+
+    def __str__(self):
+        return self.write(outfile=None)   # Will write to stdout
 
     @property
     def data(self):
@@ -175,6 +183,10 @@ class POSCAR:
     def poscar(self):
         "poscar data."
         return self._data
+
+    @property
+    def bz(self):
+        return self._bz
 
     @_sub_doc(sio.get_bz,'- path_pos')
     def get_bz(self, loop=True, digits=8, primitive=False):
@@ -193,7 +205,51 @@ class POSCAR:
 
     @_sub_doc(sio.splot_bz,'- path_pos_bz')
     def splot_bz(self, ax=None, plane=None, color='blue', fill=True, vectors=True, v3=False, vname='b', colormap='plasma', light_from=(1, 1, 1), alpha=0.4):
-        return sio.splot_bz(path_pos_bz = self._bz, ax=ax, plane=plane, color=color, fill=fill, vectors=vectors, v3=v3, vname=vname, colormap=colormap, light_from=light_from, alpha=alpha)
+        self._plane = plane # Set plane for splot_kpath
+        new_ax = sio.splot_bz(path_pos_bz = self._bz, ax=ax, plane=plane, color=color, fill=fill, vectors=vectors, v3=v3, vname=vname, colormap=colormap, light_from=light_from, alpha=alpha)
+        self._ax = new_ax # Set ax for splot_kpath
+        return new_ax
+
+    def splot_kpath(self,vertex = 0, knn_inds = None, labels = None, color='k', line_width = 0.8,marker_size = 10,marker_style = '.',**labels_kwargs):
+        """Plot k-path over existing BZ.
+        - **Parameters**
+            - vertex: vertex index nearby which to plot path. There are as many vertices as there are in BZ's shape.
+            - knn_inds: list of indices of k nearest points e.g. [2,3,1] will trace path linking as 2-3-1.
+                0 is Gamma point and 1 is the selected vertex itself. Points are taken internally from BZ, you can see from `self.bz.specials`.
+            - labels: list of labels for each k-point in same order as `knn_inds`.
+            - color, line_width, marker_size, marker_style are passed to `plt.plot`.
+
+        labels_kwargs are passed to `plt.text`.
+
+        > Tip: You can use this function multiple times to plot multiple/broken paths over same BZ.
+        """
+        if not self._bz or not self._ax:
+            raise ValueError("BZ not found, use `splot_bz` first")
+
+        _specials = self._bz.specials
+        nearest = knn_inds
+
+        ijk = [0,1,2]
+        _mapping = {'xy':[0,1],'xz':[0,2],'yz':[1,2],'zx':[2,0],'zy':[2,1],'yx':[1,0]}
+        if isinstance(self._plane, str) and self._plane in _mapping:
+            ijk = _mapping[self._plane]
+
+        inds = _specials.near[vertex]
+        if nearest:
+            inds = [inds[n] for n in nearest]
+
+        if not labels:
+            labels = ["[{0:6.3f}, {1:6.3f}, {2:6.3f}]".format(*_specials.kpoints[i]) for i in inds]
+            if nearest:
+                labels = [f"{n}: {_lab}" for n, _lab in zip(nearest, labels)]
+
+        coords = _specials.coords[inds][:,ijk]
+        self._ax.plot(*coords.T,color = color,linewidth=line_width,marker=marker_style,markersize=marker_size)
+
+        for c,text in zip(coords, labels):
+            self._ax.text(*c,text,**labels_kwargs)
+        return self._ax
+
 
     def splot_cell(self, ax=None, plane=None, color='blue', fill=True, vectors=True, v3=False, vname='a', colormap='plasma', light_from=(1, 1, 1), alpha=0.4):
         "See docs of `splot_bz`, everything is same except space is inverted."
@@ -221,19 +277,19 @@ class POSCAR:
 
     @_sub_doc(sio.join_poscars,'- poscar1',replace={'poscar2':'other'})
     def join(self,other, direction='z', tol=0.01):
-        return POSCAR(_other_data = sio.join_poscars(poscar1=self._data, poscar2=other.data, direction=direction, tol=tol))
+        return self.__class__(_other_data = sio.join_poscars(poscar1=self._data, poscar2=other.data, direction=direction, tol=tol))
 
     @_sub_doc(sio.scale_poscar,'- path_poscar')
     def scale(self, scale=(1, 1, 1), tol=0.01):
-        return POSCAR(_other_data = sio.scale_poscar(path_poscar=self._data, scale=scale, tol=tol))
+        return self.__class__(_other_data = sio.scale_poscar(path_poscar=self._data, scale=scale, tol=tol))
 
     @_sub_doc(sio.rotate_poscar,'- path_poscar')
     def rotate(self,angle_deg,axis_vec):
-        return POSCAR(_other_data = sio.rotate_poscar(path_poscar=self._data, angle_deg = angle_deg, axis_vec=axis_vec))
+        return self.__class__(_other_data = sio.rotate_poscar(path_poscar=self._data, angle_deg = angle_deg, axis_vec=axis_vec))
 
     @_sub_doc(sio.fix_sites,'- poscar')
     def fix_sites(self, tol=0.01, eqv_sites=True, translate=None):
-        return POSCAR(_other_data = sio.fix_sites(poscar=self._data, tol=tol, eqv_sites=eqv_sites, translate=translate))
+        return self.__class__(_other_data = sio.fix_sites(poscar=self._data, tol=tol, eqv_sites=eqv_sites, translate=translate))
 
     @_sub_doc(sio.get_kmesh,'- path_pos')
     def get_kmesh(self, n_xyz=[5, 5, 5], weight=None, ibzkpt=None, outfile=None):
@@ -446,29 +502,29 @@ class Vasprun:
         return sp.splot_bands(self._data,ax = ax, **kwargs)
 
     @_sub_doc(sp.splot_dos_lines,'- path_evr')
-    def splot_dos_lines(self,elements = [[0],], orbs = [[0],], labels = ['s',], ax = None,**kwargs):
+    def splot_dos_lines(self,elements = [[0],], orbs = [[0],], labels = ['s',], ax = None, query_data= {}, **kwargs):
         kwargs = self.__handle_kwargs(kwargs,dos=True)
-        return sp.splot_dos_lines(self._data,elements = elements, orbs = orbs, labels = labels, ax = ax, **kwargs)
+        return sp.splot_dos_lines(self._data,elements = elements, orbs = orbs, labels = labels, ax = ax, query_data = query_data,**kwargs)
 
     @_sub_doc(sp.splot_rgb_lines,'- path_evr')
-    def splot_rgb_lines(self,elements = [[],[],[]], orbs = [[],[],[]], labels = ['','',''], ax = None, **kwargs):
+    def splot_rgb_lines(self,elements = [[],[],[]], orbs = [[],[],[]], labels = ['','',''], ax = None, query_data= {}, **kwargs):
         kwargs = self.__handle_kwargs(kwargs)
-        return sp.splot_rgb_lines(self._data,elements = elements, orbs = orbs, labels = labels, ax = ax, **kwargs)
+        return sp.splot_rgb_lines(self._data,elements = elements, orbs = orbs, labels = labels, ax = ax, query_data = query_data,**kwargs)
 
     @_sub_doc(sp.splot_color_lines,'- path_evr')
-    def splot_color_lines(self,elements = [[0],], orbs = [[0],], labels = ['s',],axes = None,**kwargs):
+    def splot_color_lines(self,elements = [[0],], orbs = [[0],], labels = ['s',],axes = None, query_data= {}, **kwargs):
         kwargs = self.__handle_kwargs(kwargs)
-        return sp.splot_color_lines(self._data,elements = elements, orbs = orbs, labels = labels, axes = axes, **kwargs)
+        return sp.splot_color_lines(self._data,elements = elements, orbs = orbs, labels = labels, axes = axes, query_data = query_data,**kwargs)
 
     @_sub_doc(ip.iplot_dos_lines,'- path_evr')
-    def iplot_dos_lines(self,elements = [[0],], orbs = [[0],], labels = ['s',],**kwargs):
+    def iplot_dos_lines(self,elements = [[0],], orbs = [[0],], labels = ['s',], query_data= {}, **kwargs):
         kwargs = self.__handle_kwargs(kwargs, dos=True)
-        return ip.iplot_dos_lines(self._data,elements = elements, orbs = orbs, labels = labels, **kwargs)
+        return ip.iplot_dos_lines(self._data,elements = elements, orbs = orbs, labels = labels, query_data = query_data,**kwargs)
 
     @_sub_doc(ip.iplot_rgb_lines,'- path_evr')
-    def iplot_rgb_lines(self,elements = [[],[],[]], orbs = [[],[],[]], labels = ['','',''],**kwargs):
+    def iplot_rgb_lines(self,elements = [[],[],[]], orbs = [[],[],[]], labels = ['','',''], query_data= {}, **kwargs):
         kwargs = self.__handle_kwargs(kwargs)
-        return ip.iplot_rgb_lines(self._data,elements = elements, orbs = orbs, labels = labels, **kwargs)
+        return ip.iplot_rgb_lines(self._data,elements = elements, orbs = orbs, labels = labels, query_data = query_data,**kwargs)
 
     def get_band_info(self,b_i,k_i=None):
         """Get band information for given band index `b_i`. If `k_i` is given, returns info at that point

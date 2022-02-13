@@ -279,11 +279,11 @@ pp.g_utils.ps2std(ps_command='(Get-Process)[0..4]')
 
     NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
     ------    -----      -----     ------      --  -- -----------
-    15     3.47       3.91       0.84    9624   1 AdobeARM
-    6     1.29       4.67       0.00    6100   0 AggregatorHost
-    11     2.56       6.45       0.00    4428   0 AppHelperCap
-    22    22.66      16.98       0.27   14440   1 ApplicationFrameHost
-    9     1.62       2.88       0.00    4100   0 armsvc
+    21     6.93       3.78       0.36   15160   1 AcrobatNotificationClient
+    5     1.36       5.41       0.00    6484   0 AggregatorHost
+    17     5.74      15.48       0.00    5424   0 AppHelperCap
+    24    23.79      43.61       2.78    3756   1 ApplicationFrameHost
+    19     4.37      17.89       0.00    5132   0 armsvc
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -324,12 +324,12 @@ Get-ChildItem 'E:\Research\graphene_example\'
         Directory: E:\Research\graphene_example
     
     
-    Mode                 LastWriteTime         Length Name                     
-    ----                 -------------         ------ ----                     
-    da----        11/28/2021   8:04 PM                ISPIN_1                  
-    da----          5/9/2020   1:05 PM                ISPIN_2                  
-    -a----          5/9/2020   1:01 PM          75331 OUTCAR                   
-    -a----          5/9/2020   1:01 PM         240755 vasprun.xml              
+    Mode                 LastWriteTime         Length Name                            
+    ----                 -------------         ------ ----                            
+    da----        11/28/2021   8:04 PM                ISPIN_1                         
+    da----          5/9/2020   1:05 PM                ISPIN_2                         
+    -a----          5/9/2020   1:01 PM          75331 OUTCAR                          
+    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                     
     
     
 
