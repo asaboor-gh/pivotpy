@@ -104,7 +104,7 @@ def _flip_even_patches(array_1d, patch_length):
     return out_put
 
 # Cell
-def _rgb2plotly(rgb_data=None,mode='markers',max_width=None,showlegend=False,name='',labels=['s','p','d'],symbol=0,start=0):
+def _rgb2plotly(rgb_data=None,mode='markers',max_width=None,showlegend=False,name='',labels=['s','p','d'],symbol=0,bands_indices = None):
     """
     - Returns data object of plotly's figure using `_get_rgb_data`. Returned data could be fed to a plolty's figure.
     - ** Parameters**
@@ -118,16 +118,16 @@ def _rgb2plotly(rgb_data=None,mode='markers',max_width=None,showlegend=False,nam
         - labels     : Optional, show red green blue colors corresponding orbitals.
         - showlegend : Optional, only suitbale if spin up/down or 'bands' mode is ON.
         - symbol     : Plotly's marker symbol. 0 for circle, 5/6 for Up/Down.
-        - start      : Start index of bands, defult is zero. Should be export_vasprun().bands.indices[0] or get_evals().indices[0].
+        - bands_indices : `len(bands_indices) == NBANDS` should hold. `export_vasprun().bands.indices` or `get_evals().indices`.
     """
     if mode not in ('markers','bands','lines'):
         raise TypeError("Argument `mode` expects one of ['markers','bands','lines'], got '{}'.".format(mode))
-        return
     if rgb_data:
         k,en,rgb,lws = rgb_data
+        _indices = range(np.shape(en)[1]) if bands_indices is None else bands_indices
 
-        _names = [["<sub>{}</sub>".format(int(1+i+start)) for j in range(len(en[0]))]
-                  for i in range(len(en))]
+        _names = [["<sub>{}</sub>".format(int(1+i)) for j in range(len(en[0]))]
+                  for i in _indices]
         clrs=(255*rgb).astype(int).clip(min=0,max=255) #clip in color range
         _txt=(100*rgb).astype(int)
         colors=[['rgb({},{},{})'.format(*i) for i in _c] for _c in clrs]
@@ -161,10 +161,9 @@ def _rgb2plotly(rgb_data=None,mode='markers',max_width=None,showlegend=False,nam
                         color='rgba(255,255,250,0)'),showlegend=showlegend,hovertext=h_text)
                         )
         if(mode=='bands'):
-            for i,values in enumerate(zip(en,colors,lws,h_text)):
-                e,c,w,t = values
+            for i,e,c,w,t in zip(_indices,en,colors,lws,h_text):
                 data.append(go.Scatter(x=k,y=e,mode='markers+lines',
-                            name="{}<sub>{}</sub>".format(name,str(i+1+start)),
+                            name="{}<sub>{}</sub>".format(name,str(i+1)),
                             marker=dict(color=c,size=w,symbol=symbol),line=dict(width=0.001,
                             color='rgba(255,255,250,0)'),showlegend=showlegend,hovertext=t)
                            )
@@ -261,7 +260,6 @@ def iplot_rgb_lines(path_evr    = None,
     """
     if mode not in ('markers','bands','lines'):
         raise TypeError("Argument `mode` expects one of ['markers','bands','lines'], got '{}'.".format(mode))
-        return
 
     check, vr = vp._validate_evr(path_evr=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
     if check == False:
@@ -296,7 +294,7 @@ def iplot_rgb_lines(path_evr    = None,
     ISPIN=vr.sys_info.ISPIN
     args_dict=dict(orbs=orbs,elements=elements,interp_nk=interp_nk,scale_color=True) # Do not scale color there, scale here.
     data,showlegend,name=[],False,'' # Place holder
-    start = vr.bands.indices[0]
+
     if(mode=='bands'):
             showlegend=True
     if(ISPIN==1):
@@ -305,7 +303,7 @@ def iplot_rgb_lines(path_evr    = None,
         new_args=dict(kpath=K, evals_set=En, pros_set=Pros,**args_dict)
         rgb_lines=_get_rgb_data(**new_args)
         data=_rgb2plotly(rgb_data=rgb_lines,mode=mode,showlegend=showlegend,
-                           labels=labels,name='B',max_width=max_width,start=start)
+                           labels=labels,name='B',max_width=max_width,bands_indices= vr.bands.indices)
     if(ISPIN==2):
         if(mode=='markers'):
             showlegend=True
@@ -316,11 +314,11 @@ def iplot_rgb_lines(path_evr    = None,
         new_args1=dict(kpath=K, evals_set=En1, pros_set=Pros1,**args_dict)
         rgb_lines1=_get_rgb_data(**new_args1)
         data1=_rgb2plotly(rgb_data=rgb_lines1,mode=mode,symbol=0,showlegend=showlegend,
-                            labels=labels,name='B<sup>↑</sup>',max_width=max_width,start=start)
+                            labels=labels,name='B<sup>↑</sup>',max_width=max_width,bands_indices= vr.bands.indices)
         new_args2=dict(kpath=K, evals_set=En2, pros_set=Pros2,**args_dict)
         rgb_lines2=_get_rgb_data(**new_args2)
         data2=_rgb2plotly(rgb_data=rgb_lines2,mode=mode,symbol=100,showlegend=showlegend,
-                            labels=labels,name='B<sup>↓</sup>',max_width=max_width,start=start)
+                            labels=labels,name='B<sup>↓</sup>',max_width=max_width,bands_indices= vr.bands.indices)
         data=[[d1,d2] for d1,d2 in zip(data1,data2)]
         data=[d for ds in data for d in ds]
 

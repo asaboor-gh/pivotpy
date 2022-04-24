@@ -496,6 +496,42 @@ class Vasprun:
         "Get exported data."
         return self._data
 
+    def select(self,kpoints_inds = None, bands_inds = None):
+        """Seletc data based on kpoints and bands indices.
+        This is useful to select only a subset of data and even reorder kpoints after calculations.
+        Both   `kpoints_inds` and `bands_inds` are based on current data and should be based on zero indexing.
+
+        **Returns** `Vasprun` object with selected data that can be plotted using `splot_[...]` or `iplot_[...]` functions.
+
+        New in version 1.1.3
+        """
+        if kpoints_inds is None and bands_inds is None:
+            return self
+
+        assert isinstance(kpoints_inds,(list,tuple,range)) if kpoints_inds is not None else True
+        assert isinstance(bands_inds,(list,tuple,range)) if bands_inds is not None else True
+
+        d = self.data.to_dict()
+        kpoints_inds = range(len(d['kpoints'])) if kpoints_inds is None else kpoints_inds
+        bands_inds = range(len(d['bands']['indices'])) if bands_inds is None else bands_inds
+
+        d['kpoints'] = d['kpoints'][kpoints_inds]
+        d['kpath'] = [k for i, k in enumerate(d['kpath']) if i in kpoints_inds]
+        d['kpath'] = [k - d['kpath'][0] for k in d['kpath']]
+        d['bands']['indices'] = tuple([d['bands']['indices'].start + b for b in bands_inds]) # It is range in original data
+
+        if self.data.sys_info.ISPIN == 1:
+            d['bands']['evals'] = d['bands']['evals'][kpoints_inds][:,bands_inds]
+            d['pro_bands']['pros'] = d['pro_bands']['pros'][:,kpoints_inds][:,:,bands_inds,...]
+        else:
+            d['bands']['evals']['SpinUp'] = d['bands']['evals']['SpinUp'][kpoints_inds][:,bands_inds]
+            d['bands']['evals']['SpinDown'] = d['bands']['evals']['SpinDown'][kpoints_inds][:,bands_inds]
+            d['pro_bands']['pros']['SpinUp'] = d['pro_bands']['pros']['SpinUp'][:,kpoints_inds][:,:,bands_inds,...]
+            d['pro_bands']['pros']['SpinDown'] = d['pro_bands']['pros']['SpinDown'][:,kpoints_inds][:,:,bands_inds,...]
+
+        return self.__class__(data_str = vp.Dict2Data(d).to_json())
+
+
     @_sub_doc(sp.splot_bands,'- path_evr')
     def splot_bands(self,ax = None,**kwargs):
         kwargs = self.__handle_kwargs(kwargs)
