@@ -496,14 +496,14 @@ class Vasprun:
         "Get exported data."
         return self._data
 
-    def select(self,kpoints_inds = None, bands_inds = None):
+    def select(self,kpoints_inds = None, bands_inds = None, kseg_inds = None):
         """Seletc data based on kpoints and bands indices.
         This is useful to select only a subset of data and even reorder kpoints after calculations.
         Both   `kpoints_inds` and `bands_inds` are based on current data and should be based on zero indexing.
-
+        `kseg_inds` is index of disconnected kpoints in `kpoints_inds`, e.g. in `kpoints_inds = [0,5,6,7]`, if 0 and 5 are disconnected, `kseg_inds = [1]`
         **Returns** `Vasprun` object with selected data that can be plotted using `splot_[...]` or `iplot_[...]` functions.
 
-        New in version 1.1.3
+        New in version 1.1.4
         """
         if kpoints_inds is None and bands_inds is None:
             return self
@@ -516,8 +516,9 @@ class Vasprun:
         bands_inds = range(len(d['bands']['indices'])) if bands_inds is None else bands_inds
 
         d['kpoints'] = d['kpoints'][kpoints_inds]
-        d['kpath'] = [k for i, k in enumerate(d['kpath']) if i in kpoints_inds]
-        d['kpath'] = [k - d['kpath'][0] for k in d['kpath']]
+        d['kpath'] = [0, *np.linalg.norm(d['kpoints'][1:] - d['kpoints'][:-1],axis=1).cumsum().round(6)]
+        d['kpath'] = vp.join_ksegments(d['kpath'],kseg_inds) # If broken kpath is provided, join it
+
         d['bands']['indices'] = tuple([d['bands']['indices'].start + b for b in bands_inds]) # It is range in original data
 
         if self.data.sys_info.ISPIN == 1:

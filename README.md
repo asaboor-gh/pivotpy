@@ -277,13 +277,14 @@ Some tasks are very tideious in python while just a click way in powershell. See
 pp.g_utils.ps2std(ps_command='(Get-Process)[0..4]')
 ```
 
-    NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
-    ------    -----      -----     ------      --  -- -----------
-    5     1.30       5.21       0.00    7052   0 AggregatorHost
-    18     6.52      15.43       0.00    5104   0 AppHelperCap
-    25    21.84      43.61       6.64   14344   1 ApplicationFrameHost
-    9     1.98       8.07       0.03   17780   1 AppVShNotify
-    17     4.08      16.70       0.00    4864   0 armsvc
+    NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI Process
+    Name
+    ------    -----      -----     ------      --  -- -------
+    6     1.36       5.43       0.00    7052   0 Aggreg…
+    18     6.52      15.29       0.00    5104   0 AppHel…
+    25    21.84      43.36       6.64   14344   1 Applic…
+    8     1.85       7.72       0.02   20412   1 AppVSh…
+    8     1.57       6.93       0.00   26512   0 AppVSh…
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -324,12 +325,13 @@ Get-ChildItem 'E:\Research\graphene_example\'
         Directory: E:\Research\graphene_example
     
     
-    Mode                 LastWriteTime         Length Name                                                         
-    ----                 -------------         ------ ----                                                         
-    da----        11/28/2021   8:04 PM                ISPIN_1                                                      
-    da----          5/9/2020   1:05 PM                ISPIN_2                                                      
-    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                       
-    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                  
+    Mode                 LastWriteTime         Length Name    
+    ----                 -------------         ------ ----    
+    da----        11/28/2021   8:04 PM                ISPIN_1 
+    da----          5/9/2020   1:05 PM                ISPIN_2 
+    -a----          5/9/2020   1:01 PM          75331 OUTCAR  
+    -a----          5/9/2020   1:01 PM         240755 vasprun.
+                                                      xml     
     
     
 
