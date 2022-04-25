@@ -683,19 +683,22 @@ def export_vasprun(path=None,
 def _validate_evr(path_evr=None,**kwargs):
     "Validates data given for plotting functions. Returns a tuple of (Boolean,data)."
     if type(path_evr) == Dict2Data:
-        vr = path_evr
+        try:
+            path_evr.bands;path_evr.kpath # check if data is valid.
+            return path_evr
+        except:
+            raise ValueError('Provide Data is not valid!.')
     elif path_evr is None:
         path_evr = './vasprun.xml'
 
-    if isinstance(path_evr,str) and os.path.isfile(path_evr):
-        # kwargs -> skipk=skipk,elim=elim,kseg_inds=kseg_inds
-        vr = export_vasprun(path=path_evr,**kwargs)
-    # Apply a robust final check.
-    try:
-        vr.bands;vr.kpath
-        return (True,vr)
-    except:
-        return (False,path_evr)
+    if isinstance(path_evr,str):
+        if os.path.isfile(path_evr):
+            # kwargs -> skipk=skipk,elim=elim,kseg_inds=kseg_inds
+            return export_vasprun(path=path_evr,**kwargs)
+        else:
+            raise FileNotFoundError(f'File {path_evr!r} not found!')
+    # Other things are not valid.
+    raise ValueError('path_evr must be a path string or output of export_vasprun function.')
 
 # Cell
 def load_export(path= './vasprun.xml',

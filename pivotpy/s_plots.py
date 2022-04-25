@@ -326,9 +326,7 @@ def splot_bands(path_evr=None,ax=None,skipk=None,kseg_inds=[],elim=[],ktick_inds
     - **Returns**
         - ax : matplotlib axes object with plotted bands.
     """
-    check, vr = vp._validate_evr(path_evr=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
-    if check == False:
-        return print('Check first argument, something went wrong')
+    vr = vp._validate_evr(path_evr=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
 
     # Main working here.
     K = vp.join_ksegments(vr.kpath,kseg_inds=kseg_inds)
@@ -666,8 +664,7 @@ def _plot_collection(gpd_args,mlc_args,axes=None):
 def _validate_input(elements,orbs,labels,sys_info,rgb=False):
     "Fix input elements, orbs and labels according to given sys_info. Returns (Bool, elements, orbs,labels)."
     if len(elements) != len(orbs) or len(elements) != len(labels):
-        print("`elements`, `orbs` and `labels` expect same length, even if empty.")
-        return (False,elements,orbs,labels)
+        raise ValueError("`elements`, `orbs` and `labels` expect same length, even if empty.")
 
     elem_inds = sys_info.ElemIndex
     max_ind   = elem_inds[-1]-1 # Last index is used for range in ElemIndex, not python index.
@@ -675,25 +672,21 @@ def _validate_input(elements,orbs,labels,sys_info,rgb=False):
         if type(elem) == int:
             try:
                 elements[i] = range(elem_inds[elem],elem_inds[elem+1])
-                info = "elements[{}] = {} is converted to {} which picks all ions of {!r}.".format(
-                        i,elem,elements[i],sys_info.ElemName[elem])
-                info += "To just pick one ion at this index, wrap it in brackets []."
-                print(gu.color.g(info))
+                info = f"Given {elem} at position {i+1} of sequence => {sys_info.ElemName[elem]!r}: {elements[i]}. "
+                print(gu.color.g(info + f"To just pick one ion, write it as [{elem}]."))
             except:
-                print("Wrap elements[{}] in []. You have only {} types of ions.".format(i,len(sys_info.ElemName)))
-                return (False,elements,orbs,labels)
+                raise IndexError(f"Wrap {elem} at position {i+1} of sequence in []. You have only {len(sys_info.ElemName)} types of ions.")
 
     _es = [e for ee in elements for e in (*ee,)] # important if ee is int
     if  _es and max(_es) > max_ind:
-        print("index {} is out of bound for {} ions".format(max(_es),max_ind+1))
-        return (False,elements,orbs,labels)
+        raise IndexError("index {} is out of bound for {} ions".format(max(_es),max_ind+1))
+
     # Orbitals Index fixing
     nfields = len(sys_info.fields)
     orbs = [[item] if type(item) == int else item for item in orbs] #Fix if integer given.
     _os = [r for rr in orbs for r in rr]
     if  _os and max(_os) >= nfields:
-        print("index {} is out of bound for {} orbs".format(max(_os),nfields))
-        return (False,elements,orbs,labels)
+        raise IndexError("index {} is out of bound for {} orbs".format(max(_os),nfields))
 
     while rgb and len(elements) < 3: # < 3 as it appends to make it 3.
         elements.append([])
@@ -712,7 +705,7 @@ def _validate_input(elements,orbs,labels,sys_info,rgb=False):
     if rgb and not _es and not _os:
         labels=[sys_info.SYSTEM + v for v in ['-s','-p','-d']]
 
-    return (True,elements,orbs,labels)
+    return elements,orbs,labels
 
 def _format_input(query_data,rgb=False,include_bands=False):
     """
@@ -823,17 +816,13 @@ def splot_rgb_lines(path_evr    = None,
     > Note: Two figures made by this function could be comapred quantitatively only if `scale_data=False, max_width=None, scale_color=False` as these parameters act internally on data.
     """
     # Fix input data
-    check, vr = vp._validate_evr(path_evr=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
-    if check == False:
-        return print("Check 'path_evr', something went wrong")
+    vr = vp._validate_evr(path_evr=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
 
     # Fix orbitals, elements and labels lengths very early.
     if query_data:
         elements,orbs,labels = _format_input(query_data,rgb=True) # Preferred over elements,orbs,labels
 
-    bool_, elements,orbs,labels = _validate_input(elements,orbs,labels,vr.sys_info,rgb=True)
-    if bool_ == False:
-        return print('Check any of elements,orbs,labels. Something went wrong')
+    elements,orbs,labels = _validate_input(elements,orbs,labels,vr.sys_info,rgb=True)
 
     # Main working here.
     if vr.pro_bands == None:
@@ -992,17 +981,12 @@ def splot_color_lines(path_evr      = None,
     > Note: Two figures made by this function could be comapred quantitatively only if `scale_data=False, max_width=None` as these parameters act internally on data.
     """
     # Fix data input
-    check, vr = vp._validate_evr(path_evr=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
-    if check == False:
-        return print("Check 'path_evr', something went wrong")
-
+    vr = vp._validate_evr(path_evr=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
     # Fix orbitals, elements and labels lengths very early.
     if query_data:
         elements, orbs, labels = _format_input(query_data=query_data,rgb=False)# preferred over elements, orbs, labels
 
-    bool_, elements,orbs,labels = _validate_input(elements,orbs,labels,vr.sys_info)
-    if bool_ == False:
-        return print('Check any of elements,orbs,labels. Something went wrong')
+    elements,orbs,labels = _validate_input(elements,orbs,labels,vr.sys_info)
 
     # Main working here.
     if vr.pro_bands == None:
@@ -1129,14 +1113,10 @@ def _collect_dos(path_evr      = None,
         - labels : ['label1,'label2',...] spin polarized is auto-fixed.
         - vr     : Exported vasprun.
     """
-    check, vr = vp._validate_evr(path_evr=path_evr,elim=elim)
-    if check == False:
-        return print('Check first argument, something went wrong')
+    vr = vp._validate_evr(path_evr=path_evr,elim=elim)
 
     # Fix orbitals, elements and labels lengths very early.
-    bool_, elements,orbs,labels = _validate_input(elements,orbs,labels,vr.sys_info)
-    if bool_ == False:
-        return print('Check any of elements,orbs,labels. Something went wrong')
+    elements,orbs,labels = _validate_input(elements,orbs,labels,vr.sys_info)
 
     # Main working here.
     if(vr.pro_dos==None):

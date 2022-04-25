@@ -456,7 +456,6 @@ class Vasprun:
             raise ValueError(f'''path expects vasprun.xml file or exported files with extensions .json/.pickle
             using `to_json/to_pickle` methods, got\n {path!r}''')
 
-
         self.elim = elim
         self._kpath = self._data.kpath  # For info only, get updated with plot commands
         self._efermi = self._data.bands.E_Fermi   # For info only, get updated with plot commands
@@ -468,6 +467,12 @@ class Vasprun:
         else:
             self.kticks = {} # no kticks available when loading from json/pickle data_str
 
+    def get_poscar(self):
+        """Returns POSCAR object that can be used for plotting BZ/Lattice etc.
+
+        New in 1.1.5
+        """
+        return POSCAR(_other_data = self._data.poscar)  #POSCAR class
 
     def __handle_kwargs(self,kwargs,dos=False):
         kwargs = {'elim': self.elim, **kwargs}
@@ -500,7 +505,8 @@ class Vasprun:
         """Seletc data based on kpoints and bands indices.
         This is useful to select only a subset of data and even reorder kpoints after calculations.
         Both   `kpoints_inds` and `bands_inds` are based on current data and should be based on zero indexing.
-        `kseg_inds` is index of disconnected kpoints in `kpoints_inds`, e.g. in `kpoints_inds = [0,5,6,7]`, if 0 and 5 are disconnected, `kseg_inds = [1]`
+        `kseg_inds` is index of disconnected kpoints in `kpoints_inds`, e.g. in `kpoints_inds = [0,5,6,7]`, if 0 and 5 are disconnected, `kseg_inds = [1]`.
+
         **Returns** `Vasprun` object with selected data that can be plotted using `splot_[...]` or `iplot_[...]` functions.
 
         New in version 1.1.4
