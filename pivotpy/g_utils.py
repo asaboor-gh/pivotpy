@@ -291,7 +291,7 @@ def export_outcar(path=None):
     if path is None:
         path = './OUTCAR'
     if not os.path.isfile(path):
-        return print("{} does not exist!".format(path))
+        raise FileNotFoundError("{} does not exist!".format(path))
     # Raeding it
     with open(r'{}'.format(path),'r') as f:
         lines = f.readlines()
@@ -347,12 +347,12 @@ def export_potential(locpot=None,e = True,m = False):
         if os.path.isfile('LOCPOT'):
             locpot = 'LOCPOT'
         else:
-            return print('./LOCPOT not found.')
+            raise FileNotFoundError('./LOCPOT not found.')
     else:
         if not os.path.isfile(locpot):
-            return print("File {!r} does not exist!".format(locpot))
+            raise FileNotFoundError("File {!r} does not exist!".format(locpot))
     if m not in [True,False,'x','y','z']:
-        return print("m expects one of [True,False,'x','y','z'], got {}".format(e))
+        raise ValueError("m expects one of [True,False,'x','y','z'], got {}".format(e))
     # data fixing after reading islice from file.
     def fix_data(islice_gen,shape):
         new_gen = (float(l) for line in islice_gen for l in line.split())

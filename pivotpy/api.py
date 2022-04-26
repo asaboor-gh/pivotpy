@@ -45,17 +45,16 @@ def download_structure(formula, mp_id=None, max_sites=None,min_sites=None, api_k
         - api_key: API key from Materials project websit, if you use save_key=True, never required again.
         - save_key: Save API key to file. You can save any time of key or device changed.
     - **Return**
-        - structure: Structure data containing attributes `poscars` and `cifs` as list.
-                    Each item in list has attributes `content` and `write` to write to file.
+        List of Structure data containing attribute/method `cif`/`export_poscar, write_cif` etc.
     """
     mp = sio.InvokeMaterialsProject(api_key= api_key)
-    mp.request(formula=formula,mp_id=mp_id,max_sites=max_sites,min_sites=min_sites) # make a request
+    output = mp.request(formula=formula,mp_id=mp_id,max_sites=max_sites,min_sites=min_sites) # make a request
     if save_key and isinstance(api_key,str):
         mp.save_api_key(api_key)
     if mp.success:
-        return vp.Dict2Data({'poscars':mp.poscars,'cifs':mp.cifs})
+        return output
     else:
-        return print('Connection was not sccessful. Try again later.')
+        raise ConnectionError('Connection was not sccessful. Try again!')
 
 # Cell
 # Direct function exports from modules
@@ -78,7 +77,8 @@ _memebers = (
     sp.plt2text,
     sp.show,
     sp.savefig,
-    sp.append_axes
+    sp.append_axes,
+    sp.join_axes
 )
 
 # Subset of functions from modules in __all__ to make exportable as *
@@ -153,27 +153,21 @@ def parse_text(path,
 # Cell
 class POSCAR:
     "POSACR class to contain data and related methods"
-    def __init__(self,path=None,content=None,_other_data=None):
+    def __init__(self,path = None,text_plain = None,_other_data = None):
         """Do not use `_other_data` yourself, it's for operations on poscar.
-        Prefrence order: _other_data, content, path"""
+        Prefrence order: _other_data, text_plain, path"""
         self.path = path
-        self.content = content
+        self.text_plain = text_plain
         if _other_data:
             self._data = _other_data
         else:
-            self._data = sio.export_poscar(path=path,content=content)
+            self._data = sio.export_poscar(path=path,text_plain=text_plain)
         # These after data to work with data
         self.primitive = False
         self._bz = self.get_bz(primitive = False) # Get defualt regular BZ
         self._cell = self.get_cell() # Get defualt cell
         self._plane = None # Get defualt plane, changed with splot_bz
         self._ax = None # Get defualt axis, changed with splot_bz
-
-    def __repr__(self):
-        return self.write(outfile=None)   # Will write to stdout
-
-    def __str__(self):
-        return self.write(outfile=None)   # Will write to stdout
 
     @property
     def data(self):
@@ -302,7 +296,7 @@ class POSCAR:
     @_sub_doc(sio.kpoints2bz,'- bz')
     def bring_in_bz(self,kpoints):
         if not self._bz:
-            return print('No BZ found. Please run get_bz() first.')
+            raise ValueError('No BZ found. Please run `get_bz()` first.')
         return sio.kpoints2bz(self._bz, kpoints= kpoints,primitive = self.primitive)
 
 
@@ -348,7 +342,7 @@ class LOCPOT:
             except:
                 e_or_m = self._data.to_dict()[f'm_{self.m}']
         else:
-            return print("Magnetization data set does not exist in {}".format(self.path))
+            raise ValueError("Magnetization data set does not exist in {}".format(self.path))
         return sp.plot_potential(basis=self._data.basis,e_or_m=e_or_m,operation=operation,
                                     ax=ax,period=period,lr_pos=lr_pos,lr_widths=lr_widths,
                                     labels=labels,colors=colors,annotate=annotate)
@@ -365,7 +359,7 @@ class LOCPOT:
         pos = period_guess
         check = ['mean_x','min_x','max_x','mean_y','min_y','max_y','mean_z','min_z','max_z']
         if operation not in check:
-            return print("operation expects any of {!r}, got {}".format(check,operation))
+            raise ValueError("operation expects any of {!r}, got {}".format(check,operation))
         if e_or_m is None:
             try:
                 data = self._data.e
@@ -375,7 +369,7 @@ class LOCPOT:
                 except:
                    data = self._data.to_dict()[f'm_{self.m}']
                 else:
-                    return print("Magnetization data set does not exist in {}".format(self.path))
+                    raise ValueError("Magnetization data set does not exist in {}".format(self.path))
         else:
             data = e_or_m
 
@@ -404,7 +398,7 @@ class LOCPOT:
 def get_axes(figsize=(3.4, 2.6), nrows=1, ncols=1, widths=[], heights=[], axes_off=[], axes_3d=[], sharex=False, sharey=False, azim=45, elev=15, ortho3d=True, **subplots_adjust_kwargs):
     axes = sp.get_axes(figsize=figsize, nrows=nrows, ncols=ncols, widths=widths, heights=heights, axes_off=axes_off, axes_3d=axes_3d, sharex=sharex, sharey=sharey, azim=azim, elev=elev, ortho3d=ortho3d, **subplots_adjust_kwargs)
     for ax in np.array([axes]).flatten():
-        for f in [sp.add_text,sp.add_legend,sp.add_colorbar,sp.color_wheel,sp.break_spines,sp.modify_axes,sp.append_axes]:
+        for f in [sp.add_text,sp.add_legend,sp.add_colorbar,sp.color_wheel,sp.break_spines,sp.modify_axes,sp.append_axes, sp.join_axes]:
             if ax.name != '3d':
                 setattr(ax,f.__name__,f.__get__(ax,type(ax)))
     return axes
@@ -417,6 +411,7 @@ get_axes.__doc__ = get_axes.__doc__ + '''
 - break_spines
 - modify_axes
 - append_axes
+- join_axes
 '''
 
 # Cell

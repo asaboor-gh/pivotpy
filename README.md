@@ -31,6 +31,12 @@
 - For CLI, use [Vasp2Visual](https://github.com/massgh/Vasp2Visual).
 - See [PDF Slides](https://github.com/massgh/InteractiveHTMLs/tree/master/docs/IPySlides.pdf) for detailed introduction.
 
+## Changelog for version 1.1.8+
+Errors are properly handled now.   
+`download_structure` returns list of structres for which output data can be access via attributes and methods on demand.   
+You can now use `join_axes` to create desired layouts in plots.
+
+
 ## Changelog for version 1.1.1
 `splot_[rgb,color,dos]_lines` and `iplot_[rgb,dos]_lines` now accept another arguement `query_data` which replaces `elements, orbs, labels` if provided. This argument is a dictionary whose keys are replaced by `labels`, last item in its values is in the form of (elements, orbs). It will be extend in future for fermi plots when you select individul bands as well.
 
@@ -63,7 +69,7 @@ See GIF here:
 # New: Live Slides in Jupyter Notebook
 Navigate to  [ipyslides](https://github.com/massgh/ipyslides) or do `pip install ipyslides` to create beautiful data driven presentation in Jupyter Notebook.
 
-```
+```python
 import os, pivotpy as pp
 with pp.set_dir('E:/Research/graphene_example/ISPIN_1/bands'):
     vr=pp.Vasprun(elim=[-5,5])
@@ -139,6 +145,16 @@ vr.data
             unique = Data(
                 C = range(0, 2)
             )
+            text_plain = C2  # Created by Pivotpy
+          2.46803100000000    
+            1.0000000000000000    0.0000000000000000    0.0000000000000000
+           -0.4999997974093519    0.8660251836382931    0.0000000000000000
+            0.0000000000000000    0.0000000000000000    8.1029342824300024
+          C
+          2
+        Direct
+           0.3333330000000000   0.6666670000000000   0.0000000000000000
+           0.6666670000000000   0.3333330000000000   0.0000000000000000
         )
     )
 
@@ -148,7 +164,7 @@ vr.data
 - Add anything from legend,colorbar, colorwheel. In below figure, all three are shown.
 - Use aliases such as sbands, sdos,srgb,irgb,scolor,idos for plotting. 
 
-```
+```python
 #collapse_input
 import pivotpy as pp, numpy as np
 import matplotlib.pyplot as plt 
@@ -176,7 +192,7 @@ pp._show()
 
 ## Interactive plots using plotly
 
-```
+```python
 args_dict['labels'] = ['s','p_z','p_x+p_y']
 fig1 = vr1.iplot_rgb_lines(**args_dict)
 #pp.iplot2html(fig1) #Do inside Google Colab, fig1 inside Jupyter
@@ -198,7 +214,7 @@ Markdown("[See Interactive Plot](https://massgh.github.io/InteractiveHTMLs/iGrap
 #### Look the output of `pivotpy.sio.splot_bz`.
 ![BZ](docs\images\3bz.jpg)
 
-```
+```python
 import pivotpy as pp 
 pp.sio.splot_bz([[1,0,0],[0,1,0],[0,0,1]],color=(1,1,1,0.2),light_from=(0.5,0,2),colormap='RGB').set_axis_off()
 #pp.iplot2html(fig2) #Do inside Google Colab, fig1 inside Jupyter
@@ -220,7 +236,7 @@ Markdown("[See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ
 ## Plotting Two Calculations Side by Side 
 - Here we will use `shift_kpath` to demonstrate plot of two calculations on same axes side by side
 
-```
+```python
 #nbdev_collapse_input
 import matplotlib.pyplot as plt
 import pivotpy as pp 
@@ -249,7 +265,7 @@ pp._show()
 ## Interpolation 
 Amost every bandstructure and DOS plot function has an argument `interp_nk` which is a dictionary with keys `n` (Number of additional points between adjacent points) and `k` (order of interpolation 0-3). `n > k` must hold.
 
-```
+```python
 #collapse_input
 import pivotpy as pp, matplotlib.pyplot as plt
 plt.style.use('ggplot')
@@ -273,18 +289,22 @@ check out the class `pivotpy.LOCPOT` to visulize local potential/charge and magn
 ## Running powershell commands from python.
 Some tasks are very tideious in python while just a click way in powershell. See below, and try to list processes in python yourself to see the difference!
 
-```
+```python
 pp.g_utils.ps2std(ps_command='(Get-Process)[0..4]')
 ```
 
-    NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI Process
-    Name
-    ------    -----      -----     ------      --  -- -------
-    6     1.36       5.33       0.00    7052   0 Aggreg…
-    18     6.36      15.18       0.00    5104   0 AppHel…
-    25    21.85      43.44       6.69   14344   1 Applic…
-    8     1.85       7.39       0.02   20412   1 AppVSh…
-    8     1.57       6.68       0.00   26512   0 AppVSh…
+    NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI Pr
+    oc
+    es
+    sN
+    am
+    e
+    ------    -----      -----     ------      --  -- --
+    6     1.38       5.34       0.00    7052   0 A…
+    18     7.22      16.22       0.00    5104   0 A…
+    25    25.50      45.11       9.36   14344   1 A…
+    8     1.88       7.75       0.02   20412   1 A…
+    8     1.63       7.05       0.00   26512   0 A…
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -315,7 +335,7 @@ c.ScriptMagics.script_paths = {
 }
 ```
 
-```
+```python
 %%ps 
 Get-ChildItem 'E:\Research\graphene_example\'
 ```
@@ -325,18 +345,26 @@ Get-ChildItem 'E:\Research\graphene_example\'
         Directory: E:\Research\graphene_example
     
     
-    Mode                 LastWriteTime         Length Name    
-    ----                 -------------         ------ ----    
-    da----        11/28/2021   8:04 PM                ISPIN_1 
-    da----          5/9/2020   1:05 PM                ISPIN_2 
-    -a----          5/9/2020   1:01 PM          75331 OUTCAR  
-    -a----          5/9/2020   1:01 PM         240755 vasprun.
-                                                      xml     
+    Mode                 LastWriteTime         Length Nam
+                                                      e  
+    ----                 -------------         ------ ---
+    da----        11/28/2021   8:04 PM                ISP
+                                                      IN_
+                                                      1  
+    da----          5/9/2020   1:05 PM                ISP
+                                                      IN_
+                                                      2  
+    -a----          5/9/2020   1:01 PM          75331 OUT
+                                                      CAR
+    -a----          5/9/2020   1:01 PM         240755 vas
+                                                      pru
+                                                      n.x
+                                                      ml 
     
     
 
 
-```
+```python
 x = %ps (Get-ChildItem 'E:\Research\graphene_example\').Name
 x
 ```

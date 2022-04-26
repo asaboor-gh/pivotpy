@@ -99,6 +99,20 @@ class Dict2Data:
         """Creates a namedtuple."""
         return dict2tuple('Data',self.to_dict())
 
+    def write(self,outfile=None):
+        """ If data has an attribute text_plain, writes to file or stdout.
+        - **Parameters**
+            - outfile : Default is None and returns string. If given, writes to file.
+        """
+        if hasattr(self,'text_plain') and self.text_plain:
+            if outfile is None:
+                self.text_plain
+            else:
+                with open(outfile,'w') as f:
+                    f.write(self.text_plain)
+        else:
+            raise AttributeError("No 'text_plain' attribute found.")
+
     def __repr__(self):
         items= []
         for k,v in self.__dict__.items():
@@ -130,8 +144,9 @@ class Dict2Data:
     def items(self):
         return self.__dict__.items()
 
+
 # Cell
-def read_asxml(path=None):
+def read_asxml(path = None):
     """
     - Reads a big vasprun.xml file into memory once and then apply commands. If current folder contains `vasprun.xml` file, it automatically picks it.
 
@@ -144,11 +159,11 @@ def read_asxml(path=None):
     if(path==None):
         path='./vasprun.xml'
     if not os.path.isfile(path):
-        print("File: '{}'' does not exist!".format(path))
-        return # This is important to stop further errors.
+        raise FileNotFoundError("File: '{}'' does not exist!".format(path))
+
     elif 'vasprun.xml' not in path:
-        print("File name should be '*vasprun.xml'.")
-        return # This is important to stop further errors.
+        raise Exception("File name should end with 'vasprun.xml'")
+
     else:
         fsize = gu.get_file_size(path)
         value = float(fsize.split()[0])
@@ -163,9 +178,7 @@ def read_asxml(path=None):
         elif 'GB' in fsize and value > 1:
             print(gu.color.y(textwrap.dedent(print_str)))
 
-        tree = ET.parse(path)
-        xml_data = tree.getroot()
-        return xml_data
+        return ET.parse(path).getroot() # THis is xml_data for other functions
 
 # Cell
 def xml2dict(xmlnode_or_filepath):
@@ -184,7 +197,7 @@ def xml2dict(xmlnode_or_filepath):
     return {'tag': node.tag,'text': text, 'attr':node.attrib, 'nodes': nodes}
 
 # Cell
-def exclude_kpts(xml_data=None):
+def exclude_kpts(xml_data):
     """
     - Returns number of kpoints to exclude used from IBZKPT.
     - **Parameters**
@@ -192,10 +205,6 @@ def exclude_kpts(xml_data=None):
     - **Returns**
         - int      : Number of kpoints to exclude.
     """
-    if(xml_data==None):
-        xml_data=read_asxml()
-    if not xml_data:
-        return
     for kpts in xml_data.iter('varray'):
         if(kpts.attrib=={'name': 'weights'}):
             weights=[float(arr.text.strip()) for arr in kpts.iter('v')]
@@ -205,7 +214,7 @@ def exclude_kpts(xml_data=None):
     return skipk
 
 # Cell
-def get_ispin(xml_data=None):
+def get_ispin(xml_data):
     """
     - Returns value of ISPIN.
     - **Parameters**
@@ -213,16 +222,12 @@ def get_ispin(xml_data=None):
     - **Returns**
         - int      : Value of ISPIN.
     """
-    if(xml_data==None):
-        xml_data=read_asxml()
-    if not xml_data:
-        return
     for item in xml_data.iter('i'):
         if(item.attrib=={'type': 'int', 'name': 'ISPIN'}):
             return int(item.text)
 
 # Cell
-def get_summary(xml_data=None):
+def get_summary(xml_data):
     """
     - Returns overview of system parameters.
     - **Parameters**
@@ -230,10 +235,6 @@ def get_summary(xml_data=None):
     - **Returns**
         - Data     : pivotpy.Dict2Data with attibutes accessible via dot notation.
     """
-    if(xml_data==None):
-        xml_data=read_asxml()
-    if not xml_data:
-        return
     for i_car in xml_data.iter('incar'):
         incar={car.attrib['name']:car.text.strip() for car in i_car}
     n_ions=[int(atom.text) for atom in xml_data.iter('atoms')][0]
@@ -270,29 +271,17 @@ def join_ksegments(kpath,kseg_inds=[]):
             path_list[ind:] -= path_list[ind] - path_list[ind-1]
     return list(path_list)
 
-def get_kpts(xml_data=None,skipk=0,kseg_inds=[]):
+def get_kpts(xml_data, skipk=0,kseg_inds=[]):
     r"""Returns kpoints and calculated kpath.
 
-    Parameters:
+    **Parameters**
+    - xml_data: From `read_asxml` function.
+    - skipk : (int) Number of initil kpoints to skip.
+    - kseg_inds : (list) List of indices of kpoints where path is broken.
 
-    xml_data
-        From `read_asxml` function.
-
-    skipk : int
-        Number of initil kpoints to skip.
-
-    kseg_inds : list
-        List of indices of kpoints where path is broken.
-
-    Returns:
-
-    Data : pivotpy.Dict2Data
-        with attibutes `kpath` and `kpoints`.
+    **Returns**
+    - Data : pivotpy.Dict2Data with attibutes `kpath` and `kpoints`.
     """
-    if(xml_data==None):
-        xml_data=read_asxml()
-    if not xml_data:
-        return
     for kpts in xml_data.iter('varray'):
         if(kpts.attrib=={'name': 'kpointlist'}):
             kpoints=[[float(item) for item in arr.text.split()] for arr in kpts.iter('v')]
@@ -305,7 +294,7 @@ def get_kpts(xml_data=None,skipk=0,kseg_inds=[]):
     return Dict2Data({'NKPTS':len(kpoints),'kpoints':kpoints,'kpath':kpath})
 
 # Cell
-def get_tdos(xml_data=None,spin_set=1,elim=[]):
+def get_tdos(xml_data,spin_set=1,elim=[]):
     """
     - Returns total dos for a spin_set (default 1) and energy limit. If spin-polarized calculations, gives SpinUp and SpinDown keys as well.
     - **Parameters**
@@ -315,10 +304,6 @@ def get_tdos(xml_data=None,spin_set=1,elim=[]):
     - **Returns**
         - Data     : pivotpy.Dict2Data with attibutes E_Fermi, ISPIN,tdos.
     """
-    if(xml_data==None):
-        xml_data=read_asxml()
-    if not xml_data:
-        return
     tdos=[]; #assign for safely exit if wrong spin set entered.
     ISPIN = get_ispin(xml_data=xml_data)
     for neighbor in xml_data.iter('dos'):
@@ -357,7 +342,7 @@ def get_tdos(xml_data=None,spin_set=1,elim=[]):
     return Dict2Data(dos_dic)
 
 # Cell
-def get_evals(xml_data=None,skipk=None,elim=[]):
+def get_evals(xml_data,skipk=None,elim=[]):
     """
     - Returns eigenvalues as numpy array. If spin-polarized calculations, gives SpinUp and SpinDown keys as well.
     - **Parameters**
@@ -367,10 +352,6 @@ def get_evals(xml_data=None,skipk=None,elim=[]):
     - **Returns**
         - Data     : pivotpy.Dict2Data with attibutes evals and related parameters.
     """
-    if(xml_data==None):
-        xml_data=read_asxml()
-    if not xml_data:
-        return
     evals=[]; #assign for safely exit if wrong spin set entered.
     ISPIN=get_ispin(xml_data=xml_data)
     if skipk!=None:
@@ -411,7 +392,7 @@ def get_evals(xml_data=None,skipk=None,elim=[]):
     return Dict2Data(evals_dic)
 
 # Cell
-def get_bands_pro_set(xml_data=None,
+def get_bands_pro_set(xml_data,
                       spin_set=1,
                       skipk=0,
                       bands_range=None,
@@ -427,10 +408,10 @@ def get_bands_pro_set(xml_data=None,
     - **Returns**
         - Data     : pivotpy.Dict2Data with attibutes of bands projections and related parameters.
     """
-    if(bands_range!=None):
+    if bands_range != None:
         check_list = list(bands_range)
         if check_list==[]:
-            return print(gu.color.r("No bands prjections found in given energy range."))
+            raise ValueError("No bands prjections found in given energy range.")
     # Try to read _set.txt first. instance check is important.
     if isinstance(set_path,str) and os.path.isfile(set_path):
         _header = islice2array(set_path,nlines=1,raw=True,exclude=None)
@@ -459,11 +440,6 @@ def get_bands_pro_set(xml_data=None,
         data = data.reshape((NKPTS,NBANDS,NIONS,NORBS)).transpose([2,0,1,3])
         return Dict2Data({'labels':fields,'pros':data})
 
-    # if above not worked, read from main vasprun.xml file.
-    if(xml_data==None):
-        xml_data=read_asxml()
-    if not xml_data:
-        return
     #Collect Projection fields
     fields=[];
     for pro in xml_data.iter('projected'):
@@ -506,7 +482,7 @@ def get_bands_pro_set(xml_data=None,
     return Dict2Data({'labels':fields,'pros':data})
 
 # Cell
-def get_dos_pro_set(xml_data=None,spin_set=1,dos_range=None):
+def get_dos_pro_set(xml_data,spin_set=1,dos_range=None):
     """
     - Returns dos projection of a spin_set(default 1) as numpy array. If spin-polarized calculations, gives SpinUp and SpinDown keys as well.
     - **Parameters**
@@ -516,14 +492,11 @@ def get_dos_pro_set(xml_data=None,spin_set=1,dos_range=None):
     - **Returns**
         - Data     : pivotpy.Dict2Data with attibutes of dos projections and related parameters.
     """
-    if(dos_range!=None):
-        check_list=list(dos_range)
-        if(check_list==[]):
-            return print(gu.color.r("No DOS prjections found in given energy range."))
-    if(xml_data==None):
-        xml_data=read_asxml()
-    if not xml_data:
-        return
+    if dos_range != None:
+        check_list = list(dos_range)
+        if check_list == []:
+            raise ValueError("No DOS prjections found in given energy range.")
+
     n_ions=get_summary(xml_data=xml_data).NION
     for pro in xml_data.iter('partial'):
         dos_fields=[field.text.strip()for field in pro.iter('field')]
@@ -547,7 +520,22 @@ def get_dos_pro_set(xml_data=None,spin_set=1,dos_range=None):
     return Dict2Data({'labels':dos_fields,'pros':final_data})
 
 # Cell
-def get_structure(xml_data=None):
+def _add_text_attr2poscar(poscar_data):
+    "Returns poscar_data with additional attribute `text_plain` to write to file."
+    scale = np.linalg.norm(poscar_data.basis[0])
+    unique_d = poscar_data.unique.to_dict()
+
+    out_str = f"{poscar_data.SYSTEM}  # Created by Pivotpy\n  {scale:<20.14f}\n"
+    out_str += '\n'.join(["{:>22.16f}{:>22.16f}{:>22.16f}".format(*a) for a in poscar_data.basis/scale])
+    out_str += "\n  " + '\t'.join(unique_d.keys())
+    out_str += "\n  " + '\t'.join([str(len(v)) for v in unique_d.values()])
+    out_str += "\nDirect\n"
+    out_str += '\n'.join("{:>21.16f}{:>21.16f}{:>21.16f}".format(*a) for a in poscar_data.positions)
+
+    poscar_data.text_plain = out_str
+    return poscar_data
+
+def get_structure(xml_data):
     """
     - Returns structure's volume,basis,positions and rec-basis.
     - **Parameters**
@@ -555,11 +543,6 @@ def get_structure(xml_data=None):
     - **Returns**
         - Data     : pivotpy.Dict2Data with attibutes volume,basis,positions rec_basis and labels.
     """
-    if(xml_data==None):
-        xml_data=read_asxml()
-    if not xml_data:
-        return
-
     SYSTEM = [i.text for i in xml_data.iter('i') if i.attrib['name'] == 'SYSTEM'][0]
 
     for final in xml_data.iter('structure'):
@@ -584,16 +567,17 @@ def get_structure(xml_data=None):
     Names = list(np.unique(elems[:-types]))
     unique_d = {e:range(INDS[i],INDS[i+1]) for i,e in enumerate(Names)}
 
-    st_dic={'SYSTEM':SYSTEM,'volume': volume,'basis': np.array(basis),'rec_basis': np.array(rec_basis),'positions': np.array(positions),'labels':labels,'unique': unique_d}
-    return Dict2Data(st_dic)
+    st_dic={'SYSTEM':SYSTEM,'volume': volume,'basis': np.array(basis),'rec_basis': np.array(rec_basis),'positions': np.array(positions),
+            'labels':labels,'unique': unique_d}
+    return _add_text_attr2poscar(Dict2Data(st_dic))
 
 # Cell
-def export_vasprun(path=None,
-                   skipk=None,
-                   elim=[],
-                   kseg_inds=[],
-                   shift_kpath=0,
-                   try_pwsh = True
+def export_vasprun(path        = None,
+                   skipk       = None,
+                   elim        = [],
+                   kseg_inds   = [],
+                   shift_kpath = 0,
+                   try_pwsh    = True
                    ):
     """
     - Returns a full dictionary of all objects from `vasprun.xml` file. It first try to load the data exported by powershell's `Export-VR(Vasprun)`, which is very fast for large files. It is recommended to export large files in powershell first.
@@ -845,7 +829,7 @@ def load_export(path= './vasprun.xml',
     kpath = join_ksegments(kpath,kseg_inds)
     kpath=[k+shift_kpath for k in kpath.copy()] # Shift kpath
     full_dic = {'sys_info': sys_info,'dim_info': dim_info,'kpoints': kpoints,'kpath':kpath,               'bands':bands_dic,'tdos':tdos_dic,'pro_bands': pro_dic ,'pro_dos': pdos_dic,
-               'poscar':poscar}
+               'poscar':_add_text_attr2poscar(Dict2Data(poscar))}
     return Dict2Data(full_dic)
 
 # Cell
@@ -859,7 +843,7 @@ def dump_dict(dict_data = None, dump_to = 'pickle',outfile = None,indent=1):
         - indent   : Defualt is 1. Only works for json.
     """
     if dump_to not in ['pickle','json']:
-        return print("`dump_to` expects 'pickle' or 'json', got '{}'".format(dump_to))
+        raise ValueError("`dump_to` expects 'pickle' or 'json', got '{}'".format(dump_to))
     try: dict_obj = dict_data.to_dict() # Change Data object to dictionary
     except: dict_obj = dict_data
     if dump_to == 'pickle':
@@ -1058,7 +1042,7 @@ def split_vasprun(path=None):
     if not path:
         path = './vasprun.xml'
     if not os.path.isfile(path):
-        return print("{!r} does not exist!".format(path))
+        raise FileNotFoundError("{!r} does not exist!".format(path))
     base_dir = os.path.split(os.path.abspath(path))[0]
     out_file = os.path.join(base_dir,'_vasprun.xml')
     out_sets = [os.path.join(base_dir,'_set{}.txt'.format(i)) for i in range(1,5)]

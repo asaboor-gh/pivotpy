@@ -45,8 +45,8 @@ def _get_rgb_data(   kpath       = None,
         - widths   : An (NBAND,NKPTS) numpy arry, its actually colors summed along z-axis.
     """
     if pros_set == []:
-        print(gu.color.y("Can not plot an empty eigenvalues object."))
-        return print(gu.color.g("Try with large energy range."))
+        raise ValueError("Can not plot an empty eigenvalues object\n"
+                         "Try with large energy range.")
     if len(orbs) < 3 :
         raise ValueError("orbs have structure [[],[],[]], do not reduce structure even if it is empty.")
     elif len(elements) <3:
@@ -271,8 +271,8 @@ def iplot_rgb_lines(path_evr    = None,
 
     ## Main working here.
     if(vr.pro_bands==None):
-        print(gu.color.y("Can not plot an empty eigenvalues object."))
-        return print(gu.color.g("Try with large energy range."))
+        raise ValueError("Can not plot an empty eigenvalues object.\n"
+                         "Try with large energy range.")
 
     if E_Fermi == None:
         E_Fermi=vr.bands.E_Fermi
@@ -384,8 +384,8 @@ def iplot_dos_lines(path_evr     = None,
                             E_Fermi=E_Fermi, spin='both',interp_nk=interp_nk)
         try:
             en,tdos,pdos,labels,vr = cl_dos
-        except TypeError:
-            return print(gu.color.g("Try with large energy range."))
+        except:
+            raise ValueError("Try with large energy range.")
 
         labels=[label.replace('$','').replace('^↑','<sup>↑</sup>').replace('^↓','<sup>↓</sup>') for label in labels]
         # Make additional colors for spin down. Inverted colors are better.
@@ -408,7 +408,7 @@ def iplot_dos_lines(path_evr     = None,
             if len(tdos) == 2 and 'both' in spin and len(orbs)==3:
                 colors[[-1,-2]]= colors[[-2,-1]] #Flip last two colors only
         else:
-            return print("`colormap` expects one of the follwoing:\n{}".format(plt.colormaps()))
+            raise ValueError("`colormap` expects one of the follwoing:\n{}".format(plt.colormaps()))
         # Total DOS colors
         t_color=mpl.colors.to_rgb(tdos_color)
         it_color=gu.transform_color(t_color,c = -1) #inverts for c = -1
