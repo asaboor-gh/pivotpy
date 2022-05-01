@@ -99,11 +99,11 @@ index = {"iplot2html": "InteractivePlots.ipynb",
          "slice_data": "XmlElementTree.ipynb",
          "split_vasprun": "XmlElementTree.ipynb"}
 
-modules = ["i_plots.py",
+modules = ["iplots.py",
            "api.py",
-           "s_plots.py",
+           "splots.py",
            "sio.py",
-           "g_utils.py",
+           "utils.py",
            "widgets.py",
            "vr_parser.py"]
 

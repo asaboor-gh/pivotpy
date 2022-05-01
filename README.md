@@ -276,7 +276,7 @@ evals = vr1.data.bands.evals-ef
 knew,enew=pp.interpolate_data(x=k,y=evals,n=10,k=3)
 plot = plt.plot(k,evals,'m',lw=5,label='real data')
 plot = plt.plot(k,evals,'w',lw=1,label='interpolated',ls='dashed')
-pp.s_plots.add_text(ax=plt.gca(),txts='Graphene')
+pp.splots.add_text(ax=plt.gca(),txts='Graphene')
 ```
 
 
@@ -290,16 +290,16 @@ check out the class `pivotpy.LOCPOT` to visulize local potential/charge and magn
 Some tasks are very tideious in python while just a click way in powershell. See below, and try to list processes in python yourself to see the difference!
 
 ```python
-pp.g_utils.ps2std(ps_command='(Get-Process)[0..4]')
+pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
 ```
 
-    NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
-    ------    -----      -----     ------      --  -- -----------
-    6     1.38       4.73       0.00    7052   0 Aggregator…
-    18     6.43       6.87       0.00    5104   0 AppHelperC…
-    25    24.05      16.12       9.55   14344   1 Applicatio…
-    8     1.85       4.72       0.02   20412   1 AppVShNoti…
-    8     1.57       4.45       0.00   26512   0 AppVShNoti…
+    NPM(K)    PM(M)      WS(M)     CPU(s)    Id
+    ------    -----      -----     ------    --
+    21     6.94       9.16       0.50 27304
+    15     3.50       4.19       1.03 14868
+    5     1.41       4.83       0.00  7052
+    18     7.05      10.25       0.00  5104
+    25    25.41      15.41      10.03 14344
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -340,12 +340,12 @@ Get-ChildItem 'E:\Research\graphene_example\'
         Directory: E:\Research\graphene_example
     
     
-    Mode                 LastWriteTime         Length Name        
-    ----                 -------------         ------ ----        
-    da----        11/28/2021   8:04 PM                ISPIN_1     
-    da----          5/9/2020   1:05 PM                ISPIN_2     
-    -a----          5/9/2020   1:01 PM          75331 OUTCAR      
-    -a----          5/9/2020   1:01 PM         240755 vasprun.xml 
+    Mode                 LastWriteTime    Length
+    ----                 -------------    ------
+    da----        11/28/2021   8:04 PM          
+    da----          5/9/2020   1:05 PM          
+    -a----          5/9/2020   1:01 PM     75331
+    -a----          5/9/2020   1:01 PM    240755
     
     
 

@@ -24,10 +24,10 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 # Inside packages import to work both with package and jupyter notebook.
 try:
     from pivotpy import vr_parser as vp
-    from pivotpy import s_plots as sp
+    from pivotpy import splots as sp
 except:
     import pivotpy.vr_parser as vp
-    import pivotpy.s_plots as sp
+    import pivotpy.splots as sp
 
 # Cell
 from matplotlib.patches import FancyArrowPatch

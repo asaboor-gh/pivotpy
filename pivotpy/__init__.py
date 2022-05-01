@@ -6,9 +6,9 @@ Modules:
 -------
     pivotpy.api:      # API for general use
     pivotpy.vr_parser # Parser for vasprun.xml
-    pivotpy.g_utils   # general functions
-    pivotpy.s_plots   # Matplotlib's plotting functions
-    pivotpy.i_plots   # Plotly's interactive plotting functions
+    pivotpy.utils     # general functions
+    pivotpy.splots    # Matplotlib's plotting functions
+    pivotpy.iplots    # Plotly's interactive plotting functions
     pivotpy.sio       # Functions for BZ, POSCAR, KPath etc.
     pivotpy.widgets   # Jupyter widgets apps for output analysis/kpath selection. Very useful in big projectes. 
     
@@ -22,7 +22,7 @@ Usage:
     ... pp.generate_summary(paths)  # Get a dataframe for whole project after you used pp.VasprunApp
     
     If you want to acess private functions/varaiables, you need to import a submodule itself, e.g.
-    >>> import pivotpy.s_plots as sp 
+    >>> import pivotpy.splots as sp 
     ... sp._plot_bands() #This is a private function, (see leading underscore)
     
 Links:
@@ -34,7 +34,7 @@ Links:
 links = """[github](https://github.com/massgh/pivotpy)             
 [docs](https://massgh.github.io/pivotpy/)"""
 
-__version__ = "1.1.8"
+__version__ = "1.1.9"
 
 __all__ = []
 
@@ -46,7 +46,7 @@ __all__.extend(api_all)
 
 # Access all functions through root modile pivotpy
 from .api import *
-from .g_utils import nav_links # For use in Jupyter Notebooks
+from .utils import nav_links # For use in Jupyter Notebooks
     
 from matplotlib.pyplot import show as _show,savefig as _savefig
 
@@ -87,11 +87,10 @@ __mapping = {
     'plotly_rgb_lines': 'iplot_dos_lines',
     'plotly_dos_lines': 'iplot_dos_lines'
 }
+
 for k,v in __mapping.items():
     _code = f"""def {k}(*args,**kwargs):
-    "See docs and arguments of {v!r} for reference to use in this function."
-    print(color.yb("Name {k!r} is deprecated, use {v!r} in future."))
-    return {v}(*args,**kwargs)"""
+    raise DeprecationWarning("Name {k!r} is deprecated, use Vasprun().{v!r} instead.")"""
     exec(_code)
 
 

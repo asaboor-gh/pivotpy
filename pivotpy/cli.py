@@ -1,10 +1,9 @@
 from . import __version__, __doc__, docs
 from .sio import str2kpath, InvokeMaterialsProject, _save_mp_API
-import argparse, os
+import argparse
 from argparse import RawTextHelpFormatter
 def main():
-    print('Pivotpy\n=======')
-    print('Version: ', __version__)
+    print(f'Pivotpy\n=======\nVersion: {__version__}')
     print(__doc__)
     print('Loading Online DOCS...')
     docs()
@@ -35,15 +34,12 @@ def poscar():
     
     args = parser.parse_args()
     mp = InvokeMaterialsProject(api_key=args.api_key)
-    mp.request(args.formula,mp_id=args.mp_id,max_sites=args.max_sites, min_sites=args.min_sites)
+    output = mp.request(args.formula,mp_id=args.mp_id,max_sites=args.max_sites, min_sites=args.min_sites)
     
-    poscars = mp.poscars
-    
-    if poscars:
-        for car in poscars:
-            if len(poscars) > 1: #Do not print anything else for one POSCAR
-                print(f" mp_id: {car.mp_id}, symbol: {car.symbol}, crystal: {car.crystal} ".center(75,u"\u2588"))
-            print(car.content)
+    if output:
+        for car in output:
+            print("\ncar\n{('='*66}")
+            print(car.export_poscar().text_plain)
     else:
         print('No POSCAR found with provided input, try increasing range')
         

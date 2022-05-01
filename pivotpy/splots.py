@@ -22,10 +22,10 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 # Inside packages import to work both with package and jupyter notebook.
 try:
     from pivotpy import vr_parser as vp
-    from pivotpy import g_utils as gu
+    from pivotpy import utils as gu
 except:
     import pivotpy.vr_parser as vp
-    import pivotpy.g_utils as gu
+    import pivotpy.utils as gu
 
 from IPython import get_ipython
 from IPython.display import HTML, set_matplotlib_formats #HTML for plt2html
@@ -83,7 +83,7 @@ def modify_axes(ax=None,xticks=[],xt_labels=[],xlim=[],\
     return None
 
 # Cell
-def get_axes(figsize   = (3.4,2.6),
+def get_axes(figsize  = (3.4,2.6),
             nrows     = 1,
             ncols     = 1,
             widths    = [],
@@ -143,6 +143,7 @@ def get_axes(figsize   = (3.4,2.6),
             pos = axs.get_position()
             axs.remove()
             axs = fig.add_axes(pos,projection='3d',azim=azim,elev=elev,**proj)
+            setattr(axs,add_legend.__name__,add_legend.__get__(axs,type(axs)))
 
     else:
         _ = [modify_axes(ax=ax) for ax in axs.ravel()]
@@ -577,7 +578,7 @@ def _get_pros_data(kpath      = None,
 
     if interp_nk:
         min_d, max_d = np.min(_colors),np.max(_colors) # For cliping
-        from pivotpy import g_utils as gu
+        from pivotpy import utils as gu
         knew, evals = gu.interpolate_data(kpath,evals_set,**interp_nk)
         _colors     = gu.interpolate_data(kpath,_colors,**interp_nk)[1].clip(min=min_d,max=max_d)
         return {'kpath':knew,'evals': evals,'pros': _colors}
@@ -1098,7 +1099,7 @@ def _select_pdos(tdos        = None,
     pros = np.take(pdos_set[:,:,1:],list(ions),axis=0).sum(axis=0)
     p_dos = np.take(pros,orbs,axis=1).sum(axis=1)
     if interp_nk:
-        from pivotpy import g_utils as gu
+        from pivotpy import utils as gu
         _en,_tdos=gu.interpolate_data(en,t_dos,**interp_nk)
         _tdos = _tdos.clip(min=0)
         _pdos = gu.interpolate_data(en,p_dos,**interp_nk)[1].clip(min=0)

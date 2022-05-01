@@ -12,12 +12,12 @@ import plotly.graph_objects as go
 # Inside packages import to work both with package and jupyter notebook.
 try:
     from pivotpy import vr_parser as vp
-    from pivotpy import s_plots as sp
-    from pivotpy import g_utils as gu
+    from pivotpy import splots as sp
+    from pivotpy import utils as gu
 except:
     import pivotpy.vr_parser as vp
-    import pivotpy.s_plots as sp
-    import pivotpy.g_utils as gu
+    import pivotpy.splots as sp
+    import pivotpy.utils as gu
 
 # Cell
 def _get_rgb_data(   kpath       = None,
@@ -59,7 +59,7 @@ def _get_rgb_data(   kpath       = None,
        b = np.take(pros_set,orbs[2],axis=3).sum(axis=3)
        b = np.take(b,list(elements[2]),axis=0).sum(axis=0)
        if interp_nk:
-           from pivotpy import g_utils as gu
+           from pivotpy import utils as gu
            knew,evals = gu.interpolate_data(kpath,evals_set,**interp_nk)
            r  = gu.interpolate_data(kpath,r,**interp_nk)[1].clip(min=0)
            g  = gu.interpolate_data(kpath,g,**interp_nk)[1].clip(min=0)

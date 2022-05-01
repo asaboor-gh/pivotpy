@@ -8,18 +8,18 @@ import numpy as np
 import plotly.graph_objects as go
 try:
     from pivotpy import vr_parser as vp
-    from pivotpy import s_plots as sp
-    from pivotpy import i_plots as ip
+    from pivotpy import splots as sp
+    from pivotpy import iplots as ip
     from pivotpy import sio as sio
     from pivotpy import widgets as wdg
-    from pivotpy import g_utils as gu
+    from pivotpy import utils as gu
 except:
     import pivotpy.vr_parser as vp
-    import pivotpy.s_plots as sp
-    import pivotpy.i_plots as ip
+    import pivotpy.splots as sp
+    import pivotpy.iplots as ip
     import pivotpy.sio as sio
     import pivotpy.widgets as wdg
-    import pivotpy.g_utils as gu
+    import pivotpy.utils as gu
 
 def _sub_doc(from_func,skip_param=None,replace={}):
     """Assing __doc__ from other function. Replace words in docs where need."""

@@ -19,10 +19,10 @@ import textwrap
 import xml.etree.ElementTree as ET
 # Inside packages import to work both with package and jupyter notebook.
 try:
-    from pivotpy import g_utils as gu
+    from pivotpy import utils as gu
     from .sio import read_ticks
 except:
-    import pivotpy.g_utils as gu
+    import pivotpy.utils as gu
     import pivotpy.sio.read_ticks as read_ticks
 
 # Cell
