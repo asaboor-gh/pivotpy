@@ -677,7 +677,7 @@ Tuple:  Data(A=1, B=2)
 <li>Returns total dos for a spin_set (default 1) and energy limit. If spin-polarized calculations, gives SpinUp and SpinDown keys as well.</li>
 <li><strong>Parameters</strong><ul>
 <li>xml_data : From <a href="/pivotpy/XmlElementTree.html#read_asxml"><code>read_asxml</code></a> function</li>
-<li>spin_set : int, default is 1.and</li>
+<li>spin_set : int, default is 1 to pick up total spin.</li>
 <li>elim     : List [min,max] of energy, default empty.</li>
 </ul>
 </li>
@@ -1684,6 +1684,68 @@ Note: Slicing a dimension to 100% of its data is faster than let say 80% for inn
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Export-Data-with-Specific-Spin-Set(s)">Export Data with Specific Spin Set(s)<a class="anchor-link" href="#Export-Data-with-Specific-Spin-Set(s)"> </a></h1><p>This is useful for spin textures, fermi surfaces etc.</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="export_spin_data" class="doc_header"><code>export_spin_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L1089" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_spin_data</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>spin_sets</code></strong>=<em><code>[1]</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>None</code></em>)</p>
+</blockquote>
+<ul>
+<li>Returns Data with selected spin sets. For spin polarized calculations, it returns spin up and down data.</li>
+<li><strong>Parameters</strong><ul>
+<li>path       : Path to <code>vasprun.xml</code> file. Default is <code>'./vasprun.xml'</code>.</li>
+<li>skipk      : Default is None. Automatically detects kpoints to skip.</li>
+<li>elim       : List [min,max] of energy interval. Default is [], covers all bands.</li>
+<li>spin_sets  : List of spin sets to include from [1,2,3,4] -&gt; [S, Sx, Sy, Sz].
+<pre><code>         Only works if ISPIN == 1, otherwise it will be two sets for spin up and down.</code></pre>
+</li>
+</ul>
+</li>
+<li><strong>Returns</strong><ul>
+<li>Data : Data accessible via dot notation containing nested Data objects:<ul>
+<li>sys_info  : System Information</li>
+<li>dim_info  : Contains information about dimensions of returned objects.</li>
+<li>kpoints   : numpy array of kpoints with excluded IBZKPT points</li>
+<li>evals     : Data containing eigenvalues as evals.&lt;e,u,d&gt;.</li>
+<li>spins     : Data containing bands projections as spins.&lt;u,d,s,x,y,z&gt;.</li>
+<li>poscar    : Data containing basis,positions, rec_basis and volume.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -1721,6 +1783,6 @@ Note: Slicing a dimension to 100% of its data is faster than let say 80% for inn
  
 
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"98aca4bf88234e028f2edc81dc87900a": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "4cea62ed769d4cf1996951260454524c": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_98aca4bf88234e028f2edc81dc87900a", "msg_id": "", "outputs": []}}, "6fa8585a373d429787ac772aa5c2fd42": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "c9d07bd1872e406ca44b3521777bbf28": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_6fa8585a373d429787ac772aa5c2fd42", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
+{"state": {"c75a4b2d530c4021bbcebd21fe726245": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "8baf14ba7902482a9e1268fef24df68e": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_c75a4b2d530c4021bbcebd21fe726245", "msg_id": "", "outputs": []}}, "d1489d15afa348a4b3acd5cdaee1dd85": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "897972609cdb45a5a6b5db509691dbcb": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_d1489d15afa348a4b3acd5cdaee1dd85", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
 </script>
 
