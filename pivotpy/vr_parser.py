@@ -1086,15 +1086,15 @@ def split_vasprun(path=None):
                 print('Done')
 
 # Cell
-def export_spin_data(path = None, spin_sets = [1], skipk = None, elim = None):
+def export_spin_data(path = None, spins = 's', skipk = None, elim = None):
     """
     - Returns Data with selected spin sets. For spin polarized calculations, it returns spin up and down data.
     - **Parameters**
-        - path       : Path to `vasprun.xml` file. Default is `'./vasprun.xml'`.
-        - skipk      : Default is None. Automatically detects kpoints to skip.
-        - elim       : List [min,max] of energy interval. Default is [], covers all bands.
-        - spin_sets  : List of spin sets to include from [1,2,3,4] -> [S, Sx, Sy, Sz].
-                       Only works if ISPIN == 1, otherwise it will be two sets for spin up and down.
+        - path   : Path to `vasprun.xml` file. Default is `'./vasprun.xml'`.
+        - skipk  : Default is None. Automatically detects kpoints to skip.
+        - elim   : List [min,max] of energy interval. Default is [], covers all bands.
+        - spins  : Spin components to include from 'sxyz', e.g. 'sx' will pick <S> and <S_x> if present.
+                   Only works if ISPIN == 1, otherwise it will be two sets for spin up and down.
     - **Returns**
         - Data : Data accessible via dot notation containing nested Data objects:
             - sys_info  : System Information
@@ -1104,8 +1104,11 @@ def export_spin_data(path = None, spin_sets = [1], skipk = None, elim = None):
             - spins     : Data containing bands projections as spins.<u,d,s,x,y,z>.
             - poscar    : Data containing basis,positions, rec_basis and volume.
     """
-    if not isinstance(spin_sets,(list,tuple)):
-        raise TypeError("`spin_sets` must be a list or tuple of integers from [1,2,3,4] -> [S, Sx, Sy, Sz]!")
+    if not isinstance(spins,str):
+        raise TypeError(f"`spins` must be a string from 'sxyz', got {spins}!")
+
+    if False in [comp in 'sxyz' for comp in spins]:
+        raise ValueError(f"`spins` must be in 'sxyz', got {spins!r}!")
 
     xml_data = read_asxml(path = path or './vasprun.xml')
 
@@ -1114,7 +1117,14 @@ def export_spin_data(path = None, spin_sets = [1], skipk = None, elim = None):
 
     skipk = skipk or exclude_kpts(xml_data=xml_data) #that much to skip by default
     full_dic = {'sys_info':get_summary(xml_data)}
+
     ISPIN = full_dic['sys_info'].ISPIN
+    LSORBIT = getattr(full_dic['sys_info'].incar, 'LSORBIT', 'FALSE')
+    if 'f' in LSORBIT.lower() and ISPIN == 1:
+        for comp in spins:
+            if comp in 'xyz':
+                raise ValueError(f"LSORBIT = {LSORBIT} does not include spin component {comp!r}!")
+
     full_dic['dim_info'] = {'kpoints':'(NKPTS,3)','evals.<e,u,d>':'⇅(NKPTS,NBANDS)','spins.<u,d,s,x,y,z>':'⇅(NION,NKPTS,NBANDS,pro_fields)'}
     full_dic['kpoints']= get_kpts(xml_data, skipk = skipk).kpoints
 
@@ -1126,17 +1136,19 @@ def export_spin_data(path = None, spin_sets = [1], skipk = None, elim = None):
 
     bands_range = full_dic['bands'].indices if elim else None #indices in range form.
 
+    spin_sets = {}
     if ISPIN == 1:
-        spins , ids = {}, 'sxyz'
-        for set in spin_sets:
-            spins[ids[set - 1]] = get_bands_pro_set(xml_data, spin_set = set, skipk = skipk, bands_range = bands_range, set_path = set_paths[set-1]).pros
+        for n, s in enumerate('sxyz', start = 1):
+            if s in spins:
+                spin_sets[s] = get_bands_pro_set(xml_data, spin_set = n, skipk = skipk, bands_range = bands_range, set_path = set_paths[n-1]).pros
 
     if ISPIN == 2:
+        print(gu.color.g(f"Found ISPIN = 2, output data got attributes spins.<u,d> instead of spins.<{','.join(spins)}>"))
         pro_1 = get_bands_pro_set(xml_data, spin_set = 1, skipk = skipk, bands_range = bands_range, set_path = set_paths[0])
         pro_2 = get_bands_pro_set(xml_data, spin_set = 2, skipk = skipk, bands_range = bands_range, set_path = set_paths[1])
-        spins = {'u': pro_1.pros,'d': pro_2.pros}
+        spin_sets = {'u': pro_1.pros,'d': pro_2.pros}
 
-    full_dic['spins'] = spins
+    full_dic['spins'] = spin_sets
     full_dic['spins']['labels'] = full_dic['sys_info'].fields
     full_dic['poscar'] = {'SYSTEM':full_dic['sys_info'].SYSTEM,**(get_structure(xml_data=xml_data).to_dict())}
     return Dict2Data(full_dic)
