@@ -97,7 +97,8 @@ index = {"iplot2html": "InteractivePlots.ipynb",
          "load_from_dump": "XmlElementTree.ipynb",
          "islice2array": "XmlElementTree.ipynb",
          "slice_data": "XmlElementTree.ipynb",
-         "split_vasprun": "XmlElementTree.ipynb"}
+         "split_vasprun": "XmlElementTree.ipynb",
+         "export_spin_data": "XmlElementTree.ipynb"}
 
 modules = ["iplots.py",
            "api.py",

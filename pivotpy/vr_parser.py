@@ -3,7 +3,7 @@
 __all__ = ['dict2tuple', 'Dict2Data', 'read_asxml', 'xml2dict', 'exclude_kpts', 'get_ispin', 'get_summary',
            'join_ksegments', 'get_kpts', 'get_tdos', 'get_evals', 'get_bands_pro_set', 'get_dos_pro_set',
            'get_structure', 'export_vasprun', 'load_export', 'dump_dict', 'load_from_dump', 'islice2array',
-           'slice_data', 'split_vasprun']
+           'slice_data', 'split_vasprun', 'export_spin_data']
 
 # Cell
 import re
@@ -299,7 +299,7 @@ def get_tdos(xml_data,spin_set=1,elim=[]):
     - Returns total dos for a spin_set (default 1) and energy limit. If spin-polarized calculations, gives SpinUp and SpinDown keys as well.
     - **Parameters**
         - xml_data : From `read_asxml` function
-        - spin_set : int, default is 1.and
+        - spin_set : int, default is 1 to pick up total spin.
         - elim     : List [min,max] of energy, default empty.
     - **Returns**
         - Data     : pivotpy.Dict2Data with attibutes E_Fermi, ISPIN,tdos.
@@ -1084,3 +1084,59 @@ def split_vasprun(path=None):
                 middle = islice(f,start,stop_)
                 setf.write(''.join(l.lstrip().replace('/','').replace('<r>','') for l in middle if '</r>' in l))
                 print('Done')
+
+# Cell
+def export_spin_data(path = None, spin_sets = [1], skipk = None, elim = None):
+    """
+    - Returns Data with selected spin sets. For spin polarized calculations, it returns spin up and down data.
+    - **Parameters**
+        - path       : Path to `vasprun.xml` file. Default is `'./vasprun.xml'`.
+        - skipk      : Default is None. Automatically detects kpoints to skip.
+        - elim       : List [min,max] of energy interval. Default is [], covers all bands.
+        - spin_sets  : List of spin sets to include from [1,2,3,4] -> [S, Sx, Sy, Sz].
+                       Only works if ISPIN == 1, otherwise it will be two sets for spin up and down.
+    - **Returns**
+        - Data : Data accessible via dot notation containing nested Data objects:
+            - sys_info  : System Information
+            - dim_info  : Contains information about dimensions of returned objects.
+            - kpoints   : numpy array of kpoints with excluded IBZKPT points
+            - evals     : Data containing eigenvalues as evals.<e,u,d>.
+            - spins     : Data containing bands projections as spins.<u,d,s,x,y,z>.
+            - poscar    : Data containing basis,positions, rec_basis and volume.
+    """
+    if not isinstance(spin_sets,(list,tuple)):
+        raise TypeError("`spin_sets` must be a list or tuple of integers from [1,2,3,4] -> [S, Sx, Sy, Sz]!")
+
+    xml_data = read_asxml(path = path or './vasprun.xml')
+
+    base_dir = os.path.split(os.path.abspath(path))[0]
+    set_paths = [os.path.join(base_dir,"_set{}.txt".format(i)) for i in (1,2,3,4)]
+
+    skipk = skipk or exclude_kpts(xml_data=xml_data) #that much to skip by default
+    full_dic = {'sys_info':get_summary(xml_data)}
+    ISPIN = full_dic['sys_info'].ISPIN
+    full_dic['dim_info'] = {'kpoints':'(NKPTS,3)','evals.<e,u,d>':'⇅(NKPTS,NBANDS)','spins.<u,d,s,x,y,z>':'⇅(NION,NKPTS,NBANDS,pro_fields)'}
+    full_dic['kpoints']= get_kpts(xml_data, skipk = skipk).kpoints
+
+    bands = get_evals(xml_data, skipk = skipk,elim = elim).to_dict()
+    evals = bands['evals']
+    bands.update({'u': evals['SpinUp'], 'd': evals['SpinDown']} if ISPIN == 2 else {'e': evals})
+    del bands['evals']
+    full_dic['evals'] = bands
+
+    bands_range = full_dic['bands'].indices if elim else None #indices in range form.
+
+    if ISPIN == 1:
+        spins , ids = {}, 'sxyz'
+        for set in spin_sets:
+            spins[ids[set - 1]] = get_bands_pro_set(xml_data, spin_set = set, skipk = skipk, bands_range = bands_range, set_path = set_paths[set-1]).pros
+
+    if ISPIN == 2:
+        pro_1 = get_bands_pro_set(xml_data, spin_set = 1, skipk = skipk, bands_range = bands_range, set_path = set_paths[0])
+        pro_2 = get_bands_pro_set(xml_data, spin_set = 2, skipk = skipk, bands_range = bands_range, set_path = set_paths[1])
+        spins = {'u': pro_1.pros,'d': pro_2.pros}
+
+    full_dic['spins'] = spins
+    full_dic['spins']['labels'] = full_dic['sys_info'].fields
+    full_dic['poscar'] = {'SYSTEM':full_dic['sys_info'].SYSTEM,**(get_structure(xml_data=xml_data).to_dict())}
+    return Dict2Data(full_dic)
