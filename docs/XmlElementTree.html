@@ -135,7 +135,7 @@ nb_path: "XmlElementTree.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Dict2Data" class="doc_header"><code>class</code> <code>Dict2Data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/data_types.py#L20" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Dict2Data</code>(<strong><code>d</code></strong>)</p>
+<h2 id="Dict2Data" class="doc_header"><code>class</code> <code>Dict2Data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/serializer.py#L19" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Dict2Data</code>(<strong><code>d</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns a Data object with dictionary keys as attributes of Data accessible by dot notation or by key. Once an attribute is created, it can not be changed from outside.</li>
@@ -172,7 +172,7 @@ x.B.to_dict()
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Dict2Data.to_dict" class="doc_header"><code>Dict2Data.to_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/data_types.py#L53" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_dict</code>()</p>
+<h4 id="Dict2Data.to_dict" class="doc_header"><code>Dict2Data.to_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/serializer.py#L52" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_dict</code>()</p>
 </blockquote>
 <p>Converts a <code>Dict2Data</code> object (root or nested level) to a dictionary.</p>
 
@@ -184,7 +184,7 @@ x.B.to_dict()
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Dict2Data.to_json" class="doc_header"><code>Dict2Data.to_json</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/data_types.py#L63" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_json</code>(<strong><code>outfile</code></strong>=<em><code>None</code></em>, <strong><code>indent</code></strong>=<em><code>1</code></em>)</p>
+<h4 id="Dict2Data.to_json" class="doc_header"><code>Dict2Data.to_json</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/serializer.py#L62" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_json</code>(<strong><code>outfile</code></strong>=<em><code>None</code></em>, <strong><code>indent</code></strong>=<em><code>1</code></em>)</p>
 </blockquote>
 <p>Dumps a <code>Dict2Data</code> object (root or nested level) to json.</p>
 <ul>
@@ -203,7 +203,7 @@ x.B.to_dict()
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Dict2Data.to_pickle" class="doc_header"><code>Dict2Data.to_pickle</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/data_types.py#L71" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_pickle</code>(<strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="Dict2Data.to_pickle" class="doc_header"><code>Dict2Data.to_pickle</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/serializer.py#L70" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_pickle</code>(<strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Dumps a <code>Dict2Data</code> object (root or nested level) to pickle.</p>
 <ul>
@@ -221,7 +221,7 @@ x.B.to_dict()
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Dict2Data.to_tuple" class="doc_header"><code>Dict2Data.to_tuple</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/data_types.py#L78" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_tuple</code>()</p>
+<h4 id="Dict2Data.to_tuple" class="doc_header"><code>Dict2Data.to_tuple</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/serializer.py#L77" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_tuple</code>()</p>
 </blockquote>
 <p>Creates a namedtuple.</p>
 
@@ -242,7 +242,7 @@ x.B.to_dict()
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">data_types</span><span class="o">.</span><span class="n">Dict2Data</span><span class="p">({</span><span class="s1">&#39;A&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">})</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">Dict2Data</span><span class="p">({</span><span class="s1">&#39;A&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">})</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Dict: &#39;</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;JSON: &#39;</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="n">to_json</span><span class="p">())</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Pickle: &#39;</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="n">to_pickle</span><span class="p">())</span>
@@ -1293,7 +1293,7 @@ Direct
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>This back and forth data transport is required in <a href="https://github.com/massgh/pivotpy-dash">pivotpy-dash</a> app where data is stored in browser in json format, but needs to by python objects for figures.</p>
-<h2 id="Write-Clean-data-to-JSON-or-Pickle-file">Write Clean data to JSON or Pickle file<a class="anchor-link" href="#Write-Clean-data-to-JSON-or-Pickle-file"> </a></h2><p>Use <code>dump_dict</code> to write output of <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> or <a href="/pivotpy/XmlElementTree.html#load_export"><code>load_export</code></a> to pickle/json file. Pickle is useful for quick load in python while json is useful to transfer data into any language.</p>
+<h2 id="Write-Clean-data-to-JSON-or-Pickle-file">Write Clean data to JSON or Pickle file<a class="anchor-link" href="#Write-Clean-data-to-JSON-or-Pickle-file"> </a></h2><p>Use <code>pivotpy.serializer.dump</code> to write output of <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> or <a href="/pivotpy/XmlElementTree.html#load_export"><code>load_export</code></a> to pickle/json file. Pickle is useful for quick load in python while json is useful to transfer data into any language.</p>
 
 </div>
 </div>
@@ -1309,12 +1309,12 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="dump_dict" class="doc_header"><code>dump_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/data_types.py#L212" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>dump_dict</code>(<strong><code>dict_data</code></strong>=<em><code>None</code></em>, <strong><code>dump_to</code></strong>=<em><code>'pickle'</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>, <strong><code>indent</code></strong>=<em><code>1</code></em>)</p>
+<h4 id="dump" class="doc_header"><code>dump</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/serializer.py#L210" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>dump</code>(<strong><code>dict_data</code></strong>=<em><code>None</code></em>, <strong><code>dump_to</code></strong>=<em><code>'pickle'</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>, <strong><code>indent</code></strong>=<em><code>1</code></em>)</p>
 </blockquote>
 <ul>
 <li>Dump an <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> or <a href="/pivotpy/XmlElementTree.html#load_export"><code>load_export</code></a>'s <code>Data</code> object or any dictionary to json or pickle string/file. It convert <code>Dict2Data</code> to dictionary before serializing to json/pickle, so json/pickle.loads() of converted Data would be a simple dictionary, pass that to <code>Dict2Data</code> to again make accessible via dot notation.</li>
 <li><strong>Parameters</strong><ul>
-<li>dict_data : Any dictionary/Dict2Data(or subclass Data) object containg numpy arrays, including <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> or <a href="/pivotpy/XmlElementTree.html#load_export"><code>load_export</code></a> output.</li>
+<li>dict_data: Any dictionary/Dict2Data(or subclass Data) object containg numpy arrays, including <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> or <a href="/pivotpy/XmlElementTree.html#load_export"><code>load_export</code></a> output.</li>
 <li>dump_to  : Defualt is <code>pickle</code> or <code>json</code>.</li>
 <li>outfile  : Defualt is None and return string. File name does not require extension.</li>
 <li>indent   : Defualt is 1. Only works for json.</li>
@@ -1330,13 +1330,13 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="load_from_dump" class="doc_header"><code>load_from_dump</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/data_types.py#L242" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_from_dump</code>(<strong><code>file_or_str</code></strong>, <strong><code>json_to</code></strong>=<em><code>Dict2Data</code></em>)</p>
+<h4 id="load" class="doc_header"><code>load</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/serializer.py#L240" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load</code>(<strong><code>file_or_str</code></strong>, <strong><code>json_to</code></strong>=<em><code>Dict2Data</code></em>)</p>
 </blockquote>
 <ul>
 <li>Loads a json/pickle dumped file or string by auto detecting it.</li>
 <li><strong>Parameters</strong><ul>
 <li>file_or_str : Filename of pickl/json or their string.</li>
-<li>json_to     : Defualt is Dict2Data and return <code>Data</code> object. Can have subclasses of Dict2Data or dict.</li>
+<li>json_to     : If loading json, convert to (Dict2Data by defualt) or subclasses and/or dict. </li>
 </ul>
 </li>
 </ul>
@@ -1376,9 +1376,9 @@ Direct
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">data_types</span><span class="o">.</span><span class="n">dump_dict</span><span class="p">(</span><span class="n">evr</span><span class="o">.</span><span class="n">poscar</span><span class="p">,</span><span class="n">dump_to</span><span class="o">=</span><span class="s1">&#39;pickle&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">evr</span><span class="o">.</span><span class="n">poscar</span><span class="p">,</span><span class="n">dump_to</span><span class="o">=</span><span class="s1">&#39;pickle&#39;</span><span class="p">)</span>
 <span class="c1">#print(s)</span>
-<span class="n">data_types</span><span class="o">.</span><span class="n">load_from_dump</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="n">serializer</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -1736,6 +1736,6 @@ Note: Slicing a dimension to 100% of its data is faster than let say 80% for inn
  
 
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"486b978243ef45069fe4ee2833ec40cd": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "f9b0527996ab4fccbc9a802a83e12c82": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_486b978243ef45069fe4ee2833ec40cd", "msg_id": "", "outputs": []}}, "b054dc4d723f49be95f9a7fd8e46e383": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "538711c8d3ba40bfb38a52277cf58163": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_b054dc4d723f49be95f9a7fd8e46e383", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
+{"state": {"56a4097112914962981bb53f8a0cb21a": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "390883e8a7bd40cca92a55c350eeeaa1": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_56a4097112914962981bb53f8a0cb21a", "msg_id": "", "outputs": []}}, "428411f28a6d495bb9fd79b36ad5e9b1": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "3e5c405e225948b6ae98e60dd0b301c8": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_428411f28a6d495bb9fd79b36ad5e9b1", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
 </script>
 

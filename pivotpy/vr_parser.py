@@ -18,11 +18,11 @@ import textwrap
 import xml.etree.ElementTree as ET
 # Inside packages import to work both with package and jupyter notebook.
 try:
-    from pivotpy import utils as gu, data_types as data_types
+    from pivotpy import utils as gu, serializer as serializer
     from .sio import read_ticks
 except:
     import pivotpy.utils as gu
-    import pivotpy.data_types as data_types
+    import pivotpy.serializer as serializer
     import pivotpy.sio.read_ticks as read_ticks
 
 # Cell
@@ -151,7 +151,7 @@ def get_summary(xml_data):
     info_dic={'SYSTEM':incar['SYSTEM'],'NION':n_ions,'NELECT':NELECT,'TypeION':type_ions,
               'ElemName':elem_name,'ElemIndex':elem_index,'E_Fermi': efermi,'ISPIN':ISPIN,
               'fields':dos_fields,'incar':incar}
-    return data_types.Dict2Data(info_dic)
+    return serializer.Dict2Data(info_dic)
 
 # Cell
 def join_ksegments(kpath,kseg_inds=[]):
@@ -182,7 +182,7 @@ def get_kpts(xml_data, skipk=0,kseg_inds=[]):
     [kpath.append(np.round(np.sqrt(np.sum((pt1-pt2)**2))+kpath[-1],6)) for pt1,pt2 in zip(pts[:-1],pts[1:])]
     # If broken path, then join points.
     kpath = join_ksegments(kpath,kseg_inds)
-    return data_types.Dict2Data({'NKPTS':len(kpoints),'kpoints':kpoints,'kpath':kpath})
+    return serializer.Dict2Data({'NKPTS':len(kpoints),'kpoints':kpoints,'kpath':kpath})
 
 # Cell
 def get_tdos(xml_data,spin_set=1,elim=[]):
@@ -230,7 +230,7 @@ def get_tdos(xml_data,spin_set=1,elim=[]):
             lo_ind=np.min(np.where(tdos[:,0]-efermi>=np.min(elim)))
             tdos=tdos[lo_ind:up_ind,:]
         dos_dic= {'E_Fermi':efermi,'ISPIN':ISPIN,'grid_range':range(lo_ind,up_ind),'tdos':tdos}
-    return data_types.Dict2Data(dos_dic)
+    return serializer.Dict2Data(dos_dic)
 
 # Cell
 def get_evals(xml_data,skipk=None,elim=[]):
@@ -280,7 +280,7 @@ def get_evals(xml_data,skipk=None,elim=[]):
         evals_dic['NBANDS'] = NBANDS
         evals_dic['indices'] = range(lo_ind,up_ind)
         evals_dic['evals'] = evals
-    return data_types.Dict2Data(evals_dic)
+    return serializer.Dict2Data(evals_dic)
 
 # Cell
 def get_bands_pro_set(xml_data,
@@ -329,7 +329,7 @@ def get_bands_pro_set(xml_data,
         COUNT = NIONS*NBANDS*NKPTS*NORBS
         data = islice2array(set_path,start=start,nlines=nlines,count=COUNT)
         data = data.reshape((NKPTS,NBANDS,NIONS,NORBS)).transpose([2,0,1,3])
-        return data_types.Dict2Data({'labels':fields,'pros':data})
+        return serializer.Dict2Data({'labels':fields,'pros':data})
 
     #Collect Projection fields
     fields=[];
@@ -370,7 +370,7 @@ def get_bands_pro_set(xml_data,
         print("Done.")
 
     data = data.reshape((NKPTS,NBANDS,NIONS,NORBS)).transpose((2,0,1,3))
-    return data_types.Dict2Data({'labels':fields,'pros':data})
+    return serializer.Dict2Data({'labels':fields,'pros':data})
 
 # Cell
 def get_dos_pro_set(xml_data,spin_set=1,dos_range=None):
@@ -408,7 +408,7 @@ def get_dos_pro_set(xml_data,spin_set=1,dos_range=None):
         max_ind=dos_range[-1]+1
         dos_pro=np.array(dos_pro)[:,min_ind:max_ind,:]
     final_data=np.array(dos_pro) #shape(NION,e_grid,pro_fields)
-    return data_types.Dict2Data({'labels':dos_fields,'pros':final_data})
+    return serializer.Dict2Data({'labels':dos_fields,'pros':final_data})
 
 # Cell
 def _add_text_attr2poscar(poscar_data):
@@ -460,7 +460,7 @@ def get_structure(xml_data):
 
     st_dic={'SYSTEM':SYSTEM,'volume': volume,'basis': np.array(basis),'rec_basis': np.array(rec_basis),'positions': np.array(positions),
             'labels':labels,'unique': unique_d}
-    return _add_text_attr2poscar(data_types.PoscarData(st_dic))
+    return _add_text_attr2poscar(serializer.PoscarData(st_dic))
 
 # Cell
 def export_vasprun(path        = None,
@@ -552,12 +552,12 @@ def export_vasprun(path        = None,
     kpath=[k+shift_kpath for k in kpts.kpath]  # shift kpath for side by side calculations.
     full_dic={'sys_info':info_dic,'dim_info':dim_dic,'kpoints':kpts.kpoints,'kpath':kpath,'bands':eigenvals,
              'tdos':tot_dos,'pro_bands':pro_bands,'pro_dos':pro_dos,'poscar': poscar}
-    return data_types.VasprunData(full_dic)
+    return serializer.VasprunData(full_dic)
 
 # Cell
 def _validate_evr(path_evr=None,**kwargs):
     "Validates data given for plotting functions. Returns a tuple of (Boolean,data)."
-    if type(path_evr) == data_types.VasprunData:
+    if type(path_evr) == serializer.VasprunData:
         return path_evr
 
     path_evr = path_evr or './vasprun.xml' # default path.
@@ -716,8 +716,8 @@ def load_export(path= './vasprun.xml',
     kpath = join_ksegments(kpath,kseg_inds)
     kpath=[k+shift_kpath for k in kpath.copy()] # Shift kpath
     full_dic = {'sys_info': sys_info,'dim_info': dim_info,'kpoints': kpoints,'kpath':kpath,               'bands':bands_dic,'tdos':tdos_dic,'pro_bands': pro_dic ,'pro_dos': pdos_dic,
-               'poscar':_add_text_attr2poscar(data_types.PoscarData(poscar))}
-    return data_types.VasprunData(full_dic)
+               'poscar':_add_text_attr2poscar(serializer.PoscarData(poscar))}
+    return serializer.VasprunData(full_dic)
 
 # Cell
 def islice2array(path_or_islice,dtype=float,delimiter='\s+',
@@ -941,7 +941,7 @@ def export_spin_data(path = None, spins = 's', skipk = None, elim = None):
 
     xml_data = read_asxml(path = path or './vasprun.xml')
 
-    base_dir = os.path.split(os.path.abspath(path))[0]
+    base_dir = os.path.split(os.path.abspath(path or './vasprun.xml'))[0]
     set_paths = [os.path.join(base_dir,"_set{}.txt".format(i)) for i in (1,2,3,4)]
 
     skipk = skipk or exclude_kpts(xml_data=xml_data) #that much to skip by default
@@ -980,4 +980,4 @@ def export_spin_data(path = None, spins = 's', skipk = None, elim = None):
     full_dic['spins'] = spin_sets
     full_dic['spins']['labels'] = full_dic['sys_info'].fields
     full_dic['poscar'] = {'SYSTEM':full_dic['sys_info'].SYSTEM,**(get_structure(xml_data=xml_data).to_dict())}
-    return data_types.SpinData(full_dic)
+    return serializer.SpinData(full_dic)

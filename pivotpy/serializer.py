@@ -5,7 +5,7 @@ from collections import namedtuple
 
 import numpy as np
 
-# Cell
+
 def dict2tuple(name,d):
     """Converts a dictionary (nested as well) to namedtuple, accessible via index and dot notation as well as by unpacking.
     - **Parameters**
@@ -16,7 +16,6 @@ def dict2tuple(name,d):
            *(dict2tuple(k.upper(),v) if isinstance(v,dict) else v for k,v in d.items())
            )
 
-# Cell
 class Dict2Data:
     """
     - Returns a Data object with dictionary keys as attributes of Data accessible by dot notation or by key. Once an attribute is created, it can not be changed from outside.
@@ -66,14 +65,14 @@ class Dict2Data:
             - outfile : Default is None and returns string. If given, writes to file.
             - indent  : Json indent. Default is 1.
         """
-        return dump_dict(self,dump_to='json',outfile=outfile,indent=indent)
+        return dump(self,dump_to='json',outfile=outfile,indent=indent)
 
     def to_pickle(self,outfile=None):
         """Dumps a `Dict2Data` object (root or nested level) to pickle.
         - **Parameters**
             - outfile : Default is None and returns string. If given, writes to file.
         """
-        return dump_dict(self,dump_to='pickle',outfile=outfile)
+        return dump(self,dump_to='pickle',outfile=outfile)
 
     def to_tuple(self):
         """Creates a namedtuple."""
@@ -208,12 +207,11 @@ class DecodeToNumpy(json.JSONDecoder):
         return obj
 
     
-# Cell
-def dump_dict(dict_data = None, dump_to = 'pickle',outfile = None,indent=1):
+def dump(dict_data = None, dump_to = 'pickle',outfile = None,indent=1):
     """
     - Dump an `export_vasprun` or `load_export`'s `Data` object or any dictionary to json or pickle string/file. It convert `Dict2Data` to dictionary before serializing to json/pickle, so json/pickle.loads() of converted Data would be a simple dictionary, pass that to `Dict2Data` to again make accessible via dot notation.
     - **Parameters**
-        - dict_data : Any dictionary/Dict2Data(or subclass Data) object containg numpy arrays, including `export_vasprun` or `load_export` output.
+        - dict_data: Any dictionary/Dict2Data(or subclass Data) object containg numpy arrays, including `export_vasprun` or `load_export` output.
         - dump_to  : Defualt is `pickle` or `json`.
         - outfile  : Defualt is None and return string. File name does not require extension.
         - indent   : Defualt is 1. Only works for json.
@@ -238,16 +236,16 @@ def dump_dict(dict_data = None, dump_to = 'pickle',outfile = None,indent=1):
             json.dump(dict_obj,f,cls = EncodeFromNumpy,indent=indent)
     return None
 
-# Cell
-def load_from_dump(file_or_str,json_to = Dict2Data):
+
+def load(file_or_str,json_to = Dict2Data):
     """
     - Loads a json/pickle dumped file or string by auto detecting it.
     - **Parameters**
         - file_or_str : Filename of pickl/json or their string.
-        - json_to     : Defualt is Dict2Data and return `Data` object. Can have subclasses of Dict2Data or dict.
+        - json_to     : If loading json, convert to (Dict2Data by defualt) or subclasses and/or dict. 
     """
     if json_to not in [dict, Dict2Data,VasprunData,SpinData,PoscarData,LocpotData,OutcarData]:
-        raise ValueError("`load_as` expects `Dict2Data`, `dict`, `VasprunData`, `SpinData`, `PoscarData`, `LocpotData`, `OutcarData`, got '{}'".format(load_as))
+        raise ValueError("`json_to` expects `Dict2Data`, `dict`, `VasprunData`, `SpinData`, `PoscarData`, `LocpotData`, `OutcarData`, got '{}'".format(load_as))
     out = {}
     if not isinstance(file_or_str,bytes):
         try: #must try, else fails due to path length issue

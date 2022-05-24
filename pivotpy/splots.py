@@ -23,11 +23,11 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 try:
     from pivotpy import vr_parser as vp
     from pivotpy import utils as gu
-    from pivotpy import data_types
+    from pivotpy import serializer
 except:
     import pivotpy.vr_parser as vp
     import pivotpy.utils as gu
-    import pivotpy.data_types as data_types
+    import pivotpy.serializer as serializer
 
 from IPython import get_ipython
 from IPython.display import HTML, set_matplotlib_formats #HTML for plt2html
@@ -1500,7 +1500,7 @@ def plot_potential(basis = None,
     ret_dict = {'direction':operation.split('_')[1]}
     # Only go below if periodicity is given
     if period == None:
-        return (ax,data_types.Dict2Data(ret_dict)) # Simple Return
+        return (ax,serializer.Dict2Data(ret_dict)) # Simple Return
     if period != None:
         period = int(period*len(pot))
         arr_con = np.convolve(pot, np.ones((period,))/period, mode='valid')
@@ -1530,4 +1530,4 @@ def plot_potential(basis = None,
                             bbox=dict(edgecolor='white',facecolor='white', alpha=0.5),transform=ax.transAxes)
         ax.set_xlabel('$'+ret_dict['direction']+' ('+u'\u212B'+')$')
         ax.set_xlim([x[0],x[-1]])
-        return (ax,data_types.Dict2Data(ret_dict))
+        return (ax,serializer.Dict2Data(ret_dict))

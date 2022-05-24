@@ -19,7 +19,7 @@ import numpy as np
 import plotly.graph_objects as go
 # Inside packages import to work both with package and jupyter notebook.
 try:
-    from pivotpy import vr_parser as vp, data_types
+    from pivotpy import vr_parser as vp, serializer
     from pivotpy import splots as sp
     from pivotpy import iplots as ip
     from pivotpy import sio as sio
@@ -28,7 +28,7 @@ except:
     import pivotpy.splots as sp
     import pivotpy.iplots as ip
     import pivotpy.sio as sio
-    import pivotpy.data_types as data_types
+    import pivotpy.serializer as serializer
 
 # Cell
 def get_file_size(path):
@@ -282,7 +282,7 @@ def export_outcar(path=None):
     pos_pot = np.hstack([pos_arr,pot_arr[:,1:]])
     basis = np.loadtxt(StringIO(''.join(lines[b_first:b_first+3])))
     final_dict = {'ion_pot':pot_arr,'positions':pos_arr,'site_pot':pos_pot,'basis':basis[:,:3],'rec_basis':basis[:,3:],'n_kbi':n_kbi}
-    return data_types.OutcarData(final_dict)
+    return serializer.OutcarData(final_dict)
 
 # Cell
 def export_potential(locpot=None,e = True,m = False):
@@ -362,7 +362,7 @@ def export_potential(locpot=None,e = True,m = False):
 
     final_dict = dict(SYSTEM=system,ElemName=ElemName,ElemIndex=ElemIndex,basis=basis,positions=positions)
     final_dict = {**final_dict,**pot_dict}
-    return data_types.LocpotData(final_dict)
+    return serializer.LocpotData(final_dict)
 
 # Cell
 def transform_color(arr,s=1,c=1,b=0,mixing_matrix=None):
