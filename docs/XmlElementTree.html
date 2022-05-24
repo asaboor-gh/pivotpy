@@ -65,7 +65,7 @@ nb_path: "XmlElementTree.ipynb"
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <ul>
-<li>Almost every object in this module returns a <a href="/pivotpy/XmlElementTree.html#Dict2Data"><code>Dict2Data</code></a> object with attributes accessible via dot notation. This object can by transformed to a dictionary by <code>to_dict()</code> method on the object.</li>
+<li>Almost every object in this module returns a <code>Dict2Data</code> object with attributes accessible via dot notation. This object can by transformed to a dictionary by <code>to_dict()</code> method on the object.</li>
 </ul>
 
 </div>
@@ -135,7 +135,7 @@ nb_path: "XmlElementTree.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Dict2Data" class="doc_header"><code>class</code> <code>Dict2Data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L40" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Dict2Data</code>(<strong><code>d</code></strong>)</p>
+<h2 id="Dict2Data" class="doc_header"><code>class</code> <code>Dict2Data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/data_types.py#L20" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Dict2Data</code>(<strong><code>d</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns a Data object with dictionary keys as attributes of Data accessible by dot notation or by key. Once an attribute is created, it can not be changed from outside.</li>
@@ -168,33 +168,13 @@ x.B.to_dict()
 
 </div>
 
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
 <div class="output_area">
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Dict2Data.to_dict" class="doc_header"><code>Dict2Data.to_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L73" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_dict</code>()</p>
+<h4 id="Dict2Data.to_dict" class="doc_header"><code>Dict2Data.to_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/data_types.py#L53" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_dict</code>()</p>
 </blockquote>
-<p>Converts a <a href="/pivotpy/XmlElementTree.html#Dict2Data"><code>Dict2Data</code></a> object (root or nested level) to a dictionary.</p>
+<p>Converts a <code>Dict2Data</code> object (root or nested level) to a dictionary.</p>
 
 </div>
 
@@ -204,9 +184,9 @@ x.B.to_dict()
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Dict2Data.to_json" class="doc_header"><code>Dict2Data.to_json</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L83" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_json</code>(<strong><code>outfile</code></strong>=<em><code>None</code></em>, <strong><code>indent</code></strong>=<em><code>1</code></em>)</p>
+<h4 id="Dict2Data.to_json" class="doc_header"><code>Dict2Data.to_json</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/data_types.py#L63" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_json</code>(<strong><code>outfile</code></strong>=<em><code>None</code></em>, <strong><code>indent</code></strong>=<em><code>1</code></em>)</p>
 </blockquote>
-<p>Dumps a <a href="/pivotpy/XmlElementTree.html#Dict2Data"><code>Dict2Data</code></a> object (root or nested level) to json.</p>
+<p>Dumps a <code>Dict2Data</code> object (root or nested level) to json.</p>
 <ul>
 <li><strong>Parameters</strong><ul>
 <li>outfile : Default is None and returns string. If given, writes to file.</li>
@@ -223,9 +203,9 @@ x.B.to_dict()
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Dict2Data.to_pickle" class="doc_header"><code>Dict2Data.to_pickle</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L91" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_pickle</code>(<strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="Dict2Data.to_pickle" class="doc_header"><code>Dict2Data.to_pickle</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/data_types.py#L71" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_pickle</code>(<strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
-<p>Dumps a <a href="/pivotpy/XmlElementTree.html#Dict2Data"><code>Dict2Data</code></a> object (root or nested level) to pickle.</p>
+<p>Dumps a <code>Dict2Data</code> object (root or nested level) to pickle.</p>
 <ul>
 <li><strong>Parameters</strong><ul>
 <li>outfile : Default is None and returns string. If given, writes to file.</li>
@@ -241,7 +221,7 @@ x.B.to_dict()
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Dict2Data.to_tuple" class="doc_header"><code>Dict2Data.to_tuple</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L98" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_tuple</code>()</p>
+<h4 id="Dict2Data.to_tuple" class="doc_header"><code>Dict2Data.to_tuple</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/data_types.py#L78" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_tuple</code>()</p>
 </blockquote>
 <p>Creates a namedtuple.</p>
 
@@ -262,7 +242,7 @@ x.B.to_dict()
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">Dict2Data</span><span class="p">({</span><span class="s1">&#39;A&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">})</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">data_types</span><span class="o">.</span><span class="n">Dict2Data</span><span class="p">({</span><span class="s1">&#39;A&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">})</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Dict: &#39;</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;JSON: &#39;</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="n">to_json</span><span class="p">())</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Pickle: &#39;</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="n">to_pickle</span><span class="p">())</span>
@@ -324,7 +304,7 @@ Tuple:  Data(A=1, B=2)
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="read_asxml" class="doc_header"><code>read_asxml</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L149" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>read_asxml</code>(<strong><code>path</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="read_asxml" class="doc_header"><code>read_asxml</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L40" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>read_asxml</code>(<strong><code>path</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li><p>Reads a big vasprun.xml file into memory once and then apply commands. If current folder contains <code>vasprun.xml</code> file, it automatically picks it.</p>
@@ -369,7 +349,7 @@ Tuple:  Data(A=1, B=2)
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="xml2dict" class="doc_header"><code>xml2dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L184" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>xml2dict</code>(<strong><code>xmlnode_or_filepath</code></strong>)</p>
+<h4 id="xml2dict" class="doc_header"><code>xml2dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L75" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>xml2dict</code>(<strong><code>xmlnode_or_filepath</code></strong>)</p>
 </blockquote>
 <p>Convert xml node or xml file content to dictionary. All output text is in string format, so further processing is required to convert into data types/split etc.</p>
 <ul>
@@ -406,7 +386,7 @@ Tuple:  Data(A=1, B=2)
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="exclude_kpts" class="doc_header"><code>exclude_kpts</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L200" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>exclude_kpts</code>(<strong><code>xml_data</code></strong>)</p>
+<h4 id="exclude_kpts" class="doc_header"><code>exclude_kpts</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L91" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>exclude_kpts</code>(<strong><code>xml_data</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns number of kpoints to exclude used from IBZKPT.</li>
@@ -448,7 +428,7 @@ Tuple:  Data(A=1, B=2)
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_ispin" class="doc_header"><code>get_ispin</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L217" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_ispin</code>(<strong><code>xml_data</code></strong>)</p>
+<h4 id="get_ispin" class="doc_header"><code>get_ispin</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L108" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_ispin</code>(<strong><code>xml_data</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns value of ISPIN.</li>
@@ -490,7 +470,7 @@ Tuple:  Data(A=1, B=2)
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_summary" class="doc_header"><code>get_summary</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L230" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_summary</code>(<strong><code>xml_data</code></strong>)</p>
+<h4 id="get_summary" class="doc_header"><code>get_summary</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L121" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_summary</code>(<strong><code>xml_data</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns overview of system parameters.</li>
@@ -567,7 +547,7 @@ Tuple:  Data(A=1, B=2)
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="join_ksegments" class="doc_header"><code>join_ksegments</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L266" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>join_ksegments</code>(<strong><code>kpath</code></strong>, <strong><code>kseg_inds</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="join_ksegments" class="doc_header"><code>join_ksegments</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L157" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>join_ksegments</code>(<strong><code>kpath</code></strong>, <strong><code>kseg_inds</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>Joins a broken kpath's next segment to previous. <code>kseg_inds</code> should be list of first index of next segment</p>
 
@@ -592,7 +572,7 @@ Tuple:  Data(A=1, B=2)
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_kpts" class="doc_header"><code>get_kpts</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L274" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_kpts</code>(<strong><code>xml_data</code></strong>, <strong><code>skipk</code></strong>=<em><code>0</code></em>, <strong><code>kseg_inds</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_kpts" class="doc_header"><code>get_kpts</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L165" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_kpts</code>(<strong><code>xml_data</code></strong>, <strong><code>skipk</code></strong>=<em><code>0</code></em>, <strong><code>kseg_inds</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>Returns kpoints and calculated kpath.</p>
 <p><strong>Parameters</strong></p>
@@ -671,7 +651,7 @@ Tuple:  Data(A=1, B=2)
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_tdos" class="doc_header"><code>get_tdos</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L297" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_tdos</code>(<strong><code>xml_data</code></strong>, <strong><code>spin_set</code></strong>=<em><code>1</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_tdos" class="doc_header"><code>get_tdos</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L188" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_tdos</code>(<strong><code>xml_data</code></strong>, <strong><code>spin_set</code></strong>=<em><code>1</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns total dos for a spin_set (default 1) and energy limit. If spin-polarized calculations, gives SpinUp and SpinDown keys as well.</li>
@@ -752,7 +732,7 @@ Tuple:  Data(A=1, B=2)
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_evals" class="doc_header"><code>get_evals</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L345" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_evals</code>(<strong><code>xml_data</code></strong>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_evals" class="doc_header"><code>get_evals</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L236" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_evals</code>(<strong><code>xml_data</code></strong>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns eigenvalues as numpy array. If spin-polarized calculations, gives SpinUp and SpinDown keys as well.</li>
@@ -835,7 +815,7 @@ Tuple:  Data(A=1, B=2)
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_bands_pro_set" class="doc_header"><code>get_bands_pro_set</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L395" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_bands_pro_set</code>(<strong><code>xml_data</code></strong>, <strong><code>spin_set</code></strong>=<em><code>1</code></em>, <strong><code>skipk</code></strong>=<em><code>0</code></em>, <strong><code>bands_range</code></strong>=<em><code>None</code></em>, <strong><code>set_path</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_bands_pro_set" class="doc_header"><code>get_bands_pro_set</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L286" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_bands_pro_set</code>(<strong><code>xml_data</code></strong>, <strong><code>spin_set</code></strong>=<em><code>1</code></em>, <strong><code>skipk</code></strong>=<em><code>0</code></em>, <strong><code>bands_range</code></strong>=<em><code>None</code></em>, <strong><code>set_path</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns bands projection of a spin_set(default 1). If spin-polarized calculations, gives SpinUp and SpinDown keys as well.</li>
@@ -917,7 +897,7 @@ Tuple:  Data(A=1, B=2)
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_dos_pro_set" class="doc_header"><code>get_dos_pro_set</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L485" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_dos_pro_set</code>(<strong><code>xml_data</code></strong>, <strong><code>spin_set</code></strong>=<em><code>1</code></em>, <strong><code>dos_range</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="get_dos_pro_set" class="doc_header"><code>get_dos_pro_set</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L376" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_dos_pro_set</code>(<strong><code>xml_data</code></strong>, <strong><code>spin_set</code></strong>=<em><code>1</code></em>, <strong><code>dos_range</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns dos projection of a spin_set(default 1) as numpy array. If spin-polarized calculations, gives SpinUp and SpinDown keys as well.</li>
@@ -961,7 +941,7 @@ Tuple:  Data(A=1, B=2)
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_structure" class="doc_header"><code>get_structure</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L538" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_structure</code>(<strong><code>xml_data</code></strong>)</p>
+<h4 id="get_structure" class="doc_header"><code>get_structure</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L429" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_structure</code>(<strong><code>xml_data</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns structure's volume,basis,positions and rec-basis.</li>
@@ -1014,7 +994,7 @@ Tuple:  Data(A=1, B=2)
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>Data(
+<pre>PoscarData(
     SYSTEM =  AlAs
     volume = 45.73530449
     basis = &lt;ndarray:shape=(3, 3)&gt;
@@ -1064,7 +1044,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="export_vasprun" class="doc_header"><code>export_vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L575" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_vasprun</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>kseg_inds</code></strong>=<em><code>[]</code></em>, <strong><code>shift_kpath</code></strong>=<em><code>0</code></em>, <strong><code>try_pwsh</code></strong>=<em><code>True</code></em>)</p>
+<h4 id="export_vasprun" class="doc_header"><code>export_vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L466" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_vasprun</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>[]</code></em>, <strong><code>kseg_inds</code></strong>=<em><code>[]</code></em>, <strong><code>shift_kpath</code></strong>=<em><code>0</code></em>, <strong><code>try_pwsh</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns a full dictionary of all objects from <code>vasprun.xml</code> file. It first try to load the data exported by powershell's <code>Export-VR(Vasprun)</code>, which is very fast for large files. It is recommended to export large files in powershell first.</li>
@@ -1141,7 +1121,7 @@ Direct
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>Data(
+<pre>VasprunData(
     sys_info = Data(
         SYSTEM = C2
         NION = 2
@@ -1261,7 +1241,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="load_export" class="doc_header"><code>load_export</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L688" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_export</code>(<strong><code>path</code></strong>=<em><code>'./vasprun.xml'</code></em>, <strong><code>kseg_inds</code></strong>=<em><code>[]</code></em>, <strong><code>shift_kpath</code></strong>=<em><code>0</code></em>, <strong><code>path_to_ps</code></strong>=<em><code>'pwsh'</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>max_filled</code></strong>=<em><code>10</code></em>, <strong><code>max_empty</code></strong>=<em><code>10</code></em>, <strong><code>keep_files</code></strong>=<em><code>True</code></em>)</p>
+<h4 id="load_export" class="doc_header"><code>load_export</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L575" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_export</code>(<strong><code>path</code></strong>=<em><code>'./vasprun.xml'</code></em>, <strong><code>kseg_inds</code></strong>=<em><code>[]</code></em>, <strong><code>shift_kpath</code></strong>=<em><code>0</code></em>, <strong><code>path_to_ps</code></strong>=<em><code>'pwsh'</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>max_filled</code></strong>=<em><code>10</code></em>, <strong><code>max_empty</code></strong>=<em><code>10</code></em>, <strong><code>keep_files</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns a full dictionary of all objects from <code>vasprun.xml</code> file exported using powershell.</li>
@@ -1313,7 +1293,7 @@ Direct
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>This back and forth data transport is required in <a href="https://github.com/massgh/pivotpy-dash">pivotpy-dash</a> app where data is stored in browser in json format, but needs to by python objects for figures.</p>
-<h2 id="Write-Clean-data-to-JSON-or-Pickle-file">Write Clean data to JSON or Pickle file<a class="anchor-link" href="#Write-Clean-data-to-JSON-or-Pickle-file"> </a></h2><p>Use <code>dump_vasprun</code> to write output of <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> or <a href="/pivotpy/XmlElementTree.html#load_export"><code>load_export</code></a> to pickle/json file. Pickle is useful for quick load in python while json is useful to transfer data into any language.</p>
+<h2 id="Write-Clean-data-to-JSON-or-Pickle-file">Write Clean data to JSON or Pickle file<a class="anchor-link" href="#Write-Clean-data-to-JSON-or-Pickle-file"> </a></h2><p>Use <code>dump_dict</code> to write output of <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> or <a href="/pivotpy/XmlElementTree.html#load_export"><code>load_export</code></a> to pickle/json file. Pickle is useful for quick load in python while json is useful to transfer data into any language.</p>
 
 </div>
 </div>
@@ -1329,12 +1309,12 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="dump_dict" class="doc_header"><code>dump_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L836" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>dump_dict</code>(<strong><code>dict_data</code></strong>=<em><code>None</code></em>, <strong><code>dump_to</code></strong>=<em><code>'pickle'</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>, <strong><code>indent</code></strong>=<em><code>1</code></em>)</p>
+<h4 id="dump_dict" class="doc_header"><code>dump_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/data_types.py#L212" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>dump_dict</code>(<strong><code>dict_data</code></strong>=<em><code>None</code></em>, <strong><code>dump_to</code></strong>=<em><code>'pickle'</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>, <strong><code>indent</code></strong>=<em><code>1</code></em>)</p>
 </blockquote>
 <ul>
-<li>Dump an <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> or <a href="/pivotpy/XmlElementTree.html#load_export"><code>load_export</code></a>'s <code>Data</code> object or any dictionary to json or pickle string/file. It convert <a href="/pivotpy/XmlElementTree.html#Dict2Data"><code>Dict2Data</code></a> to dictionary before serializing to json/pickle, so json/pickle.loads() of converted Data would be a simple dictionary, pass that to <a href="/pivotpy/XmlElementTree.html#Dict2Data"><code>Dict2Data</code></a> to again make accessible via dot notation.</li>
+<li>Dump an <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> or <a href="/pivotpy/XmlElementTree.html#load_export"><code>load_export</code></a>'s <code>Data</code> object or any dictionary to json or pickle string/file. It convert <code>Dict2Data</code> to dictionary before serializing to json/pickle, so json/pickle.loads() of converted Data would be a simple dictionary, pass that to <code>Dict2Data</code> to again make accessible via dot notation.</li>
 <li><strong>Parameters</strong><ul>
-<li>dict_data : Any dictionary/Dict2Data object containg numpy arrays, including <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> or <a href="/pivotpy/XmlElementTree.html#load_export"><code>load_export</code></a> output.</li>
+<li>dict_data : Any dictionary/Dict2Data(or subclass Data) object containg numpy arrays, including <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> or <a href="/pivotpy/XmlElementTree.html#load_export"><code>load_export</code></a> output.</li>
 <li>dump_to  : Defualt is <code>pickle</code> or <code>json</code>.</li>
 <li>outfile  : Defualt is None and return string. File name does not require extension.</li>
 <li>indent   : Defualt is 1. Only works for json.</li>
@@ -1346,37 +1326,17 @@ Direct
 
 </div>
 
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
 <div class="output_area">
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="load_from_dump" class="doc_header"><code>load_from_dump</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L864" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_from_dump</code>(<strong><code>file_or_str</code></strong>, <strong><code>keep_as_dict</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="load_from_dump" class="doc_header"><code>load_from_dump</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/data_types.py#L242" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_from_dump</code>(<strong><code>file_or_str</code></strong>, <strong><code>json_to</code></strong>=<em><code>Dict2Data</code></em>)</p>
 </blockquote>
 <ul>
 <li>Loads a json/pickle dumped file or string by auto detecting it.</li>
 <li><strong>Parameters</strong><ul>
 <li>file_or_str : Filename of pickl/json or their string.</li>
-<li>keep_as_dict: Defualt is False and return <code>Data</code> object. If True, returns dictionary.</li>
+<li>json_to     : Defualt is Dict2Data and return <code>Data</code> object. Can have subclasses of Dict2Data or dict.</li>
 </ul>
 </li>
 </ul>
@@ -1387,13 +1347,6 @@ Direct
 
 </div>
 </div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
@@ -1423,9 +1376,9 @@ Direct
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">dump_dict</span><span class="p">(</span><span class="n">evr</span><span class="o">.</span><span class="n">poscar</span><span class="p">,</span><span class="n">dump_to</span><span class="o">=</span><span class="s1">&#39;pickle&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">data_types</span><span class="o">.</span><span class="n">dump_dict</span><span class="p">(</span><span class="n">evr</span><span class="o">.</span><span class="n">poscar</span><span class="p">,</span><span class="n">dump_to</span><span class="o">=</span><span class="s1">&#39;pickle&#39;</span><span class="p">)</span>
 <span class="c1">#print(s)</span>
-<span class="n">load_from_dump</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="n">data_types</span><span class="o">.</span><span class="n">load_from_dump</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -1493,7 +1446,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="islice2array" class="doc_header"><code>islice2array</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L894" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>islice2array</code>(<strong><code>path_or_islice</code></strong>, <strong><code>dtype</code></strong>=<em><code>float</code></em>, <strong><code>delimiter</code></strong>=<em><code>'\\s+'</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>, <strong><code>exclude</code></strong>=<em><code>'#'</code></em>, <strong><code>raw</code></strong>=<em><code>False</code></em>, <strong><code>fix_format</code></strong>=<em><code>True</code></em>, <strong><code>start</code></strong>=<em><code>0</code></em>, <strong><code>nlines</code></strong>=<em><code>None</code></em>, <strong><code>count</code></strong>=<em><code>-1</code></em>, <strong><code>cols</code></strong>=<em><code>None</code></em>, <strong><code>new_shape</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="islice2array" class="doc_header"><code>islice2array</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L723" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>islice2array</code>(<strong><code>path_or_islice</code></strong>, <strong><code>dtype</code></strong>=<em><code>float</code></em>, <strong><code>delimiter</code></strong>=<em><code>'\\s+'</code></em>, <strong><code>include</code></strong>=<em><code>None</code></em>, <strong><code>exclude</code></strong>=<em><code>'#'</code></em>, <strong><code>raw</code></strong>=<em><code>False</code></em>, <strong><code>fix_format</code></strong>=<em><code>True</code></em>, <strong><code>start</code></strong>=<em><code>0</code></em>, <strong><code>nlines</code></strong>=<em><code>None</code></em>, <strong><code>count</code></strong>=<em><code>-1</code></em>, <strong><code>cols</code></strong>=<em><code>None</code></em>, <strong><code>new_shape</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Reads a sliced array from txt,csv type files and return to array. Also manages if columns lengths are not equal and return 1D array. It is faster than loading  whole file into memory. This single function could be used to parse EIGENVAL, PROCAR, DOCAR and similar files with just a combination of <code>exclude, include,start,stop,step</code> arguments.</li>
@@ -1552,7 +1505,7 @@ Note: Slicing a dimension to 100% of its data is faster than let say 80% for inn
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="slice_data" class="doc_header"><code>slice_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L981" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>slice_data</code>(<strong><code>dim_inds</code></strong>, <strong><code>old_shape</code></strong>)</p>
+<h4 id="slice_data" class="doc_header"><code>slice_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L810" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>slice_data</code>(<strong><code>dim_inds</code></strong>, <strong><code>old_shape</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns a dictionary that can be unpacked in arguments of isclice2array function. This function works only for regular txt/csv/tsv data files which have rectangular data written.</li>
@@ -1650,7 +1603,7 @@ Note: Slicing a dimension to 100% of its data is faster than let say 80% for inn
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="split_vasprun" class="doc_header"><code>split_vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L1031" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>split_vasprun</code>(<strong><code>path</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="split_vasprun" class="doc_header"><code>split_vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L860" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>split_vasprun</code>(<strong><code>path</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Splits a given vasprun.xml file into a smaller _vasprun.xml file plus _set[1,2,3,4].txt files which contain projected data for each spin set.</li>
@@ -1702,7 +1655,7 @@ Note: Slicing a dimension to 100% of its data is faster than let say 80% for inn
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="export_spin_data" class="doc_header"><code>export_spin_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L1089" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_spin_data</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>spins</code></strong>=<em><code>'s'</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="export_spin_data" class="doc_header"><code>export_spin_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L918" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_spin_data</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>spins</code></strong>=<em><code>'s'</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns Data with selected spin sets. For spin polarized calculations, it returns spin up and down data.</li>
@@ -1783,6 +1736,6 @@ Note: Slicing a dimension to 100% of its data is faster than let say 80% for inn
  
 
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"b29e04684b274695b22fa3e99b2dab60": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "a35ebdde3a6645fe9b9f22b6914baa05": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_b29e04684b274695b22fa3e99b2dab60", "msg_id": "", "outputs": []}}, "784a859198d24f63b9c7bddfcef8890d": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "00b3183f1cd4413c8f04f2a9da16c424": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_784a859198d24f63b9c7bddfcef8890d", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
+{"state": {"486b978243ef45069fe4ee2833ec40cd": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "f9b0527996ab4fccbc9a802a83e12c82": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_486b978243ef45069fe4ee2833ec40cd", "msg_id": "", "outputs": []}}, "b054dc4d723f49be95f9a7fd8e46e383": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "538711c8d3ba40bfb38a52277cf58163": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_b054dc4d723f49be95f9a7fd8e46e383", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
 </script>
 

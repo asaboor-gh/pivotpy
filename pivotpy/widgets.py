@@ -27,12 +27,14 @@ try:
     from pivotpy import iplots as ip
     from pivotpy import splots as sp
     from pivotpy import sio
+    from pivotpy import data_types
 except:
     import pivotpy.utils as gu
     import pivotpy.vr_parser as vp
     import pivotpy.iplots as ip
     import pivotpy.splots as sp
     import pivotpy.sio as sio
+    import pivotpy.data_types as data_types
 
 # Cell
 def css_style(colors_dict,_class = 'main_wrapper'):
@@ -218,7 +220,7 @@ def get_files_gui(auto_fill = 'vasprun.xml', theme_colors = None, height=320):
                 print("Falling back to PWD: {}".format(os.getcwd()))
             path = os.getcwd()
             pw.value = path
-        gci = vp.Dict2Data({'children':[],'parent':path})
+        gci = data_types.Dict2Data({'children':[],'parent':path})
 
         if 'Files' in item_w.value:
             file_type = dict(filesOnly=True)
@@ -285,7 +287,7 @@ class InputGui:
             - output: Dictionary that contains kwargs for plot functions.
             - html  : A widget which can be used to bserve change in output, used in `VasprunApp`.
         """
-        self.sys_info = sys_info if sys_info else vp.Dict2Data({'fields':['s'],
+        self.sys_info = sys_info if sys_info else data_types.Dict2Data({'fields':['s'],
                                                 'ElemIndex':[0,1],'ElemName':['A']})
         self.output = dict(elements = [[],[],[]],orbs = [[],[],[]],labels = ['','',''])
 
@@ -453,7 +455,7 @@ def _tabulate_data(data_dict):
 # Send Data
 def _save_data(out_w1,data_dict):
     out_f = os.path.join(os.path.split(out_w1.value)[0],'result.json')
-    vp.dump_dict(data_dict,dump_to='json',outfile=out_f)
+    data_types.dump_dict(data_dict,dump_to='json',outfile=out_f)
 
 # Cell
 def _color_toggle(tog_w,fig,rd_btn):
@@ -790,7 +792,7 @@ class VasprunApp:
         try:
             _dir = os.path.split(path)[0]
             r_f = os.path.join(_dir,'result.json')
-            self.result = vp.load_from_dump(r_f,keep_as_dict=True)
+            self.result = data_types.load_from_dump(r_f,keep_as_dict=True)
             print('Previous Analysis loaded in Table for {}'.format(path))
         except:
             print('Previous Analysis does not exist for {}'.format(path))
@@ -815,16 +817,16 @@ class VasprunApp:
         self.buttons['load_data'].description='Loading ...'
         _dir = os.path.split(self.files_dd.value)[0] # directory
         try:
-            sys_info = vp.load_from_dump(os.path.join(_dir,'sys_info.pickle'))
-            self.data = vp.load_from_dump(os.path.join(_dir,'vasprun.pickle'))
+            sys_info = data_types.load_from_dump(os.path.join(_dir,'sys_info.pickle'))
+            self.data = data_types.load_from_dump(os.path.join(_dir,'vasprun.pickle'))
             print('Cache Loaded')
         except:
             print('Trying Loading from Python ...')
             self.data = vp.export_vasprun(self.files_dd.value, **self.evr_kws)
             if self.cache_data:
                 print('Caching From: {}'.format(self.files_dd.value)) #Cache result
-                vp.dump_dict(self.data.sys_info,outfile=os.path.join(_dir,'sys_info.pickle'))
-                vp.dump_dict(self.data,outfile=os.path.join(_dir,'vasprun.pickle'))
+                data_types.dump_dict(self.data.sys_info,outfile=os.path.join(_dir,'sys_info.pickle'))
+                data_types.dump_dict(self.data,outfile=os.path.join(_dir,'vasprun.pickle'))
 
             sys_info = self.data.sys_info # required here.
             print('Done')
@@ -859,7 +861,7 @@ class VasprunApp:
             self.input = {k:v for k,v in self.input.items() if k not in ['ktick_inds','ktick_vals','kseg_inds']}
         #Update at last
         self.InGui.output = self.input
-        self.buttons['load_graph'].tooltip = "Current Input\n{!r}".format(vp.Dict2Data(self.input))
+        self.buttons['load_graph'].tooltip = "Current Input\n{!r}".format(data_types.Dict2Data(self.input))
         self.buttons['load_graph'].icon = 'fa-refresh'
 
     @output.capture(clear_output=True,wait=True)
@@ -951,7 +953,7 @@ class VasprunApp:
                     print('Trying to Load Cache for Graph ...')
                     file = os.path.join(os.path.split(path)[0],'vasprun.pickle')
                     self.buttons['load_graph'].description = file
-                    self.data = vp.load_from_dump(file)
+                    self.data = data_types.load_from_dump(file)
                     self.buttons['load_graph'].description = 'Load Graph'
                 except:
                     self.buttons['load_graph'].description = 'Loading export...'

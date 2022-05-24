@@ -23,9 +23,11 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 try:
     from pivotpy import vr_parser as vp
     from pivotpy import utils as gu
+    from pivotpy import data_types
 except:
     import pivotpy.vr_parser as vp
     import pivotpy.utils as gu
+    import pivotpy.data_types as data_types
 
 from IPython import get_ipython
 from IPython.display import HTML, set_matplotlib_formats #HTML for plt2html
@@ -240,7 +242,7 @@ def _plot_bands(ax=None,kpath=None,bands=None,showlegend=False,E_Fermi=None,inte
         - bands      : Dictionary Object from `get_evals` or `export_vasprun`().bands.
         - showlegend : Boolean, default is False, if true, gives legend for spin-polarized calculations.
         - E_Fermi    : If not given, automatically picked from bands object.
-        - interp_nk   : Dictionary with keys 'n' and 'k' for interpolation.
+        - interp_nk  : Dictionary with keys 'n' and 'k' for interpolation.
 
     Additional kwargs are passed to matplotlib.lines.Lin2D. For passing a keyword to spindown channel, append an underscore, e.g 'lw' goes to SpinUp and 'lw_' goes to SpinDown.
     - **Returns**
@@ -1498,7 +1500,7 @@ def plot_potential(basis = None,
     ret_dict = {'direction':operation.split('_')[1]}
     # Only go below if periodicity is given
     if period == None:
-        return (ax,vp.Dict2Data(ret_dict)) # Simple Return
+        return (ax,data_types.Dict2Data(ret_dict)) # Simple Return
     if period != None:
         period = int(period*len(pot))
         arr_con = np.convolve(pot, np.ones((period,))/period, mode='valid')
@@ -1528,4 +1530,4 @@ def plot_potential(basis = None,
                             bbox=dict(edgecolor='white',facecolor='white', alpha=0.5),transform=ax.transAxes)
         ax.set_xlabel('$'+ret_dict['direction']+' ('+u'\u212B'+')$')
         ax.set_xlim([x[0],x[-1]])
-        return (ax,vp.Dict2Data(ret_dict))
+        return (ax,data_types.Dict2Data(ret_dict))

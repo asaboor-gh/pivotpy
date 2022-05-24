@@ -23,11 +23,12 @@ from mpl_toolkits import mplot3d
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 # Inside packages import to work both with package and jupyter notebook.
 try:
-    from pivotpy import vr_parser as vp
+    from pivotpy import vr_parser as vp, data_types
     from pivotpy import splots as sp
 except:
     import pivotpy.vr_parser as vp
     import pivotpy.splots as sp
+    import pivotpy.data_types as data_types
 
 # Cell
 from matplotlib.patches import FancyArrowPatch
@@ -148,7 +149,7 @@ def export_poscar(path=None,text_plain=None):
         for ind in range(inds[i],inds[i+1]):
             elem_labels.append(f"{name} {str(ind - inds[i] + 1)}")
     out_dict.update({'positions':positions,'labels':elem_labels,'unique':unique_d})
-    return vp._add_text_attr2poscar(vp.Dict2Data(out_dict))
+    return vp._add_text_attr2poscar(data_types.PoscarData(out_dict))
 
 
 # Cell
@@ -789,7 +790,7 @@ def get_bz(path_pos = None,loop = True,digits=8,primitive=False):
     one2one  = {'coords': mid_all_p ,'kpoints': mid_basis_p,'near': _arrs}
     out_dict = {'basis':basis, 'normals':face_vectors, 'vertices':verts,
                 'faces':faces,'specials':one2one}
-    return vp.dict2tuple('BZ',out_dict)
+    return data_types.dict2tuple('BZ',out_dict)
 
 # Cell
 def splot_bz(path_pos_bz = None, ax = None, plane=None,color='blue',fill=True,vectors=True,v3=False,vname='b',colormap='plasma',light_from=(1,1,1),alpha=0.4):
@@ -1121,7 +1122,7 @@ def fix_sites(poscar,tol=1e-2,eqv_sites=True,translate=None):
         # Update Things
         out_dict['positions'] = pos
 
-    return vp.Dict2Data(out_dict)
+    return data_types.PoscarData(out_dict)
 
 def get_pairs(basis, positions, r, eps=1e-2):
     """Returns a tuple of Lattice (coords,pairs), so coords[pairs] given nearest site bonds.
@@ -1134,7 +1135,7 @@ def get_pairs(basis, positions, r, eps=1e-2):
     coords = to_R3(basis,positions)
     tree = KDTree(coords)
     inds = np.array([[*p] for p in tree.query_pairs(r,eps=eps)])
-    return vp.dict2tuple('Lattice',{'coords':coords,'pairs':inds})
+    return data_types.dict2tuple('Lattice',{'coords':coords,'pairs':inds})
 
 def _get_bond_length(poscar,given=None,eps=1e-2):
     "eps is add to calculated bond length in order to fix small differences, paramater `given` in range [0,1] which is scaled to V^(1/3)."
@@ -1372,7 +1373,7 @@ def join_poscars(poscar1,poscar2,direction='z',tol=1e-2):
     uelems = {_u:range(i_all[i],i_all[i+1]) for i,_u in enumerate(u_all)}
     sys = ''.join(uelems.keys()) + "   # Created by Pivotpy"
     out_dict = {'SYSTEM':sys,'volume':volume,'basis':basis,'rec_basis':rec_basis,'positions':np.array(pos_all),'labels':labels,'unique':uelems}
-    return vp.Dict2Data(out_dict)
+    return data_types.PoscarData(out_dict)
 
 # Cell
 def scale_poscar(path_poscar,scale=(1,1,1),tol=1e-2):
@@ -1435,7 +1436,7 @@ def scale_poscar(path_poscar,scale=(1,1,1),tol=1e-2):
     new_poscar['labels']    = labels
     new_poscar['unique']    = uelems
     new_poscar['positions'] = np.array(positions)
-    return vp.Dict2Data(new_poscar)
+    return data_types.PoscarData(new_poscar)
 
 def rotate_poscar(path_poscar,angle_deg,axis_vec):
     """Rotate a given POSCAR.
@@ -1452,4 +1453,4 @@ def rotate_poscar(path_poscar,angle_deg,axis_vec):
     p_dict = poscar.to_dict()
     p_dict['basis'] = rot.apply(p_dict['basis']) # Rotate basis so that they are transpose
     p_dict['rec_basis'] = np.linalg.inv(p_dict['basis']).T # invert rotated basis
-    return vp.Dict2Data(p_dict)
+    return data_types.PoscarData(p_dict)

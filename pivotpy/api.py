@@ -13,6 +13,7 @@ try:
     from pivotpy import sio as sio
     from pivotpy import widgets as wdg
     from pivotpy import utils as gu
+    from pivotpy import data_types
 except:
     import pivotpy.vr_parser as vp
     import pivotpy.splots as sp
@@ -20,6 +21,7 @@ except:
     import pivotpy.sio as sio
     import pivotpy.widgets as wdg
     import pivotpy.utils as gu
+    import pivotpy.data_types as data_types
 
 def _sub_doc(from_func,skip_param=None,replace={}):
     """Assing __doc__ from other function. Replace words in docs where need."""
@@ -442,11 +444,11 @@ class Vasprun:
     """
     def __init__(self,path = None,skipk = None,elim=[],shift_kpath=0,try_pwsh=True,data_str=None):
         if data_str: #json/pickle data strings
-            self._data = vp.load_from_dump(file_or_str=data_str,keep_as_dict=False)
+            self._data = data_types.load_from_dump(file_or_str=data_str,keep_as_dict=False)
         elif path is None or (os.path.splitext(path)[1] == '.xml' and os.path.isfile(path)):
             self._data = vp.export_vasprun(path=path,skipk=skipk,elim=elim,shift_kpath=shift_kpath,try_pwsh=try_pwsh)
         elif os.path.splitext(path)[1] in ['.json','.pickle'] and os.path.isfile(path):
-            self._data = vp.load_from_dump(file_or_str=path,keep_as_dict=False)
+            self._data = data_types.load_from_dump(file_or_str=path,keep_as_dict=False)
         else:
             raise ValueError(f'''path expects vasprun.xml file or exported files with extensions .json/.pickle
             using `to_json/to_pickle` methods, got\n {path!r}''')
@@ -483,11 +485,11 @@ class Vasprun:
             self._efermi = kwargs['E_Fermi']
         return kwargs
 
-    @_sub_doc(vp.Dict2Data.to_json,'')
+    @_sub_doc(data_types.Dict2Data.to_json,'')
     def to_json(self,outfile=None,indent=1):
         return self._data.to_json(outfile=outfile,indent=indent)
 
-    @_sub_doc(vp.Dict2Data.to_pickle,'')
+    @_sub_doc(data_types.Dict2Data.to_pickle,'')
     def to_pickle(self,outfile=None):
         return self._data.to_pickle(outfile=outfile)
 
@@ -531,7 +533,7 @@ class Vasprun:
             d['pro_bands']['pros']['SpinUp'] = d['pro_bands']['pros']['SpinUp'][:,kpoints_inds][:,:,bands_inds,...]
             d['pro_bands']['pros']['SpinDown'] = d['pro_bands']['pros']['SpinDown'][:,kpoints_inds][:,:,bands_inds,...]
 
-        return self.__class__(data_str = vp.Dict2Data(d).to_json())
+        return self.__class__(data_str = data_types.VasprunData(d).to_json())
 
 
     @_sub_doc(sp.splot_bands,'- path_evr')
@@ -580,7 +582,7 @@ class Vasprun:
                 where, = np.where(_bands_ == extrema) # unpack singelton
                 k, kp = [float(self._kpath[w]) for w in where], self._data.kpoints[where]
                 pros = _pros[:,where[0],:].sum(axis=0).flatten()
-            return vp.Dict2Data({'e':float(extrema),'k':k,'kp':kp.tolist(),
+            return data_types.Dict2Data({'e':float(extrema),'k':k,'kp':kp.tolist(),
                     'pros':{l.replace('-',''):float(p) for p,l in zip(pros,self._data.pro_bands.labels)}})
 
         if self._data.bands.ISPIN == 1:
@@ -590,7 +592,7 @@ class Vasprun:
             if isinstance(k_i,int): # single kpoint
                 return at_minmax(b,p,np.min,k_i=k_i)
 
-            return vp.Dict2Data({'min':at_minmax(b,p,np.min,k_i=k_i),'max':at_minmax(b,p,np.max,k_i=k_i)})
+            return data_types.Dict2Data({'min':at_minmax(b,p,np.min,k_i=k_i),'max':at_minmax(b,p,np.max,k_i=k_i)})
 
         else: # spin-polarized
             bu = self._data.bands.evals.SpinUp[:,b_i]
@@ -606,9 +608,9 @@ class Vasprun:
             _maxd = at_minmax(bd,pd,np.max,k_i=k_i)
 
             if isinstance(k_i,int): # single kpoint
-                return vp.Dict2Data({'SpinUp':_minu,'SpinDown':_mind})
+                return data_types.Dict2Data({'SpinUp':_minu,'SpinDown':_mind})
 
-            return vp.Dict2Data({'SpinUp':{'min':_minu,'max':_maxu},'SpinDown':{'min':_mind,'max':_maxd}})
+            return data_types.Dict2Data({'SpinUp':{'min':_minu,'max':_maxu},'SpinDown':{'min':_mind,'max':_maxd}})
 
     def get_en_diff(self,b1_i,b2_i,k1_i=None,k2_i=None):
         """Get energy difference between two bands at given two kpoints indices. Index 2 is considered at higher energy.
@@ -647,12 +649,12 @@ class Vasprun:
             if isinstance(k1_i,int):
                 b1 = self.get_band_info(b1_i,k_i=k1_i)
                 b2 = self.get_band_info(b2_i,k_i=k2_i)
-                return vp.Dict2Data({'de':b2.e - b1.e, 'coords': np.array([[b1.k,b1.e],[b2.k, b2.e]])})
+                return data_types.Dict2Data({'de':b2.e - b1.e, 'coords': np.array([[b1.k,b1.e],[b2.k, b2.e]])})
             else:
                 b1 = self.get_band_info(b1_i,k_i=None).max
                 b2 = self.get_band_info(b2_i,k_i=None).min
 
-                return vp.Dict2Data({'de':b2.e - b1.e, **format_coords(b1,b2)})
+                return data_types.Dict2Data({'de':b2.e - b1.e, **format_coords(b1,b2)})
         else:
             if isinstance(k1_i,int):
                 b1u = self.get_band_info(b1_i,k_i=k1_i).SpinUp
@@ -660,7 +662,7 @@ class Vasprun:
                 b2u = self.get_band_info(b2_i,k_i=k2_i).SpinUp
                 b2d = self.get_band_info(b2_i,k_i=k2_i).SpinDown
 
-                return vp.Dict2Data({
+                return data_types.Dict2Data({
                     'u1u2':{'de':b2u.e - b1u.e, 'coords':np.array([[b1u.k, b1u.e], [b2u.k, b2u.e]])},
                     'd1d2':{'de':b2d.e - b1d.e, 'coords':np.array([[b1d.k, b1d.e], [b2d.k, b2d.e]])},
                     'd1u2':{'de':b2u.e - b1d.e, 'coords':np.array([[b1d.k, b1d.e], [b2u.k, b2u.e]])},
@@ -672,7 +674,7 @@ class Vasprun:
                 b2u = self.get_band_info(b2_i,k_i=None).SpinUp.min # min in upper band
                 b2d = self.get_band_info(b2_i,k_i=None).SpinDown.min
 
-                return vp.Dict2Data({
+                return data_types.Dict2Data({
                     'u1u2':{'de':b2u.e - b1u.e, **format_coords(b1u,b2u)},
                     'd1d2':{'de':b2d.e - b1d.e, **format_coords(b1d,b2d)},
                     'd1u2':{'de':b2u.e - b1d.e, **format_coords(b1d,b2u)},
