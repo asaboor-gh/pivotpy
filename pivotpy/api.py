@@ -14,6 +14,7 @@ try:
     from pivotpy import widgets as wdg
     from pivotpy import utils as gu
     from pivotpy import serializer
+    from pivotpy import surfaces as srf
 except:
     import pivotpy.vr_parser as vp
     import pivotpy.splots as sp
@@ -22,6 +23,7 @@ except:
     import pivotpy.widgets as wdg
     import pivotpy.utils as gu
     import pivotpy.serializer as serializer
+    import pivotpy.surfaces as srf
 
 def _sub_doc(from_func,skip_param=None,replace={}):
     """Assing __doc__ from other function. Replace words in docs where need."""
@@ -61,6 +63,7 @@ def download_structure(formula, mp_id=None, max_sites=None,min_sites=None, api_k
 # Cell
 # Direct function exports from modules
 _memebers = (
+    srf.SpinDataFrame,
     sio.get_kpath,
     sio.str2kpath,
     sio.fancy_quiver3d,
@@ -464,7 +467,8 @@ class Vasprun:
         else:
             self.kticks = {} # no kticks available when loading from json/pickle data_str
 
-    def get_poscar(self):
+    @property
+    def poscar(self):
         """Returns POSCAR object that can be used for plotting BZ/Lattice etc.
 
         New in 1.1.5

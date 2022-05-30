@@ -18,6 +18,7 @@
 > [&nbsp;`▶` StructureIO&nbsp;](https://massgh.github.io/pivotpy/StructureIO)  
 > [&nbsp;`▶` Widgets&nbsp;](https://massgh.github.io/pivotpy/Widgets)  
 > [&nbsp;`▶` MainAPI&nbsp;](https://massgh.github.io/pivotpy/MainAPI)  
+> [&nbsp;`▶` SpinProjectedSurfaces&nbsp;](https://massgh.github.io/pivotpy/SpinProjectedSurfaces)  
 
 
 
@@ -293,18 +294,13 @@ Some tasks are very tideious in python while just a click way in powershell. See
 pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
 ```
 
-    [32;1m NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI Pr[0m
-    [32;1m                                                   oc[0m
-    [32;1m                                                   es[0m
-    [32;1m                                                   sN[0m
-    [32;1m                                                   am[0m
-    [32;1m                                                   e[0m
-    [32;1m ------    -----      -----     ------      --  -- --[0m
-    66     3.28       0.38       0.00   20924   1 A…
-    70     6.78      27.12       0.30   23752   1 A…
-    5     1.33       5.45       0.00    8396   0 A…
-    19     7.39      19.59       0.00    7180   0 A…
-    25    26.00      49.87      25.06   13424   1 A…
+    [32;1m NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName[0m
+    [32;1m ------    -----      -----     ------      --  -- -----------[0m
+    22     6.96       2.50       0.67   16452   1 AcrobatNotificationClient
+    6     1.32       4.63       0.00    6864   0 AggregatorHost
+    19     7.57      12.31       0.00    4816   0 AppHelperCap
+    29    43.22      29.87      11.36    3844   1 ApplicationFrameHost
+    9     1.86       6.81       0.03   10072   1 AppVShNotify
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -345,21 +341,12 @@ Get-ChildItem 'E:\Research\graphene_example\'
         Directory: E:\Research\graphene_example
     
     
-    Mode                 LastWriteTime         Length Nam
-                                                      e  
-    ----                 -------------         ------ ---
-    da----        11/28/2021   8:04 PM                ISP
-                                                      IN_
-                                                      1  
-    da----          5/9/2020   1:05 PM                ISP
-                                                      IN_
-                                                      2  
-    -a----          5/9/2020   1:01 PM          75331 OUT
-                                                      CAR
-    -a----          5/9/2020   1:01 PM         240755 vas
-                                                      pru
-                                                      n.x
-                                                      ml 
+    Mode                 LastWriteTime         Length Name                               
+    ----                 -------------         ------ ----                               
+    da----        11/28/2021   8:04 PM                ISPIN_1                            
+    da----          5/9/2020   1:05 PM                ISPIN_2                            
+    -a----          5/9/2020   1:01 PM          75331 OUTCAR                             
+    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                        
     
     
 
@@ -391,6 +378,7 @@ x
 > [&nbsp;`▶` StructureIO&nbsp;](https://massgh.github.io/pivotpy/StructureIO)  
 > [&nbsp;`▶` Widgets&nbsp;](https://massgh.github.io/pivotpy/Widgets)  
 > [&nbsp;`▶` MainAPI&nbsp;](https://massgh.github.io/pivotpy/MainAPI)  
+> [&nbsp;`▶` SpinProjectedSurfaces&nbsp;](https://massgh.github.io/pivotpy/SpinProjectedSurfaces)  
 
 
 

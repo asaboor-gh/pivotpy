@@ -7,8 +7,6 @@ __all__ = ['dict2tuple', 'read_asxml', 'xml2dict', 'exclude_kpts', 'get_ispin', 
 # Cell
 import re
 import os
-import json
-import pickle
 from itertools import islice, chain, product
 from collections import namedtuple
 
