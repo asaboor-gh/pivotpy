@@ -77,7 +77,10 @@ class SpinDataFrame(pd.DataFrame):
     """
     def __init__(self,path = None, band = 0, elements = [[0],], orbs = [[0],], scale_data = False, E_Fermi = None,skipk=None):
         if not isinstance(path,(pd.DataFrame,self.__class__)):
-            spin_data = vp.export_spin_data(path=path,spins='sxyz',skipk=skipk)
+            try: # Check if 4 sets of data are given.
+                spin_data = vp.export_spin_data(path=path,spins='sxyz',skipk=skipk)
+            except: # If not 4 sets
+                spin_data = vp.export_spin_data(path=path,spins='s',skipk=skipk)
             out_dict = _collect_spin_data(spin_data, band = band, elements = elements, orbs = orbs, scale_data = scale_data, E_Fermi = E_Fermi)
             super().__init__(out_dict)
             self.cmap = 'viridis'
