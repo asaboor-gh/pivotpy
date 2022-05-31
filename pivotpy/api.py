@@ -158,15 +158,15 @@ def parse_text(path,
 # Cell
 from contextlib import suppress
 class POSCAR:
-    "POSACR class to contain data and related methods"
-    def __init__(self,path = None,text_plain = None,_other_data = None):
-        """Do not use `_other_data` yourself, it's for operations on poscar.
-        Prefrence order: _other_data, text_plain, path"""
+    "POSACR class to contain data and related methods, data is PoscarData, json/tuple file/string."
+    def __init__(self,path = None,text_plain = None,data = None):
+        """Do not use `data` yourself, it's for operations on poscar.
+        Prefrence order: data, text_plain, path"""
         self.path = path
         self.text_plain = text_plain
         self._kpts_info = None # Get defualt kpts_info
-        if _other_data:
-            self._data = _other_data
+        if data:
+            self._data = serializer.PoscarData.validated(data)
         else:
             self._data = sio.export_poscar(path=path,text_plain=text_plain)
             with suppress(BaseException): # Only reuqired here,not in vasprun_data or spin_data
@@ -180,7 +180,7 @@ class POSCAR:
         self._ax = None # Get defualt axis, changed with splot_bz
 
     def get_kpoints_info(self, other_path):
-        "Return kpoints info from pther_path to be POSCAR path, required for kpoints to bring in bz."
+        "Return kpoints info from other_path to be POSCAR path, required for kpoints to bring in bz."
         self._kpts_info = vp.get_kpoints_info(other_path)
         return self._kpts_info
 
@@ -286,23 +286,35 @@ class POSCAR:
 
     @_sub_doc(sio.join_poscars,'- poscar1',replace={'poscar2':'other'})
     def join(self,other, direction='z', tol=0.01):
-        return self.__class__(_other_data = sio.join_poscars(poscar1=self._data, poscar2=other.data, direction=direction, tol=tol))
+        return self.__class__(data = sio.join_poscars(poscar1=self._data, poscar2=other.data, direction=direction, tol=tol))
 
     @_sub_doc(sio.scale_poscar,'- path_poscar')
     def scale(self, scale=(1, 1, 1), tol=0.01):
-        return self.__class__(_other_data = sio.scale_poscar(path_poscar=self._data, scale=scale, tol=tol))
+        return self.__class__(data = sio.scale_poscar(path_poscar=self._data, scale=scale, tol=tol))
 
     @_sub_doc(sio.rotate_poscar,'- path_poscar')
     def rotate(self,angle_deg,axis_vec):
-        return self.__class__(_other_data = sio.rotate_poscar(path_poscar=self._data, angle_deg = angle_deg, axis_vec=axis_vec))
+        return self.__class__(data = sio.rotate_poscar(path_poscar=self._data, angle_deg = angle_deg, axis_vec=axis_vec))
 
     @_sub_doc(sio.fix_sites,'- poscar')
     def fix_sites(self, tol=0.01, eqv_sites=True, translate=None):
-        return self.__class__(_other_data = sio.fix_sites(poscar=self._data, tol=tol, eqv_sites=eqv_sites, translate=translate))
+        return self.__class__(data = sio.fix_sites(poscar=self._data, tol=tol, eqv_sites=eqv_sites, translate=translate))
 
-    @_sub_doc(sio.get_kmesh,'- path_pos')
-    def get_kmesh(self, n_xyz=[5, 5, 5], weight=None, ibzkpt=None, outfile=None):
-        return sio.get_kmesh(n_xyz=n_xyz, weight=weight, ibzkpt=ibzkpt, path_pos=self._data.basis, outfile=outfile)
+    def get_kmesh(self, *args, shift = 0, weight=None, cartesian = False, ibzkpt=None, outfile=None):
+        """Generates uniform mesh of kpoints. Options are write to file, or return KPOINTS list. Use self.write(...) as well if you use this function to have KPOINTS and POSCAR similar way.
+        - Positional arguments are 1 or 3 integers which decide shape of mesh. If 1, mesh points are equally spaced using information from POSCAR.
+        - **Parameters**
+            - shift  : Defualt is 0 and grid is created in interval [0,1], if given, grid is shifted to [shift,1+shift] in all directions.
+            - weight : Float, if None, auto generates weights.
+            - cartesian: If True, generates cartesian mesh and also reguires scale to be given.
+            - ibzkpt : Path to ibzkpt file, required for HSE calculations.
+            - outfile: Path/to/file to write kpoints.
+
+        If `outfile = None`, KPOINTS file content is printed."""
+        scale = 1 # All POSCARS are scaled to 1.0 if written by this class
+        abc_norms = np.linalg.norm(self._data.basis, axis=1).round(4)
+        print(abc_norms, self._data.basis)
+        return sio.get_kmesh(*args, shift = shift, weight = weight, abc_norms = abc_norms, cartesian = cartesian, scale = scale,ibzkpt= ibzkpt, outfile=outfile)
 
     def bring_in_cell(self,points, scale = None):
         """Brings atoms's positions inside Cell and returns their R3 coordinates.
@@ -457,15 +469,13 @@ class Vasprun:
 
     - **Main Parameter**
         - path: str: path/to/vasprun.xml. Auto picks in CWD.
-                `.json/.pickle` files are also accepted if they are saved previously using `to_json/to_pickle` methods.
-                `.json` file is useful to load data in other languages.
 
     - **Optional Parameters** (only useful if path is `vasprun.xml` file)
         - skipk      : int: Skip initial kpoints.
         - elim       : list: Energy range e.g. [-5,5].
         - shift_kpath: float: Shift in kpath values for side by side plotting.
         - try_pwsh   : bool: True by default, tries to load data exported using Powershell's `Vasp2Visual.Export-Vasprun` command.
-        - data_str   : json/pickle: Data in json/pickle format saved from `to_json/to_pickle` methods.
+        - data   : json/pickle file/str or VasprunData Take precedence over path parameter.
 
     - **Attributes and Methods**
         - data        : Exported data from given file. This has it's own attributes as well to save as json/pickle etc.
@@ -476,16 +486,11 @@ class Vasprun:
 
     > Tip: If KPOINTS file is generated by this module, ticks on kpath are auto-picked.
     """
-    def __init__(self,path = None,skipk = None,elim=[],shift_kpath=0,try_pwsh=True,data_str=None):
-        if data_str: #json/pickle data strings
-            self._data = serializer.load(file_or_str=data_str,keep_as_dict=False)
-        elif path is None or (os.path.splitext(path)[1] == '.xml' and os.path.isfile(path)):
-            self._data = vp.export_vasprun(path=path,skipk=skipk,elim=elim,shift_kpath=shift_kpath,try_pwsh=try_pwsh)
-        elif os.path.splitext(path)[1] in ['.json','.pickle'] and os.path.isfile(path):
-            self._data = serializer.load(file_or_str=path,keep_as_dict=False)
+    def __init__(self,path = None,skipk = None,elim=[],shift_kpath=0,try_pwsh=True,data=None):
+        if data: #json/pickle data strings
+            self._data = serializer.VasprunData.validated(data)
         else:
-            raise ValueError(f'''path expects vasprun.xml file or exported files with extensions .json/.pickle
-            using `to_json/to_pickle` methods, got\n {path!r}''')
+            self._data = vp.export_vasprun(path=path,skipk=skipk,elim=elim,shift_kpath=shift_kpath,try_pwsh=try_pwsh)
 
         self.elim = elim
         self._kpath = self._data.kpath  # For info only, get updated with plot commands
@@ -504,7 +509,7 @@ class Vasprun:
 
         New in 1.1.5
         """
-        return POSCAR(_other_data = self._data.poscar)  #POSCAR class
+        return POSCAR(data = self._data.poscar)  #POSCAR class
 
     def __handle_kwargs(self,kwargs,dos=False):
         kwargs = {'elim': self.elim, **kwargs}

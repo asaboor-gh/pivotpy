@@ -19,6 +19,7 @@
 > [&nbsp;`▶` Widgets&nbsp;](https://massgh.github.io/pivotpy/Widgets)  
 > [&nbsp;`▶` MainAPI&nbsp;](https://massgh.github.io/pivotpy/MainAPI)  
 > [&nbsp;`▶` SpinProjectedSurfaces&nbsp;](https://massgh.github.io/pivotpy/SpinProjectedSurfaces)  
+> [&nbsp;`▶` Example&nbsp;](https://massgh.github.io/pivotpy/Example)  
 
 
 
@@ -108,6 +109,11 @@ vr.data
             kpts_info = Data(
                 cartesian = False
                 header = Automatically generated using PivotPy with HSK-INDS = [0, 30, 60,-1], LABELS = ['Γ','M','K', 'Γ'], SEG-INDS = []
+                ticks = Data(
+                    ktick_inds = [0, 30, 60, -1]
+                    ktick_vals = ['Γ', 'M', 'K', 'Γ']
+                    kseg_inds = []
+                )
             )
         )
         dim_info = Data(
@@ -306,11 +312,11 @@ pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
     [32;1m                                                   am[0m
     [32;1m                                                   e[0m
     [32;1m ------    -----      -----     ------      --  -- --[0m
-    22     7.01       2.76       0.72   16452   1 A…
-    6     1.40       4.64       0.00    6864   0 A…
-    19     8.08      14.34       0.00    4816   0 A…
-    29    37.96      22.40      14.91    3844   1 A…
-    9     1.86       6.37       0.05   10072   1 A…
+    22     7.01       2.77       0.72   16452   1 A…
+    5     1.34       4.66       0.00    6864   0 A…
+    19     8.38      16.68       0.00    4816   0 A…
+    30    44.62      29.70      15.94    3844   1 A…
+    9     1.86       6.44       0.05   10072   1 A…
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -398,6 +404,7 @@ x
 > [&nbsp;`▶` Widgets&nbsp;](https://massgh.github.io/pivotpy/Widgets)  
 > [&nbsp;`▶` MainAPI&nbsp;](https://massgh.github.io/pivotpy/MainAPI)  
 > [&nbsp;`▶` SpinProjectedSurfaces&nbsp;](https://massgh.github.io/pivotpy/SpinProjectedSurfaces)  
+> [&nbsp;`▶` Example&nbsp;](https://massgh.github.io/pivotpy/Example)  
 
 
 

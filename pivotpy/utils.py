@@ -217,7 +217,8 @@ def nav_links(current_index=0,
                        "StructureIO",
                        "Widgets",
                        "MainAPI",
-                       "SpinProjectedSurfaces"
+                       "SpinProjectedSurfaces",
+                       "Example"
                        ],
             horizontal = False,
             out_string = False):

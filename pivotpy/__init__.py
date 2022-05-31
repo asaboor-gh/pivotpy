@@ -11,6 +11,7 @@ Modules:
     pivotpy.iplots    # Plotly's interactive plotting functions
     pivotpy.sio       # Functions for BZ, POSCAR, KPath etc.
     pivotpy.widgets   # Jupyter widgets apps for output analysis/kpath selection. Very useful in big projectes. 
+    pivotpy.surfaces  # Functions for surface and spin texture analysis
     
 Usage:
 -----
@@ -112,10 +113,13 @@ __mpl.rcParams.update(
 import webbrowser as __wb
 def docs():
     __wb.open('https://massgh.github.io/pivotpy/',new=1)
+
+def example():
+    __wb.open('https://massgh.github.io/pivotpy/Example.html',new=1)
     
 def example_notebook():
     __wb.open('https://colab.research.google.com/github/massgh/pivotpy/blob/master/test.ipynb',new=1)
     
-__all__ = ['docs','example_notebook', 'create_colormap' ,*__all__]
+__all__ = ['docs','example','example_notebook', 'create_colormap' ,*__all__]
     
     

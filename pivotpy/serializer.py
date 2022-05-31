@@ -48,7 +48,19 @@ class Dict2Data:
                 setattr(self,a,[Dict2Data(x) if isinstance(x,dict) else x for x in b])
             else:
                 setattr(self,a,Dict2Data(b) if isinstance(b,dict) else b)
-
+    
+    @classmethod
+    def validated(cls, data):
+        "Validate data like it's own or from json/pickle file/string."
+        if isinstance(data,cls):
+            return data
+        
+        if isinstance(data,(str,bytes)):
+            new_data = load(data, json_to = cls)
+            if not isinstance(new_data,cls):
+                raise TypeError(f"Data is not of type {cls}.")
+            return new_data
+        
     def to_dict(self):
         """Converts a `Dict2Data` object (root or nested level) to a dictionary.
         """

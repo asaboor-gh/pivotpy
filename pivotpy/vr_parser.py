@@ -126,7 +126,22 @@ def get_kpoints_info(other_path = './vasprun.xml'):
     line = islice2array(path,start=2,nlines=1,exclude=None,raw=True).strip()
     cart = True if line[0] in 'cCkK' else False
     header = islice2array(path,start=0,nlines=1,exclude=None,raw=True).strip()
-    return serializer.Dict2Data({'cartesian':cart,'header':header})
+    out_dict = {'cartesian':cart,'header':header}
+    if 'GRID-SHAPE' in header:
+        segs = header.split('GRID-SHAPE')[1].split(']')[0].split('[')[1].split(',')
+        out_dict['grid_shape'] = tuple([int(s) for s in segs if s])
+
+    if 'HSK-INDS' in header:
+        out_dict['ticks'] = {}
+        hsk = header.split('HSK-INDS')[1].split(']')[0].split('[')[1].split(',')
+        out_dict['ticks']['ktick_inds'] = [int(h) for h in hsk if h]
+        if 'LABELS' in header:
+            labs = header.split('LABELS')[1].split(']')[0].split('[')[1].split(',')
+            out_dict['ticks']['ktick_vals'] = [l.replace("'","").replace('"','').strip() for l in labs if l]
+        if 'SEG-INDS' in header:
+            segs = header.split('SEG-INDS')[1].split(']')[0].split('[')[1].split(',')
+            out_dict['ticks']['kseg_inds'] = [int(s) for s in segs if s]
+    return serializer.Dict2Data(out_dict)
 
 
 def get_summary(xml_data):

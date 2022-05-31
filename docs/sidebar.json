@@ -3,6 +3,7 @@
     "Overview": "/",
     "Interactive Plots": "InteractivePlots.html",
     "User API": "MainAPI.html",
+    "Calculation Example": "Example.html",
     "Fermi Surfaces and Spin Texture": "SpinProjectedSurfaces.html",
     "Static Plots": "StaticPlots.html",
     "Structure IO": "StructureIO.html",

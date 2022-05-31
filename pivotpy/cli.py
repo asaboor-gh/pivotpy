@@ -1,4 +1,4 @@
-from . import __version__, __doc__, docs
+from . import __version__, __doc__, docs, example
 from .sio import str2kpath, InvokeMaterialsProject, _save_mp_API
 import argparse
 from argparse import RawTextHelpFormatter
@@ -7,6 +7,10 @@ def main():
     print(__doc__)
     print('Loading Online DOCS...')
     docs()
+    
+def wroking_example():
+    print('Loading Example...')
+    example()
 
     
 def get_kpath():
