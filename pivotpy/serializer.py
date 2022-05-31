@@ -17,6 +17,7 @@ def dict2tuple(name,d):
            )
 
 class Dict2Data:
+    _req_keys = ()
     """
     - Returns a Data object with dictionary keys as attributes of Data accessible by dot notation or by key. Once an attribute is created, it can not be changed from outside.
     - **Parmeters**
@@ -39,10 +40,15 @@ class Dict2Data:
         > {'C': 2}
     """
     def __init__(self,d):
-        if isinstance(d,Dict2Data):
-            d = d.to_dict() # if nested Dict2Dataects, must expand here.
+        if isinstance(d,(self.__class__, Dict2Data)):
+            d = d.to_dict() # if nested Dict2Data , must expand here.
+        # Check if all required keys are present in main level of subclasses
+        for key in self.__class__._req_keys:
+            if key not in d:
+                raise ValueError(f"Invalid input for {self.__class__.__name__}")
+        # ===================
         for a,b in d.items():
-            if isinstance(b,Dict2Data):
+            if isinstance(b,(self.__class__, Dict2Data)):
                 b = b.to_dict() # expands self instance !must here.
             if isinstance(b,(list,tuple)):
                 setattr(self,a,[Dict2Data(x) if isinstance(x,dict) else x for x in b])
@@ -50,7 +56,7 @@ class Dict2Data:
                 setattr(self,a,Dict2Data(b) if isinstance(b,dict) else b)
     
     @classmethod
-    def validated(cls, data, keys = []):
+    def validated(cls, data):
         "Validate data like it's own or from json/pickle file/string."
         if isinstance(data,cls):
             return data
@@ -61,14 +67,11 @@ class Dict2Data:
                 raise TypeError(f"Data is not of type {cls}.")
             return new_data
         
-        if isinstance(data,Dict2Data) and not keys:
-            raise TypeError("some keys must be given if data is a Dict2Data object to verify given type.")
-        
-        # Check when keys are given.
-        data_keys = data.keys()
-        for key in keys:
-            if key not in data_keys:
-                raise KeyError(f"Data is invlaid. Key {key!r} not found.")
+        if isinstance(data,Dict2Data) and cls is not Dict2Data: # Check for other classes strictly   
+            data_keys = data.keys()
+            for key in cls._req_keys:
+                if key not in data_keys:
+                    raise KeyError(f"Invalid data for {cls.__name__}")
             
         return cls(data) # make of that type at end
         
@@ -147,6 +150,7 @@ class Dict2Data:
         return self.__dict__.items()
     
 class VasprunData(Dict2Data):
+    _req_keys = ('kpath','bands','poscar')
     def __init__(self,d):
         super().__init__(d)
     
@@ -154,6 +158,7 @@ class VasprunData(Dict2Data):
         return super().__repr__().replace("Data","VasprunData",1)
     
 class SpinData(Dict2Data):
+    _req_keys = ('kpoints','spins','poscar')
     def __init__(self,d):
         super().__init__(d)
     
@@ -161,12 +166,13 @@ class SpinData(Dict2Data):
         return super().__repr__().replace("Data","SpinData",1)
     
 class PoscarData(Dict2Data):
+    _req_keys = ('basis','rec_basis','cartesian')
     def __init__(self,d):
         if not isinstance(d,dict): # It could be other data type.
             try:
                 d = d.to_dict()
             except:
-                raise TypeError("Data is not of type dict or valid Dict2data or subclass.")
+                raise TypeError(f"{self.__class__} expects dict with valid keys or PoscarData got {d}")
         fixed_dict = self._add_text_plain(d)
         super().__init__(fixed_dict)
     
@@ -175,6 +181,10 @@ class PoscarData(Dict2Data):
     
     def _add_text_plain(self, poscar_dict):
         "Returns poscar_dict with additional attribute `text_plain` after each operation"
+        for key in self.__class__._req_keys:
+            if key not in poscar_dict:
+                raise KeyError(f"Invalid input for PoscarData")
+
         comment = poscar_dict.get('text_plain',None) or '-- # Exported using pivotpy\n '
         comment = comment.splitlines()[0].split('#')
         comment = comment[1].strip() if comment[1:] else ''
@@ -191,6 +201,7 @@ class PoscarData(Dict2Data):
         return poscar_dict
 
 class LocpotData(Dict2Data):
+    _req_keys = ('ElemName','ElemIndex','SYSTEM')
     def __init__(self,d):
         super().__init__(d)
     
@@ -198,6 +209,7 @@ class LocpotData(Dict2Data):
         return super().__repr__().replace("Data","LocpotData",1)
 
 class OutcarData(Dict2Data):
+    _req_keys = ('site_pot','ion_pot','basis')
     def __init__(self,d):
         super().__init__(d)
     

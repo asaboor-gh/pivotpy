@@ -165,7 +165,7 @@ class POSCAR:
         self.text_plain = text_plain
         self._kpts_info = None # Get defualt kpts_info
         if data:
-            self._data = serializer.PoscarData.validated(data, keys=['basis','rec_basis','SYSTEM','cartesian'])
+            self._data = serializer.PoscarData.validated(data)
         else:
             self._data = sio.export_poscar(path=path,text_plain=text_plain)
             with suppress(BaseException): # Only reuqired here,not in vasprun_data or spin_data
@@ -472,7 +472,7 @@ class Vasprun:
         - elim       : list: Energy range e.g. [-5,5].
         - shift_kpath: float: Shift in kpath values for side by side plotting.
         - try_pwsh   : bool: True by default, tries to load data exported using Powershell's `Vasp2Visual.Export-Vasprun` command.
-        - data   : json/pickle file/str or VasprunData Take precedence over path parameter.
+        - data   : json/pickle file/str or VasprunData or a valid dictionary. Takes precedence over path parameter.
 
     - **Attributes and Methods**
         - data        : Exported data from given file. This has it's own attributes as well to save as json/pickle etc.
@@ -485,7 +485,7 @@ class Vasprun:
     """
     def __init__(self,path = None,skipk = None,elim=[],shift_kpath=0,try_pwsh=True,data=None):
         if data: #json/pickle data strings
-            self._data = serializer.VasprunData.validated(data, keys=['bands','kpath','poscar','sys_info'])
+            self._data = serializer.VasprunData.validated(data)
         else:
             self._data = vp.export_vasprun(path=path,skipk=skipk,elim=elim,shift_kpath=shift_kpath,try_pwsh=try_pwsh)
 
