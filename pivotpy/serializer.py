@@ -95,7 +95,7 @@ class Dict2Data:
     def __repr__(self):
         items= []
         for k,v in self.__dict__.items():
-            if type(v) not in (str,float,int,range) and not isinstance(v,Dict2Data):
+            if type(v) not in (str,float,int,range,bool,None,True,False) and not isinstance(v,Dict2Data):
                 if isinstance(v,np.ndarray):
                     v = "<{}:shape={}>".format(v.__class__.__name__,np.shape(v))
                 elif type(v) in (list,tuple):
@@ -139,10 +139,27 @@ class SpinData(Dict2Data):
     
 class PoscarData(Dict2Data):
     def __init__(self,d):
-        super().__init__(d)
+        super().__init__(self._add_text_plain(d))
     
     def __repr__(self):
         return super().__repr__().replace("Data","PoscarData",1)
+    
+    def _add_text_plain(self, poscar_dict):
+        "Returns poscar_dict with additional attribute `text_plain` after each operation"
+        comment = poscar_dict.get('text_plain',None) or '-- # Exported using pivotpy\n '
+        comment = comment.splitlines()[0].split('#')
+        comment = comment[1].strip() if comment[1:] else ''
+        system = poscar_dict['SYSTEM'].split('#')[0].strip()
+        scale = np.linalg.norm(poscar_dict['basis'][0])
+        unique_d = poscar_dict['unique']
+        out_str = f"{system} # {comment}\n  {scale:<20.14f}\n"
+        out_str += '\n'.join(["{:>22.16f}{:>22.16f}{:>22.16f}".format(*a) for a in poscar_dict['basis']/scale])
+        out_str += "\n  " + '\t'.join(unique_d.keys())
+        out_str += "\n  " + '\t'.join([str(len(v)) for v in unique_d.values()])
+        out_str += "\nCartesian\n" if poscar_dict.get('cartesian',False) else "\nDirect\n"
+        out_str += '\n'.join("{:>21.16f}{:>21.16f}{:>21.16f}".format(*a) for a in poscar_dict['positions'])
+        poscar_dict.update({'text_plain':out_str}) 
+        return poscar_dict
 
 class LocpotData(Dict2Data):
     def __init__(self,d):

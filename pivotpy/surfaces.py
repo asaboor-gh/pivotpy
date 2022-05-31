@@ -85,13 +85,19 @@ class SpinDataFrame(pd.DataFrame):
             super().__init__(out_dict)
             self.cmap = 'viridis'
             self.scale_data = scale_data
-            self.poscar = api.POSCAR(text_plain = spin_data.poscar.text_plain)
+            # Path below is used to get kpoints info
+            self.poscar = api.POSCAR(path = path, text_plain = spin_data.poscar.text_plain)
             self.sys_info = spin_data.sys_info
+            self.poscar._kpts_info = spin_data.sys_info.kpts_info
         else:
             super().__init__(path.to_dict()) # Works for both SpinDataFrame and pd.DataFrame
 
     def wraps(self,dataframe):
         "wraps a pd.DataFrame in a SpinDataFrame, that enables extra methods"
+        for k in ['ky','kx','kz']:
+            if k not in dataframe.columns:
+                raise ValueError('Invalid DataFrame, cannot make a SpinDataFrame from it!')
+
         df = self.__class__(dataframe)
         df.poscar = self.poscar
         df.sys_info = self.sys_info
@@ -103,7 +109,9 @@ class SpinDataFrame(pd.DataFrame):
         raise Exception('Use `self.poscar.bring_in_bz(koints)` instead for your custom functions, Works fine in `splot` without it.')
 
     def masked(self, column, value, tol = 1e-2, n = None, method = 'cubic'):
-        "Mask dataframe with a given value, using a tolerance, If n is given, data values are interpolated to grid of size (l,m,n) where n is longest side."
+        """Mask dataframe with a given value, using a tolerance.
+        If n is given, data values are interpolated to grid of size (l,m,n) where n is longest side.
+        n could be arbirarily large as mask will filter out data outside the tolerance."""
         if n and not isinstance(n,int):
             raise TypeError('`n` must be an integer to be applied to short side of grid.')
 
@@ -155,15 +163,17 @@ class SpinDataFrame(pd.DataFrame):
         "Slice data in a plane orthogonal to given `column` at given `value`"
         return self.wraps(self[self[column] == value])
 
-    def splot(self,*args, arrows = [], every=4, marker='H', ax = None, **kwargs):
+    def splot(self,*args, arrows = [], every=4, marker='H', ax = None, quiver_kws = {}, scale = None, **kwargs):
         """plot a 2D energy surface with/without arrows.
         - **Parameters**:
-            - *args: 3 or 4 names of columns, representing X,Y,Energy, and optionally, something to colorize data.
+            - *args: 3 or 4 names of columns, representing X,Y,Energy, and optionally, something to colorize data. if kwargs has color, that takes precedence.
             - arrows: 2 or 3 names of columns, representing U,V as arrows direstcion, and optionally, something to colorize data.
             - every: every nth point is plotted as arrow.
             - marker: marker to use for scatter, use s as another argument to change size.
             - ax: matplotlib axes to plot on (defaults to auto create one).
-        **kwargs are passed to matplotlib.pyplot.scatter if arrows are not given, otherwise to matplotlib.pyplot.quiver.
+            - quiver_kws: these are passed to matplotlib.pyplot.quiver.
+            - scale: scale factor for if kpoints in cartesian mode. This should be closer to `2π/a`, where `a` is on second line of POSCAR.
+        **kwargs are passed to matplotlib.pyplot.scatter.
 
         - **Returns**:
             - ax: matplotlib axes. It has additinal method `colorbar` to plot colorbar from most recent plot.
@@ -188,25 +198,34 @@ class SpinDataFrame(pd.DataFrame):
         arrows_data = np.array(arrows_data).T
 
         kij = [['kx','ky','kz'].index(a) for a in args[:2]]
-        kxyz = self.poscar.bring_in_bz(self[['kx','ky','kz']].to_numpy())
+        kxyz = self[['kx','ky','kz']].to_numpy()
+        kxyz = self.poscar.bring_in_bz(kxyz, scale = scale)
+
         ax = ax or api.get_axes()
         minmax_c = [0,1]
         self.cmap = kwargs.get('cmap',self.cmap)
 
         if arrows:
-            ax.quiver(*kxyz[::every].T[kij],*arrows_data[::every].T, **kwargs)
+            self.cmap = quiver_kws.get('cmap',self.cmap)
+            ax.quiver(*kxyz[::every].T[kij],*arrows_data[::every].T, **quiver_kws)
             if len(arrows) == 3:
                 minmax_c = [arrows_data[:,2].min(),arrows_data[:,2].max()]
         else:
             _C = self[args[3]] if len(args) == 4 else self[args[2]]
-            ax.scatter(*kxyz.T[kij],c = _C, marker=marker,**kwargs)
+            kwargs['marker'] = marker # Avoid double marker
+            if 'color' in kwargs:
+                kwargs['c'] = kwargs['color']
+                del kwargs['color'] # keep one
+
+            kwargs['c'] = kwargs.get('c',_C)
+            ax.scatter(*kxyz.T[kij],**kwargs)
             minmax_c = [min(_C),max(_C)]
 
-        cmap = kwargs.get('cmap',self.cmap)
         def colorbar(cax = None, nticks = 6, **kwargs):
+            "kwargs are passed to pivotpy.splots.add_colorbar"
             ticks = np.linspace(0,1,nticks, endpoint=True)
             labels = np.linspace(*minmax_c,nticks,endpoint=True).round(2).astype(str)
-            return ax.add_colorbar(cax, cmap ,ticks = list(ticks), ticklabels=labels, **kwargs)
+            return ax.add_colorbar(cax, self.cmap ,ticks = list(ticks), ticklabels=labels, **kwargs)
 
         ax.colobar = colorbar
         return ax

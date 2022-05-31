@@ -156,6 +156,7 @@ def parse_text(path,
     return vp.islice2array(path_or_islice=path,**extra_kws)
 
 # Cell
+from contextlib import suppress
 class POSCAR:
     "POSACR class to contain data and related methods"
     def __init__(self,path = None,text_plain = None,_other_data = None):
@@ -163,16 +164,25 @@ class POSCAR:
         Prefrence order: _other_data, text_plain, path"""
         self.path = path
         self.text_plain = text_plain
+        self._kpts_info = None # Get defualt kpts_info
         if _other_data:
             self._data = _other_data
         else:
             self._data = sio.export_poscar(path=path,text_plain=text_plain)
+            with suppress(BaseException): # Only reuqired here,not in vasprun_data or spin_data
+                base_dir = os.path.split(os.path.abspath(path or './POSCAR'))[0]
+                self._kpts_info = vp.get_kpoints_info(os.path.join(base_dir,'KPOINTS'))
         # These after data to work with data
         self.primitive = False
         self._bz = self.get_bz(primitive = False) # Get defualt regular BZ
         self._cell = self.get_cell() # Get defualt cell
         self._plane = None # Get defualt plane, changed with splot_bz
         self._ax = None # Get defualt axis, changed with splot_bz
+
+    def get_kpoints_info(self, other_path):
+        "Return kpoints info from pther_path to be POSCAR path, required for kpoints to bring in bz."
+        self._kpts_info = vp.get_kpoints_info(other_path)
+        return self._kpts_info
 
     @property
     def data(self):
@@ -294,14 +304,35 @@ class POSCAR:
     def get_kmesh(self, n_xyz=[5, 5, 5], weight=None, ibzkpt=None, outfile=None):
         return sio.get_kmesh(n_xyz=n_xyz, weight=weight, ibzkpt=ibzkpt, path_pos=self._data.basis, outfile=outfile)
 
-    def bring_in_cell(self,points):
-        """Brings atoms's positions inside Cell and returns their R3 coordinates."""
+    def bring_in_cell(self,points, scale = None):
+        """Brings atoms's positions inside Cell and returns their R3 coordinates.
+        If points are cartesian, they are just scaled to fit inside the cell.
+        The scale factor is usaully `a` which is on second line of POSCAR.
+        """
+        if self.data.cartesian:
+            if isinstance(scale,(int,float)):
+                return np.array(points) * scale
+            else:
+                raise RuntimeError('Found Cartesian POSCAR, tweak `scale = a`  where a is on second line of POSCAR.')
         return sio.to_R3(self._data.basis, points= points)
 
     @_sub_doc(sio.kpoints2bz,'- bz')
-    def bring_in_bz(self,kpoints):
+    def bring_in_bz(self,kpoints, scale = None):
+        """Brings kpoints inside already set BZ, (primitive or regular).
+        If kpoints are cartesian, they are just scaled to fit inside the BZ.
+        The scale factor is usaully `2π/a` where a is on second line of POSCAR.
+        """
+        if not self._kpts_info:
+            raise RuntimeError('Run `POSCAR.get_kpoints_info(other_path)` first. Only required once!')
+
+        if self._kpts_info.cartesian:
+            if isinstance(scale,(int,float)):
+                return np.array(kpoints) * scale
+            else:
+                raise RuntimeError('Found Cartesian KPOINTS, tweak `scale ~ 2π/a`, where a is on second line of POSCAR.')
+
         if not self._bz:
-            raise ValueError('No BZ found. Please run `get_bz()` first.')
+            raise RuntimeError('No BZ found. Please run `get_bz()` first.')
         return sio.kpoints2bz(self._bz, kpoints= kpoints,primitive = self.primitive)
 
 
