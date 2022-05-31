@@ -785,6 +785,8 @@ def islice2array(path_or_islice,dtype=float,delimiter='\s+',
         if exclude:
             _islice = (l for l in _islice if not re.search(exclude,l))
 
+        _islice = (l.strip() for l in _islice) # remove whitespace and new lines
+
         # Make slices here after comment excluding.
         if isinstance(nlines,int) and isinstance(start,(list,np.ndarray)):
             #As islice moves the pointer as it reads, start[1:]-nlines-1
@@ -815,13 +817,13 @@ def islice2array(path_or_islice,dtype=float,delimiter='\s+',
             _islice = islice(f,0,None) # Read full, Will fix later.
             _islice = _fixing(_islice)
             if raw:
-                return ''.join(_islice)
+                return '\n'.join(_islice)
             # Must to consume islice when file is open
             data = np.fromiter(_gen(_islice),dtype=dtype,count=count)
     else:
         _islice = _fixing(path_or_islice)
         if raw:
-            return ''.join(_islice)
+            return '\n'.join(_islice)
         data = np.fromiter(_gen(_islice),dtype=dtype,count=count)
 
     if new_shape:

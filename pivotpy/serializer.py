@@ -50,7 +50,7 @@ class Dict2Data:
                 setattr(self,a,Dict2Data(b) if isinstance(b,dict) else b)
     
     @classmethod
-    def validated(cls, data):
+    def validated(cls, data, keys = []):
         "Validate data like it's own or from json/pickle file/string."
         if isinstance(data,cls):
             return data
@@ -60,6 +60,17 @@ class Dict2Data:
             if not isinstance(new_data,cls):
                 raise TypeError(f"Data is not of type {cls}.")
             return new_data
+        
+        if isinstance(data,Dict2Data) and not keys:
+            raise TypeError("some keys must be given if data is a Dict2Data object to verify given type.")
+        
+        # Check when keys are given.
+        data_keys = data.keys()
+        for key in keys:
+            if key not in data_keys:
+                raise KeyError(f"Data is invlaid. Key {key!r} not found.")
+            
+        return cls(data) # make of that type at end
         
     def to_dict(self):
         """Converts a `Dict2Data` object (root or nested level) to a dictionary.
@@ -151,7 +162,13 @@ class SpinData(Dict2Data):
     
 class PoscarData(Dict2Data):
     def __init__(self,d):
-        super().__init__(self._add_text_plain(d))
+        if not isinstance(d,dict): # It could be other data type.
+            try:
+                d = d.to_dict()
+            except:
+                raise TypeError("Data is not of type dict or valid Dict2data or subclass.")
+        fixed_dict = self._add_text_plain(d)
+        super().__init__(fixed_dict)
     
     def __repr__(self):
         return super().__repr__().replace("Data","PoscarData",1)

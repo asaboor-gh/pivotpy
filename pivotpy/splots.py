@@ -779,7 +779,6 @@ def _format_input(query_data,rgb=False,include_bands=False):
         nt = namedtuple('Selection',['elements','orbs','labels'])
         return nt(elements, orbs, labels)
 
-
 # Cell
 def splot_rgb_lines(path_evr    = None,
                     elements    = [[],[],[]],

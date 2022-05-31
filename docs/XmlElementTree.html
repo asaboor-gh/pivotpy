@@ -174,7 +174,7 @@ x.B.to_dict()
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Dict2Data.to_dict" class="doc_header"><code>Dict2Data.to_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/serializer.py#L64" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_dict</code>()</p>
+<h4 id="Dict2Data.to_dict" class="doc_header"><code>Dict2Data.to_dict</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/serializer.py#L75" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_dict</code>()</p>
 </blockquote>
 <p>Converts a <code>Dict2Data</code> object (root or nested level) to a dictionary.</p>
 
@@ -186,7 +186,7 @@ x.B.to_dict()
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Dict2Data.to_json" class="doc_header"><code>Dict2Data.to_json</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/serializer.py#L74" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_json</code>(<strong><code>outfile</code></strong>=<em><code>None</code></em>, <strong><code>indent</code></strong>=<em><code>1</code></em>)</p>
+<h4 id="Dict2Data.to_json" class="doc_header"><code>Dict2Data.to_json</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/serializer.py#L85" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_json</code>(<strong><code>outfile</code></strong>=<em><code>None</code></em>, <strong><code>indent</code></strong>=<em><code>1</code></em>)</p>
 </blockquote>
 <p>Dumps a <code>Dict2Data</code> object (root or nested level) to json.</p>
 <ul>
@@ -205,7 +205,7 @@ x.B.to_dict()
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Dict2Data.to_pickle" class="doc_header"><code>Dict2Data.to_pickle</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/serializer.py#L82" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_pickle</code>(<strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="Dict2Data.to_pickle" class="doc_header"><code>Dict2Data.to_pickle</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/serializer.py#L93" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_pickle</code>(<strong><code>outfile</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>Dumps a <code>Dict2Data</code> object (root or nested level) to pickle.</p>
 <ul>
@@ -223,7 +223,7 @@ x.B.to_dict()
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Dict2Data.to_tuple" class="doc_header"><code>Dict2Data.to_tuple</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/serializer.py#L89" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_tuple</code>()</p>
+<h4 id="Dict2Data.to_tuple" class="doc_header"><code>Dict2Data.to_tuple</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/serializer.py#L100" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dict2Data.to_tuple</code>()</p>
 </blockquote>
 <p>Creates a namedtuple.</p>
 
@@ -585,7 +585,7 @@ Tuple:  Data(A=1, B=2)
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>VasprunXML(path=&#39;E:\\Research\\vasprun.xml&#39;, root=&lt;Element &#39;modeling&#39; at 0x00000182FB23C7C8&gt;)</pre>
+<pre>VasprunXML(path=&#39;E:\\Research\\vasprun.xml&#39;, root=&lt;Element &#39;modeling&#39; at 0x000001E2AC5DAA98&gt;)</pre>
 </div>
 
 </div>
@@ -1387,7 +1387,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="dump" class="doc_header"><code>dump</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/serializer.py#L239" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>dump</code>(<strong><code>dict_data</code></strong>=<em><code>None</code></em>, <strong><code>dump_to</code></strong>=<em><code>'pickle'</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>, <strong><code>indent</code></strong>=<em><code>1</code></em>)</p>
+<h4 id="dump" class="doc_header"><code>dump</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/serializer.py#L256" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>dump</code>(<strong><code>dict_data</code></strong>=<em><code>None</code></em>, <strong><code>dump_to</code></strong>=<em><code>'pickle'</code></em>, <strong><code>outfile</code></strong>=<em><code>None</code></em>, <strong><code>indent</code></strong>=<em><code>1</code></em>)</p>
 </blockquote>
 <ul>
 <li>Dump an <a href="/pivotpy/XmlElementTree.html#export_vasprun"><code>export_vasprun</code></a> or <a href="/pivotpy/XmlElementTree.html#load_export"><code>load_export</code></a>'s <code>Data</code> object or any dictionary to json or pickle string/file. It convert <code>Dict2Data</code> to dictionary before serializing to json/pickle, so json/pickle.loads() of converted Data would be a simple dictionary, pass that to <code>Dict2Data</code> to again make accessible via dot notation.</li>
@@ -1408,7 +1408,7 @@ Direct
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="load" class="doc_header"><code>load</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/serializer.py#L269" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load</code>(<strong><code>file_or_str</code></strong>, <strong><code>json_to</code></strong>=<em><code>Dict2Data</code></em>)</p>
+<h4 id="load" class="doc_header"><code>load</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/serializer.py#L286" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load</code>(<strong><code>file_or_str</code></strong>, <strong><code>json_to</code></strong>=<em><code>Dict2Data</code></em>)</p>
 </blockquote>
 <ul>
 <li>Loads a json/pickle dumped file or string by auto detecting it.</li>
@@ -1585,7 +1585,7 @@ Note: Slicing a dimension to 100% of its data is faster than let say 80% for inn
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="slice_data" class="doc_header"><code>slice_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L836" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>slice_data</code>(<strong><code>dim_inds</code></strong>, <strong><code>old_shape</code></strong>)</p>
+<h4 id="slice_data" class="doc_header"><code>slice_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L838" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>slice_data</code>(<strong><code>dim_inds</code></strong>, <strong><code>old_shape</code></strong>)</p>
 </blockquote>
 <ul>
 <li>Returns a dictionary that can be unpacked in arguments of isclice2array function. This function works only for regular txt/csv/tsv data files which have rectangular data written.</li>
@@ -1683,7 +1683,7 @@ Note: Slicing a dimension to 100% of its data is faster than let say 80% for inn
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="split_vasprun" class="doc_header"><code>split_vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L886" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>split_vasprun</code>(<strong><code>path</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="split_vasprun" class="doc_header"><code>split_vasprun</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L888" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>split_vasprun</code>(<strong><code>path</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Splits a given vasprun.xml file into a smaller _vasprun.xml file plus _set[1,2,3,4].txt files which contain projected data for each spin set.</li>
@@ -1735,7 +1735,7 @@ Note: Slicing a dimension to 100% of its data is faster than let say 80% for inn
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="export_spin_data" class="doc_header"><code>export_spin_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L944" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_spin_data</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>spins</code></strong>=<em><code>'s'</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="export_spin_data" class="doc_header"><code>export_spin_data</code><a href="https://github.com/massgh/pivotpy/tree/master/pivotpy/vr_parser.py#L946" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>export_spin_data</code>(<strong><code>path</code></strong>=<em><code>None</code></em>, <strong><code>spins</code></strong>=<em><code>'s'</code></em>, <strong><code>skipk</code></strong>=<em><code>None</code></em>, <strong><code>elim</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <ul>
 <li>Returns Data with selected spin sets. For spin polarized calculations, it returns spin up and down data.</li>
@@ -1818,6 +1818,6 @@ Note: Slicing a dimension to 100% of its data is faster than let say 80% for inn
  
 
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"143d6708ea394f188ff5d4bedb9d9c96": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "01e521b0fd164e289661e796835ded5e": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_143d6708ea394f188ff5d4bedb9d9c96", "msg_id": "", "outputs": []}}, "06c2758a9a414fabbda92c47ab1bba71": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "d56b9ac0724f4fa493bc3ba41a5f2850": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_06c2758a9a414fabbda92c47ab1bba71", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
+{"state": {"bd401e3675134b3ea8d2cc02d2236ef0": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "f0ebe27402564f2095d5aeda91562902": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_bd401e3675134b3ea8d2cc02d2236ef0", "msg_id": "", "outputs": []}}, "1380aa6ace0a4bbfbef2fae177a31953": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "ecdf5feb77a346f19076849be0442dc1": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": ["output"], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_1380aa6ace0a4bbfbef2fae177a31953", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
 </script>
 

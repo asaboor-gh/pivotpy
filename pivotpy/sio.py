@@ -83,7 +83,8 @@ def write_poscar(poscar,sd_list=None,outfile=None,overwrite=False,**kwargs):
         - outfile  : str,file path to write on.
         - overwrite: bool, if file already exists, overwrite=True changes it.
     """
-    out_str = f'{poscar.SYSTEM}  # ' + kwargs.get('comment',"Created by Pivotpy")
+    _comment = kwargs.get('comment',None) or re.sub('.*#','',poscar.text_plain.splitlines()[0],flags=re.DOTALL).strip()
+    out_str = f'{poscar.SYSTEM}  # ' + (_comment or 'Created by Pivopty')
     scale = np.linalg.norm(poscar.basis[0])
     out_str += "\n  {:<20.14f}\n".format(scale)
     out_str += '\n'.join(["{:>22.16f}{:>22.16f}{:>22.16f}".format(*a) for a in poscar.basis/scale])
@@ -137,7 +138,7 @@ def export_poscar(path = None,text_plain=None):
     N = np.sum(ions).astype(int)
     inds = np.cumsum([0,*ions]).astype(int)
     # Check Cartesian and Selective Dynamics
-    lines = vp.islice2array('POSCAR',start=7,nlines=2,exclude=None,raw=True).splitlines()
+    lines = vp.islice2array(path,start=7,nlines=2,exclude=None,raw=True).splitlines()
     lines = [l.strip() for l in lines] # remove whitespace or tabs
     out_dict['cartesian'] = True if ((lines[0][0] in 'cCkK') or (lines[1][0] in 'cCkK')) else False
     # Two lines are excluded in below command before start. so start = 7-2
@@ -153,7 +154,6 @@ def export_poscar(path = None,text_plain=None):
             elem_labels.append(f"{name} {str(ind - inds[i] + 1)}")
     out_dict.update({'text_plain': text_plain,'positions':positions,'labels':elem_labels,'unique':unique_d})
     return serializer.PoscarData(out_dict)
-
 
 # Cell
 def _save_mp_API(api_key):
@@ -344,7 +344,6 @@ class InvokeMaterialsProject:
 
         self.success = True # set success flag
         return structures
-
 
 # Cell
 def get_kpath(hsk_list=[],labels=[], n = 5,weight= None ,ibzkpt = None,outfile=None):
@@ -724,7 +723,6 @@ def rotation(angle_deg,axis_vec):
     axis_vec = np.array(axis_vec)/np.linalg.norm(axis_vec) # Normalization
     angle_rad = np.deg2rad(angle_deg)
     return Rotation.from_rotvec(angle_rad * axis_vec)
-
 
 # Cell
 def get_bz(path_pos = None,loop = True,digits=8,primitive=False):

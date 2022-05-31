@@ -30,6 +30,7 @@
 ## How to use
 - Use commnad `pivotpy` in regular terminal to quickly launch documentation any time. 
 - See [Full Documentation](https://massgh.github.io/pivotpy/).
+- See a [Calculation Example](https://massgh.github.io/pivotpy/Example.html)
 - For CLI, use [Vasp2Visual](https://github.com/massgh/Vasp2Visual).
 - See [PDF Slides](https://github.com/massgh/InteractiveHTMLs/tree/master/docs/IPySlides.pdf) for detailed introduction.
 
@@ -312,11 +313,11 @@ pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
     [32;1m                                                   am[0m
     [32;1m                                                   e[0m
     [32;1m ------    -----      -----     ------      --  -- --[0m
-    22     7.01       2.77       0.72   16452   1 A…
-    5     1.34       4.66       0.00    6864   0 A…
-    19     8.38      16.68       0.00    4816   0 A…
-    30    44.62      29.70      15.94    3844   1 A…
-    9     1.86       6.44       0.05   10072   1 A…
+    22     7.01       2.76       0.72   16452   1 A…
+    23     5.51       5.97       2.94   19136   1 A…
+    6     1.40       4.59       0.00    6864   0 A…
+    19     8.26      15.05       0.00    4816   0 A…
+    29    39.85      27.31      16.09    3844   1 A…
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`

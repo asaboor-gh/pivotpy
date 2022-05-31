@@ -35,7 +35,6 @@ def _sub_doc(from_func,skip_param=None,replace={}):
         return func
     return wrapper
 
-
 # Cell
 def download_structure(formula, mp_id=None, max_sites=None,min_sites=None, api_key=None,save_key = False):
     """Download structure data from Materials project website.
@@ -166,7 +165,7 @@ class POSCAR:
         self.text_plain = text_plain
         self._kpts_info = None # Get defualt kpts_info
         if data:
-            self._data = serializer.PoscarData.validated(data)
+            self._data = serializer.PoscarData.validated(data, keys=['basis','rec_basis','SYSTEM','cartesian'])
         else:
             self._data = sio.export_poscar(path=path,text_plain=text_plain)
             with suppress(BaseException): # Only reuqired here,not in vasprun_data or spin_data
@@ -174,7 +173,7 @@ class POSCAR:
                 self._kpts_info = vp.get_kpoints_info(os.path.join(base_dir,'KPOINTS'))
         # These after data to work with data
         self.primitive = False
-        self._bz = self.get_bz(primitive = False) # Get defualt regular BZ
+        self._bz = self.get_bz(primitive = False) # Get defualt regular BZ from sio
         self._cell = self.get_cell() # Get defualt cell
         self._plane = None # Get defualt plane, changed with splot_bz
         self._ax = None # Get defualt axis, changed with splot_bz
@@ -188,23 +187,23 @@ class POSCAR:
     def data(self):
         "Data object in POSCAR."
         return self._data
-    @property
-    def poscar(self):
-        "poscar data."
-        return self._data
 
     @property
     def bz(self):
         return self._bz
 
+    @property
+    def cell(self):
+        return self._cell
+
     @_sub_doc(sio.get_bz,'- path_pos')
     def get_bz(self, loop=True, digits=8, primitive=False):
-        self._bz = sio.get_bz(path_pos=self._data.basis, loop=loop, digits=digits, primitive=primitive)
+        self._bz = sio.get_bz(path_pos = self._data.basis, loop=loop, digits=digits, primitive=primitive)
         self.primitive = primitive
         return self._bz
 
     def set_bz(self,primitive=False,loop=True,digits=8):
-        """Set BZ in primitive or regular shape. returns None, just set self._bz"""
+        """Set BZ in primitive or regular shape. returns None, just set self.bz"""
         self.get_bz(primitive=primitive,loop=loop,digits=digits)
 
     def get_cell(self, loop=True, digits=8):
@@ -313,7 +312,6 @@ class POSCAR:
         If `outfile = None`, KPOINTS file content is printed."""
         scale = 1 # All POSCARS are scaled to 1.0 if written by this class
         abc_norms = np.linalg.norm(self._data.basis, axis=1).round(4)
-        print(abc_norms, self._data.basis)
         return sio.get_kmesh(*args, shift = shift, weight = weight, abc_norms = abc_norms, cartesian = cartesian, scale = scale,ibzkpt= ibzkpt, outfile=outfile)
 
     def bring_in_cell(self,points, scale = None):
@@ -346,7 +344,6 @@ class POSCAR:
         if not self._bz:
             raise RuntimeError('No BZ found. Please run `get_bz()` first.')
         return sio.kpoints2bz(self._bz, kpoints= kpoints,primitive = self.primitive)
-
 
 # Cell
 class LOCPOT:
@@ -488,7 +485,7 @@ class Vasprun:
     """
     def __init__(self,path = None,skipk = None,elim=[],shift_kpath=0,try_pwsh=True,data=None):
         if data: #json/pickle data strings
-            self._data = serializer.VasprunData.validated(data)
+            self._data = serializer.VasprunData.validated(data, keys=['bands','kpath','poscar','sys_info'])
         else:
             self._data = vp.export_vasprun(path=path,skipk=skipk,elim=elim,shift_kpath=shift_kpath,try_pwsh=try_pwsh)
 
