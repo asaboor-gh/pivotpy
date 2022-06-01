@@ -21,11 +21,11 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 # Inside packages import to work both with package and jupyter notebook.
 try:
-    from pivotpy import vr_parser as vp
+    from pivotpy import parser as vp
     from pivotpy import utils as gu
     from pivotpy import serializer
 except:
-    import pivotpy.vr_parser as vp
+    import pivotpy.parser as vp
     import pivotpy.utils as gu
     import pivotpy.serializer as serializer
 
@@ -1464,7 +1464,7 @@ def plot_potential(basis = None,
     """
     - Returns tuple(ax,Data) where Data contains resultatnt parameters of averaged potential of LOCPOT.
     - **Parameters**
-        - basis  : `export_potential().basis`.
+        - basis  : `export_locpot().basis`.
         - e_or_m : `epxort_potential().[e,m,m_x,m_y,m_z]` is 3D grid data. As `epxort_potential` is slow, so compute it once and then plot the output data.
         - operation: Default is 'mean_z'. What to do with provided volumetric potential data. Anyone of these 'mean_x','min_x','max_x','mean_y','min_y','max_y','mean_z','min_z','max_z'.
         - ax: Matplotlib axes, if not given auto picks.
@@ -1483,7 +1483,7 @@ def plot_potential(basis = None,
     if e_or_m is None or basis is None:
         print('`e_or_m` or `basis` not given, trying to autopick LOCPOT...')
         try:
-            ep = gu.export_potential()
+            ep = vp.export_locpot()
             basis = ep.basis
             e_or_m= ep.e
         except:

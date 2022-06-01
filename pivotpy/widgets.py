@@ -23,14 +23,14 @@ import plotly.graph_objects as go
 # Inside packages import to work both with package and jupyter notebook.
 try:
     from pivotpy import utils as gu
-    from pivotpy import vr_parser as vp
+    from pivotpy import parser as vp
     from pivotpy import iplots as ip
     from pivotpy import splots as sp
     from pivotpy import sio
     from pivotpy import serializer
 except:
     import pivotpy.utils as gu
-    import pivotpy.vr_parser as vp
+    import pivotpy.parser as vp
     import pivotpy.iplots as ip
     import pivotpy.splots as sp
     import pivotpy.sio as sio

@@ -31,14 +31,8 @@ entries:
       title: Pivotpy Module
       url: test.html
     - output: web,pdf
-      title: Utilities
-      url: Utilities.html
-    - output: web,pdf
       title: Widgets
       url: Widgets.html
-    - output: web,pdf
-      title: Xml Parser
-      url: XmlElementTree.html
     output: web
     title: pivotpy
   output: web

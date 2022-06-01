@@ -8,11 +8,11 @@ import pandas as pd
 from scipy.interpolate import griddata
 # Inside packages import to work both with package and jupyter notebook.
 try:
-    from pivotpy import vr_parser as vp
+    from pivotpy import parser as vp
     from pivotpy import api
     from .splots import _validate_input
 except:
-    import pivotpy.vr_parser as vp
+    import pivotpy.parser as vp
     import pivotpy.api as api
     import pivotpy.splots._validate_input as _validate_input
 

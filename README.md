@@ -11,15 +11,13 @@
 <style>a{text-decoration: none !important;color:lightkblue;font-weight:bold;}
                 a:focus,a:active,a:hover{color:hotpink !important;}</style>
 > [&nbsp;`▶` Index●&nbsp;](https://massgh.github.io/pivotpy/)  
-> [&nbsp;`▶` XmlElementTree&nbsp;](https://massgh.github.io/pivotpy/XmlElementTree)  
+> [&nbsp;`▶` Example&nbsp;](https://massgh.github.io/pivotpy/Example)  
 > [&nbsp;`▶` StaticPlots&nbsp;](https://massgh.github.io/pivotpy/StaticPlots)  
 > [&nbsp;`▶` InteractivePlots&nbsp;](https://massgh.github.io/pivotpy/InteractivePlots)  
-> [&nbsp;`▶` Utilities&nbsp;](https://massgh.github.io/pivotpy/Utilities)  
+> [&nbsp;`▶` SpinProjectedSurfaces&nbsp;](https://massgh.github.io/pivotpy/SpinProjectedSurfaces)  
 > [&nbsp;`▶` StructureIO&nbsp;](https://massgh.github.io/pivotpy/StructureIO)  
 > [&nbsp;`▶` Widgets&nbsp;](https://massgh.github.io/pivotpy/Widgets)  
 > [&nbsp;`▶` MainAPI&nbsp;](https://massgh.github.io/pivotpy/MainAPI)  
-> [&nbsp;`▶` SpinProjectedSurfaces&nbsp;](https://massgh.github.io/pivotpy/SpinProjectedSurfaces)  
-> [&nbsp;`▶` Example&nbsp;](https://massgh.github.io/pivotpy/Example)  
 
 
 
@@ -313,11 +311,11 @@ pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
     [32;1m                                                   am[0m
     [32;1m                                                   e[0m
     [32;1m ------    -----      -----     ------      --  -- --[0m
-    22     7.01       2.77       0.72   16452   1 A…
-    6     1.40       4.66       0.00    6864   0 A…
-    19     7.86      15.52       0.00    4816   0 A…
-    28    40.91      25.27      16.17    3844   1 A…
-    9     1.86       6.44       0.05   10072   1 A…
+    6     1.43       4.75       0.00    6864   0 A…
+    19     8.14      16.94       0.00    4816   0 A…
+    29    41.21      29.00      17.47    3844   1 A…
+    9     1.86       6.63       0.05   10072   1 A…
+    8     1.57       6.08       0.00   20560   0 A…
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -397,15 +395,13 @@ x
 <style>a{text-decoration: none !important;color:lightkblue;font-weight:bold;}
                 a:focus,a:active,a:hover{color:hotpink !important;}</style>
 > [&nbsp;`▶` Index●&nbsp;](https://massgh.github.io/pivotpy/)  
-> [&nbsp;`▶` XmlElementTree&nbsp;](https://massgh.github.io/pivotpy/XmlElementTree)  
+> [&nbsp;`▶` Example&nbsp;](https://massgh.github.io/pivotpy/Example)  
 > [&nbsp;`▶` StaticPlots&nbsp;](https://massgh.github.io/pivotpy/StaticPlots)  
 > [&nbsp;`▶` InteractivePlots&nbsp;](https://massgh.github.io/pivotpy/InteractivePlots)  
-> [&nbsp;`▶` Utilities&nbsp;](https://massgh.github.io/pivotpy/Utilities)  
+> [&nbsp;`▶` SpinProjectedSurfaces&nbsp;](https://massgh.github.io/pivotpy/SpinProjectedSurfaces)  
 > [&nbsp;`▶` StructureIO&nbsp;](https://massgh.github.io/pivotpy/StructureIO)  
 > [&nbsp;`▶` Widgets&nbsp;](https://massgh.github.io/pivotpy/Widgets)  
 > [&nbsp;`▶` MainAPI&nbsp;](https://massgh.github.io/pivotpy/MainAPI)  
-> [&nbsp;`▶` SpinProjectedSurfaces&nbsp;](https://massgh.github.io/pivotpy/SpinProjectedSurfaces)  
-> [&nbsp;`▶` Example&nbsp;](https://massgh.github.io/pivotpy/Example)  
 
 
 

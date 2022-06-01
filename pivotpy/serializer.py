@@ -40,6 +40,8 @@ class Dict2Data:
         > {'C': 2}
     """
     def __init__(self,d):
+        if not hasattr(self.__class__,'_req_keys'):
+            raise AttributeError("Derived class of `Dict2Data` should have attribute '_req_keys'")
         if isinstance(d,(self.__class__, Dict2Data)):
             d = d.to_dict() # if nested Dict2Data , must expand here.
         # Check if all required keys are present in main level of subclasses

@@ -7,7 +7,7 @@ import os
 import numpy as np
 import plotly.graph_objects as go
 try:
-    from pivotpy import vr_parser as vp
+    from pivotpy import parser as vp
     from pivotpy import splots as sp
     from pivotpy import iplots as ip
     from pivotpy import sio as sio
@@ -16,7 +16,7 @@ try:
     from pivotpy import serializer
     from pivotpy import surfaces as srf
 except:
-    import pivotpy.vr_parser as vp
+    import pivotpy.parser as vp
     import pivotpy.splots as sp
     import pivotpy.iplots as ip
     import pivotpy.sio as sio
@@ -359,7 +359,7 @@ class LOCPOT:
         """
         self.path = path # Must be
         self.m = m # Required to put in plots.
-        self._data = gu.export_potential(locpot=path, e=e,m=m)
+        self._data = vp.export_locpot(locpot=path, e=e,m=m)
 
     @property
     def data(self):

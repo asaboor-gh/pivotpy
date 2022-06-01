@@ -23,10 +23,10 @@ from mpl_toolkits import mplot3d
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 # Inside packages import to work both with package and jupyter notebook.
 try:
-    from pivotpy import vr_parser as vp, serializer
+    from pivotpy import parser as vp, serializer
     from pivotpy import splots as sp
 except:
-    import pivotpy.vr_parser as vp
+    import pivotpy.parser as vp
     import pivotpy.splots as sp
     import pivotpy.serializer as serializer
 
