@@ -32,144 +32,54 @@
 - For CLI, use [Vasp2Visual](https://github.com/massgh/Vasp2Visual).
 - See [PDF Slides](https://github.com/massgh/InteractiveHTMLs/tree/master/docs/IPySlides.pdf) for detailed introduction.
 
-## Changelog for version 1.1.8+
-Errors are properly handled now.   
-`download_structure` returns list of structres for which output data can be access via attributes and methods on demand.   
-You can now use `join_axes` to create desired layouts in plots.
-
-
-## Changelog for version 1.1.1
-`splot_[rgb,color,dos]_lines` and `iplot_[rgb,dos]_lines` now accept another arguement `query_data` which replaces `elements, orbs, labels` if provided. This argument is a dictionary whose keys are replaced by `labels`, last item in its values is in the form of (elements, orbs). It will be extend in future for fermi plots when you select individul bands as well.
-
-These two are equivalent and later one is simplified with each item showing a single color/line:
-```python
-plot_command(elements=[range(2),range(2)],orbs=[0,[1,2,3]],labels=['s','p'])  
-plot_command(query_data = {'s': (range(2),0),'p': (range(2),[1,2,3])}) # version >= 1.1.1
-```
-
-## Changelog for version 1.0.10 onward
-A new module `api` is added which consists of selective functions and classes and it is enough for common user. 
-Now `import pivotpy as pp` exports only whaterver is inside `api`, access other modules separately.
-
 ## CLI commnds
 - Use `pivotpy` in system terminal to launch DOCS. 
 - Use `pivotpy_get_poscar` to download POSCAR.
-- Use `pivotpy_get_kpath` to create fine controlled KPATH.
-- More to come. 
+- Use `pivotpy_get_kpath` to create fine controlled KPATH. 
 
-## New: Plot in Terminal without GUI
+## Plot in Terminal without GUI
 Use `pp.plt2text(colorful=True/False)` after matplotlib's code and your figure will appear in terminal. You need to zoom out alot to get a good view like below.
 
 Tip: Use file [matplotlib2terminal.py](https://gist.github.com/massgh/d5cc44ad32510d3ff58cfefd75c6884e) on github independent of this package to plot in terminal. 
 ![IMG](terminal.jpg)
 
-# New: Ipywidgets-based GUI
+# Ipywidgets-based GUI
 See GIF here:
 ![GIF](widget.gif) 
 
-# New: Live Slides in Jupyter Notebook
+# Live Slides in Jupyter Notebook
 Navigate to  [ipyslides](https://github.com/massgh/ipyslides) or do `pip install ipyslides` to create beautiful data driven presentation in Jupyter Notebook.
 
 ```python
 import os, pivotpy as pp
 with pp.set_dir('E:/Research/graphene_example/ISPIN_1/bands'):
-    vr=pp.Vasprun(elim=[-5,5])
-vr.data
+    vr = pp.Vasprun(elim=[-5,5])
+
+print('Try Follwing Methods:')
+for v in dir(vr):
+    if not v.startswith('_'):
+        print('vr.'+v)
 ```
 
     Loading from PowerShell Exported Data...
+    Try Follwing Methods:
+    vr.data
+    vr.elim
+    vr.get_band_info
+    vr.get_en_diff
+    vr.iplot_dos_lines
+    vr.iplot_rgb_lines
+    vr.kticks
+    vr.poscar
+    vr.select
+    vr.splot_bands
+    vr.splot_color_lines
+    vr.splot_dos_lines
+    vr.splot_en_diff
+    vr.splot_rgb_lines
+    vr.to_json
+    vr.to_pickle
     
-
-
-
-
-    VasprunData(
-        sys_info = Data(
-            SYSTEM = C2
-            NION = 2
-            NELECT = 8
-            TypeION = 1
-            ElemName = ['C']
-            E_Fermi = -3.3501
-            fields = ['s', 'py', 'pz', 'px', 'dxy', 'dyz', 'dz2', 'dxz', 'x2-y2']
-            incar = Data(
-                SYSTEM = C2
-                PREC = high
-                ALGO = N
-                LSORBIT = T
-                NELMIN = 7
-                ISMEAR = 0
-                SIGMA = 0.10000000
-                LORBIT = 11
-                GGA = PS
-            )
-            ElemIndex = [0, 2]
-            ISPIN = 1
-            kpts_info = Data(
-                cartesian = False
-                header = Automatically generated using PivotPy with HSK-INDS = [0, 30, 60,-1], LABELS = ['Γ','M','K', 'Γ'], SEG-INDS = []
-                ticks = Data(
-                    ktick_inds = [0, 30, 60, -1]
-                    ktick_vals = ['Γ', 'M', 'K', 'Γ']
-                    kseg_inds = []
-                )
-            )
-        )
-        dim_info = Data(
-            kpoints = (NKPTS,3)
-            kpath = (NKPTS,1)
-            bands = ⇅(NKPTS,NBANDS)
-            dos = ⇅(grid_size,3)
-            pro_dos = ⇅(NION,grid_size,en+pro_fields)
-            pro_bands = ⇅(NION,NKPTS,NBANDS,pro_fields)
-        )
-        kpoints = <ndarray:shape=(90, 3)>
-        kpath = <list:len=90>
-        bands = Data(
-            E_Fermi = -3.3501
-            ISPIN = 1
-            NBANDS = 21
-            evals = <ndarray:shape=(90, 21)>
-            indices = range(1, 22)
-        )
-        tdos = Data(
-            E_Fermi = -3.3501
-            ISPIN = 1
-            tdos = <ndarray:shape=(301, 3)>
-        )
-        pro_bands = Data(
-            labels = ['s', 'py', 'pz', 'px', 'dxy', 'dyz', 'dz2', 'dxz', 'x2-y2']
-            pros = <ndarray:shape=(2, 90, 21, 9)>
-        )
-        pro_dos = Data(
-            labels = ['s', 'py', 'pz', 'px', 'dxy', 'dyz', 'dz2', 'dxz', 'x2-y2']
-            pros = <ndarray:shape=(2, 301, 10)>
-        )
-        poscar = Data(
-            SYSTEM = C2
-            volume = 105.49324928
-            basis = <ndarray:shape=(3, 3)>
-            rec_basis = <ndarray:shape=(3, 3)>
-            cartesian = False
-            positions = <ndarray:shape=(2, 3)>
-            labels = ['C 1', 'C 2']
-            unique = Data(
-                C = range(0, 2)
-            )
-            text_plain = C2 # Exported using pivotpy
-          2.46803100000000    
-            1.0000000000000000    0.0000000000000000    0.0000000000000000
-           -0.4999997974093519    0.8660251836382931    0.0000000000000000
-            0.0000000000000000    0.0000000000000000    8.1029342824300024
-          C
-          2
-        Direct
-           0.3333330000000000   0.6666670000000000   0.0000000000000000
-           0.6666670000000000   0.3333330000000000   0.0000000000000000
-        )
-    )
-
-
 
 ## Matplotlib's static plots
 - Add anything from legend,colorbar, colorwheel. In below figure, all three are shown.
@@ -224,25 +134,8 @@ Markdown("[See Interactive Plot](https://massgh.github.io/InteractiveHTMLs/iGrap
 - Any colored point's hover text is in gold background.      
 #### Look the output of `pivotpy.sio.splot_bz`.
 ![BZ](docs\images\3bz.jpg)
-
-```python
-import pivotpy as pp 
-pp.sio.splot_bz([[1,0,0],[0,1,0],[0,0,1]],color=(1,1,1,0.2),light_from=(0.5,0,2),colormap='RGB').set_axis_off()
-#pp.iplot2html(fig2) #Do inside Google Colab, fig1 inside Jupyter
-from IPython.display import Markdown
-Markdown("[See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ.html)")
-```
-
-
-
-
+![Energy](docs\images\energy.jpg)
 [See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ.html)
-
-
-
-
-![svg](docs/images/output_13_1.svg)
-
 
 ## Plotting Two Calculations Side by Side 
 - Here we will use `shift_kpath` to demonstrate plot of two calculations on same axes side by side
@@ -270,7 +163,7 @@ pp._show()
     
 
 
-![svg](docs/images/output_15_1.svg)
+![svg](docs/images/output_14_1.svg)
 
 
 ## Interpolation 
@@ -291,7 +184,7 @@ pp.splots.add_text(ax=plt.gca(),txts='Graphene')
 ```
 
 
-![svg](docs/images/output_17_0.svg)
+![svg](docs/images/output_16_0.svg)
 
 
 ## LOCPOT,CHG Visualization
@@ -311,11 +204,11 @@ pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
     [32;1m                                                   am[0m
     [32;1m                                                   e[0m
     [32;1m ------    -----      -----     ------      --  -- --[0m
-    5     1.37       4.57       0.00    6864   0 A…
-    19     8.44      12.86       0.00    4816   0 A…
-    29    41.86      30.59      20.45    3844   1 A…
-    9     1.86       6.37       0.05   10072   1 A…
-    8     1.57       5.79       0.00   20560   0 A…
+    20     6.47       1.84       0.23    3496   1 A…
+    5     1.37       4.53       0.00    6864   0 A…
+    19     8.98      17.18       0.00    4816   0 A…
+    30    37.96      32.84      22.22    3844   1 A…
+    9     1.86       6.27       0.05   10072   1 A…
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`

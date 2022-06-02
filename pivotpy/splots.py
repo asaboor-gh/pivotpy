@@ -110,8 +110,8 @@ def get_axes(figsize  = (3.4,2.6),
         - share(x,y): Share axes between plots, this removes shared ticks automatically.
         - axes_off  : Turn off axes visibility, If `nrows = ncols = 1, set True/False`, If anyone of `nrows or ncols > 1`, provide list of axes indices to turn off. If both `nrows and ncols > 1`, provide list of tuples (x_index,y_index) of axes.
         - axes_3d   : Change axes to 3D. If `nrows = ncols = 1, set True/False`, If anyone of `nrows or ncols > 1`, provide list of axes indices to turn off. If both `nrows and ncols > 1`, provide list of tuples (x_index,y_index) of axes.
-        azim,elev   : Matplotlib's 3D angles, defualt are 45,15.
-        ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise perspective.
+        - azim,elev   : Matplotlib's 3D angles, defualt are 45,15.
+        - ortho3d     : Only works for 3D axes. If True, x,y,z are orthogonal, otherwise perspective.
         - **subplots_adjust_kwargs : These are same as `plt.subplots_adjust()`'s arguements.
     """
     # SVG and rcParams are must in get_axes to bring to other files, not just here.
@@ -405,8 +405,8 @@ def add_legend(ax=None,colors=[],labels=[],styles='solid',\
     return None
 
 # Cell
-def add_colorbar(ax, cax = None, cmap_or_clist=None,N=256,ticks=[1/6,1/2,5/6],\
-            ticklabels=['r','g','b'],tickloc='right',vertical=True,fontsize=8):
+def add_colorbar(ax, cax = None, cmap_or_clist=None,N=256,ticks=None,\
+            ticklabels=None,tickloc='right',vertical=True, digits=2,fontsize=8):
     """
     - Plots colorbar on a given axes. This axes should be only for colorbar. Returns None or throws ValueError for given colors.
     - **Parameters**
@@ -415,9 +415,10 @@ def add_colorbar(ax, cax = None, cmap_or_clist=None,N=256,ticks=[1/6,1/2,5/6],\
         - cmap_or_clist: List/array of colors in or colormap's name. If None(default), first tries to get latest `splot_rgb_lines` colormap
                         and if no success, then `RGB_f` colorbar is added. If nothing works, matplotlib's default colormap is plotted.
         - N          : int, number of color points Default 256.
-        - ticks      : List of tick values to show on colorbar in interval [0,1].
+        - ticks      : List of tick values to show on colorbar. To turn off, give [].
         - ticklabels : List of labels for ticks.
         - tickloc    : Default 'right'. Any of ['right','left','top','bottom'].
+        - digits     : Number of digits to show in tick if ticklabels are not given.
         - vertical   : Boolean, default is Fasle.
         - fontsize   : Default 8. Adjustable according to plot space.
 
@@ -445,6 +446,23 @@ def add_colorbar(ax, cax = None, cmap_or_clist=None,N=256,ticks=[1/6,1/2,5/6],\
         _hsv_ = cmap_or_clist #colormap name
     else:
         _hsv_ = None # default fallback
+
+    if ticks != []:
+        if ticks is None: # should be before labels
+            ticks = (N * np.linspace(1/6,5/6,3, endpoint=True)).astype(int)
+
+        if isinstance(ticks,(list,tuple, np.ndarray)):
+            ticks = np.array(ticks)
+            if ticklabels is None: # Pick original values first
+                ticklabels = ticks.round(digits).astype(str)
+            ticks = (N * ((ticks - ticks.min())/np.ptp(ticks))).astype(int)
+
+        if ticklabels is None:
+            ticklabels = ticks.round(digits).astype(str)
+    else:
+        ticks = []
+        ticklabels = []
+
     c_vals = np.linspace(0,1,N).reshape((1,N)) # make 2D array
 
     ticks_param = dict(direction='out',pad= 2,length=2,width=0.3,top=False,left=False,
@@ -457,9 +475,8 @@ def add_colorbar(ax, cax = None, cmap_or_clist=None,N=256,ticks=[1/6,1/2,5/6],\
         cax.xaxis.tick_top() # to show ticks on top by default
         if tickloc == 'bottom':
             cax.xaxis.tick_bottom() # top is by default
-        cax.set_xticks([np.floor(N*t) for t in ticks])
-        if ticks:
-            cax.set_xticklabels(ticklabels,rotation=0,ha='center')
+        cax.set_xticks(ticks)
+        cax.set_xticklabels(ticklabels,rotation=0,ha='center')
 
     if vertical == True:
         c_vals = c_vals.transpose()
@@ -468,9 +485,8 @@ def add_colorbar(ax, cax = None, cmap_or_clist=None,N=256,ticks=[1/6,1/2,5/6],\
         cax.yaxis.tick_right() # Show right by default
         if tickloc == 'left':
             cax.yaxis.tick_left() # right is by default
-        cax.set_yticks([np.floor(N*t) for t in ticks])
-        if ticks:
-            cax.set_yticklabels(ticklabels,rotation=90,va='center')
+        cax.set_yticks(ticks)
+        cax.set_yticklabels(ticklabels,rotation=90,va='center')
 
     for tick in cax.xaxis.get_major_ticks():
         tick.label.set_fontsize(fontsize)
