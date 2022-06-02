@@ -79,21 +79,6 @@ rbg_matrix= __np.array([[1,0,0],[0,0,1],[0,1,0]]) # Red, Blue, Green
 swap_bg_matrix = rbg_matrix # Alias for backward compatibility
 cmy_matrix = __np.array([[0,0.5,0.5,1],[0.5,0,0.5,1],[0.5,0.5,0,0.2],[1,1,0.2,0]]) # Generates CMYK color palette
 
-#Backward Compatibility
-__mapping = {
-    'quick_bplot':      'splot_bands',
-    'quick_rgb_lines':  'splot_rgb_lines',
-    'quick_color_lines':'splot_color_lines',
-    'quick_dos_lines':  'splot_dos_lines',
-    'plotly_rgb_lines': 'iplot_dos_lines',
-    'plotly_dos_lines': 'iplot_dos_lines'
-}
-
-for k,v in __mapping.items():
-    _code = f"""def {k}(*args,**kwargs):
-    raise DeprecationWarning("Name {k!r} is deprecated, use Vasprun().{v!r} instead.")"""
-    exec(_code)
-
 
 # Edit rcParams here
 import matplotlib as __mpl

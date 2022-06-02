@@ -15,6 +15,7 @@ try:
     from pivotpy import utils as gu
     from pivotpy import serializer
     from pivotpy import surfaces as srf
+
 except:
     import pivotpy.parser as vp
     import pivotpy.splots as sp
@@ -62,18 +63,15 @@ def download_structure(formula, mp_id=None, max_sites=None,min_sites=None, api_k
 # Cell
 # Direct function exports from modules
 _memebers = (
-    srf.SpinDataFrame,
+    gu.set_dir,
+    gu.get_child_items,
+    gu.transform_color,
+    gu.interpolate_data,
     sio.get_kpath,
     sio.str2kpath,
     sio.fancy_quiver3d,
     sio.rotation,
     wdg.generate_summary,
-    wdg.VasprunApp,
-    wdg.KPathApp,
-    gu.set_dir,
-    gu.get_child_items,
-    gu.transform_color,
-    gu.interpolate_data,
     vp.split_vasprun,
     vp.xml2dict,
     ip.iplot2html,
@@ -82,7 +80,13 @@ _memebers = (
     sp.show,
     sp.savefig,
     sp.append_axes,
-    sp.join_axes
+    sp.join_axes,
+    sp.add_colorbar,
+    sp.add_legend,
+    sp.add_text,
+    wdg.VasprunApp,
+    wdg.KPathApp,
+    srf.SpinDataFrame,
 )
 
 # Subset of functions from modules in __all__ to make exportable as *
@@ -264,8 +268,8 @@ class POSCAR:
         return sio.splot_bz(path_pos_bz = self._cell, ax=ax, plane=plane, color=color, fill=fill, vectors=vectors, v3=v3, vname=vname, colormap=colormap, light_from=light_from, alpha=alpha)
 
     @_sub_doc(sio.iplot_bz,'- path_pos_bz')
-    def iplot_bz(self, fill=True, color='rgba(168,204,216,0.4)', background='rgb(255,255,255)', vname='b', alpha=0.4, ortho3d=True, fig=None):
-        return sio.iplot_bz(path_pos_bz = self._bz, fill=fill, color=color, background=background, vname=vname, alpha=alpha, ortho3d=ortho3d, fig=fig)
+    def iplot_bz(self, fill=True, color='rgba(168,204,216,0.4)', background='rgb(255,255,255)', vname='b', special_kpoints = True, alpha=0.4, ortho3d=True, fig=None):
+        return sio.iplot_bz(path_pos_bz = self._bz, fill=fill, color=color, background=background, vname=vname, special_kpoints=special_kpoints, alpha=alpha, ortho3d=ortho3d, fig=fig)
 
     def iplot_cell(self, fill=True, color='rgba(168,204,216,0.4)', background='rgb(255,255,255)', vname='a', alpha=0.4, ortho3d=True, fig=None):
         "See docs of `iplot_bz`, everything is same except space is iverted."
@@ -366,7 +370,6 @@ class LOCPOT:
         return self._data
 
     @_sub_doc(sp.plot_potential,'- e_or_m')
-    @_sub_doc(sp.plot_potential,'- basis')
     def splot_e(self,operation='mean_z',ax=None,period=None,
                  lr_pos=(0.25,0.75),lr_widths = [0.5,0.5],
                  labels=(r'$V(z)$',r'$\langle V \rangle _{roll}(z)$',r'$\langle V \rangle $'),
@@ -376,7 +379,6 @@ class LOCPOT:
                                     labels=labels,colors=colors,annotate=annotate)
 
     @_sub_doc(sp.plot_potential,'- e_or_m')
-    @_sub_doc(sp.plot_potential,'- basis')
     def splot_m(self,operation='mean_z',ax=None,period=None,
                 lr_pos = (0.25,0.75),lr_widths = [0.5,0.5],
                 labels = (r'$M(z)$',r'$\langle M \rangle _{roll}(z)$',r'$\langle M \rangle $'),

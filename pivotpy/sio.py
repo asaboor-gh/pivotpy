@@ -934,7 +934,7 @@ def splot_bz(path_pos_bz = None, ax = None, plane=None,color='blue',fill=True,ve
         return ax3d
 
 # Cell
-def iplot_bz(path_pos_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',background = 'rgb(255,255,255)',vname = 'b', alpha=0.4,ortho3d=True,fig=None):
+def iplot_bz(path_pos_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',background = 'rgb(255,255,255)',vname = 'b', special_kpoints = True, alpha=0.4,ortho3d=True,fig=None):
     """
     - Plots interactive figure showing axes,BZ surface, special points and basis, each of which could be hidden or shown.
     - **Parameters**
@@ -943,6 +943,7 @@ def iplot_bz(path_pos_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',back
         - color      : color to fill surface 'rgba(168,204,216,0.4)` by default.
         - background : Plot background color, default is 'rgb(255,255,255)'.
         - vname      : Default is `b` for reciprocal space, can set `a` for plotting cell as after `get_bz(get_bz().basis)` you get real space lattice back if `primitive=True` both times.
+        - special_kpoints : True by default, determines whether to plot special points or not.
         - alpha      : Opacity of BZ planes.
         - ortho3d    : Default is True, decides whether x,y,z are orthogonal or perspective.
         - fig        : (Optional) Plotly's `go.Figure`. If you want to plot on another plotly's figure, provide that.
@@ -1004,7 +1005,7 @@ def iplot_bz(path_pos_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',back
                         legendgroup=s_name,name=s_name))
 
     # Special Points only if in reciprocal space.
-    if vname == 'b':
+    if vname == 'b' and special_kpoints:
         texts,values =[],[]
         norms = np.round(np.linalg.norm(bz.specials.coords,axis=1),5)
         sps = bz.specials

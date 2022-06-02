@@ -1464,7 +1464,6 @@ def plot_potential(basis = None,
     """
     - Returns tuple(ax,Data) where Data contains resultatnt parameters of averaged potential of LOCPOT.
     - **Parameters**
-        - basis  : `export_locpot().basis`.
         - e_or_m : `epxort_potential().[e,m,m_x,m_y,m_z]` is 3D grid data. As `epxort_potential` is slow, so compute it once and then plot the output data.
         - operation: Default is 'mean_z'. What to do with provided volumetric potential data. Anyone of these 'mean_x','min_x','max_x','mean_y','min_y','max_y','mean_z','min_z','max_z'.
         - ax: Matplotlib axes, if not given auto picks.

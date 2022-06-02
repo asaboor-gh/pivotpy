@@ -6,19 +6,20 @@ __all__ = ['SpinDataFrame']
 import numpy as np
 import pandas as pd
 from scipy.interpolate import griddata
+import matplotlib.pyplot as plt
 # Inside packages import to work both with package and jupyter notebook.
 try:
     from pivotpy import parser as vp
-    from pivotpy import api
+    from pivotpy import api, serializer, splots
     from .splots import _validate_input
 except:
     import pivotpy.parser as vp
     import pivotpy.api as api
+    import pivotpy.serializer as serializer
+    import pivotpy.splots as splots
     import pivotpy.splots._validate_input as _validate_input
 
 # Cell
-
-
 
 #export
 def _collect_spin_data(exported_spin_data, band = 0, elements = [[0],], orbs = [[0],], scale_data = False, E_Fermi = None):
@@ -65,50 +66,54 @@ class SpinDataFrame(pd.DataFrame):
         - scale_data: if True, data is scaled to -1 to 1.
         - E_Fermi: if not None, auto picked as Fermi level from vasprun.xml.
         - skipk: if not None, auto skipped unnecessary k-points.
+        - elim: if not None, filtered out unnecessary bands.
+        - data: if not None, data is loaded from given data/pickle/json/dict and validated. Many other parameters are ignored when data is given.
 
     - **Returns**:
         - SpinDataFrame: dataframe with colums as k-points, eigenvalues, spin components projected over selected ions and orbtials.
 
     - **Methods**:
-        - wraps: wraps a pd.DataFrame in a SpinDataFrame, that enables extra methods.
         - sliced: Slice data in a plane orthogonal to given `column` at given `value`.
         - masked: Mask data over a constant value in a given column. Useful for plotting fermi level/surface.
         - splot: plot data in a 2D plot.
 
         All other methods are inherited from pd.DataFrame. If you apply some method, then use `wraps` to wrap the result in a SpinDataFrame.
     """
-    def __init__(self,path = None, band = 0, elements = [[0],], orbs = [[0],], scale_data = False, E_Fermi = None,skipk=None):
-        if not isinstance(path,(pd.DataFrame,self.__class__)):
-            try: # Check if 4 sets of data are given.
-                spin_data = vp.export_spin_data(path=path,spins='sxyz',skipk=skipk)
-            except: # If not 4 sets
-                spin_data = vp.export_spin_data(path=path,spins='s',skipk=skipk)
-            out_dict = _collect_spin_data(spin_data, band = band, elements = elements, orbs = orbs, scale_data = scale_data, E_Fermi = E_Fermi)
-            super().__init__(out_dict)
-            self.cmap = 'viridis'
-            self.scale_data = scale_data
-            # Path below is used to get kpoints info
-            self.poscar = api.POSCAR(path = path, text_plain = spin_data.poscar.text_plain)
-            self.sys_info = spin_data.sys_info
-            self.poscar._kpts_info = spin_data.sys_info.kpts_info
-        else:
-            super().__init__(path.to_dict()) # Works for both SpinDataFrame and pd.DataFrame
+    _metadata = ['cmap','scale_data','sys_info','poscar'] # These are passed after operations to new dataframe.
+    def __init__(self, *args, path = None, band = 0, elements = [[0],], orbs = [[0],], scale_data = False, E_Fermi = None, elim = None, skipk=None, data = None, **kwargs):
+        if not (path or args): # It works fine without path given, but it is not recommended.
+            path = './vasprun.xml'
+        if path or data: # Don't updates args otherwise
+            spin_data = None # To avoid access before assignment
+            if data:
+                spin_data = serializer.SpinData.validated(data)
+            elif isinstance(path, str):
+                try: # Check if 4 sets of data are there.
+                    spin_data = vp.export_spin_data(path, spins = 'sxyz',skipk = skipk, elim = elim)
+                except: # If not 4 sets
+                    spin_data = vp.export_spin_data(path, spins = 's',skipk = skipk, elim = elim)
+            else:
+                raise ValueError('Invalid path or data!')
 
-    def wraps(self,dataframe):
-        "wraps a pd.DataFrame in a SpinDataFrame, that enables extra methods"
-        for k in ['ky','kx','kz']:
-            if k not in dataframe.columns:
-                raise ValueError('Invalid DataFrame, cannot make a SpinDataFrame from it!')
+            if spin_data:
+                out_dict = _collect_spin_data(spin_data, band = band, elements = elements, orbs = orbs, scale_data = scale_data, E_Fermi = E_Fermi)
+                super().__init__(out_dict)
+                self.cmap = 'viridis'
+                self.scale_data = scale_data
+                self.sys_info = spin_data.sys_info
+                # Path below is used to get kpoints info
+                self.poscar = api.POSCAR(path = path, data = spin_data.poscar)
+                self.poscar._kpts_info = spin_data.sys_info.kpts_info
+        else: # This part is only for operations on dataframe.
+            if len(args) == 1: # This gives hack to load data from a file in current directory.
+                if (args[0] is None) or isinstance(args[0],str): # If path is given as positional argument
+                    raise ValueError('SpinDataFrame expects no positional argument!')
+            super().__init__(*args, **kwargs)
 
-        df = self.__class__(dataframe)
-        df.poscar = self.poscar
-        df.sys_info = self.sys_info
-        df.cmap = self.cmap
-        df.scale_data = self.scale_data
-        return df
-
-    def move2bz(self, primitive = False):
-        raise Exception('Use `self.poscar.bring_in_bz(koints)` instead for your custom functions, Works fine in `splot` without it.')
+    @property
+    def _constructor(self):
+        "That's main hero of this class. This is called when you apply some method of slice it."
+        return SpinDataFrame
 
     def masked(self, column, value, tol = 1e-2, n = None, method = 'cubic'):
         """Mask dataframe with a given value, using a tolerance.
@@ -117,60 +122,66 @@ class SpinDataFrame(pd.DataFrame):
         if n and not isinstance(n,int):
             raise TypeError('`n` must be an integer to be applied to short side of grid.')
 
-        df =  self
-        if n:
-            kxyz = self[['kx','ky','kz']].to_numpy()
-            lx,*_,hx = self['kx'].sort_values(inplace=False)
-            ly,*_,hy = self['ky'].sort_values(inplace=False)
-            lz,*_,hz = self['kz'].sort_values(inplace=False)
-            vs = np.array([hx-lx,hy-ly, hz-lz])
-            nx, ny, nz = nxyz = (vs/vs.max()*n).astype(int)
-            nijk = [i for i,n in enumerate(nxyz) if n > 0]
+        df = self.copy() # To avoid changing original dataframe
+        df.drop(df.index, inplace=True)  # only columns names there and metadata
 
-            if len(nijk) < 2:
-                raise ValueError('At least two of kx,ky,kz must have non-coplanar points.')
-            df_dict = {}
-            if len(nijk) == 3:
-                xyz = kxyz.T
-                XYZ = [a.flatten() for a in np.mgrid[lx:hx:nx*1j,ly:hy:ny*1j,lz:hz:nz*1j]]
-                for name, index in zip('xyz',range(3)):
-                    df_dict[f'k{name}'] = XYZ[index]
-            else:
-                [l1,l2],[h1,h2],[n1,n2] = np.array([[lx,ly,lz],[hx,hy,hz],[nx,ny,nz]])[:,nijk]
-                xyz = kxyz.T[nijk]
-                XYZ = [a.flatten() for a in np.mgrid[l1:h1:n1*1j,l2:h2:n2*1j]]
-                for name, index in zip('xyz',range(3)):
-                    if index in nijk:
-                        df_dict[f'k{name}'] = XYZ[index]
-                    else:
-                        df_dict[f'k{name}'] = np.zeros_like(XYZ[0])
+        kxyz = self[['kx','ky','kz']].to_numpy()
+        lx,*_,hx = self['kx'].sort_values(inplace=False)
+        ly,*_,hy = self['ky'].sort_values(inplace=False)
+        lz,*_,hz = self['kz'].sort_values(inplace=False)
+        vs = np.array([hx-lx,hy-ly, hz-lz])
+        nx, ny, nz = nxyz = (vs/vs.max()*n).astype(int)
+        nijk = [i for i,n in enumerate(nxyz) if n > 0]
 
-            for c in [_c for _c in self.columns if _c not in 'kxkykz']:
-                df_dict[c] = griddata(tuple(xyz),self[c].to_numpy(),tuple(XYZ),method = method)
+        if len(nijk) < 2:
+            raise ValueError('At least two of kx,ky,kz must have non-coplanar points.')
 
-            df = pd.DataFrame(df_dict).round(6).dropna()
+        if len(nijk) == 3:
+            xyz = kxyz.T
+            XYZ = [a.flatten() for a in np.mgrid[lx:hx:nx*1j,ly:hy:ny*1j,lz:hz:nz*1j]]
+            for name, index in zip('xyz',range(3)):
+                df[f'k{name}'] = XYZ[index]
+        else:
+            [l1,l2],[h1,h2],[n1,n2] = np.array([[lx,ly,lz],[hx,hy,hz],[nx,ny,nz]])[:,nijk]
+            xyz = kxyz.T[nijk]
+            XYZ = [a.flatten() for a in np.mgrid[l1:h1:n1*1j,l2:h2:n2*1j]]
+            for name, index in zip('xyz',range(3)):
+                if index in nijk:
+                    df[f'k{name}'] = XYZ[index]
+                else:
+                    df[f'k{name}'] = np.zeros_like(XYZ[0])
 
-            if self.scale_data == True:
-                _max = []
-                for k in [c for c in df.columns if c.startswith('s')]:
-                    _max.append(np.abs(df[k]).max())
+        for c in [_c for _c in self.columns if _c not in 'kxkykz']:
+            df[c] = griddata(tuple(xyz),self[c].to_numpy(),tuple(XYZ),method = method)
 
-                _max = max(_max)
-                for k in [c for c in df.columns if c.startswith('s')]:
-                    df[k] = df[k] / (_max if _max != 0 else 1)
+        df = df.round(6).dropna()
 
-        return self.wraps(df[np.logical_and((df[column] < value + tol),(df[column] > value-tol))])
+        if self.scale_data == True:
+            _max = []
+            for k in [c for c in df.columns if c.startswith('s')]:
+                _max.append(np.abs(df[k]).max())
+
+            _max = max(_max)
+            for k in [c for c in df.columns if c.startswith('s')]:
+                df[k] = df[k] / (_max if _max != 0 else 1)
+
+        # Make sure to keep metadata, it doesn't work otherwise.
+        for k in self._metadata:
+            setattr(df, k, getattr(self, k))
+
+        return df[np.logical_and((df[column] < value + tol),(df[column] > value-tol))]
 
     def sliced(self,column = 'kz', value = 0):
         "Slice data in a plane orthogonal to given `column` at given `value`"
-        return self.wraps(self[self[column] == value])
+        return self[self[column] == value]
 
-    def splot(self,*args, arrows = [], every=4, marker='H', ax = None, quiver_kws = {}, scale = None, **kwargs):
-        """plot a 2D energy surface with/without arrows.
+    def splot(self,*args, arrows = [], every=4, norm = 1, marker='H', ax = None, quiver_kws = {}, scale = None, **kwargs):
+        """Plot energy in 2D with/without arrows.
         - **Parameters**:
             - *args: 3 or 4 names of columns, representing X,Y,Energy, and optionally, something to colorize data. if kwargs has color, that takes precedence.
             - arrows: 2 or 3 names of columns, representing U,V as arrows direstcion, and optionally, something to colorize data.
             - every: every nth point is plotted as arrow.
+            - norm: normalization factor for size of arrows.
             - marker: marker to use for scatter, use s as another argument to change size.
             - ax: matplotlib axes to plot on (defaults to auto create one).
             - quiver_kws: these are passed to matplotlib.pyplot.quiver.
@@ -209,7 +220,7 @@ class SpinDataFrame(pd.DataFrame):
 
         if arrows:
             self.cmap = quiver_kws.get('cmap',self.cmap)
-            ax.quiver(*kxyz[::every].T[kij],*arrows_data[::every].T, **quiver_kws)
+            ax.quiver(*kxyz[::every].T[kij],*(norm*arrows_data[::every].T), **quiver_kws)
             if len(arrows) == 3:
                 minmax_c = [arrows_data[:,2].min(),arrows_data[:,2].max()]
         else:
@@ -228,6 +239,92 @@ class SpinDataFrame(pd.DataFrame):
             ticks = np.linspace(0,1,nticks, endpoint=True)
             labels = np.linspace(*minmax_c,nticks,endpoint=True).round(2).astype(str)
             return ax.add_colorbar(cax, self.cmap ,ticks = list(ticks), ticklabels=labels, **kwargs)
+
+        ax.colobar = colorbar
+        return ax
+
+    def splot3d(self,*args, arrows = [], every=4,norm = 1, marker='H', ax = None, quiver_kws = {'arrowstyle':'-|>','size':1}, scale = None, **kwargs):
+        """Plot energy in 3D with/without arrows.
+        - **Parameters**:
+            - *args: 4 or 5 names of columns, representing X,Y,Z,Energy, and optionally, something to colorize data. if kwargs has color, that takes precedence.
+            - arrows: 3 or 4 names of columns, representing U,V,W as arrows direstcion, and optionally, something to colorize data.
+            - every: every nth point is plotted as arrow.
+            - norm: normalization factor for size of arrows.
+            - marker: marker to use for scatter, use s as another argument to change size.
+            - ax: matplotlib 3d axes to plot on (defaults to auto create one).
+            - quiver_kws: these are passed to pivotpy.fancy_quiver3d.
+            - scale: scale factor for if kpoints in cartesian mode. This should be closer to `2π/a`, where `a` is on second line of POSCAR.
+        **kwargs are passed to matplotlib.pyplot.scatter.
+
+        - **Returns**:
+            - ax: matplotlib 3d axes. It has additinal method `colorbar` to plot colorbar from most recent plot.
+
+        See examples at https://massgh.github.io/pivotpy/
+        """
+        if arrows and len(arrows) not in [3,4]:
+            raise ValueError('`arrows ` requires 3 or 4 items form spin data [s1,s2, s2, [color]], one of s1,s2,s3 could be "".')
+        if len(args) not in [4,5]:
+            raise ValueError('splot takes 4 or 5 positional arguments [X,Y,Z,E,[color]]')
+
+        for arg in args:
+            if arg not in self.columns:
+                raise ValueError(f'{arg!r} is not a column in the dataframe')
+
+        arrows_data = []
+        for i, arr in enumerate(arrows):
+            if arr not in ['',*self.columns]:
+                raise ValueError(f'{arr!r} is not a column in the dataframe')
+            arrows_data.append(self[arr] if arr else np.zeros_like(self['kx'].to_numpy()))
+
+        arrows_data = np.array(arrows_data).T
+
+        kij = [['kx','ky','kz'].index(a) for a in args[:3]]
+        kxyz = self[['kx','ky','kz']].to_numpy()
+        kxyz = self.poscar.bring_in_bz(kxyz, scale = scale)
+
+        ax = ax or api.get_axes(axes_3d=True)
+        minmax_c = [0,1]
+        self.cmap = kwargs.get('cmap',self.cmap)
+
+        if arrows:
+            self.cmap = quiver_kws.get('cmap',self.cmap)
+            if len(arrows) == 4:
+                array = arrows_data[::every,3]
+                array = (array - array.min())/np.ptp(array)
+                quiver_kws['C'] = plt.get_cmap(self.cmap)(array)
+                minmax_c = [arrows_data[:,3].min(),arrows_data[:,3].max()]
+            elif 'color' in quiver_kws:
+                quiver_kws['C'] = quiver_kws['color']
+                quiver_kws.pop('color') # It is not in FancyArrowPatch
+            elif len(arrows) == 3:
+                array = np.linalg.norm(arrows_data[::every,:3],axis=1)
+                minmax_c = [array.min(),array.max()] # Fist set then normalize
+                array = (array - array.min())/np.ptp(array)
+                quiver_kws['C'] = plt.get_cmap(self.cmap)(array)
+
+            if 'cmap' in quiver_kws:
+                quiver_kws.pop('cmap') # It is not in fancy_quiver3d
+
+
+            api.fancy_quiver3d(*kxyz[::every].T[kij],*(norm*arrows_data[::every].T[:3]), **quiver_kws,ax=ax)
+
+        else:
+            _C = self[args[4]] if len(args) == 5 else self[args[3]]
+            kwargs['marker'] = marker # Avoid double marker
+            if 'color' in kwargs:
+                kwargs['c'] = kwargs['color']
+                del kwargs['color'] # keep one
+
+            kwargs['c'] = kwargs.get('c',_C)
+            ax.scatter(*kxyz.T[kij],**kwargs)
+            minmax_c = [min(_C),max(_C)]
+
+        def colorbar(cax = None, nticks = 6, **kwargs):
+            "kwargs are passed to pivotpy.splots.add_colorbar"
+            cax = cax or plt.gcf().add_axes([0.85, 0.15, 0.03, 0.7])
+            ticks = np.linspace(0,1,nticks, endpoint=True)
+            labels = np.linspace(*minmax_c,nticks,endpoint=True).round(2).astype(str)
+            return splots.add_colorbar(cax, cax, self.cmap ,ticks = list(ticks), ticklabels=labels, **kwargs)
 
         ax.colobar = colorbar
         return ax
