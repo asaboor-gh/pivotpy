@@ -233,7 +233,7 @@ class SpinDataFrame(pd.DataFrame):
             if arg not in self.columns:
                 raise ValueError(f'{arg!r} is not a column in the dataframe')
 
-    def splot(self,*args, arrows = [], every=4, norm = 1, marker='H', ax = None, quiver_kws = {}, scale = None, **kwargs):
+    def splot(self,*args, arrows = [], every=1, norm = 1, marker='H', ax = None, quiver_kws = {}, scale = None, **kwargs):
         """Plot energy in 2D with/without arrows.
         - **Parameters**:
             - *args: 3 or 4 names of columns, representing [X,Y,Energy,[Anything]], from given args, last one is colormapped. If kwargs has color, that takes precedence.
@@ -267,8 +267,11 @@ class SpinDataFrame(pd.DataFrame):
             cmap = quiver_kws.get('cmap',cmap)
             if 'color' in quiver_kws:
                 cmap = None # No colorbar for color only
+                arrows_data = arrows_data[:,:2] # color takes precedence
             ax.quiver(*kxyz[::every].T[kij],*(norm*arrows_data[::every].T), **quiver_kws)
-            if len(arrows) == 3:
+
+            if len(arrows) == 3 and 'color' not in quiver_kws:
+                cmap = quiver_kws.get('cmap','viridis') # Fallback to default
                 minmax_c = [arrows_data[:,2].min(),arrows_data[:,2].max()]
         else:
             _C = self[args[-1]] # Most right arg is color mapped
@@ -285,7 +288,7 @@ class SpinDataFrame(pd.DataFrame):
         self._current_attrs = {'ax':ax,'minmax_c':minmax_c,'cmap':cmap}
         return ax
 
-    def splot3d(self,*args, arrows = [], every=4,norm = 1, marker='H', ax = None, quiver_kws = {'arrowstyle':'-|>','size':1}, scale = None, **kwargs):
+    def splot3d(self,*args, arrows = [], every=1,norm = 1, marker='H', ax = None, quiver_kws = {'arrowstyle':'-|>','size':1}, scale = None, **kwargs):
         """Plot energy in 3D with/without arrows.
         - **Parameters**:
             - *args: 3, 4 or 5 names of columns, representing [X,Y,[Z or Energy],Energy, [Anything]], out of given args, last one is color mapped. if kwargs has color, that takes precedence.
@@ -320,7 +323,11 @@ class SpinDataFrame(pd.DataFrame):
         if arrows:
             arrows_data = self._collect_arrows_data(arrows)
             cmap = quiver_kws.get('cmap',cmap)
-            if len(arrows) == 4:
+            if 'color' in quiver_kws: # color takes precedence
+                quiver_kws['C'] = quiver_kws['color']
+                quiver_kws.pop('color') # It is not in FancyArrowPatch
+                cmap = None # No colorbar
+            elif len(arrows) == 4:
                 array = arrows_data[::every,3]
                 array = (array - array.min())/np.ptp(array)
                 quiver_kws['C'] = plt.get_cmap(cmap)(array)
@@ -330,10 +337,6 @@ class SpinDataFrame(pd.DataFrame):
                 minmax_c = [array.min(),array.max()] # Fist set then normalize
                 array = (array - array.min())/np.ptp(array)
                 quiver_kws['C'] = plt.get_cmap(cmap)(array)
-            elif 'color' in quiver_kws:
-                quiver_kws['C'] = quiver_kws['color']
-                quiver_kws.pop('color') # It is not in FancyArrowPatch
-                cmap = None # No colorbar
 
             if 'cmap' in quiver_kws:
                 quiver_kws.pop('cmap') # It is not in fancy_quiver3d
