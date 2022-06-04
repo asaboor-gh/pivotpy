@@ -390,7 +390,7 @@ def get_structure(xml_data):
     Names = list(np.unique(elems[:-types]))
     unique_d = {e:range(INDS[i],INDS[i+1]) for i,e in enumerate(Names)}
 
-    st_dic={'SYSTEM':SYSTEM,'volume': volume,'basis': np.array(basis),'rec_basis': np.array(rec_basis),
+    st_dic={'SYSTEM':SYSTEM,'volume': volume,'basis': np.array(basis),'rec_basis': np.array(rec_basis), 'scale': 1.0,
             'cartesian': _is_poscar_cartesian(other_path=xml_data.path),'positions': np.array(positions),'labels':labels,'unique': unique_d}
     return serializer.PoscarData(st_dic)
 
@@ -853,13 +853,13 @@ def export_locpot(locpot=None,e = True,m = False):
             pot_dict.update({'m_z': fix_data(islice(f, start,start+nlines),Nxyz)})
 
     # Read Info
-    basis = np.loadtxt(StringIO(''.join(poscar[2:5])))*float(poscar[1].strip())
-    system = poscar[0].strip()
-    ElemName = poscar[5].split()
-    ElemIndex = [int(v) for v in poscar[6].split()]
-    ElemIndex.insert(0,0)
-    ElemIndex = list(np.cumsum(ElemIndex))
-    positions = np.loadtxt(StringIO(''.join(poscar[8:N+9])))
+    from .sio import export_poscar # Keep inside to avoid import loop
+    poscar_data = export_poscar(text_plain = '\n'.join(p.strip() for p in poscar))
+    basis = poscar_data.basis
+    system = poscar_data.SYSTEM
+    ElemName = list(poscar_data.unique.keys())
+    ElemIndex = [0,*[v[-1]+ 1 for v in poscar_data.unique.values()]]
+    positions = poscar_data.positions
 
     final_dict = dict(SYSTEM=system,ElemName=ElemName,ElemIndex=ElemIndex,basis=basis,positions=positions)
     final_dict = {**final_dict,**pot_dict}

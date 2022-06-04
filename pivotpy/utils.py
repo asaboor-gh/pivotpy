@@ -160,6 +160,7 @@ def load_ps_exported(path= './vasprun.xml',kseg_inds =[], shift_kpath = 0, path_
                             'basis' : np.array(_vars.basis),
                             'rec_basis': np.array(_vars.rec_basis),
                             'cartesian':iscartesian,
+                            'scale': 1.0,
                             'positions': np.array(_vars.positions)
                             }
         fields            = _vars.fields

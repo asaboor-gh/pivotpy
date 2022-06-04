@@ -215,10 +215,10 @@ class POSCAR:
         self._cell = sio.get_bz(path_pos=self._data.rec_basis,loop=loop, digits=digits, primitive=True) # cell must be primitive
         return self._cell
 
-    @_sub_doc(sio.splot_bz,'- path_pos_bz')
+    @_sub_doc(sio.splot_bz,'- bz_data')
     def splot_bz(self, ax=None, plane=None, color='blue', fill=True, vectors=True, v3=False, vname='b', colormap='plasma', light_from=(1, 1, 1), alpha=0.4):
         self._plane = plane # Set plane for splot_kpath
-        new_ax = sio.splot_bz(path_pos_bz = self._bz, ax=ax, plane=plane, color=color, fill=fill, vectors=vectors, v3=v3, vname=vname, colormap=colormap, light_from=light_from, alpha=alpha)
+        new_ax = sio.splot_bz(bz_data = self._bz, ax=ax, plane=plane, color=color, fill=fill, vectors=vectors, v3=v3, vname=vname, colormap=colormap, light_from=light_from, alpha=alpha)
         self._ax = new_ax # Set ax for splot_kpath
         return new_ax
 
@@ -265,89 +265,69 @@ class POSCAR:
 
     def splot_cell(self, ax=None, plane=None, color='blue', fill=True, vectors=True, v3=False, vname='a', colormap='plasma', light_from=(1, 1, 1), alpha=0.4):
         "See docs of `splot_bz`, everything is same except space is inverted."
-        return sio.splot_bz(path_pos_bz = self._cell, ax=ax, plane=plane, color=color, fill=fill, vectors=vectors, v3=v3, vname=vname, colormap=colormap, light_from=light_from, alpha=alpha)
+        return sio.splot_bz(bz_data = self._cell, ax=ax, plane=plane, color=color, fill=fill, vectors=vectors, v3=v3, vname=vname, colormap=colormap, light_from=light_from, alpha=alpha)
 
-    @_sub_doc(sio.iplot_bz,'- path_pos_bz')
+    @_sub_doc(sio.iplot_bz,'- bz_data')
     def iplot_bz(self, fill=True, color='rgba(168,204,216,0.4)', background='rgb(255,255,255)', vname='b', special_kpoints = True, alpha=0.4, ortho3d=True, fig=None):
-        return sio.iplot_bz(path_pos_bz = self._bz, fill=fill, color=color, background=background, vname=vname, special_kpoints=special_kpoints, alpha=alpha, ortho3d=ortho3d, fig=fig)
+        return sio.iplot_bz(bz_data = self._bz, fill=fill, color=color, background=background, vname=vname, special_kpoints=special_kpoints, alpha=alpha, ortho3d=ortho3d, fig=fig)
 
     def iplot_cell(self, fill=True, color='rgba(168,204,216,0.4)', background='rgb(255,255,255)', vname='a', alpha=0.4, ortho3d=True, fig=None):
         "See docs of `iplot_bz`, everything is same except space is iverted."
-        return sio.iplot_bz(path_pos_bz = self._cell, fill=fill, color=color, background=background, vname=vname, alpha=alpha, ortho3d=ortho3d, fig=fig)
+        return sio.iplot_bz(bz_data = self._cell, fill=fill, color=color, background=background, vname=vname, alpha=alpha, ortho3d=ortho3d, fig=fig)
 
-    @_sub_doc(sio.splot_lat,'- poscar')
+    @_sub_doc(sio.splot_lat,'- poscar_data')
     def splot_lat(self, sizes=50, colors=[], colormap=None, bond_length=None, tol=0.1, eps=0.01, eqv_sites=True, translate=None, line_width=1, edge_color=(1, 0.5, 0, 0.4), vectors=True, v3=False, plane=None, light_from=(1, 1, 1), fill=False, alpha=0.4, ax=None):
-        return sio.splot_lat(poscar=self._data, sizes=sizes, colors=colors, colormap=colormap, bond_length=bond_length, tol=tol, eps=eps, eqv_sites=eqv_sites, translate=translate, line_width=line_width, edge_color=edge_color, vectors=vectors, v3=v3, plane=plane, light_from=light_from, fill=fill, alpha=alpha, ax=ax)
+        return sio.splot_lat(self._data, sizes=sizes, colors=colors, colormap=colormap, bond_length=bond_length, tol=tol, eps=eps, eqv_sites=eqv_sites, translate=translate, line_width=line_width, edge_color=edge_color, vectors=vectors, v3=v3, plane=plane, light_from=light_from, fill=fill, alpha=alpha, ax=ax)
 
-    @_sub_doc(sio.iplot_lat,'- poscar')
+    @_sub_doc(sio.iplot_lat,'- poscar_data')
     def iplot_lat(self, sizes=10, colors='blue', bond_length=None, tol=0.1, eps=0.01, eqv_sites=True, translate=None, line_width=4, edge_color='black', fill=False, alpha=0.4, ortho3d=True, fig=None):
-        return sio.iplot_lat(poscar=self._data, sizes=sizes, colors=colors, bond_length=bond_length, tol=tol, eps=eps, eqv_sites=eqv_sites, translate=translate, line_width=line_width, edge_color=edge_color, fill=fill, alpha=alpha, ortho3d=ortho3d, fig=fig)
+        return sio.iplot_lat(self._data, sizes=sizes, colors=colors, bond_length=bond_length, tol=tol, eps=eps, eqv_sites=eqv_sites, translate=translate, line_width=line_width, edge_color=edge_color, fill=fill, alpha=alpha, ortho3d=ortho3d, fig=fig)
 
-    @_sub_doc(sio.write_poscar,'- poscar')
+    @_sub_doc(sio.write_poscar,'- poscar_data')
     def write(self, sd_list=None, outfile=None, overwrite=False):
-        return sio.write_poscar(poscar = self._data, sd_list=sd_list, outfile=outfile, overwrite=overwrite)
+        return sio.write_poscar(self._data, sd_list=sd_list, outfile=outfile, overwrite=overwrite)
 
     @_sub_doc(sio.join_poscars,'- poscar1',replace={'poscar2':'other'})
     def join(self,other, direction='z', tol=0.01):
         return self.__class__(data = sio.join_poscars(poscar1=self._data, poscar2=other.data, direction=direction, tol=tol))
 
-    @_sub_doc(sio.scale_poscar,'- path_poscar')
+    @_sub_doc(sio.scale_poscar,'- poscar_data')
     def scale(self, scale=(1, 1, 1), tol=0.01):
-        return self.__class__(data = sio.scale_poscar(path_poscar=self._data, scale=scale, tol=tol))
+        return self.__class__(data = sio.scale_poscar(self._data, scale=scale, tol=tol))
 
-    @_sub_doc(sio.rotate_poscar,'- path_poscar')
+    @_sub_doc(sio.rotate_poscar,'- poscar_data')
     def rotate(self,angle_deg,axis_vec):
-        return self.__class__(data = sio.rotate_poscar(path_poscar=self._data, angle_deg = angle_deg, axis_vec=axis_vec))
+        return self.__class__(data = sio.rotate_poscar(self._data, angle_deg = angle_deg, axis_vec=axis_vec))
 
-    @_sub_doc(sio.fix_sites,'- poscar')
+    @_sub_doc(sio.fix_sites,'- poscar_data')
     def fix_sites(self, tol=0.01, eqv_sites=True, translate=None):
-        return self.__class__(data = sio.fix_sites(poscar=self._data, tol=tol, eqv_sites=eqv_sites, translate=translate))
+        return self.__class__(data = sio.fix_sites(self._data, tol=tol, eqv_sites=eqv_sites, translate=translate))
 
+    @_sub_doc(sio.fix_sites,'- poscar_data')
     def get_kmesh(self, *args, shift = 0, weight=None, cartesian = False, ibzkpt=None, outfile=None):
-        """Generates uniform mesh of kpoints. Options are write to file, or return KPOINTS list. Use self.write(...) as well if you use this function to have KPOINTS and POSCAR similar way.
-        - Positional arguments are 1 or 3 integers which decide shape of mesh. If 1, mesh points are equally spaced using information from POSCAR.
-        - **Parameters**
-            - shift  : Defualt is 0 and grid is created in interval [0,1], if given, grid is shifted to [shift,1+shift] in all directions.
-            - weight : Float, if None, auto generates weights.
-            - cartesian: If True, generates cartesian mesh and also reguires scale to be given.
-            - ibzkpt : Path to ibzkpt file, required for HSE calculations.
-            - outfile: Path/to/file to write kpoints.
+        return sio.get_kmesh(self.data, *args, shift = shift, weight = weight, cartesian = cartesian,ibzkpt= ibzkpt, outfile=outfile)
 
-        If `outfile = None`, KPOINTS file content is printed."""
-        scale = 1 # All POSCARS are scaled to 1.0 if written by this class
-        abc_norms = np.linalg.norm(self._data.basis, axis=1).round(4)
-        return sio.get_kmesh(*args, shift = shift, weight = weight, abc_norms = abc_norms, cartesian = cartesian, scale = scale,ibzkpt= ibzkpt, outfile=outfile)
-
-    def bring_in_cell(self,points, scale = None):
+    def bring_in_cell(self,points):
         """Brings atoms's positions inside Cell and returns their R3 coordinates.
         If points are cartesian, they are just scaled to fit inside the cell.
         The scale factor is usaully `a` which is on second line of POSCAR.
         """
-        if self.data.cartesian:
-            if isinstance(scale,(int,float)):
-                return np.array(points) * scale
-            else:
-                raise RuntimeError('Found Cartesian POSCAR, tweak `scale = a`  where a is on second line of POSCAR.')
-        return sio.to_R3(self._data.basis, points= points)
+        basis = np.identity(3) if self.data.cartesian else self._data.basis
+        return sio.to_R3(basis, points= points)
 
-    @_sub_doc(sio.kpoints2bz,'- bz')
-    def bring_in_bz(self,kpoints, scale = None):
+    @_sub_doc(sio.kpoints2bz,'- bz_data')
+    def bring_in_bz(self,kpoints, basis=None):
         """Brings kpoints inside already set BZ, (primitive or regular).
-        If kpoints are cartesian, they are just scaled to fit inside the BZ.
+        If basis is not None, it is used to set modify kpoints instead of basis inside bz.
+        If kpoints are cartesian, you can uses `basis` to scale them in any direction.
         The scale factor is usaully `2π/a` where a is on second line of POSCAR.
         """
         if not self._kpts_info:
             raise RuntimeError('Run `POSCAR.get_kpoints_info(other_path)` first. Only required once!')
 
-        if self._kpts_info.cartesian:
-            if isinstance(scale,(int,float)):
-                return np.array(kpoints) * scale
-            else:
-                raise RuntimeError('Found Cartesian KPOINTS, tweak `scale ~ 2π/a`, where a is on second line of POSCAR.')
-
         if not self._bz:
             raise RuntimeError('No BZ found. Please run `get_bz()` first.')
-        return sio.kpoints2bz(self._bz, kpoints= kpoints,primitive = self.primitive)
+        return sio.kpoints2bz(self._bz, kpoints= kpoints,primitive = self.primitive, basis = basis)
 
 # Cell
 class LOCPOT:

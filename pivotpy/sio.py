@@ -2,8 +2,8 @@
 
 __all__ = ['Arrow3D', 'fancy_quiver3d', 'write_poscar', 'export_poscar', 'InvokeMaterialsProject', 'get_kpath',
            'read_ticks', 'str2kpath', 'get_kmesh', 'order', 'rotation', 'get_bz', 'splot_bz', 'iplot_bz', 'to_R3',
-           'kpoints2bz', 'fix_sites', 'get_pairs', 'iplot_lat', 'splot_lat', 'join_poscars', 'scale_poscar',
-           'rotate_poscar']
+           'to_basis', 'kpoints2bz', 'transformed_pos', 'original_pos', 'fix_sites', 'get_pairs', 'iplot_lat',
+           'splot_lat', 'join_poscars', 'scale_poscar', 'rotate_poscar']
 
 # Cell
 import sys, os, re
@@ -75,17 +75,18 @@ def fancy_quiver3d(X,Y,Z,U,V,W,ax=None,C = 'r',L = 0.7,mutation_scale=10,**kwarg
     return ax
 
 # Cell
-def write_poscar(poscar,sd_list=None,outfile=None,overwrite=False,**kwargs):
+def write_poscar(poscar_data,sd_list=None,outfile=None,overwrite=False,**kwargs):
     """Writes poscar data object to a file or returns string
     - **Parameters**
-        - poscar   : Output of `export_poscar`,`join_poscars` etc.
+        - poscar_data: Output of `export_poscar`,`join_poscars` etc.
         - sd_list  : A list ['T T T','F F F',...] strings to turn on selective dynamics at required sites. len(sd_list)==len(sites) should hold.
         - outfile  : str,file path to write on.
         - overwrite: bool, if file already exists, overwrite=True changes it.
     """
+    poscar = poscar_data
     _comment = kwargs.get('comment',None) or re.sub('.*#','',poscar.text_plain.splitlines()[0],flags=re.DOTALL).strip()
     out_str = f'{poscar.SYSTEM}  # ' + (_comment or 'Created by Pivopty')
-    scale = np.linalg.norm(poscar.basis[0])
+    scale = poscar.scale if poscar.cartesian else 1
     out_str += "\n  {:<20.14f}\n".format(scale)
     out_str += '\n'.join(["{:>22.16f}{:>22.16f}{:>22.16f}".format(*a) for a in poscar.basis/scale])
     uelems = poscar.unique.to_dict()
@@ -94,7 +95,8 @@ def write_poscar(poscar,sd_list=None,outfile=None,overwrite=False,**kwargs):
     if sd_list:
         out_str += "\nSelective Dynamics"
     out_str += "\nCartesian\n" if poscar.cartesian else "\nDirect\n"
-    pos_list = ["{:>21.16f}{:>21.16f}{:>21.16f}".format(*a) for a in poscar.positions]
+    factor = 1/scale if poscar.cartesian else 1
+    pos_list = ["{:>21.16f}{:>21.16f}{:>21.16f}".format(*a) for a in poscar.positions*factor]
     if sd_list:
         if len(pos_list) != len(sd_list):
             raise ValueError("len(sd_list) != len(sites).")
@@ -127,11 +129,11 @@ def export_poscar(path = None,text_plain=None):
             raise FileNotFoundError(f"{path!r} not found.")
 
     SYSTEM = vp.islice2array(path,start=0,nlines=1,raw=True,exclude=None).split('#')[0].strip()
-    scale = vp.islice2array(path,start=1,nlines=1,exclude=None).squeeze()
+    scale = float(vp.islice2array(path,start=1,nlines=1,exclude=None,raw=True).strip())
     basis = scale*vp.islice2array(path,start=2,nlines=3,exclude=None).reshape((-1,3))
     volume = np.linalg.det(basis)
     rec_basis = np.linalg.inv(basis).T # general formula
-    out_dict = {'SYSTEM':SYSTEM,'volume':volume,'basis':basis,'rec_basis':rec_basis}
+    out_dict = {'SYSTEM':SYSTEM,'volume':volume,'basis':basis,'rec_basis':rec_basis,'scale':scale}
 
     elems = vp.islice2array(path,raw=True,start=5,nlines=1,exclude=None).split()
     ions = vp.islice2array(path,start=6,nlines=1,exclude=None)
@@ -143,6 +145,8 @@ def export_poscar(path = None,text_plain=None):
     out_dict['cartesian'] = True if ((lines[0][0] in 'cCkK') or (lines[1][0] in 'cCkK')) else False
     # Two lines are excluded in below command before start. so start = 7-2
     positions = vp.islice2array(path,start=5,exclude="^\s+[a-zA-Z]|^[a-zA-Z]",cols=[0,1,2]).reshape((-1,3))[:N]
+    if out_dict['cartesian']:
+        positions = scale * positions
 
     unique_d = {}
     for i,e in enumerate(elems):
@@ -510,7 +514,7 @@ def str2kpath(kpath_str,n = 5, weight = None, ibzkpt = None, outfile = None):
 
 # Cell
 def _get_basis(path_pos):
-    """Returns given(computed) and inverted(without 2π) basis as tuple(given,inverted).
+    """Returns given(computed) and inverted basis as tuple(given,inverted).
     - **Parameters**
         - path_pos: path/to/POSCAR or 3 given vectors as rows of a matrix."""
     if isinstance(path_pos,(list,np.ndarray)) and np.ndim(path_pos) ==2:
@@ -519,42 +523,40 @@ def _get_basis(path_pos):
         basis = export_poscar(path_pos).basis
     else:
         raise FileNotFoundError("{!r} does not exist or not 3 by 3 list.".format(path_pos))
-    # Process. 2π is not included in vasp code.
+    # Process. 2π is not included in vasp output
     rec_basis = np.linalg.inv(basis).T # Compact Formula
     Basis = namedtuple('Basis', ['given', 'inverted'])
     return Basis(basis,rec_basis)
 
 # Cell
-def get_kmesh(*args, shift = 0, weight = None, abc_norms = None, cartesian = False, scale = None,ibzkpt= None, outfile=None):
+def get_kmesh(poscar_data, *args, shift = 0, weight = None, cartesian = False, ibzkpt= None, outfile=None):
     """**Note**: Use `pivotpy.POSCAR.get_kmesh` to get k-mesh based on current POSCAR.
     - Generates uniform mesh of kpoints. Options are write to file, or return KPOINTS list.
-    - Positional arguments are 1 or 3 integers which decide shape of mesh. If 1, and abc_norms = [|a|,|b|,|c|] of POSCAR, mesh points equally spaced.
     - **Parameters**
+        - poscar_data: export_poscar() or export_vasprun().poscar().
+        - *args: 1 or 3 integers which decide shape of mesh. If 1, mesh points equally spaced based on data from POSCAR.
         - shift  : Defualt is 0 and grid is created in interval [0,1], if given, grid is shifted to [shift,1+shift] in all directions.
         - weight : Float, if None, auto generates weights.
-        - abc_norms: [|a|,|b|,|c|] of POSCAR are used to create uniform mesh.
         - cartesian: If True, generates cartesian mesh and also reguires scale to be given.
-        - scale  : Value at second line of POSCAR and scaling is done as scale/2pi(kx,ky,kz), which in calculations go to 2pi/scale(kx,ky,kz) if cartesian.
         - ibzkpt : Path to ibzkpt file, required for HSE calculations.
         - outfile: Path/to/file to write kpoints.
 
     If `outfile = None`, KPOINTS file content is printed."""
     if len(args) not in [1,3]:
-        raise ValueError("get_kmesh() takes 1 or 3 positional arguments!")
+        raise ValueError("get_kmesh() takes 1 or 3 args!")
 
-    if cartesian and not isinstance(scale,(int,float)):
-        raise ValueError("scale should be given from second line of POSCAR if cartesian is True!")
-
+    if cartesian:
+        norms = np.ptp(poscar_data.rec_basis,axis=0)
+    else:
+        norms = np.linalg.norm(poscar_data.rec_basis, axis = 1)
 
     if len(args) == 1:
         if not isinstance(args[0],int):
             raise ValueError("get_kmesh expects integer for first positional argument!")
         nx,ny,nz = [args[0] for _ in range(3)]
 
-        if isinstance(abc_norms,(list,tuple,np.ndarray)):
-            assert len(abc_norms) == 3
-            weights = abc_norms/np.min(abc_norms) # For making smallest side at given n_xyz
-            nx, ny, nz = np.rint(weights*args[0]).astype(int)
+        weights = norms/np.max(norms) # For making largest side at given n
+        nx, ny, nz = np.rint(weights*args[0]).astype(int)
 
     elif len(args) == 3:
         for i,a in enumerate(args):
@@ -562,16 +564,17 @@ def get_kmesh(*args, shift = 0, weight = None, abc_norms = None, cartesian = Fal
                 raise ValueError("get_kmesh expects integer at position {}!".format(i))
         nx,ny,nz = list(args)
 
-    low, high = shift, 1 + shift
+    low,high = np.array([[0,0,0],[1,1,1]]) + shift
     if cartesian:
-        low = round(low * scale/(2*np.pi),6) # This will be multiplied by 2pi/scale inside calculation
-        high = round(high * scale/(2*np.pi),6)
+        low, high = np.min(poscar_data.rec_basis,axis=0), np.max(poscar_data.rec_basis,axis=0)
+        low = (low * poscar_data.scale/(2*np.pi)).round(6) # This will be multiplied by 2pi/scale inside calculation
+        high = (high * poscar_data.scale/(2*np.pi)).round(6)
 
-
+    (lx,ly,lz),(hx,hy,hz) = low,high
     points = []
-    for k in np.linspace(low,high,nz, endpoint = True):
-        for j in np.linspace(low,high,ny, endpoint = True):
-            for i in np.linspace(low,high,nx, endpoint = True):
+    for k in np.linspace(lz,hz,nz, endpoint = True):
+        for j in np.linspace(ly,hy,ny, endpoint = True):
+            for i in np.linspace(lx,hx,nx, endpoint = True):
                 points.append([i,j,k])
 
     points = np.array(points)
@@ -799,7 +802,7 @@ def get_bz(path_pos = None,loop = True,digits=8,primitive=False):
     # Round off results
     mid_all_p    = np.round(mid_all,digits) # Coordinates
     mid_basis_p  = np.round(mid_basis_all,digits) # Relative points
-    bais         = np.round(basis,digits)
+    basis        = np.round(basis,digits)
     face_vectors = np.round(face_vectors,digits)
     verts        = np.round(verts,digits)
     faces        = tuple([np.round(face,digits) for face in faces])
@@ -821,11 +824,11 @@ def get_bz(path_pos = None,loop = True,digits=8,primitive=False):
     return serializer.dict2tuple('BZ',out_dict)
 
 # Cell
-def splot_bz(path_pos_bz = None, ax = None, plane=None,color='blue',fill=True,vectors=True,v3=False,vname='b',colormap='plasma',light_from=(1,1,1),alpha=0.4):
+def splot_bz(bz_data, ax = None, plane=None,color='blue',fill=True,vectors=True,v3=False,vname='b',colormap='plasma',light_from=(1,1,1),alpha=0.4):
     """
     - Plots matplotlib's static figure.
     - **Parameters**
-        - path_pos_bz: Path/to/POSCAR or List of 3 basis vectors or output of `get_zb`. Auto picks POSCAR from current directory.
+        - bz_data    : Output of `get_bz`.
         - fill       : True by defult, determines whether to fill surface of BZ or not.
         - color      : color to fill surface and stroke color.
         - vectors    : Plots basis vectors, default is True.
@@ -842,11 +845,7 @@ def splot_bz(path_pos_bz = None, ax = None, plane=None,color='blue',fill=True,ve
 
     > Tip: `splot_bz(rec_basis,primitive=True)` will plot cell in real space.
     """
-    try:
-        path_pos_bz.faces #See if it is BZ
-        bz = path_pos_bz
-    except AttributeError:
-        bz = get_bz(_get_basis(path_pos_bz).given) # If it is a Matrix or picks POSCAR from CWD.
+    bz = bz_data
     label = r"$k_{}$" if vname=='b' else "{}"
     if not ax: #For both 3D and 2D, initialize 2D axis.
         ax = sp.get_axes(figsize=(3.4,3.4)) #For better display
@@ -934,11 +933,11 @@ def splot_bz(path_pos_bz = None, ax = None, plane=None,color='blue',fill=True,ve
         return ax3d
 
 # Cell
-def iplot_bz(path_pos_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',background = 'rgb(255,255,255)',vname = 'b', special_kpoints = True, alpha=0.4,ortho3d=True,fig=None):
+def iplot_bz(bz_data,fill = True,color = 'rgba(168,204,216,0.4)',background = 'rgb(255,255,255)',vname = 'b', special_kpoints = True, alpha=0.4,ortho3d=True,fig=None):
     """
     - Plots interactive figure showing axes,BZ surface, special points and basis, each of which could be hidden or shown.
     - **Parameters**
-        - path_pos_bz: Path/to/POSCAR or List of 3 basis vectors or output of `get_zb`. Auto picks POSCAR from current directory.
+        - bz_data    : Output of `get_bz`.
         - fill       : True by defult, determines whether to fill surface of BZ or not.
         - color      : color to fill surface 'rgba(168,204,216,0.4)` by default.
         - background : Plot background color, default is 'rgb(255,255,255)'.
@@ -952,12 +951,7 @@ def iplot_bz(path_pos_bz = None,fill = True,color = 'rgba(168,204,216,0.4)',back
 
     > Tip: `iplot_bz(rec_basis,primitive=True)` will plot cell in real space.
     """
-    try:
-        path_pos_bz.faces #See if it is BZ object
-        bz = path_pos_bz
-    except AttributeError:
-        bz = get_bz(_get_basis(path_pos_bz).given) # If it is a Matrix or picks POSCAR from CWD.
-
+    bz = bz_data
     if not fig:
         fig = go.Figure()
     # Name fixing
@@ -1045,7 +1039,7 @@ def to_R3(basis,points):
         - basis : Non-orthogonal basis of real or reciprocal space.
         - points: 3D points relative to basis, such as KPOINTS and Lattice Points.
 
-    **Note**: Do not use this function if points are Cartesian, just scale with `2π/a` if points are in reciprocal space, with `a` if in direct space, where `a` is on second line of POSCAR file.
+    **Note**: Do not use this function if points are Cartesian or provide identity basis.
     """
     rec_basis = np.array(basis)
     points = np.array(points)
@@ -1055,20 +1049,31 @@ def to_R3(basis,points):
     coords = points.dot(rec_basis)
     return coords
 
+def to_basis(basis,coords):
+    """Transforms coordinates of points (relative to othogonal basis) into basis space.
+    - **Parameters**
+        - basis : Non-orthogonal basis of real or reciprocal space.
+        - points: 3D points relative to cartesian axes, such as KPOINTS and Lattice Points.
+    """
+    return np.dot(np.linalg.inv(basis).T,coords.T).T
+
 # Cell
-def kpoints2bz(bz,kpoints,primitive=False):
+def kpoints2bz(bz_data,kpoints,basis = None, primitive=False):
     """Brings KPOINTS inside BZ. Applies `to_R3` only if `primitive=True`.
     - **Parameters**
-        - bz       : Output of get_bz(), make sure use same value of `primitive` there and here.
+        - bz_data  : Output of get_bz(), make sure use same value of `primitive` there and here.
         - kpoints  : List or array of KPOINTS to transorm into BZ or R3.
+        - basis    : If given, take precedence over bz_data.basis. Useful If kpoints are cartesian.
         - primitive: Default is False and brings kpoints into regular BZ. If True, returns `to_R3()`.
 
     **Note**: Do not use this function if kpoints are Cartesian, just scale with `2π/a`, where `a` is on second line of POSCAR file.
     """
+    bz = bz_data
     # Shift to 1st octant for both cases of primitive argument.
     kpoints = kpoints - np.min(kpoints,axis=0)
+    basis = basis if basis is not None else bz_data.basis
     if primitive:
-        return to_R3(bz.basis,kpoints)
+        return to_R3(basis,kpoints)
 
     # Work ahead if not primitive
     kpoints = kpoints - 0.5 # For regular BZ only
@@ -1090,7 +1095,7 @@ def kpoints2bz(bz,kpoints,primitive=False):
         for q in product([0,1,-1],[0,1,-1],[0,1,-1]):
             # First translate, then make coords, then feed it back
             #print(q)
-            pos = to_R3(bz.basis,p + np.array(q))
+            pos = to_R3(basis,p + np.array(q))
             r = inside(pos,cent_planes)
             if r:
                 #print(p,'-->',r)
@@ -1100,15 +1105,29 @@ def kpoints2bz(bz,kpoints,primitive=False):
     return out_coords # These may have duplicates, apply np.unique(out_coords,axis=0). do this in surface plots
 
 # Cell
-def fix_sites(poscar,tol=1e-2,eqv_sites=True,translate=None):
+def transformed_pos(poscar_data):
+    "If not relative to basis, set to relative to basis."
+    pos = poscar_data.positions.copy()
+    if poscar_data.cartesian:
+        return to_basis(poscar_data.basis,pos)
+    return pos
+
+def original_pos(poscar_data, pos):
+    "After any operation, return to original form."
+    if poscar_data.cartesian:
+        return to_R3(poscar_data.basis,pos)
+    return pos
+
+def fix_sites(poscar_data,tol=1e-2,eqv_sites=True,translate=None):
     """Add equivalent sites to make a full data shape of lattice. Returns same data after fixing.
     - **Parameters**
-        - poscar: Output of `export_poscar` or `export_vasprun().poscar`.
+        - poscar_data: Output of `export_poscar` or `export_vasprun().poscar`.
         - tol   : Tolerance value. Default is 0.01.
         - eqv_sites: If True, add sites on edges and faces. If False, just fix coordinates, i.e. `pos > 1 - tol -> pos - 1`, useful for merging poscars to make slabs.
         - translate: A number(+/-) or list of three numbers to translate in x,y,z directions.
     """
-    pos = poscar.positions.copy() # Must to avoid chnaging outside.
+    poscar = poscar_data
+    pos = transformed_pos(poscar)
     labels = poscar.labels
     out_dict = poscar.to_dict() # For output
 
@@ -1155,16 +1174,19 @@ def fix_sites(poscar,tol=1e-2,eqv_sites=True,translate=None):
         # Update Things
         out_dict['positions'] = pos
 
+    out_dict['positions'] = original_pos(poscar,out_dict['positions']) # Return to original
+
     return serializer.PoscarData(out_dict)
 
-def get_pairs(basis, positions, r, eps=1e-2):
+def get_pairs(poscar_data, positions, r, eps=1e-2):
     """Returns a tuple of Lattice (coords,pairs), so coords[pairs] given nearest site bonds.
     - **Parameters**
-        - basis: Real space lattice basis.
+        - poscar_data: Output of `export_poscar` or `export_vasprun().poscar`.
         - positions: Array(N,3) of fractional positions of lattice sites. If coordinates positions, provide unity basis.
         - r        : Cartesian distance between the pairs in units of Angstrom e.g. 1.2 -> 1.2E-10.
         - eps      : Tolerance value. Default is 10^-2.
     """
+    basis = np.identity(3) if poscar_data.cartesian else poscar_data.basis
     coords = to_R3(basis,positions)
     tree = KDTree(coords)
     inds = np.array([[*p] for p in tree.query_pairs(r,eps=eps)])
@@ -1175,27 +1197,29 @@ def _get_bond_length(poscar,given=None,eps=1e-2):
     if given != None:
         return given*poscar.volume**(1/3) + eps
     else:
-        _coords = to_R3(poscar.basis,poscar.positions)
+        basis = np.identity(3) if poscar.cartesian else poscar.basis
+        _coords = to_R3(basis,poscar.positions)
         _arr = sorted(np.linalg.norm(_coords[1:] - _coords[0],axis=1)) # Sort in ascending. returns list
         return np.mean(_arr[:2]) + eps if _arr else 1 #Between nearest and second nearest.
 
 # Cell
-def iplot_lat(poscar,sizes=10,colors='blue',
+def iplot_lat(poscar_data,sizes=10,colors='blue',
               bond_length=None,tol=1e-1,eps=1e-2,eqv_sites=True,
               translate = None,
               line_width=4,edge_color = 'black',
               fill=False,alpha=0.4, ortho3d=True,fig=None):
     """Interactive plot of lattice.
     - **Main Parameters**
-        - poscar     : Output of export_poscar or export_vasprun().poscar.
+        - poscar_data: Output of export_poscar or export_vasprun().poscar.
         - sizes      : Size of sites. Either one int/float or list equal to type of ions.
         - colors     : Colors of sites. Either one colors or list equal to type of ions.
         - bond_length: Length of bond in fractional unit [0,1]. It is scaled to V^1/3 and auto calculated if not provides.
     Other parameters just mean what they seem to be.
     """
-    poscar = fix_sites(poscar=poscar,tol=tol,eqv_sites=eqv_sites,translate=translate)
+    poscar = poscar_data
+    poscar = fix_sites(poscar,tol=tol,eqv_sites=eqv_sites,translate=translate)
     bond_length = _get_bond_length(poscar,given=bond_length,eps=eps)
-    coords, pairs = get_pairs(basis=poscar.basis,
+    coords, pairs = get_pairs(poscar,
                         positions =poscar.positions,
                         r=bond_length,eps=eps)
     if not fig:
@@ -1257,7 +1281,7 @@ def iplot_lat(poscar,sizes=10,colors='blue',
     return fig
 
 # Cell
-def splot_lat(poscar,sizes=50,colors=[],colormap=None,
+def splot_lat(poscar_data,sizes=50,colors=[],colormap=None,
               bond_length=None,tol=1e-1,eps=1e-2,eqv_sites=True,
               translate = None,
               line_width=1,edge_color=((1,0.5,0,0.4)),
@@ -1266,7 +1290,7 @@ def splot_lat(poscar,sizes=50,colors=[],colormap=None,
               fill=False,alpha=0.4,ax=None):
     """Static plot of lattice.
     - **Main Parameters**
-        - poscar     : Output of export_poscar or export_vasprun().poscar.
+        - poscar_data: Output of export_poscar or export_vasprun().poscar.
         - sizes      : Size of sites. Either one int/float or list equal to type of ions.
         - bond_length: Length of bond in fractional unit [0,1]. It is scaled to V^1/3 and auto calculated if not provides.
         - colors: List of colos. If given, preffered over colormap, should have same length as type of ions.
@@ -1274,6 +1298,7 @@ def splot_lat(poscar,sizes=50,colors=[],colormap=None,
 
     > Tip: Use `plt.style.use('ggplot')` for better 3D perception.
     """
+    poscar = poscar_data
     #Plane fix
     if plane and plane not in 'xyzxzyx':
         raise ValueError("plane expects in 'xyzxzyx' or None.")
@@ -1281,9 +1306,9 @@ def splot_lat(poscar,sizes=50,colors=[],colormap=None,
         ind = 'xyzxzyx'.index(plane)
         arr = [0,1,2,0,2,1,0]
         ix,iy = arr[ind], arr[ind+1]
-    poscar = fix_sites(poscar=poscar,tol=tol,eqv_sites=eqv_sites,translate=translate)
+    poscar = fix_sites(poscar,tol=tol,eqv_sites=eqv_sites,translate=translate)
     bond_length = _get_bond_length(poscar,given=bond_length,eps=eps)
-    coords, pairs = get_pairs(basis=poscar.basis,
+    coords, pairs = get_pairs(poscar,
                         positions =poscar.positions,
                         r=bond_length,eps=eps)
     bz = get_bz(poscar.rec_basis, primitive=True)
@@ -1348,8 +1373,8 @@ def join_poscars(poscar1,poscar2,direction='z',tol=1e-2):
         raise ValueError("Both POSCARs should be Cartesian or Direct.")
     _poscar1 = fix_sites(poscar1,tol=tol,eqv_sites=False)
     _poscar2 = fix_sites(poscar2,tol=tol,eqv_sites=False)
-    pos1 = _poscar1.positions.copy()
-    pos2 = _poscar2.positions.copy()
+    pos1 = transformed_pos(_poscar1)
+    pos2 = transformed_pos(_poscar2)
 
     s1,s2 = 0.5, 0.5 # Half length for each.
     a1,b1,c1 = np.linalg.norm(_poscar1.basis,axis=1)
@@ -1408,21 +1433,19 @@ def join_poscars(poscar1,poscar2,direction='z',tol=1e-2):
     uelems = {_u:range(i_all[i],i_all[i+1]) for i,_u in enumerate(u_all)}
     sys = ''.join(uelems.keys())
     out_dict = {'SYSTEM':sys,'volume':volume,'basis':basis,'rec_basis':rec_basis,'cartesian':poscar1.cartesian,'positions':np.array(pos_all),'labels':labels,'unique':uelems}
+    out_dict['positions'] = original_pos(serializer.PoscarData(out_dict),out_dict['positions'])
     return serializer.PoscarData(out_dict)
 
 # Cell
-def scale_poscar(path_poscar,scale=(1,1,1),tol=1e-2):
+def scale_poscar(poscar_data,scale=(1,1,1),tol=1e-2):
     """Create larger/smaller cell from a given POSCAR.
     - **Parameters**
-        - path_poscar: Path/to/POSCAR or `poscar` data object.
+        - poscar_data: `poscar` data object.
         - scale: Tuple of three values along (a,b,c) vectors. int or float values. If number of sites are not as expected in output, tweak `tol` instead of `scale`. You can put a minus sign with `tol` to get more sites and plus sign to reduce sites.
         - tol: It is used such that site positions are blow `1 - tol`, as 1 belongs to next cell, not previous one.
     > Tip: scale = (2,2,2) enlarges a cell and next operation of (1/2,1/2,1/2) should bring original cell back.
     """
-    if isinstance(path_poscar,str):
-        poscar = export_poscar(path_poscar)
-    else:
-        poscar = path_poscar
+    poscar = poscar_data
 
     ii, jj, kk = np.ceil(scale).astype(int) # Need int for joining.
     _orig_poscar = poscar # Assign base for x
@@ -1446,7 +1469,7 @@ def scale_poscar(path_poscar,scale=(1,1,1),tol=1e-2):
     fi, fj, fk = scale[0]/ii, scale[1]/jj, scale[2]/kk
 
     # Clip at end according to scale, change length of basis as fractions.
-    pos   = poscar.positions.copy()/np.array([fi,fj,fk]) # rescale for clip
+    pos   = transformed_pos(poscar)/np.array([fi,fj,fk]) # rescale for clip
     basis = poscar.basis.copy()
     for i,f in zip(range(3),[fi,fj,fk]):
         basis[i] = f*basis[i] # Basis rescale for clip
@@ -1470,22 +1493,21 @@ def scale_poscar(path_poscar,scale=(1,1,1),tol=1e-2):
     labels = ["{} {}".format(k,_v - vs[0] + 1) for k,vs in uelems.items() for _v in vs]
     new_poscar['labels']    = labels
     new_poscar['unique']    = uelems
-    new_poscar['positions'] = np.array(positions)
+    new_poscar['positions'] = np.array(original_pos(serializer.PoscarData(new_poscar), positions))
     return serializer.PoscarData(new_poscar)
 
-def rotate_poscar(path_poscar,angle_deg,axis_vec):
+def rotate_poscar(poscar_data,angle_deg,axis_vec):
     """Rotate a given POSCAR.
     - **Parameters**
         - path_poscar: Path/to/POSCAR or `poscar` data object.
         - angle_deg: Rotation angle in degrees.
         - axis_vec : (x,y,z) of axis about which rotation takes place. Axis passes through origin.
     """
-    if isinstance(path_poscar,str):
-        poscar = export_poscar(path_poscar)
-    else:
-        poscar = path_poscar
+    poscar = poscar_data
     rot = rotation(angle_deg=angle_deg,axis_vec=axis_vec)
     p_dict = poscar.to_dict()
     p_dict['basis'] = rot.apply(p_dict['basis']) # Rotate basis so that they are transpose
+    if poscar.cartesian:
+        p_dict['positions'] = rot.apply(p_dict['positions'])
     p_dict['rec_basis'] = np.linalg.inv(p_dict['basis']).T # invert rotated basis
     return serializer.PoscarData(p_dict)

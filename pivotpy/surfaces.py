@@ -214,12 +214,12 @@ class SpinDataFrame(pd.DataFrame):
 
         return np.array(arrows_data).T
 
-    def _collect_kxyz(self, *xyz, scale = None):
+    def _collect_kxyz(self, *xyz, basis = None):
         "Return tuple(kxyz, k_order)"
         _kxyz = ['kx','ky','kz']
         kij = [_kxyz.index(a) for a in xyz if a in _kxyz]
         kxyz = self[['kx','ky','kz']].to_numpy()
-        kxyz = self.poscar.bring_in_bz(kxyz, scale = scale)
+        kxyz = self.poscar.bring_in_bz(kxyz, basis = basis)
 
         # Handle third axis as energy as well
         if len(xyz) == 3 and xyz[2].startswith('e'):
@@ -233,7 +233,7 @@ class SpinDataFrame(pd.DataFrame):
             if arg not in self.columns:
                 raise ValueError(f'{arg!r} is not a column in the dataframe')
 
-    def splot(self,*args, arrows = [], every=1, norm = 1, marker='H', ax = None, quiver_kws = {}, scale = None, **kwargs):
+    def splot(self,*args, arrows = [], every=1, norm = 1, marker='H', ax = None, quiver_kws = {}, basis = None, **kwargs):
         """Plot energy in 2D with/without arrows.
         - **Parameters**:
             - *args: 3 or 4 names of columns, representing [X,Y,Energy,[Anything]], from given args, last one is colormapped. If kwargs has color, that takes precedence.
@@ -243,7 +243,7 @@ class SpinDataFrame(pd.DataFrame):
             - marker: marker to use for scatter, use s as another argument to change size.
             - ax: matplotlib axes to plot on (defaults to auto create one).
             - quiver_kws: these are passed to matplotlib.pyplot.quiver.
-            - scale: scale factor for if kpoints in cartesian mode. This should be closer to `2π/a`, where `a` is on second line of POSCAR.
+            - basis:If given, used to transform kpoints into BZ overriding default behavior.
         **kwargs are passed to matplotlib.pyplot.scatter.
 
         - **Returns**:
@@ -257,7 +257,7 @@ class SpinDataFrame(pd.DataFrame):
             raise ValueError('splot takes 3 or 4 positional arguments [X,Y,E,[Anything]], last one is colormapped if kwargs don\'t have color.')
 
         self._validate_columns(*args)
-        kxyz, kij = self._collect_kxyz(*args[:2], scale = scale)
+        kxyz, kij = self._collect_kxyz(*args[:2], basis = basis)
         ax = ax or api.get_axes()
         minmax_c = [0,1]
         cmap = kwargs.get('cmap',self._current_attrs['cmap'])
@@ -288,7 +288,7 @@ class SpinDataFrame(pd.DataFrame):
         self._current_attrs = {'ax':ax,'minmax_c':minmax_c,'cmap':cmap}
         return ax
 
-    def splot3d(self,*args, arrows = [], every=1,norm = 1, marker='H', ax = None, quiver_kws = {'arrowstyle':'-|>','size':1}, scale = None, **kwargs):
+    def splot3d(self,*args, arrows = [], every=1,norm = 1, marker='H', ax = None, quiver_kws = {'arrowstyle':'-|>','size':1}, basis = None, **kwargs):
         """Plot energy in 3D with/without arrows.
         - **Parameters**:
             - *args: 3, 4 or 5 names of columns, representing [X,Y,[Z or Energy],Energy, [Anything]], out of given args, last one is color mapped. if kwargs has color, that takes precedence.
@@ -298,7 +298,7 @@ class SpinDataFrame(pd.DataFrame):
             - marker: marker to use for scatter, use s as another argument to change size.
             - ax: matplotlib 3d axes to plot on (defaults to auto create one).
             - quiver_kws: these are passed to pivotpy.fancy_quiver3d.
-            - scale: scale factor for if kpoints in cartesian mode. This should be closer to `2π/a`, where `a` is on second line of POSCAR.
+            - basis:If given, used to transform kpoints into BZ overriding default behavior.
         **kwargs are passed to matplotlib.pyplot.scatter.
 
         - **Returns**:
@@ -315,7 +315,7 @@ class SpinDataFrame(pd.DataFrame):
             raise ValueError('Z axis must be in [kx,ky,kz, energy]!')
 
         self._validate_columns(*args)
-        kxyz, kij = self._collect_kxyz(*args[:3], scale = scale)
+        kxyz, kij = self._collect_kxyz(*args[:3], basis = basis)
         ax = ax or api.get_axes(axes_3d=True)
         minmax_c = [0,1]
         cmap = kwargs.get('cmap',self._current_attrs['cmap'])

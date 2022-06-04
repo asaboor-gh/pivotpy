@@ -18,6 +18,7 @@ def dict2tuple(name,d):
 
 class Dict2Data:
     _req_keys = ()
+    _subclasses = ()
     """
     - Returns a Data object with dictionary keys as attributes of Data accessible by dot notation or by key. Once an attribute is created, it can not be changed from outside.
     - **Parmeters**
@@ -82,7 +83,7 @@ class Dict2Data:
         """
         result = {}
         for k,v in self.__dict__.items():
-            if isinstance(v,Dict2Data):
+            if isinstance(v,(self.__class__,Dict2Data)):
                 result.update({k:Dict2Data.to_dict(v)})
             else:
                 result.update({k:v})
@@ -150,6 +151,7 @@ class Dict2Data:
         return self.__dict__[key]
     def items(self):
         return self.__dict__.items()
+
     
 class VasprunData(Dict2Data):
     _req_keys = ('kpath','bands','poscar')
