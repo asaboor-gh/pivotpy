@@ -85,14 +85,19 @@ class SpinDataFrame(pd.DataFrame):
         - masked: Mask data over a constant value in a given column. Useful for plotting fermi level/surface.
         - splot: plot data in a 2D plot.
         - splot3d: plot data in a 3D plot.
+        - join/append/concat/+/+=: Append another SpinDataFrame to this one with same columns and copy metadata.
+        - send_metadata: Copy metadata from this to another SpinDataFrame, some methods may not carry over metadata, useful in that case.
 
-        All other methods are inherited from pd.DataFrame. If you apply some method, then use `wraps` to wrap the result in a SpinDataFrame.
+        All other methods are inherited from pd.DataFrame. If you apply some method that do not pass metadat, then use `send_metadata` to copy metadata to traget SpinDataFrame.
     """
     _metadata = ['_current_attrs','scale_data','sys_info','poscar'] # These are passed after operations to new dataframe.
     def __init__(self, *args, path = None, bands = [0], elements = [[0],], orbs = [[0],], scale_data = False, E_Fermi = None, elim = None, skipk=None, data = None, **kwargs):
         if not (path or args): # It works fine without path given, but it is not recommended.
             path = './vasprun.xml'
         if path or data: # Don't updates args otherwise
+            for k in kwargs.keys(): # Do not let pass parameters to kwargs in this case
+                raise ValueError(f'SpinDataFrame got unexpected keyword argument {k!r}')
+
             spin_data = None # To avoid access before assignment
             if data:
                 spin_data = serializer.SpinData.validated(data)
@@ -125,8 +130,35 @@ class SpinDataFrame(pd.DataFrame):
         "That's main hero of this class. This is called when you apply some method of slice it."
         return SpinDataFrame
 
+    def append(self, other):
+        "Append another SpinDataFrame to this one with same columns."
+        for k in other.columns:
+            if k not in self.columns:
+                raise ValueError(f'Column {k} in other is not not in this DataFrame!')
+        if len(self.columns) != len(other.columns):
+            raise ValueError('Columns are not same!')
+        out_df = super().append(other)
+        self.send_metadata(out_df)
+        return out_df
 
-    def masked(self, column, value, tol = 1e-2, n = None, band = None, method = 'cubic'):
+    def join(self,other):
+        "Same as self.append"
+        return self.append(other)
+
+    def concat(self,other):
+        "Same as self.append"
+        return self.append(other)
+
+    def __add__(self, other):
+        "Same as self.append"
+        return self.append(other)
+
+    def __iadd__(self, other):
+        "Same as self.append, but add in place"
+        self = self.append(other)
+        return self
+
+    def masked(self, column, value, tol = 1e-2, n = None, band = None, method = 'linear'):
         """Mask dataframe with a given value, using a tolerance.
         If n is given, (band should also be given to avoid multivalued interpolation error) data values are interpolated to grid of size (l,m,n) where n is longest side.
         n could be arbirarily large as mask will filter out data outside the tolerance."""
@@ -194,7 +226,7 @@ class SpinDataFrame(pd.DataFrame):
         # Make sure to keep metadata, it doesn't work otherwise.
         self.send_metadata(df)
 
-        return df[np.logical_and((df[column] < value + tol),(df[column] > value-tol))]
+        return df[np.logical_and((df[column] < (value + tol)),(df[column] > (value - tol)))]
 
     def send_metadata(self, target_spin_dataframe):
         "Copy metadata from this to another SpinDataFrame."

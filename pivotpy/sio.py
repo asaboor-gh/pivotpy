@@ -1063,20 +1063,19 @@ def kpoints2bz(bz_data,kpoints,basis = None, primitive=False):
     - **Parameters**
         - bz_data  : Output of get_bz(), make sure use same value of `primitive` there and here.
         - kpoints  : List or array of KPOINTS to transorm into BZ or R3.
-        - basis    : If given, take precedence over bz_data.basis. Useful If kpoints are cartesian.
+        - basis    : If given, returns kpoints in those basis. Useful If kpoints are cartesian and you need to scale those.
         - primitive: Default is False and brings kpoints into regular BZ. If True, returns `to_R3()`.
 
     **Note**: Do not use this function if kpoints are Cartesian, just scale with `2π/a`, where `a` is on second line of POSCAR file.
     """
     bz = bz_data
-    # Shift to 1st octant for both cases of primitive argument.
-    kpoints = kpoints - np.min(kpoints,axis=0)
-    basis = basis if basis is not None else bz_data.basis
-    if primitive:
+    if basis is not None:
+        basis = np.array(basis)
         return to_R3(basis,kpoints)
 
-    # Work ahead if not primitive
-    kpoints = kpoints - 0.5 # For regular BZ only
+    if primitive:
+        return to_R3(bz_data.basis,kpoints)
+
     cent_planes = [np.mean(np.unique(face,axis=0),axis=0) for face in bz.faces]
 
     out_coords = np.empty(np.shape(kpoints)) # To store back
@@ -1095,7 +1094,7 @@ def kpoints2bz(bz_data,kpoints,basis = None, primitive=False):
         for q in product([0,1,-1],[0,1,-1],[0,1,-1]):
             # First translate, then make coords, then feed it back
             #print(q)
-            pos = to_R3(basis,p + np.array(q))
+            pos = to_R3(bz_data.basis, p + np.array(q))
             r = inside(pos,cent_planes)
             if r:
                 #print(p,'-->',r)

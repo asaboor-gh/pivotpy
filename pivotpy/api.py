@@ -312,18 +312,22 @@ class POSCAR:
         If points are cartesian, they are just scaled to fit inside the cell.
         The scale factor is usaully `a` which is on second line of POSCAR.
         """
-        basis = np.identity(3) if self.data.cartesian else self._data.basis
-        return sio.to_R3(basis, points= points)
+        basis = self.data.scale*np.identity(3) if self.data.cartesian else self._data.basis
+        return sio.to_R3(basis, points)
 
     @_sub_doc(sio.kpoints2bz,'- bz_data')
-    def bring_in_bz(self,kpoints, basis=None):
+    def bring_in_bz(self,kpoints, basis = None):
         """Brings kpoints inside already set BZ, (primitive or regular).
-        If basis is not None, it is used to set modify kpoints instead of basis inside bz.
+        If basis is not None, returns kpoints relative to those basis.
         If kpoints are cartesian, you can uses `basis` to scale them in any direction.
         The scale factor is usaully `2π/a` where a is on second line of POSCAR.
         """
         if not self._kpts_info:
             raise RuntimeError('Run `POSCAR.get_kpoints_info(other_path)` first. Only required once!')
+
+        if self._kpts_info.to_dict().get('cartesian',False):
+            if basis is None:
+                basis = (2*np.pi/self.data.scale)*np.identity(3)
 
         if not self._bz:
             raise RuntimeError('No BZ found. Please run `get_bz()` first.')
