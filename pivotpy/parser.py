@@ -391,7 +391,8 @@ def get_structure(xml_data):
     unique_d = {e:range(INDS[i],INDS[i+1]) for i,e in enumerate(Names)}
 
     st_dic={'SYSTEM':SYSTEM,'volume': volume,'basis': np.array(basis),'rec_basis': np.array(rec_basis), 'scale': 1.0,
-            'cartesian': _is_poscar_cartesian(other_path=xml_data.path),'positions': np.array(positions),'labels':labels,'unique': unique_d}
+            'extra_info': {'comment':'Exported from vasprun.xml','cartesian':False,'scale':1},
+            'positions': np.array(positions),'labels':labels,'unique': unique_d}
     return serializer.PoscarData(st_dic)
 
 def export_vasprun(path = None, skipk = None, elim = [], kseg_inds = [], shift_kpath = 0, try_pwsh = True):

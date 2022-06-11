@@ -107,20 +107,6 @@ class Dict2Data:
         """Creates a namedtuple."""
         return dict2tuple('Data',self.to_dict())
 
-    def write(self,outfile=None):
-        """ If data has an attribute text_plain, writes to file or stdout.
-        - **Parameters**
-            - outfile : Default is None and returns string. If given, writes to file.
-        """
-        if hasattr(self,'text_plain') and self.text_plain:
-            if outfile is None:
-                print(self.text_plain)
-            else:
-                with open(outfile,'w') as f:
-                    f.write(self.text_plain)
-        else:
-            raise AttributeError("No 'text_plain' attribute found.")
-
     def __repr__(self):
         items= []
         for k,v in self.__dict__.items():
@@ -170,39 +156,12 @@ class SpinData(Dict2Data):
         return super().__repr__().replace("Data","SpinData",1)
     
 class PoscarData(Dict2Data):
-    _req_keys = ('basis','rec_basis','cartesian')
+    _req_keys = ('basis','rec_basis','extra_info')
     def __init__(self,d):
-        if not isinstance(d,dict): # It could be other data type.
-            try:
-                d = d.to_dict()
-            except:
-                raise TypeError(f"{self.__class__} expects dict with valid keys or PoscarData got {d}")
-        fixed_dict = self._add_text_plain(d)
-        super().__init__(fixed_dict)
+        super().__init__(d)
     
     def __repr__(self):
         return super().__repr__().replace("Data","PoscarData",1)
-    
-    def _add_text_plain(self, poscar_dict):
-        "Returns poscar_dict with additional attribute `text_plain` after each operation"
-        for key in self.__class__._req_keys:
-            if key not in poscar_dict:
-                raise KeyError(f"Invalid input for PoscarData")
-
-        comment = poscar_dict.get('text_plain',None) or '-- # Exported using pivotpy\n '
-        comment = comment.splitlines()[0].split('#')
-        comment = comment[1].strip() if comment[1:] else ''
-        system = poscar_dict['SYSTEM'].split('#')[0].strip()
-        scale = np.linalg.norm(poscar_dict['basis'][0])
-        unique_d = poscar_dict['unique']
-        out_str = f"{system} # {comment}\n  {scale:<20.14f}\n"
-        out_str += '\n'.join(["{:>22.16f}{:>22.16f}{:>22.16f}".format(*a) for a in poscar_dict['basis']/scale])
-        out_str += "\n  " + '\t'.join(unique_d.keys())
-        out_str += "\n  " + '\t'.join([str(len(v)) for v in unique_d.values()])
-        out_str += "\nCartesian\n" if poscar_dict.get('cartesian',False) else "\nDirect\n"
-        out_str += '\n'.join("{:>21.16f}{:>21.16f}{:>21.16f}".format(*a) for a in poscar_dict['positions'])
-        poscar_dict.update({'text_plain':out_str}) 
-        return poscar_dict
 
 class LocpotData(Dict2Data):
     _req_keys = ('ElemName','ElemIndex','SYSTEM')
