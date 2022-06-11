@@ -538,7 +538,6 @@ class VasprunApp:
     va = pp.VasprunApp()
     va.cache_data = False #Turn off cache globally.
     va.evr_kws['elim'] = [-2,2] #Only Bands in this range will be included. Global accross project, can change anytime.
-    va.evr_kws['try_pwsh'] = False #Defult is True. Tries to load Powershell exported data.
     va.ibands_kws['mode'] = 'bands' #Change graph mode from 'markers' to 'bands'. Setting it to 'lines' is not recommended in live graph, it could hang all UI.
     va.show() #Displays App and do work!
     va.theme_colors = pp.dark_colors #Set theme to dark externally and edit dictionary values to make your own theme
@@ -577,7 +576,7 @@ class VasprunApp:
         self.idos_kws   = dict(colormap='RGB',tdos_color=(0.5, 0.95, 0),linewidth=2,fill_area=True,
                                spin='both',interp_nk={},title=None)
         self.ibands_kws = dict(mode='markers',skipk=None,max_width=6,title=None,interp_nk={})
-        self.evr_kws = dict(skipk=None,elim=[],try_pwsh = True)
+        self.evr_kws = dict(skipk=None,elim=[])
         self.cache_data = True
 
         l_btn = ipw.Layout(width='max-content')
@@ -722,7 +721,11 @@ class VasprunApp:
 
     @output.capture()
     def __build(self):
-        intro_html = ipw.HTML("<h2>Pivotpy</h2><p>Filter files here and switch tab to Graphs. You can create cache ahead of time to load quickly while working. If anything does not seem to work, see the error in STD(out/err) tab. For large files, do `Export-VaspRun` in Powershell to access fast. <a href=https://massgh.github.io/pivotpy/Widgets.html#VasprunApp target='_blank'>See More</a></p><marquee style='color:blue'>Pivotpy GUI based on ipywidgets!</marquee>")
+        intro_html = ipw.HTML(("<h2>Pivotpy</h2><p>Filter files here and switch tab to Graphs. "
+                               "You can create cache ahead of time to load quickly while working. "
+                               "If anything does not seem to work, see the error in STD(out/err) tab. "
+                               "<a href=https://massgh.github.io/pivotpy/Widgets.html#VasprunApp target='_blank'> See More</a> "
+                               "</p><marquee style='color:blue'>Pivotpy GUI based on ipywidgets!</marquee>"))
         header_box = HBox([intro_html,
                            Label('Theme:',layout=Layout(width='80px')),
                            self.dds['theme']

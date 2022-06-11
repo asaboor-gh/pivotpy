@@ -116,7 +116,6 @@ class SpinDataFrame(pd.DataFrame):
                 self.sys_info = spin_data.sys_info
                 # Path below is used to get kpoints info
                 self.poscar = api.POSCAR(path = path, data = spin_data.poscar)
-                self.poscar._kpts_info = spin_data.sys_info.kpts_info
                 self._current_attrs = {'cmap':'viridis'} # To store attributes of current plot for use in colorbar.
 
         else: # This part is only for operations on dataframe.
@@ -226,7 +225,10 @@ class SpinDataFrame(pd.DataFrame):
         # Make sure to keep metadata, it doesn't work otherwise.
         self.send_metadata(df)
 
-        return df[np.logical_and((df[column] < (value + tol)),(df[column] > (value - tol)))]
+        # Sort based on distance, so arrows are drawn in correct order
+        out_df = df[np.logical_and((df[column] < (value + tol)),(df[column] > (value - tol)))]
+        return out_df.sort_values(by=['kx', 'ky', 'kz'])
+
 
     def send_metadata(self, target_spin_dataframe):
         "Copy metadata from this to another SpinDataFrame."
@@ -246,12 +248,12 @@ class SpinDataFrame(pd.DataFrame):
 
         return np.array(arrows_data).T
 
-    def _collect_kxyz(self, *xyz, basis = None):
+    def _collect_kxyz(self, *xyz, shift = 0):
         "Return tuple(kxyz, k_order)"
         _kxyz = ['kx','ky','kz']
         kij = [_kxyz.index(a) for a in xyz if a in _kxyz]
         kxyz = self[['kx','ky','kz']].to_numpy()
-        kxyz = self.poscar.bring_in_bz(kxyz, basis = basis)
+        kxyz = self.poscar.bring_in_bz(kxyz, sys_info = self.sys_info, shift = shift)
 
         # Handle third axis as energy as well
         if len(xyz) == 3 and xyz[2].startswith('e'):
@@ -265,7 +267,7 @@ class SpinDataFrame(pd.DataFrame):
             if arg not in self.columns:
                 raise ValueError(f'{arg!r} is not a column in the dataframe')
 
-    def splot(self,*args, arrows = [], every=1, norm = 1, marker='H', ax = None, quiver_kws = {}, basis = None, **kwargs):
+    def splot(self,*args, arrows = [], every=1, norm = 1, marker='H', ax = None, quiver_kws = {}, shift = 0, **kwargs):
         """Plot energy in 2D with/without arrows.
         - **Parameters**:
             - *args: 3 or 4 names of columns, representing [X,Y,Energy,[Anything]], from given args, last one is colormapped. If kwargs has color, that takes precedence.
@@ -275,7 +277,8 @@ class SpinDataFrame(pd.DataFrame):
             - marker: marker to use for scatter, use s as another argument to change size.
             - ax: matplotlib axes to plot on (defaults to auto create one).
             - quiver_kws: these are passed to matplotlib.pyplot.quiver.
-            - basis:If given, used to transform kpoints into BZ overriding default behavior.
+            - shift: A number or a list of three numbers that will be added to kpoints before any other operation.
+
         **kwargs are passed to matplotlib.pyplot.scatter.
 
         - **Returns**:
@@ -289,7 +292,7 @@ class SpinDataFrame(pd.DataFrame):
             raise ValueError('splot takes 3 or 4 positional arguments [X,Y,E,[Anything]], last one is colormapped if kwargs don\'t have color.')
 
         self._validate_columns(*args)
-        kxyz, kij = self._collect_kxyz(*args[:2], basis = basis)
+        kxyz, kij = self._collect_kxyz(*args[:2], shift = shift)
         ax = ax or api.get_axes()
         minmax_c = [0,1]
         cmap = kwargs.get('cmap',self._current_attrs['cmap'])
@@ -320,7 +323,7 @@ class SpinDataFrame(pd.DataFrame):
         self._current_attrs = {'ax':ax,'minmax_c':minmax_c,'cmap':cmap}
         return ax
 
-    def splot3d(self,*args, arrows = [], every=1,norm = 1, marker='H', ax = None, quiver_kws = {'arrowstyle':'-|>','size':1}, basis = None, **kwargs):
+    def splot3d(self,*args, arrows = [], every=1,norm = 1, marker='H', ax = None, quiver_kws = {'arrowstyle':'-|>','size':1}, shift = 0, **kwargs):
         """Plot energy in 3D with/without arrows.
         - **Parameters**:
             - *args: 3, 4 or 5 names of columns, representing [X,Y,[Z or Energy],Energy, [Anything]], out of given args, last one is color mapped. if kwargs has color, that takes precedence.
@@ -330,7 +333,8 @@ class SpinDataFrame(pd.DataFrame):
             - marker: marker to use for scatter, use s as another argument to change size.
             - ax: matplotlib 3d axes to plot on (defaults to auto create one).
             - quiver_kws: these are passed to pivotpy.fancy_quiver3d.
-            - basis:If given, used to transform kpoints into BZ overriding default behavior.
+            - shift: A number or a list of three numbers that will be added to kpoints before any other operation.
+
         **kwargs are passed to matplotlib.pyplot.scatter.
 
         - **Returns**:
@@ -347,7 +351,7 @@ class SpinDataFrame(pd.DataFrame):
             raise ValueError('Z axis must be in [kx,ky,kz, energy]!')
 
         self._validate_columns(*args)
-        kxyz, kij = self._collect_kxyz(*args[:3], basis = basis)
+        kxyz, kij = self._collect_kxyz(*args[:3], shift = shift)
         ax = ax or api.get_axes(axes_3d=True)
         minmax_c = [0,1]
         cmap = kwargs.get('cmap',self._current_attrs['cmap'])

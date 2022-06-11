@@ -61,7 +61,6 @@ for v in dir(vr):
         print('vr.'+v)
 ```
 
-    Loading from PowerShell Exported Data...
     Try Follwing Methods:
     vr.data
     vr.elim
@@ -80,6 +79,26 @@ for v in dir(vr):
     vr.to_json
     vr.to_pickle
     
+
+```python
+import matplotlib.pyplot as plt 
+ax1,ax2 = pp.get_axes((6,3),ncols=2)
+ax1.plot(vr.data.scsteps['e_fr_energy'],lw=3, label = 'e_fr_energy',color='k')
+ax1.plot(vr.data.scsteps['e_0_energy'],lw=0.7,ls='dashed',label='e_0_energy',color='skyblue')
+ax1.set_ylabel('Energy (eV)')
+ax1.set_xlabel('Iteration Number')
+ax1.legend()
+
+vr.poscar.splot_lat(ax=ax2,plane='xy')
+X, Y, Z = pp.sio.to_R3(vr.data.poscar.basis, vr.data.poscar.positions).T
+q = ax2.quiver(X,Y,*vr.data.force[:,:2].T,scale=25,color='r')
+ax2.quiverkey(q, 0.7, 1, 7, 'Force (arb. units)')
+ax2.add_legend()
+```
+
+
+![svg](docs/images/output_8_0.svg)
+
 
 ## Matplotlib's static plots
 - Add anything from legend,colorbar, colorwheel. In below figure, all three are shown.
@@ -108,7 +127,7 @@ pp._show()
     
 
 
-![svg](docs/images/output_9_1.svg)
+![svg](docs/images/output_10_1.svg)
 
 
 ## Interactive plots using plotly
@@ -147,7 +166,7 @@ import pivotpy as pp
 plt.style.use('bmh')
 vr1=pp.Vasprun('E:/Research/graphene_example/ISPIN_1/bands/vasprun.xml')
 shift_kpath=vr1.data.kpath[-1] # Add last point from first export in second one.
-vr2=pp.Vasprun('E:/Research/graphene_example/ISPIN_2/bands/vasprun.xml',shift_kpath=shift_kpath,try_pwsh=False)
+vr2=pp.Vasprun('E:/Research/graphene_example/ISPIN_2/bands/vasprun.xml',shift_kpath=shift_kpath)
 last_k=vr2.data.kpath[-1]
 axs=pp.get_axes(figsize=(5,2.6))
 K_all=[*vr1.data.kpath,*vr2.data.kpath] # Merge kpath for ticks
@@ -159,11 +178,8 @@ axs.modify_axes(xlim=[0,last_k],ylim=[-10,10],**ti_cks)
 pp._show()
 ```
 
-    Loading from PowerShell Exported Data...
-    
 
-
-![svg](docs/images/output_14_1.svg)
+![svg](docs/images/output_15_0.svg)
 
 
 ## Interpolation 
@@ -184,7 +200,7 @@ pp.splots.add_text(ax=plt.gca(),txts='Graphene')
 ```
 
 
-![svg](docs/images/output_16_0.svg)
+![svg](docs/images/output_17_0.svg)
 
 
 ## LOCPOT,CHG Visualization
@@ -204,11 +220,11 @@ pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
     [32;1m                                                   am[0m
     [32;1m                                                   e[0m
     [32;1m ------    -----      -----     ------      --  -- --[0m
-    22     6.96       3.12       0.56    3496   1 A…
-    6     1.48       4.68       0.00    6864   0 A…
-    19     8.99      16.89       0.00    4816   0 A…
-    25    26.13      28.91      27.00    3844   1 A…
-    9     1.86       6.16       0.05   10072   1 A…
+    22     6.82       3.70       0.36    8072   1 A…
+    6     1.30       5.63       0.00    7996   0 A…
+    17     6.59      18.21       0.00    5992   0 A…
+    28    31.50      51.71       2.00   12768   1 A…
+    9     1.64       6.58       0.00    5732   0 a…
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -252,7 +268,7 @@ Get-ChildItem 'E:\Research\graphene_example\'
     Mode                 LastWriteTime         Length Nam
                                                       e  
     ----                 -------------         ------ ---
-    da----        11/28/2021   8:04 PM                ISP
+    da----          6/9/2022  10:33 AM                ISP
                                                       IN_
                                                       1  
     da----          5/9/2020   1:05 PM                ISP

@@ -5,12 +5,10 @@ from collections import namedtuple
 from subprocess import Popen, PIPE
 from contextlib import contextmanager
 
-from importlib.machinery import SourceFileLoader
 
 import numpy as np
 from scipy.interpolate import make_interp_spline
 
-from . import serializer
 
 def get_file_size(path):
     """Return file size"""
@@ -106,143 +104,6 @@ def ps2std(ps_command='Get-ChildItem', exec_type='-Command', path_to_ps='powersh
         print(item)
     return None
 
-def load_ps_exported(path= './vasprun.xml',kseg_inds =[], shift_kpath = 0, path_to_ps='pwsh', skipk = None, max_filled = 10, max_empty = 10, keep_files = True):
-    """
-    - Returns a full dictionary of all objects from `vasprun.xml` file exported using powershell.
-    - **Parameters**
-        - path       : Path to `vasprun.xml` file. Default is `'./vasprun.xml'`.
-        - skipk      : Default is None. Automatically detects kpoints to skip.
-        - path_to_ps : Path to `powershell.exe`. Automatically picks on Windows and Linux if added to PATH.
-        - kseg_inds : List of indices of kpoints where path is broken.
-        - shift_kpath: Default 0. Can be used to merge multiple calculations side by side.
-        - keep_files : Could be use to clean exported text files. Default is True.
-        - max_filled : Number of filled bands below and including VBM. Default is 10.
-        - max_empty  : Number of empty bands above VBM. Default is 10.
-    
-    **Returns**: `pivotpy.serializer.VasprunData` object.
-    """
-    from . import parser # This should be inside function, not outside, otherwise circular import.
-    that_loc, file_name = os.path.split(os.path.abspath(path)) # abspath is important to split.
-    with set_dir(that_loc):
-        # Goes there and work
-        i = 0
-        required_files = ['Bands.txt','tDOS.txt','pDOS.txt','Projection.txt','SysInfo.py']
-        for _file in required_files:
-            if os.path.isfile(_file):
-               i = i + 1
-        if i < 5:
-            if skipk != None:
-                ps2std(path_to_ps=path_to_ps,ps_command='Import-Module Vasp2Visual; Export-VR -InputFile {} -MaxFilled {} -MaxEmpty {} -SkipK {}'.format(path,max_filled,max_empty,skipk))
-            else:
-                ps2std(path_to_ps=path_to_ps,ps_command='Import-Module Vasp2Visual; Export-VR -InputFile {} -MaxFilled {} -MaxEmpty {}'.format(path,max_filled,max_empty))
-
-        # get info from same directory
-        iscartesian = parser._is_poscar_cartesian()
-        kpoints_info = parser.get_kpoints_info()
-
-        # Enable loading SysInfo.py file as source.
-        _vars = SourceFileLoader("SysInfo", "./SysInfo.py").load_module()
-
-        SYSTEM            = _vars.SYSTEM
-        NKPTS             = _vars.NKPTS
-        NBANDS            = _vars.NBANDS
-        NFILLED           = _vars.NFILLED
-        TypeION           = _vars.TypeION
-        NION              = _vars.NION
-        NELECT            = _vars.NELECT
-        nField_Projection = _vars.nField_Projection
-        E_Fermi           = _vars.E_Fermi
-        ISPIN             = _vars.ISPIN
-        ElemIndex         = _vars.ElemIndex
-        ElemName          = _vars.ElemName
-        poscar            = {'SYSTEM': SYSTEM,
-                            'volume':_vars.volume,
-                            'basis' : np.array(_vars.basis),
-                            'rec_basis': np.array(_vars.rec_basis),
-                            'cartesian':iscartesian,
-                            'scale': 1.0,
-                            'positions': np.array(_vars.positions)
-                            }
-        fields            = _vars.fields
-        incar             = _vars.INCAR
-
-        # Elements Labels
-        elem_labels = []
-        for i, name in enumerate(ElemName):
-            for ind in range(ElemIndex[i],ElemIndex[i+1]):
-                elem_labels.append(f"{name} {str(ind - ElemIndex[i] + 1)}")
-        poscar.update({'labels': elem_labels})
-        # Unique Elements Ranges
-        unique_d = {}
-        for i,e in enumerate(ElemName):
-            unique_d.update({e:range(ElemIndex[i],ElemIndex[i+1])})
-        poscar.update({'unique': unique_d})
-
-        # Load Data
-        bands= np.loadtxt('Bands.txt').reshape((-1,NBANDS+4)) #Must be read in 2D even if one row only.
-        start = int(open('Bands.txt').readline().split()[4][1:])
-        pro_bands= np.loadtxt('Projection.txt').reshape((-1,NBANDS*nField_Projection))
-        pro_dos = np.loadtxt('pDOS.txt')
-        dos= np.loadtxt('tDOS.txt')
-
-        # Keep or delete only if python generates files (i < 5 case.)
-        if(keep_files==False and i==5):
-            for file in required_files:
-                os.remove(file)
-        # Returns back
-
-    # Work now!
-    sys_info = {'SYSTEM': SYSTEM,'NION': NION,'NELECT':NELECT,'TypeION': TypeION,'ElemName': ElemName,
-                'E_Fermi': E_Fermi,'fields':fields, 'incar': incar,'ElemIndex': ElemIndex,'ISPIN': ISPIN,
-                'kpts_info': kpoints_info}
-    dim_info = {'kpoints': '(NKPTS,3)','kpath': '(NKPTS,1)','bands': '⇅(NKPTS,NBANDS)','dos': '⇅(grid_size,3)',
-                'pro_dos': '⇅(NION,grid_size,en+pro_fields)','pro_bands': '⇅(NION,NKPTS,NBANDS,pro_fields)'}
-
-    bands_dic,tdos_dic,pdos_dic,pro_dic,kpath={},{},{},{},[]
-    if(ISPIN==1):
-        kpath   = bands[:,3]
-        kpoints = bands[:,:3]
-        evals   = bands[:,4:]
-        bands_dic = {'E_Fermi': E_Fermi, 'ISPIN': ISPIN, 'NBANDS': NBANDS, 'evals': evals, 'indices': range(start,start+NBANDS)}
-        tdos_dic  = {'E_Fermi': E_Fermi, 'ISPIN': ISPIN,'tdos': dos}
-        pdos      = pro_dos.reshape(NION,-1,nField_Projection+1)
-        pdos_dic  = {'labels': fields,'pros': pdos}
-        pros      = pro_bands.reshape(NION,NKPTS,NBANDS,-1)
-        pro_dic   = {'labels': fields,'pros': pros}
-    if(ISPIN==2):
-        # Bands
-        kpath   = bands[:NKPTS,3]
-        kpoints = bands[:NKPTS,:3]
-        SpinUp  = bands[:NKPTS,4:]
-        SpinDown= bands[NKPTS:,4:]
-        evals   = {'SpinUp':SpinUp,'SpinDown': SpinDown}
-        bands_dic = {'E_Fermi': E_Fermi, 'ISPIN': ISPIN, 'NBANDS': NBANDS, 'evals': evals,'indices': range(start,start+NBANDS)}
-        # tDOS
-        dlen    = int(np.shape(dos)[0]/2)
-        SpinUp  = dos[:dlen,:]
-        SpinDown= dos[dlen:,:]
-        tdos    = {'SpinUp':SpinUp,'SpinDown': SpinDown}
-        tdos_dic= {'E_Fermi': E_Fermi, 'ISPIN': ISPIN,'tdos': tdos}
-
-        # pDOS
-        plen    = int(np.shape(pro_dos)[0]/2)
-        SpinUp  = pro_dos[:plen,:].reshape(NION,-1,nField_Projection+1)
-        SpinDown= pro_dos[plen:,:].reshape(NION,-1,nField_Projection+1)
-        pdos    = {'SpinUp':SpinUp,'SpinDown': SpinDown}
-        pdos_dic= {'labels': fields,'pros': pdos}
-
-        # projections
-        pblen  = int(np.shape(pro_bands)[0]/2)
-        SpinUp  = pro_bands[:pblen,:].reshape(NION,NKPTS,NBANDS,-1)
-        SpinDown= pro_bands[pblen:,:].reshape(NION,NKPTS,NBANDS,-1)
-        pros    = {'SpinUp': SpinUp,'SpinDown': SpinDown}
-        pro_dic = {'labels': fields,'pros': pros}
-    # If broken path, then join points.
-    kpath = parser.join_ksegments(kpath,kseg_inds)
-    kpath=[k+shift_kpath for k in kpath.copy()] # Shift kpath
-    full_dic = {'sys_info': sys_info,'dim_info': dim_info,'kpoints': kpoints,'kpath':kpath,               'bands':bands_dic,'tdos':tdos_dic,'pro_bands': pro_dic ,'pro_dos': pdos_dic,
-               'poscar':serializer.PoscarData(poscar)}
-    return serializer.VasprunData(full_dic)
 
 def get_child_items(path = os.getcwd(),depth=None,recursive=True,include=None,exclude=None,filesOnly=False,dirsOnly= False):
     """

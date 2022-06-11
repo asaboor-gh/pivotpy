@@ -9,6 +9,7 @@ import xml.etree.ElementTree as ET
 import numpy as np
 
 from . import utils, serializer
+#from pivotpy import utils, serializer
 
 
 def dict2tuple(name,d):
@@ -44,7 +45,7 @@ def read_asxml(path = None):
     Memory Consumption Warning!
     ---------------------------
     File: {} is large ({}). It may consume a lot of memory (generally 3 times the file size).
-        An alternative way is to parse vasprun.xml is by using `Vasp2Visual` module in Powershell by command `pivotpy.utils.load_ps_exported('path/to/vasprun.xml'), which runs underlying powershell functions to load data whith efficient memory managment. It works on Windows/Linux/MacOS if you have powershell core and Vasp2Visual installed on it.
+        An alternative way is to use `pivotpy.split_vasprun()` to split the file into multiple files and then read resulting '_vasprun.xml' file.
     """.format(path,fsize)
     if 'MB' in fsize and value > 200:
         print(utils.color.y(textwrap.dedent(print_str)))
@@ -82,32 +83,74 @@ def get_ispin(xml_data):
     for item in xml_data.root.iter('i'):
         if(item.attrib=={'type': 'int', 'name': 'ISPIN'}):
             return int(item.text)
+        
+def get_force(xml_data):
+    "Reads force on each ion from vasprun.xml"
+    forces = []
+    for node in xml_data.root.iter('varray'):
+        if 'name' in node.attrib and node.attrib['name'] == 'forces':
+            for subnode in node.iter('v'):
+                forces = [*forces, *subnode.text.split()]
+    
+    forces = np.fromiter(forces,dtype=float).reshape((-1,3))
+    return forces
 
-def get_kpoints_info(other_path = './vasprun.xml'):
-    "Read KPOINTS file header and Cartesian/Reciprocal information based on other_path like vasprun.xml."
-    base_dir = os.path.split(os.path.abspath(other_path))[0]
-    path = os.path.join(base_dir,'KPOINTS')
+def get_scsteps(xml_data):
+    "Reads scsteps energies from vasprun.xml"
+    steps = []
+    for node in xml_data.root.iter('scstep'):
+        for e in node.iter('energy'):
+            _d = {}
+            for i in e.iter('i'):
+                if '_en' in i.attrib['name']:
+                    _d[i.attrib['name']] = float(i.text)
+            steps.append(_d)
+    if steps:
+        arrays = {k:[] for k in steps[0].keys()}
+        for step in steps:
+            for k,v in step.items():
+                arrays[k].append(v)
+                
+        return {k:np.array(v) for k,v in arrays.items()}
+
+
+def get_space_info(xml_data):
+    base_dir = os.path.split(os.path.abspath(xml_data.path))[0]
+    path = os.path.join(base_dir,'OUTCAR')
     if not os.path.isfile(path):
-        raise FileNotFoundError(f"File {path!r} not found. KPOINTS file should be in same directory as of {other_path!r}.")
-    line = islice2array(path,start=2,nlines=1,exclude=None,raw=True).strip()
-    cart = True if line[0] in 'cCkK' else False
-    header = islice2array(path,start=0,nlines=1,exclude=None,raw=True).strip()
-    out_dict = {'cartesian':cart,'header':header}
-    if 'GRID-SHAPE' in header:
-        segs = header.split('GRID-SHAPE')[1].split(']')[0].split('[')[1].split(',')
-        out_dict['grid_shape'] = tuple([int(s) for s in segs if s])
-
-    if 'HSK-INDS' in header:
-        out_dict['ticks'] = {}
-        hsk = header.split('HSK-INDS')[1].split(']')[0].split('[')[1].split(',')
-        out_dict['ticks']['ktick_inds'] = [int(h) for h in hsk if h]
-        if 'LABELS' in header:
-            labs = header.split('LABELS')[1].split(']')[0].split('[')[1].split(',')
-            out_dict['ticks']['ktick_vals'] = [l.replace("'","").replace('"','').strip() for l in labs if l]
-        if 'SEG-INDS' in header:
-            segs = header.split('SEG-INDS')[1].split(']')[0].split('[')[1].split(',')
-            out_dict['ticks']['kseg_inds'] = [int(s) for s in segs if s]
-    return serializer.Dict2Data(out_dict)
+        raise FileNotFoundError(f"File {path!r} not found. OUTCAR file should be in same directory as of {xml_data.path!r}.")
+    
+    info_dict = {}
+    pos_line = islice2array(path,include = '^positions|^\s+positions',raw=True)
+    info_dict['cartesian_positions'] = True if 'cartesian' in pos_line.lower() else False
+    
+    k_line = islice2array(path,include = '^k-points|^\s+k-points',raw=True).splitlines()[0]
+    info_dict['cartesian_kpoints'] = True if 'cartesian' in k_line.lower() else False
+    
+    with open(path, 'r') as f:
+        text = f.read()
+        two_pi, reciprocal = re.findall(r'2pi/SCALE.*position',text, flags = re.DOTALL)[0].split('k-points')
+        reciprocal = reciprocal.split('position')[0].strip().splitlines()[1:]
+        two_pi = two_pi.strip().splitlines()[1:]
+    
+    k_rec = np.array([[float(v) for v in r.strip().split()[:3]] for r in reciprocal])
+    k_scale = np.array([[float(v) for v in r.strip().split()[:3]] for r in two_pi])
+    
+    for final in xml_data.root.iter('structure'):
+        if final.attrib.get('name','') == 'finalpos':
+            for arr in final.iter('varray'):
+                if arr.attrib.get('name','') == 'rec_basis':
+                    rec_basis = np.array([[float(a) for a in v.text.split()] for v in arr.iter('v')])
+                    k_coords = k_rec.dot(rec_basis)
+                    ks_norm = np.linalg.norm(k_scale,axis=1)
+                    kc_norm = np.linalg.norm(k_coords,axis=1)
+                    where = (kc_norm > 1e-6) # Some kpoints may yield zero norm
+                    info_dict['scale'] = (ks_norm[where]/kc_norm[where]).mean().round(12).astype(float)
+    
+    cartesian_kpath = np.cumsum(np.linalg.norm(k_scale[1:]-k_scale[:-1],axis=1))
+    info_dict['cartesian_kpath'] = np.insert(cartesian_kpath,0,0)
+    return serializer.Dict2Data(info_dict)
+    
 
 def get_summary(xml_data):
     for i_car in xml_data.root.iter('incar'):
@@ -131,10 +174,12 @@ def get_summary(xml_data):
     for i in xml_data.root.iter('i'): #efermi for condition required.
         if(i.attrib=={'name': 'efermi'}):
             efermi=float(i.text)
+    
     #Writing information to a dictionary
+    space_info = get_space_info(xml_data=xml_data)
     info_dic={'SYSTEM':incar['SYSTEM'],'NION':n_ions,'NELECT':NELECT,'TypeION':type_ions,
               'ElemName':elem_name,'ElemIndex':elem_index,'E_Fermi': efermi,'ISPIN':ISPIN,
-              'fields':dos_fields,'incar':incar,'kpts_info':get_kpoints_info(other_path = xml_data.path)}
+              'fields':dos_fields,'incar':incar, 'space_info':space_info}
     return serializer.Dict2Data(info_dic)
 
 def join_ksegments(kpath,kseg_inds=[]):
@@ -151,8 +196,8 @@ def get_kpts(xml_data, skipk = 0,kseg_inds=[]):
             kpoints=[[float(item) for item in arr.text.split()] for arr in kpts.iter('v')]
     kpoints=np.array(kpoints[skipk:])
     #KPath solved.
-    kpath=[0];pts=kpoints
-    [kpath.append(np.round(np.sqrt(np.sum((pt1-pt2)**2))+kpath[-1],6)) for pt1,pt2 in zip(pts[:-1],pts[1:])]
+    kpath = get_space_info(xml_data).cartesian_kpath[skipk:]
+    kpath = kpath - kpath[0] # Shift to start at 0
     # If broken path, then join points.
     kpath = join_ksegments(kpath,kseg_inds)
     return serializer.Dict2Data({'NKPTS':len(kpoints),'kpoints':kpoints,'kpath':kpath})
@@ -242,7 +287,7 @@ def get_bands_pro_set(xml_data, spin_set=1, skipk=0, bands_range=None, set_path=
         - skipk       : Number of initil kpoints to skip (Default 0).
         - spin_set    : Spin set to get, default is 1.
         - bands_range : If elim used in `get_evals`,that will return bands_range to use here. Note that range(0,2) will give 2 bands 0,1 but tuple (0,2) will give 3 bands 0,1,2.
-        - set_path     : path/to/_set[1,2,3,4].txt, works if `split_vasprun` is used before.
+        - set_path    : path/to/_set[1,2,3,4].txt, works if `split_vasprun` is used before.
     - **Returns**
         - Data     : pivotpy.Dict2Data with attibutes of bands projections and related parameters.
     """
@@ -355,15 +400,6 @@ def get_dos_pro_set(xml_data,spin_set=1,dos_range=None):
     final_data=np.array(dos_pro) #shape(NION,e_grid,pro_fields)
     return serializer.Dict2Data({'labels':dos_fields,'pros':final_data})
 
-def _is_poscar_cartesian(other_path = './vaprun.xml'):
-    base_dir = os.path.split(os.path.abspath(other_path))[0]
-    _path = os.path.join(base_dir, 'POSCAR')
-    if not os.path.isfile(_path):
-        raise FileNotFoundError(f"File {_path!r} not found. POSCAR file is required from same directory as of {other_path!r}.")
-    lines = islice2array(_path,start=7,nlines=2,exclude=None,raw=True).splitlines()
-    lines = [l.strip() for l in lines] # remove whitespace or tabs
-    cart =  True if ((lines[0][0] in 'cCkK') or (lines[1][0] in 'cCkK')) else False
-    return cart
 
 def get_structure(xml_data):
     SYSTEM = [i.text for i in xml_data.root.iter('i') if i.attrib['name'] == 'SYSTEM'][0]
@@ -389,13 +425,15 @@ def get_structure(xml_data):
     INDS = np.cumsum([0,*_inds]).astype(int)
     Names = list(np.unique(elems[:-types]))
     unique_d = {e:range(INDS[i],INDS[i+1]) for i,e in enumerate(Names)}
-
+    space_info = get_space_info(xml_data)
+    scale = space_info.scale
+    cartesian = space_info.cartesian_positions
     st_dic={'SYSTEM':SYSTEM,'volume': volume,'basis': np.array(basis),'rec_basis': np.array(rec_basis), 'scale': 1.0,
-            'extra_info': {'comment':'Exported from vasprun.xml','cartesian':False,'scale':1},
+            'extra_info': {'comment':'Exported from vasprun.xml','cartesian':cartesian,'scale':scale},
             'positions': np.array(positions),'labels':labels,'unique': unique_d}
     return serializer.PoscarData(st_dic)
 
-def export_vasprun(path = None, skipk = None, elim = [], kseg_inds = [], shift_kpath = 0, try_pwsh = True):
+def export_vasprun(path = None, skipk = None, elim = [], kseg_inds = [], shift_kpath = 0, dos_only = False):
     """
     - Returns a full dictionary of all objects from `vasprun.xml` file. It first try to load the data exported by powershell's `Export-VR(Vasprun)`, which is very fast for large files. It is recommended to export large files in powershell first.
     - **Parameters**
@@ -404,24 +442,10 @@ def export_vasprun(path = None, skipk = None, elim = [], kseg_inds = [], shift_k
         - elim       : List [min,max] of energy interval. Default is [], covers all bands.
         - kseg_inds  : List of indices of kpoints where path is broken.
         - shift_kpath: Default 0. Can be used to merge multiple calculations on single axes side by side.
-        - try_pwsh   : Default is True and tries to load data exported by `Vasp2Visual` in Powershell.
     
     **Returns**: `pivotpy.serializer.VasprunData` object.
     """
-    # Try to get files if exported data in PowerShell.
-    if try_pwsh:
-        req_files = ['Bands.txt','tDOS.txt','pDOS.txt','Projection.txt','SysInfo.py']
-        if path and os.path.isfile(path):
-            req_files = [os.path.join(
-                os.path.dirname(os.path.abspath(path)),f) for f in req_files]
-        logic = [os.path.isfile(f) for f in req_files]
-        if not False in logic:
-            print('Loading from PowerShell Exported Data...')
-            return utils.load_ps_exported(path=(path if path else './vasprun.xml'))
-
-    # Proceed if not files from PWSH
-    if path==None:
-        path='./vasprun.xml'
+    path = path or './vasprun.xml'
 
     xml_data = read_asxml(path=path)
 
@@ -444,12 +468,17 @@ def export_vasprun(path = None, skipk = None, elim = [], kseg_inds = [], shift_k
         bands_range = eigenvals.indices #indices in range form.
         grid_range=tot_dos.grid_range
     else:
-        bands_range=None #projection function will read itself.
-        grid_range=None
-    if(info_dic.ISPIN==1):
+        bands_range = None #projection function will read itself.
+        grid_range = None
+        
+    if dos_only:
+        bands_range = range(1) # Just one band
+        skipk = len(kpts.kpath) + skipk - 2 # Just Single kpoint
+        
+    if info_dic.ISPIN == 1:
         pro_bands = get_bands_pro_set(xml_data=xml_data,spin_set=1,skipk=skipk,bands_range=bands_range,set_path=set_paths[0])
         pro_dos = get_dos_pro_set(xml_data=xml_data,spin_set=1,dos_range=grid_range)
-    if(info_dic.ISPIN==2):
+    if info_dic.ISPIN == 2:
         pro_1 = get_bands_pro_set(xml_data=xml_data,spin_set=1,skipk=skipk,bands_range=bands_range,set_path=set_paths[0])
         pro_2 = get_bands_pro_set(xml_data=xml_data,spin_set=2,skipk=skipk,bands_range=bands_range,set_path=set_paths[1])
         pros={'SpinUp': pro_1.pros,'SpinDown': pro_2.pros}#accessing spins in dictionary after .pro.
@@ -458,6 +487,10 @@ def export_vasprun(path = None, skipk = None, elim = [], kseg_inds = [], shift_k
         pdos_2 = get_dos_pro_set(xml_data=xml_data,spin_set=1,dos_range=grid_range)
         pdos={'SpinUp': pdos_1.pros,'SpinDown': pdos_2.pros}#accessing spins in dictionary after .pro.
         pro_dos={'labels':pdos_1.labels,'pros': pdos}
+    
+    # Forces and steps
+    force = get_force(xml_data)
+    scsteps = get_scsteps(xml_data)
 
     #Structure
     poscar = get_structure(xml_data = xml_data)
@@ -465,9 +498,10 @@ def export_vasprun(path = None, skipk = None, elim = [], kseg_inds = [], shift_k
     #Dimensions dictionary.
     dim_dic={'kpoints':'(NKPTS,3)','kpath':'(NKPTS,1)','bands':'⇅(NKPTS,NBANDS)','dos':'⇅(grid_size,3)','pro_dos':'⇅(NION,grid_size,en+pro_fields)','pro_bands':'⇅(NION,NKPTS,NBANDS,pro_fields)'}
     #Writing everything to be accessible via dot notation
-    kpath=[k+shift_kpath for k in kpts.kpath]  # shift kpath for side by side calculations.
+    kpath = [k + shift_kpath for k in kpts.kpath]  # shift kpath for side by side calculations.
     full_dic={'sys_info':info_dic,'dim_info':dim_dic,'kpoints':kpts.kpoints,'kpath':kpath,'bands':eigenvals,
-             'tdos':tot_dos,'pro_bands':pro_bands,'pro_dos':pro_dos,'poscar': poscar}
+             'tdos':tot_dos,'pro_bands':pro_bands,'pro_dos':pro_dos,'poscar': poscar,
+             'force':force,'scsteps':scsteps}
     return serializer.VasprunData(full_dic)
 
 def _validate_evr(path_evr=None,**kwargs):

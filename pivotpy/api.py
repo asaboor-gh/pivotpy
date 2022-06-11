@@ -159,7 +159,6 @@ def parse_text(path,
     return vp.islice2array(path_or_islice=path,**extra_kws)
 
 # Cell
-from contextlib import suppress
 class POSCAR:
     "POSACR class to contain data and related methods, data is PoscarData, json/tuple file/string."
     def __init__(self,path = None,text_plain = None,data = None):
@@ -167,14 +166,10 @@ class POSCAR:
         Prefrence order: data, text_plain, path"""
         self.path = path
         self.text_plain = text_plain
-        self._kpts_info = None # Get defualt kpts_info
         if data:
             self._data = serializer.PoscarData.validated(data)
         else:
             self._data = sio.export_poscar(path=path,text_plain=text_plain)
-            with suppress(BaseException): # Only reuqired here,not in vasprun_data or spin_data
-                base_dir = os.path.split(os.path.abspath(path or './POSCAR'))[0]
-                self._kpts_info = vp.get_kpoints_info(os.path.join(base_dir,'KPOINTS'))
         # These after data to work with data
         self.primitive = False
         self._bz = self.get_bz(primitive = False) # Get defualt regular BZ from sio
@@ -182,10 +177,6 @@ class POSCAR:
         self._plane = None # Get defualt plane, changed with splot_bz
         self._ax = None # Get defualt axis, changed with splot_bz
 
-    def get_kpoints_info(self, other_path):
-        "Return kpoints info from other_path to be POSCAR path, required for kpoints to bring in bz."
-        self._kpts_info = vp.get_kpoints_info(other_path)
-        return self._kpts_info
 
     @property
     def data(self):
@@ -211,7 +202,7 @@ class POSCAR:
         self.get_bz(primitive=primitive,loop=loop,digits=digits)
 
     def get_cell(self, loop=True, digits=8):
-        "See docs of `get_bz`, same except space is inverted."
+        "See docs of `get_bz`, same except space is inverted and no factor of 2pi."
         self._cell = sio.get_bz(path_pos=self._data.rec_basis,loop=loop, digits=digits, primitive=True) # cell must be primitive
         return self._cell
 
@@ -309,29 +300,20 @@ class POSCAR:
 
     def bring_in_cell(self,points):
         """Brings atoms's positions inside Cell and returns their R3 coordinates.
-        If points are cartesian, they are just scaled to fit inside the cell.
-        The scale factor is usaully `a` which is on second line of POSCAR.
         """
-        basis = self.data.scale*np.identity(3) if self.data.cartesian else self._data.basis
-        return sio.to_R3(basis, points)
+        # Cartesain POSCAR is also loaded as relative to basis in memeory, so both same
+        return sio.to_R3(self._data.basis, points)
 
     @_sub_doc(sio.kpoints2bz,'- bz_data')
-    def bring_in_bz(self,kpoints, basis = None):
+    def bring_in_bz(self,kpoints, sys_info = None, shift = 0):
         """Brings kpoints inside already set BZ, (primitive or regular).
         If basis is not None, returns kpoints relative to those basis.
-        If kpoints are cartesian, you can uses `basis` to scale them in any direction.
-        The scale factor is usaully `2π/a` where a is on second line of POSCAR.
+        If kpoints are cartesian, sys_info will take care of scaling them.
+        `shift` is a number or a list of three numbers that will be added to kpoints before any other operation.
         """
-        if not self._kpts_info:
-            raise RuntimeError('Run `POSCAR.get_kpoints_info(other_path)` first. Only required once!')
-
-        if self._kpts_info.to_dict().get('cartesian',False):
-            if basis is None:
-                basis = (2*np.pi/self.data.scale)*np.identity(3)
-
         if not self._bz:
             raise RuntimeError('No BZ found. Please run `get_bz()` first.')
-        return sio.kpoints2bz(self._bz, kpoints= kpoints,primitive = self.primitive, basis = basis)
+        return sio.kpoints2bz(self._bz, kpoints= kpoints,primitive = self.primitive, sys_info = sys_info, shift = shift)
 
 # Cell
 class LOCPOT:
@@ -471,7 +453,7 @@ class Vasprun:
         - skipk      : int: Skip initial kpoints.
         - elim       : list: Energy range e.g. [-5,5].
         - shift_kpath: float: Shift in kpath values for side by side plotting.
-        - try_pwsh   : bool: True by default, tries to load data exported using Powershell's `Vasp2Visual.Export-Vasprun` command.
+        - dos_only   : bool: False by default, If True, load mimimal bands data to save memeory.
         - data   : json/pickle file/str or VasprunData or a valid dictionary. Takes precedence over path parameter.
 
     - **Attributes and Methods**
@@ -490,11 +472,11 @@ class Vasprun:
     # The object `vr` is destroyed here and memory is freed.
     ```
     """
-    def __init__(self,path = None,skipk = None,elim=[],shift_kpath=0, try_pwsh=True,data=None):
+    def __init__(self,path = None,skipk = None,elim=[],shift_kpath=0,dos_only=False,data=None):
         if data: #json/pickle data strings
             self._data = serializer.VasprunData.validated(data)
         else:
-            self._data = vp.export_vasprun(path=path,skipk=skipk,elim=elim,shift_kpath=shift_kpath,try_pwsh=try_pwsh)
+            self._data = vp.export_vasprun(path=path,skipk=skipk,elim=elim,shift_kpath=shift_kpath,dos_only=dos_only)
 
         self.elim = elim
         self._kpath = self._data.kpath  # For info only, get updated with plot commands
@@ -522,7 +504,7 @@ class Vasprun:
         """
         return POSCAR(data = self._data.poscar)  #POSCAR class
 
-    def __handle_kwargs(self,kwargs,dos=False):
+    def __handle_kwargs(self, kwargs,dos=False):
         kwargs = {'elim': self.elim, **kwargs}
         if dos:
             return kwargs
@@ -548,11 +530,6 @@ class Vasprun:
     def data(self):
         "Get exported data."
         return self._data
-
-    @property
-    def dos(self):
-        "Clears bands data and keeps dos data."
-        return self.select(kpoints_inds=[0],bands_inds=[0])
 
     def select(self,kpoints_inds = None, bands_inds = None, kseg_inds = None):
         """Seletc data based on kpoints and bands indices.
