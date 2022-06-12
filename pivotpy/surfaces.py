@@ -87,11 +87,11 @@ class SpinDataFrame(pd.DataFrame):
         - splot3d: plot data in a 3D plot.
         - join/append/concat/+/+=: Append another SpinDataFrame to this one with same columns and copy metadata.
         - send_metadata: Copy metadata from this to another SpinDataFrame, some methods may not carry over metadata, useful in that case.
-        - get_data: Return data as collection of numpy arrays with kpoints already sent to BZ.
+        - get_data: Return data as collection of numpy arrays with kpoints already sent to BZ. Use .to_json() to export to json for plotting in other libraries/languages like Mathematica.
 
         All other methods are inherited from pd.DataFrame. If you apply some method that do not pass metadat, then use `send_metadata` to copy metadata to traget SpinDataFrame.
     """
-    _metadata = ['_current_attrs','scale_data','sys_info','poscar'] # These are passed after operations to new dataframe.
+    _metadata = ['_current_attrs','scale_data','sys_info','poscar','projection'] # These are passed after operations to new dataframe.
     def __init__(self, *args, path = None, bands = [0], elements = [[0],], orbs = [[0],], scale_data = False, E_Fermi = None, elim = None, skipk=None, data = None, **kwargs):
         if not (path or args): # It works fine without path given, but it is not recommended.
             path = './vasprun.xml'
@@ -115,6 +115,8 @@ class SpinDataFrame(pd.DataFrame):
                 super().__init__(out_dict)
                 self.scale_data = scale_data
                 self.sys_info = spin_data.sys_info
+                elements, orbs, _ = _validate_input(elements,orbs,[str(i) for i,o in enumerate(orbs)],sys_info = self.sys_info, rgb = False)
+                self.projection = serializer.Dict2Data({f'_{i}': {'ions': e, 'orbs': o} for i,(e,o) in enumerate(zip(elements,orbs))})
                 # Path below is used to get kpoints info
                 self.poscar = api.POSCAR(path = path, data = spin_data.poscar)
                 self._current_attrs = {'cmap':'viridis'} # To store attributes of current plot for use in colorbar.
@@ -157,12 +159,23 @@ class SpinDataFrame(pd.DataFrame):
         """Access Data with transformed KPOINTS based on current Brillouin Zone.
         shift is used to shift kpoints before any other operation.
         If You need to have kpoints in primitive/regular BZ, first use .poscar.set_bz() to set that kind of BZ."""
-        kx, ky, kz = self.poscar.bring_in_bz(self[['kx','ky','kx']].to_numpy(),self.sys_info,shift = shift).T
-        out_dict = {'kx':kx,'ky':ky,'kz':kz}
+        bands = np.unique(self['band'].to_numpy()).astype(int)
+        out_dict = {'SYSTEM': self.sys_info.SYSTEM}
+        out_dict['elements'] = self.poscar.data.unique
+        out_dict['orbitals'] = self.sys_info.fields
+        out_dict['projection'] = self.projection
+        out_dict['bz'] = self.poscar.bz._asdict()
+        out_dict['bz']['specials'] = self.poscar.bz.specials._asdict()
 
-        for k in self.columns:
-            if k not in out_dict:
-                out_dict[k] = self[k].to_numpy()
+        for band in bands:
+            name = f'band_{band}'
+            df = self[self['band'] == band].sort_values(by = ['kx','ky','kz'])
+            kx, ky, kz = df.poscar.bring_in_bz(df[['kx','ky','kz']].to_numpy(), sys_info = df.sys_info,shift = shift).T
+            out_dict[name] = {'kx':kx,'ky':ky,'kz':kz}
+
+            for k in df.columns:
+                if k not in ('band', *out_dict[name].keys()):
+                    out_dict[name][k] = df[k].to_numpy()
 
         return serializer.Dict2Data(out_dict)
 

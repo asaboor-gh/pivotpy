@@ -263,13 +263,13 @@ def dump(dict_data = None, dump_to = 'pickle',outfile = None,indent=1):
     if dump_to == 'pickle':
         if outfile == None:
             return pickle.dumps(dict_obj)
-        outfile = outfile.split('.')[0] + '.pickle'
+        outfile = os.path.splitext(outfile)[0] + '.pickle'
         with open(outfile,'wb') as f:
             pickle.dump(dict_obj,f)
     if dump_to == 'json':
         if outfile == None:
             return json.dumps(dict_obj,cls = EncodeFromNumpy,indent=indent)
-        outfile = outfile.split('.')[0] + '.json'
+        outfile = os.path.splitext(outfile)[0] + '.json'
         with open(outfile,'w') as f:
             json.dump(dict_obj,f,cls = EncodeFromNumpy,indent=indent)
     return None
