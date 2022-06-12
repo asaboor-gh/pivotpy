@@ -87,6 +87,7 @@ class SpinDataFrame(pd.DataFrame):
         - splot3d: plot data in a 3D plot.
         - join/append/concat/+/+=: Append another SpinDataFrame to this one with same columns and copy metadata.
         - send_metadata: Copy metadata from this to another SpinDataFrame, some methods may not carry over metadata, useful in that case.
+        - get_data: Return data as collection of numpy arrays with kpoints already sent to BZ.
 
         All other methods are inherited from pd.DataFrame. If you apply some method that do not pass metadat, then use `send_metadata` to copy metadata to traget SpinDataFrame.
     """
@@ -152,10 +153,20 @@ class SpinDataFrame(pd.DataFrame):
         "Same as self.append"
         return self.append(other)
 
-    def __iadd__(self, other):
-        "Same as self.append, but add in place"
-        self = self.append(other)
-        return self
+    def get_data(self,shift = 0):
+        """Access Data with transformed KPOINTS based on current Brillouin Zone.
+        shift is used to shift kpoints before any other operation.
+        If You need to have kpoints in primitive/regular BZ, first use .poscar.set_bz() to set that kind of BZ."""
+        kx, ky, kz = self.poscar.bring_in_bz(self[['kx','ky','kx']].to_numpy(),self.sys_info,shift = shift).T
+        out_dict = {'kx':kx,'ky':ky,'kz':kz}
+
+        for k in self.columns:
+            if k not in out_dict:
+                out_dict[k] = self[k].to_numpy()
+
+        return serializer.Dict2Data(out_dict)
+
+
 
     def masked(self, column, value, tol = 1e-2, n = None, band = None, method = 'linear'):
         """Mask dataframe with a given value, using a tolerance.

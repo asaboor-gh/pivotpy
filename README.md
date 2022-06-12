@@ -90,7 +90,7 @@ ax1.set_xlabel('Iteration Number')
 ax1.legend()
 
 vr.poscar.splot_lat(ax=ax2,plane='xy')
-X, Y, Z = pp.sio.to_R3(vr.data.poscar.basis, vr.data.poscar.positions).T
+X, Y, Z = vr.data.poscar.coords.T
 q = ax2.quiver(X,Y,*vr.data.force[:,:2].T,scale=25,color='r')
 ax2.quiverkey(q, 0.7, 1, 7, 'Force (arb. units)')
 ax2.add_legend()
@@ -213,18 +213,13 @@ Some tasks are very tideious in python while just a click way in powershell. See
 pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
 ```
 
-    [32;1m NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI Pr[0m
-    [32;1m                                                   oc[0m
-    [32;1m                                                   es[0m
-    [32;1m                                                   sN[0m
-    [32;1m                                                   am[0m
-    [32;1m                                                   e[0m
-    [32;1m ------    -----      -----     ------      --  -- --[0m
-    22     6.82       3.70       0.36    8072   1 A…
-    6     1.30       5.63       0.00    7996   0 A…
-    17     6.59      18.21       0.00    5992   0 A…
-    28    31.50      51.71       2.00   12768   1 A…
-    9     1.64       6.58       0.00    5732   0 a…
+    [32;1m NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI[0m
+    [32;1m ------    -----      -----     ------      --  --[0m
+    21     6.67       8.14       0.41    8072   1
+    6     1.30       5.73       0.00    7996   0
+    18     6.43      17.37       0.00    5992   0
+    35    37.57      67.35       4.08   12768   1
+    10     1.79       6.95       0.00    5732   0
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -265,21 +260,42 @@ Get-ChildItem 'E:\Research\graphene_example\'
         Directory: E:\Research\graphene_example
     
     
-    Mode                 LastWriteTime         Length Nam
-                                                      e  
-    ----                 -------------         ------ ---
-    da----          6/9/2022  10:33 AM                ISP
-                                                      IN_
-                                                      1  
-    da----          5/9/2020   1:05 PM                ISP
-                                                      IN_
-                                                      2  
-    -a----          5/9/2020   1:01 PM          75331 OUT
-                                                      CAR
-    -a----          5/9/2020   1:01 PM         240755 vas
-                                                      pru
-                                                      n.x
-                                                      ml 
+    Mode                 LastWriteTime         Length N
+                                                      a
+                                                      m
+                                                      e
+    ----                 -------------         ------ -
+    da----          6/9/2022  10:33 AM                I
+                                                      S
+                                                      P
+                                                      I
+                                                      N
+                                                      _
+                                                      1
+    da----          5/9/2020   1:05 PM                I
+                                                      S
+                                                      P
+                                                      I
+                                                      N
+                                                      _
+                                                      2
+    -a----          5/9/2020   1:01 PM          75331 O
+                                                      U
+                                                      T
+                                                      C
+                                                      A
+                                                      R
+    -a----          5/9/2020   1:01 PM         240755 v
+                                                      a
+                                                      s
+                                                      p
+                                                      r
+                                                      u
+                                                      n
+                                                      .
+                                                      x
+                                                      m
+                                                      l
     
     
 

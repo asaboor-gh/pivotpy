@@ -44,16 +44,19 @@ class Dict2Data:
         if not hasattr(self.__class__,'_req_keys'):
             raise AttributeError("Derived class of `Dict2Data` should have attribute '_req_keys'")
         if isinstance(d,(self.__class__, Dict2Data)):
-            d = d.to_dict() # if nested Dict2Data , must expand here.
+            d = d.to_dict() # if nested Dict2Data , must expand
         # Check if all required keys are present in main level of subclasses
         for key in self.__class__._req_keys:
             if key not in d:
                 raise ValueError(f"Invalid input for {self.__class__.__name__}")
         # ===================
-        for a,b in d.items():
+        for a,b in d.items(): 
             if isinstance(b,(self.__class__, Dict2Data)):
                 b = b.to_dict() # expands self instance !must here.
-            if isinstance(b,(list,tuple)):
+            
+            if a == 'poscar' and 'extra_info' in b:
+                setattr(self,a, PoscarData(b)) # Enables custom methods for PoscarData
+            elif isinstance(b,(list,tuple)):
                 setattr(self,a,[Dict2Data(x) if isinstance(x,dict) else x for x in b])
             else:
                 setattr(self,a,Dict2Data(b) if isinstance(b,dict) else b)
@@ -162,6 +165,20 @@ class PoscarData(Dict2Data):
     
     def __repr__(self):
         return super().__repr__().replace("Data","PoscarData",1)
+    
+    @property
+    def coords(self):
+        """Returns the lattice coordinates in cartesian space of the atoms in the poscar data.
+        """
+        from .sio import to_R3 # To avoid circular import
+        return to_R3(self.basis, self.positions)
+    
+    def write(self,sd_list = None, outfile = None, overwrite = False):
+        """Writes the poscar data to a file.
+        """
+        from .sio import write_poscar # To avoid circular import
+        return write_poscar(self,sd_list = sd_list,outfile = outfile,overwrite = overwrite)
+        
 
 class LocpotData(Dict2Data):
     _req_keys = ('ElemName','ElemIndex','SYSTEM')
