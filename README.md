@@ -50,7 +50,7 @@ See GIF here:
 # Live Slides in Jupyter Notebook
 Navigate to  [ipyslides](https://github.com/massgh/ipyslides) or do `pip install ipyslides` to create beautiful data driven presentation in Jupyter Notebook.
 
-```
+```python
 import os, pivotpy as pp
 with pp.set_dir('E:/Research/graphene_example/ISPIN_1/bands'):
     vr = pp.Vasprun(elim=[-5,5])
@@ -80,7 +80,7 @@ for v in dir(vr):
     vr.to_pickle
     
 
-```
+```python
 import matplotlib.pyplot as plt 
 ax1,ax2 = pp.get_axes((6,3),ncols=2)
 ax1.plot(vr.data.scsteps['e_fr_energy'],lw=3, label = 'e_fr_energy',color='k')
@@ -104,7 +104,7 @@ ax2.add_legend()
 - Add anything from legend,colorbar, colorwheel. In below figure, all three are shown.
 - Use aliases such as sbands, sdos,srgb,irgb,scolor,idos for plotting. 
 
-```
+```python
 #collapse_input
 import pivotpy as pp, numpy as np
 import matplotlib.pyplot as plt 
@@ -132,7 +132,7 @@ pp._show()
 
 ## Interactive plots using plotly
 
-```
+```python
 args_dict['labels'] = ['s','p_z','p_x+p_y']
 fig1 = vr1.iplot_rgb_lines(**args_dict)
 #pp.iplot2html(fig1) #Do inside Google Colab, fig1 inside Jupyter
@@ -159,7 +159,7 @@ Markdown("[See Interactive Plot](https://massgh.github.io/InteractiveHTMLs/iGrap
 ## Plotting Two Calculations Side by Side 
 - Here we will use `shift_kpath` to demonstrate plot of two calculations on same axes side by side
 
-```
+```python
 #nbdev_collapse_input
 import matplotlib.pyplot as plt
 import pivotpy as pp 
@@ -185,7 +185,7 @@ pp._show()
 ## Interpolation 
 Amost every bandstructure and DOS plot function has an argument `interp_nk` which is a dictionary with keys `n` (Number of additional points between adjacent points) and `k` (order of interpolation 0-3). `n > k` must hold.
 
-```
+```python
 #collapse_input
 import pivotpy as pp, matplotlib.pyplot as plt
 plt.style.use('ggplot')
@@ -209,17 +209,17 @@ check out the class `pivotpy.LOCPOT` to visulize local potential/charge and magn
 ## Running powershell commands from python.
 Some tasks are very tideious in python while just a click way in powershell. See below, and try to list processes in python yourself to see the difference!
 
-```
+```python
 pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
 ```
 
-    [32;1m NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName[0m
-    [32;1m ------    -----      -----     ------      --  -- -----------[0m
-    21     6.67       8.15       0.41    8072   1 AcrobatNotificationClient
-    6     1.30       5.14       0.00    7996   0 AggregatorHost
-    18     6.71      16.00       0.00    5992   0 AppHelperCap
-    25    26.00      46.87       5.89   12768   1 ApplicationFrameHost
-    10     1.79       6.47       0.00    5732   0 armsvc
+    [32;1m NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI[0m
+    [32;1m ------    -----      -----     ------      --  --[0m
+    22     6.84       8.29       0.41    8072   1
+    6     1.30       5.57       0.00    7996   0
+    19     6.94      17.85       0.00    5992   0
+    25    23.02      47.88       7.00   12768   1
+    9     1.64       6.51       0.00    5732   0
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -250,7 +250,7 @@ c.ScriptMagics.script_paths = {
 }
 ```
 
-```
+```python
 %%ps 
 Get-ChildItem 'E:\Research\graphene_example\'
 ```
@@ -260,17 +260,47 @@ Get-ChildItem 'E:\Research\graphene_example\'
         Directory: E:\Research\graphene_example
     
     
-    Mode                 LastWriteTime         Length Name                                                                                           
-    ----                 -------------         ------ ----                                                                                           
-    da----          6/9/2022  10:33 AM                ISPIN_1                                                                                        
-    da----          5/9/2020   1:05 PM                ISPIN_2                                                                                        
-    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                                                         
-    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                                                    
+    Mode                 LastWriteTime         Length N
+                                                      a
+                                                      m
+                                                      e
+    ----                 -------------         ------ -
+    da----          6/9/2022  10:33 AM                I
+                                                      S
+                                                      P
+                                                      I
+                                                      N
+                                                      _
+                                                      1
+    da----          5/9/2020   1:05 PM                I
+                                                      S
+                                                      P
+                                                      I
+                                                      N
+                                                      _
+                                                      2
+    -a----          5/9/2020   1:01 PM          75331 O
+                                                      U
+                                                      T
+                                                      C
+                                                      A
+                                                      R
+    -a----          5/9/2020   1:01 PM         240755 v
+                                                      a
+                                                      s
+                                                      p
+                                                      r
+                                                      u
+                                                      n
+                                                      .
+                                                      x
+                                                      m
+                                                      l
     
     
 
 
-```
+```python
 x = %ps (Get-ChildItem 'E:\Research\graphene_example\').Name
 x
 ```
