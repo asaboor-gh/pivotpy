@@ -30,6 +30,127 @@ except:
     import pivotpy.splots as sp
     import pivotpy.serializer as serializer
 
+
+# These colors are taken from Mathematica's ColorData["Atoms"]
+_atom_colors = {'H': (0.65, 0.7, 0.7),
+ 'He': (0.8367, 1.0, 1.0),
+ 'Li': (0.7994, 0.5436, 0.9976),
+ 'Be': (0.7706, 0.9643, 0.0442),
+ 'B': (1.0, 0.7098, 0.7098),
+ 'C': (0.4, 0.4, 0.4),
+ 'N': (0.292, 0.438, 0.8886),
+ 'O': (0.8005, 0.2015, 0.1921),
+ 'F': (0.5785, 0.8554, 0.4089),
+ 'Ne': (0.6773, 0.9284, 0.9553),
+ 'Na': (0.6587, 0.4922, 0.8428),
+ 'Mg': (0.6283, 0.8506, 0.0783),
+ 'Al': (0.8913, 0.6319, 0.6274),
+ 'Si': (0.9412, 0.7843, 0.6275),
+ 'P': (1.0, 0.502, 0.0),
+ 'S': (0.9044, 0.9702, 0.135),
+ 'Cl': (0.4127, 0.9327, 0.1664),
+ 'Ar': (0.5461, 0.8442, 0.8921),
+ 'K': (0.534, 0.4207, 0.7056),
+ 'Ca': (0.4801, 0.7446, 0.0955),
+ 'Sc': (0.902, 0.902, 0.902),
+ 'Ti': (0.749, 0.7608, 0.7804),
+ 'V': (0.651, 0.651, 0.6706),
+ 'Cr': (0.5412, 0.6, 0.7804),
+ 'Mn': (0.6118, 0.4784, 0.7804),
+ 'Fe': (0.8784, 0.4, 0.2),
+ 'Co': (0.9412, 0.5647, 0.6275),
+ 'Ni': (0.3137, 0.8157, 0.3137),
+ 'Cu': (0.7843, 0.502, 0.2),
+ 'Zn': (0.4902, 0.502, 0.6902),
+ 'Ga': (0.8008, 0.5427, 0.5335),
+ 'Ge': (0.6051, 0.6325, 0.5765),
+ 'As': (0.7412, 0.502, 0.8902),
+ 'Se': (0.9172, 0.6578, 0.0707),
+ 'Br': (0.5885, 0.2216, 0.1606),
+ 'Kr': (0.426, 0.7475, 0.8104),
+ 'Rb': (0.4254, 0.3292, 0.5859),
+ 'Sr': (0.326, 0.6464, 0.096),
+ 'Y': (0.531, 1.0, 1.0),
+ 'Zr': (0.4586, 0.9175, 0.9186),
+ 'Nb': (0.385, 0.8349, 0.8417),
+ 'Mo': (0.3103, 0.7522, 0.7693),
+ 'Tc': (0.2345, 0.6694, 0.7015),
+ 'Ru': (0.1575, 0.5865, 0.6382),
+ 'Rh': (0.0793, 0.5036, 0.5795),
+ 'Pd': (0.0, 0.4206, 0.5252),
+ 'Ag': (0.7529, 0.7529, 0.7529),
+ 'Cd': (1.0, 0.851, 0.5608),
+ 'In': (0.7284, 0.4406, 0.4222),
+ 'Sn': (0.398, 0.4915, 0.4956),
+ 'Sb': (0.6196, 0.3882, 0.7098),
+ 'Te': (0.8167, 0.4513, 0.0101),
+ 'I': (0.5804, 0.0, 0.5804),
+ 'Xe': (0.3169, 0.6381, 0.7103),
+ 'Cs': (0.3328, 0.2177, 0.4837),
+ 'Ba': (0.1659, 0.556, 0.0797),
+ 'La': (0.9281, 0.7161, 0.3294),
+ 'Ce': (0.8948, 0.7314, 0.3251),
+ 'Pr': (0.8652, 0.708, 0.3153),
+ 'Nd': (0.8378, 0.663, 0.3016),
+ 'Pm': (0.812, 0.6079, 0.2856),
+ 'Sm': (0.7876, 0.5499, 0.2683),
+ 'Eu': (0.7646, 0.4933, 0.2504),
+ 'Gd': (0.7432, 0.4401, 0.2327),
+ 'Tb': (0.7228, 0.3914, 0.2158),
+ 'Dy': (0.7024, 0.3477, 0.2004),
+ 'Ho': (0.68, 0.3092, 0.1874),
+ 'Er': (0.652, 0.2768, 0.1778),
+ 'Tm': (0.6136, 0.2515, 0.173),
+ 'Yb': (0.5579, 0.2346, 0.1749),
+ 'Lu': (0.4757, 0.2276, 0.1856),
+ 'Hf': (0.7815, 0.7174, 0.7166),
+ 'Ta': (0.7344, 0.5445, 0.6835),
+ 'W': (0.6812, 0.3604, 0.6368),
+ 'Re': (0.6052, 0.3676, 0.5563),
+ 'Os': (0.5218, 0.3821, 0.4692),
+ 'Ir': (0.4456, 0.3732, 0.3991),
+ 'Pt': (0.8157, 0.8157, 0.8784),
+ 'Au': (1.0, 0.8196, 0.1373),
+ 'Hg': (0.7216, 0.7216, 0.8157),
+ 'Tl': (0.651, 0.3294, 0.302),
+ 'Pb': (0.3412, 0.349, 0.3804),
+ 'Bi': (0.6196, 0.3098, 0.7098),
+ 'Po': (0.6706, 0.3608, 0.0),
+ 'At': (0.4588, 0.3098, 0.2706),
+ 'Rn': (0.2188, 0.5161, 0.5916),
+ 'Fr': (0.2563, 0.0861, 0.3989),
+ 'Ra': (0.0, 0.4735, 0.0465),
+ 'Ac': (0.322, 0.7169, 0.9885),
+ 'Th': (0.3608, 0.6717, 0.943),
+ 'Pa': (0.3975, 0.628, 0.8989),
+ 'U': (0.432, 0.586, 0.856),
+ 'Np': (0.4645, 0.5455, 0.8145),
+ 'Pu': (0.4949, 0.5067, 0.7744),
+ 'Am': (0.5233, 0.4695, 0.7355),
+ 'Cm': (0.5495, 0.4338, 0.698),
+ 'Bk': (0.5736, 0.3998, 0.6618),
+ 'Cf': (0.5957, 0.3675, 0.6269),
+ 'Es': (0.6156, 0.3367, 0.5934),
+ 'Fm': (0.6335, 0.3075, 0.5612),
+ 'Md': (0.6493, 0.2799, 0.5303),
+ 'No': (0.663, 0.254, 0.5007),
+ 'Lr': (0.6746, 0.2296, 0.4725),
+ 'Rf': (0.6841, 0.2069, 0.4456),
+ 'Db': (0.6915, 0.1858, 0.42),
+ 'Sg': (0.6969, 0.1663, 0.3958),
+ 'Bh': (0.7001, 0.1484, 0.3728),
+ 'Hs': (0.7013, 0.1321, 0.3512),
+ 'Mt': (0.7004, 0.1174, 0.331),
+ 'Ds': (0.6973, 0.1043, 0.312),
+ 'Rg': (0.6922, 0.0928, 0.2944),
+ 'Cn': (0.6851, 0.083, 0.2781),
+ 'Nh': (0.6758, 0.0747, 0.2631),
+ 'Fl': (0.6644, 0.0681, 0.2495),
+ 'Mc': (0.6509, 0.0631, 0.2372),
+ 'Lv': (0.6354, 0.0597, 0.2262),
+ 'Ts': (0.6354, 0.0566, 0.2262),
+ 'Og': (0.6354, 0.0528, 0.2262)}
+
 # Cell
 from matplotlib.patches import FancyArrowPatch
 from mpl_toolkits.mplot3d import proj3d
@@ -1196,7 +1317,7 @@ def _get_bond_length(poscar_data,given=None,eps=1e-2):
         return np.mean(_arr[:2]) + eps if _arr else 1 #Between nearest and second nearest.
 
 # Cell
-def iplot_lat(poscar_data,sizes=10,colors='blue',
+def iplot_lat(poscar_data,sizes=10,colors = None,
               bond_length=None,tol=1e-1,eps=1e-2,eqv_sites=True,
               translate = None,
               line_width=4,edge_color = 'black',
@@ -1205,7 +1326,7 @@ def iplot_lat(poscar_data,sizes=10,colors='blue',
     - **Main Parameters**
         - poscar_data: Output of export_poscar or export_vasprun().poscar.
         - sizes      : Size of sites. Either one int/float or list equal to type of ions.
-        - colors     : Colors of sites. Either one colors or list equal to type of ions.
+        - colors     : Sequence of colors for each type. Automatically generated if not provided.
         - bond_length: Length of bond in fractional unit [0,1]. It is scaled to V^1/3 and auto calculated if not provides.
     Other parameters just mean what they seem to be.
     """
@@ -1221,18 +1342,15 @@ def iplot_lat(poscar_data,sizes=10,colors='blue',
     if not isinstance(sizes,(list,np.ndarray)):
         sizes = [sizes for elem in uelems.keys()]
 
-    if not isinstance(colors, str):
-        colors = np.array(colors)
-    else:
-        colors = [colors for elem in uelems.keys()]
+    if colors and len(colors) != len(uelems.keys()):
+        print('Warning: Number of colors does not match number of elements. Using default colors.')
+
+    if (colors is None) or len(colors) != len(uelems.keys()):
+        colors = [_atom_colors[elem] for elem in uelems.keys()]
+
+    _colors = np.array([colors[i] for i,vs in enumerate(uelems.values()) for v in vs])
 
     h_text = np.array( poscar_data.labels)
-
-    _colors = []
-    for i,vs in enumerate(uelems.values()):
-        for v in vs:
-            _colors.append(colors[i])
-    _colors = np.array(_colors)  # Full List
 
     if np.any(pairs):
         coords_p = coords[pairs] #paired points
@@ -1258,12 +1376,12 @@ def iplot_lat(poscar_data,sizes=10,colors='blue',
                 legendgroup='Bonds',showlegend=showlegend,
                 name='Bonds',line_width=line_width))
 
-    for (k,v),c,s in zip(uelems.items(),colors,sizes):
+    for (k,v),c,s in zip(uelems.items(),_colors,sizes):
         fig.add_trace(go.Scatter3d(
             x = coords[v][:,0].T,
             y = coords[v][:,1].T,
             z = coords[v][:,2].T,
-            mode='markers',marker_color=c,
+            mode='markers',marker_color = c,
             hovertext = h_text[v],
             line_color='rgba(1,1,1,0)',line_width=0.001,
             marker_size = s,opacity=1,name=k))
@@ -1273,7 +1391,7 @@ def iplot_lat(poscar_data,sizes=10,colors='blue',
     return fig
 
 # Cell
-def splot_lat(poscar_data,sizes=50,colors=[],colormap=None,
+def splot_lat(poscar_data,sizes=50,colors=None,colormap=None,
               bond_length=None,tol=1e-1,eps=1e-2,eqv_sites=True,
               translate = None,
               line_width=1,edge_color=((1,0.5,0,0.4)),
@@ -1285,7 +1403,8 @@ def splot_lat(poscar_data,sizes=50,colors=[],colormap=None,
         - poscar_data: Output of export_poscar or export_vasprun().poscar.
         - sizes      : Size of sites. Either one int/float or list equal to type of ions.
         - bond_length: Length of bond in fractional unit [0,1]. It is scaled to V^1/3 and auto calculated if not provides.
-        - colors: List of colos. If given, preffered over colormap, should have same length as type of ions.
+        - colors: Sequence of colors for each ion type. If None, automatically generated.
+        - colormap: This is passed to splot_bz.
     Other parameters just mean what they seem to be.
 
     > Tip: Use `plt.style.use('ggplot')` for better 3D perception.
@@ -1312,17 +1431,13 @@ def splot_lat(poscar_data,sizes=50,colors=[],colormap=None,
     if not isinstance(sizes,(list,np.ndarray)):
         sizes = [sizes for elem in uelems.keys()]
 
-    if not colormap in plt.colormaps():
-        colormap = 'brg'
+    if colors and len(colors) != len(uelems.keys()):
+        print('Warning: Number of colors does not match number of elements. Using default colors.')
 
-    if not colors or len(colors) != len(uelems):
-        colors = plt.cm.get_cmap(colormap)(np.linspace(0.1,0.9,len(uelems)))
+    if (colors is None) or len(colors) != len(uelems.keys()):
+        colors = [_atom_colors[elem] for elem in uelems.keys()]
 
-    _colors = []
-    for i,vs in enumerate(uelems.values()):
-        for v in vs:
-            _colors.append(colors[i])
-    _colors = np.array(_colors)  # Full List
+    _colors = np.array([colors[i] for i,vs in enumerate(uelems.values()) for v in vs])
 
     if np.any(pairs):
         coords_p = coords[pairs] #paired points
