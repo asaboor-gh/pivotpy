@@ -213,13 +213,13 @@ Some tasks are very tideious in python while just a click way in powershell. See
 pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
 ```
 
-    [32;1m NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI[0m
-    [32;1m ------    -----      -----     ------      --  --[0m
-    22     6.84       8.29       0.41    8072   1
-    6     1.30       5.57       0.00    7996   0
-    19     6.94      17.85       0.00    5992   0
-    25    23.02      47.88       7.00   12768   1
-    9     1.64       6.51       0.00    5732   0
+    [32;1m NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName[0m
+    [32;1m ------    -----      -----     ------      --  -- -----------[0m
+    21     6.83       8.29       0.44    8072   1 AcrobatNotificat…
+    6     1.30       5.66       0.00    7996   0 AggregatorHost
+    19     7.61      20.82       0.00    5992   0 AppHelperCap
+    25    25.75      51.34       8.36   12768   1 ApplicationFrame…
+    10     1.79       6.88       0.00    5732   0 armsvc
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -260,42 +260,12 @@ Get-ChildItem 'E:\Research\graphene_example\'
         Directory: E:\Research\graphene_example
     
     
-    Mode                 LastWriteTime         Length N
-                                                      a
-                                                      m
-                                                      e
-    ----                 -------------         ------ -
-    da----          6/9/2022  10:33 AM                I
-                                                      S
-                                                      P
-                                                      I
-                                                      N
-                                                      _
-                                                      1
-    da----          5/9/2020   1:05 PM                I
-                                                      S
-                                                      P
-                                                      I
-                                                      N
-                                                      _
-                                                      2
-    -a----          5/9/2020   1:01 PM          75331 O
-                                                      U
-                                                      T
-                                                      C
-                                                      A
-                                                      R
-    -a----          5/9/2020   1:01 PM         240755 v
-                                                      a
-                                                      s
-                                                      p
-                                                      r
-                                                      u
-                                                      n
-                                                      .
-                                                      x
-                                                      m
-                                                      l
+    Mode                 LastWriteTime         Length Name              
+    ----                 -------------         ------ ----              
+    da----          6/9/2022  10:33 AM                ISPIN_1           
+    da----          5/9/2020   1:05 PM                ISPIN_2           
+    -a----          5/9/2020   1:01 PM          75331 OUTCAR            
+    -a----          5/9/2020   1:01 PM         240755 vasprun.xml       
     
     
 
