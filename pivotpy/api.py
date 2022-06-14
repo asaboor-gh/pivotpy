@@ -71,7 +71,7 @@ _memebers = (
     sio.str2kpath,
     sio.fancy_quiver3d,
     sio.rotation,
-    sio.atoms_color,
+    sio.periodic_table,
     wdg.generate_summary,
     vp.split_vasprun,
     vp.xml2dict,

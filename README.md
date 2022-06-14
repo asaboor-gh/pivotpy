@@ -213,13 +213,13 @@ Some tasks are very tideious in python while just a click way in powershell. See
 pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
 ```
 
-    [32;1m NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName[0m
-    [32;1m ------    -----      -----     ------      --  -- -----------[0m
-    21     6.83       8.29       0.44    8072   1 AcrobatNotificat…
-    6     1.30       5.66       0.00    7996   0 AggregatorHost
-    19     7.61      20.82       0.00    5992   0 AppHelperCap
-    25    25.75      51.34       8.36   12768   1 ApplicationFrame…
-    10     1.79       6.88       0.00    5732   0 armsvc
+    [32;1m NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI[0m
+    [32;1m ------    -----      -----     ------      --  --[0m
+    21     6.79       3.25       0.19    9812   1
+    6     1.17       5.68       0.00    7844   0
+    16     5.63      17.67       0.00    5948   0
+    24    22.64      47.89       0.27    2496   1
+    10     1.93       7.20       0.00    5504   0
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -260,12 +260,12 @@ Get-ChildItem 'E:\Research\graphene_example\'
         Directory: E:\Research\graphene_example
     
     
-    Mode                 LastWriteTime         Length Name              
-    ----                 -------------         ------ ----              
-    da----          6/9/2022  10:33 AM                ISPIN_1           
-    da----          5/9/2020   1:05 PM                ISPIN_2           
-    -a----          5/9/2020   1:01 PM          75331 OUTCAR            
-    -a----          5/9/2020   1:01 PM         240755 vasprun.xml       
+    Mode                 LastWriteTime         Length
+    ----                 -------------         ------
+    da----          6/9/2022  10:33 AM               
+    da----          5/9/2020   1:05 PM               
+    -a----          5/9/2020   1:01 PM          75331
+    -a----          5/9/2020   1:01 PM         240755
     
     
 
