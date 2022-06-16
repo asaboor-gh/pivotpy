@@ -68,7 +68,7 @@ class Dict2Data:
             return data
         
         if isinstance(data,(str,bytes)):
-            new_data = load(data, json_to = cls)
+            new_data = load(data)
             if not isinstance(new_data,cls):
                 raise TypeError(f"Data is not of type {cls}.")
             return new_data
@@ -100,7 +100,7 @@ class Dict2Data:
         return dump(self,dump_to='json',outfile=outfile,indent=indent)
 
     def to_pickle(self,outfile=None):
-        """Dumps a `Dict2Data` object (root or nested level) to pickle.
+        """Dumps a `Dict2Data` or subclass object (root or nested level) to pickle.
         - **Parameters**
             - outfile : Default is None and returns string. If given, writes to file.
         """
@@ -258,6 +258,7 @@ def dump(dict_data = None, dump_to = 'pickle',outfile = None,indent=1):
         raise ValueError("`dump_to` expects 'pickle' or 'json', got '{}'".format(dump_to))
     try: 
         dict_obj = dict_data.to_dict() # Change Data object to dictionary
+        dict_obj = {'_loader_':dict_data.__class__.__name__,'_data_':dict_obj} # Add class name to dictionary for reconstruction
     except: 
         dict_obj = dict_data
     if dump_to == 'pickle':
@@ -275,15 +276,12 @@ def dump(dict_data = None, dump_to = 'pickle',outfile = None,indent=1):
     return None
 
 
-def load(file_or_str,json_to = Dict2Data):
+def load(file_or_str):
     """
     - Loads a json/pickle dumped file or string by auto detecting it.
     - **Parameters**
-        - file_or_str : Filename of pickl/json or their string.
-        - json_to     : If loading json, convert to (Dict2Data by defualt) or subclasses and/or dict. 
+        - file_or_str : Filename of pickl/json or their string. 
     """
-    if json_to not in [dict, Dict2Data,VasprunData,SpinData,PoscarData,LocpotData,OutcarData]:
-        raise ValueError("`json_to` expects `Dict2Data`, `dict`, `VasprunData`, `SpinData`, `PoscarData`, `LocpotData`, `OutcarData`, got '{}'".format(load_as))
     out = {}
     if not isinstance(file_or_str,bytes):
         try: #must try, else fails due to path length issue
@@ -301,10 +299,13 @@ def load(file_or_str,json_to = Dict2Data):
         except: out = json.loads(file_or_str,cls = DecodeToNumpy)
     elif isinstance(file_or_str,bytes):
             out = pickle.loads(file_or_str)
+    
 
     if type(out) is dict:
-        if json_to == dict:
-            return out
-        return json_to(out)
-    return out
-
+        if '_loader_' in out:
+            return globals()[out['_loader_']](out['_data_'])
+    else:
+        if hasattr(out, '_loader_'):
+            return globals()[out._loader_](out._data_)
+        
+    return out # Retruns usual dictionaries

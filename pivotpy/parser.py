@@ -190,7 +190,7 @@ def join_ksegments(kpath,kseg_inds=[]):
             path_list[ind:] -= path_list[ind] - path_list[ind-1]
     return list(path_list)
 
-def get_kpts(xml_data, skipk = 0,kseg_inds=[]):
+def get_kpts(xml_data, skipk = 0):
     for kpts in xml_data.root.iter('varray'):
         if(kpts.attrib=={'name': 'kpointlist'}):
             kpoints=[[float(item) for item in arr.text.split()] for arr in kpts.iter('v')]
@@ -198,8 +198,7 @@ def get_kpts(xml_data, skipk = 0,kseg_inds=[]):
     #KPath solved.
     kpath = get_space_info(xml_data).cartesian_kpath[skipk:]
     kpath = kpath - kpath[0] # Shift to start at 0
-    # If broken path, then join points.
-    kpath = join_ksegments(kpath,kseg_inds)
+    # Do Not Join KPath if it is broken, leave that to plotting functions
     return serializer.Dict2Data({'NKPTS':len(kpoints),'kpoints':kpoints,'kpath':kpath})
 
 def get_tdos(xml_data,spin_set=1,elim=[]):
@@ -433,14 +432,13 @@ def get_structure(xml_data):
             'positions': np.array(positions),'labels':labels,'unique': unique_d}
     return serializer.PoscarData(st_dic)
 
-def export_vasprun(path = None, skipk = None, elim = [], kseg_inds = [], shift_kpath = 0, dos_only = False):
+def export_vasprun(path = None, skipk = None, elim = [], shift_kpath = 0, dos_only = False):
     """
     - Returns a full dictionary of all objects from `vasprun.xml` file. It first try to load the data exported by powershell's `Export-VR(Vasprun)`, which is very fast for large files. It is recommended to export large files in powershell first.
     - **Parameters**
         - path       : Path to `vasprun.xml` file. Default is `'./vasprun.xml'`.
         - skipk      : Default is None. Automatically detects kpoints to skip.
         - elim       : List [min,max] of energy interval. Default is [], covers all bands.
-        - kseg_inds  : List of indices of kpoints where path is broken.
         - shift_kpath: Default 0. Can be used to merge multiple calculations on single axes side by side.
     
     **Returns**: `pivotpy.serializer.VasprunData` object.
@@ -458,7 +456,7 @@ def export_vasprun(path = None, skipk = None, elim = [], kseg_inds = [], shift_k
         skipk = exclude_kpts(xml_data) #that much to skip by default
     info_dic = get_summary(xml_data) #Reads important information of system.
     #KPOINTS
-    kpts = get_kpts(xml_data,skipk=skipk,kseg_inds=kseg_inds)
+    kpts = get_kpts(xml_data,skipk=skipk)
     #EIGENVALS
     eigenvals = get_evals(xml_data,skipk=skipk,elim=elim)
     #TDOS
@@ -513,7 +511,7 @@ def _validate_evr(path_evr=None,**kwargs):
 
     if isinstance(path_evr,str):
         if os.path.isfile(path_evr):
-            # kwargs -> skipk=skipk,elim=elim,kseg_inds=kseg_inds
+            # kwargs -> skipk=skipk,elim=elim
             return export_vasprun(path=path_evr,**kwargs)
         else:
             raise FileNotFoundError(f'File {path_evr!r} not found!')

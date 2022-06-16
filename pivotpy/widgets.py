@@ -332,6 +332,7 @@ class InputGui:
         ipw.dlink((self.dds['elms'],'value'),(self.texts['elms'],'value'))
         ipw.dlink((self.dds['orbs'],'value'),(self.texts['orbs'],'value'))
 
+
     def update_options(self,sys_info=None):
         if sys_info:
             orbs_opts = [(str(i)+': '+item,str(i)) for i,item in enumerate(sys_info.fields)]
@@ -358,6 +359,7 @@ class InputGui:
                 elif v:
                     _out = [*_out,int(v)]
             return _out
+
         index = self.dds['rgb'].value
         self.output['elements'][index] = read(self.texts['elms'].value)
         self.output['orbs'][index] = read(self.texts['orbs'].value)
@@ -368,6 +370,7 @@ class InputGui:
                              """.format(self.dds['rgb'].label.lower())
         sleep(1)
         self.html.value = ''
+
 
     def __see_input(self,change):
         # Unobserve first to avoid overwriting
@@ -485,9 +488,7 @@ def _color_toggle(tog_w,fig,rd_btn):
 def generate_summary(paths_list=None):
     # Make Data Frame
     result_paths = []
-    common_prefix = '' #placeholder
     if paths_list:
-        common_prefix = os.path.commonprefix(paths_list)
         for item in paths_list:
             if item and os.path.isdir(item):
                 result_paths.append(os.path.join(item,'result.json'))
@@ -495,37 +496,32 @@ def generate_summary(paths_list=None):
                 result_paths.append(os.path.join(os.path.split(item)[0],'result.json'))
     result_dicts = []
     for path in result_paths:
-        try: _p_ = os.path.split(path)[0].split(common_prefix)[1]
-        except: _p_ = '' #In current directory
         try:
-            with open(path,'r') as f:
-                l_d = json.load(f)
-                l_d.update({'rel_path':_p_})
-                result_dicts.append(l_d)
-
+            data = serializer.load(path)
+            data.update({'path':path})
+            result_dicts.append(data)
         except: pass
+
     out_dict = {} # placeholder
     if result_dicts:
-        out_dict.update({k:[v] if v!='' else [np.nan] for k,v in result_dicts[0].items()})
-        for i,d in enumerate(result_dicts):
-            if i != 0:
-                for k,v in d.items():
-                    v = np.nan if v=='' else v
-                    try: out_dict[k].append(v)
-                    except:
-                        out_dict.update({k:[np.nan for l in range(i)]}) #if not key before, add to all previous
-                        out_dict[k].append(v) # Then append for current value
+        out_dict.update({k:[v] if v != '' else [np.nan] for k,v in result_dicts[0].items()})
+        for i,d in enumerate(result_dicts, start = 1):
+            for k,v in d.items():
+                v = np.nan if v == '' else v
+                try:
+                    out_dict[k].append(v)
+                except:
+                    out_dict.update({k:[np.nan for l in range(i)]}) #if not key before, add to all previous
+                    out_dict[k].append(v) # Then append for current value
             # If next dictionary does not have key
             for k in out_dict.keys():
                 if k not in d.keys():
                     out_dict[k].append(np.nan)
-    try: out_dict.pop('Fermi',None) # Remove Fermi as not necessary
-    except: pass
 
-    df = pd.DataFrame(out_dict)
-    if common_prefix:
-        return df.style.set_caption("Root Path: {}".format(common_prefix)) # return with header
-    return df #return simple
+    if out_dict.get('Fermi',None):
+        out_dict.pop('Fermi',None) # Remove Fermi as not necessary
+
+    return pd.DataFrame(out_dict)
 
 # Cell
 class VasprunApp:
@@ -547,7 +543,7 @@ class VasprunApp:
     ```
     """
     output = ipw.Output().add_class('output')
-    def __init__(self,height=580):
+    def __init__(self,height = 610):
         self.height = height
         tab = ipw.Tab(layout = ipw.Layout(min_height=f'{height}px', max_height='100vh',
                                            min_width='700px', max_width='100vw')
@@ -563,7 +559,6 @@ class VasprunApp:
         self.__path = None # current path
         self.fig    = go.FigureWidget() # plotly's figure widget
         self.fig.update_layout(autosize=True)
-        self.df     = None # Summary DataFrame
         self.result = {'sys':'','V':'','a':'','b':'','c':'','Fermi': None,
                      'VBM':'','CBM':'','so_max':'','so_min':''} # Table widget value
 
@@ -581,7 +576,7 @@ class VasprunApp:
 
         l_btn = ipw.Layout(width='max-content')
         self.buttons = {'load_data' : Button(description='Load Data',layout=l_btn,tooltip='Load and Cache Data'),
-                        'load_graph': Button(description='Load Graph',layout=l_btn,tooltip='Create Graph'),
+                        'load_graph': Button(description='Update Graph',layout=l_btn,tooltip='Create Graph'),
                         'confirm'   : Button(description='Confirm Delete',layout=l_btn,icon='trash'),
                         'summary'   : Button(description='Project Summary',layout=l_btn,tootltip='Make DataFrame'),
                         'expand'    : Button(icon = "fa-expand",layout=l_btn,tooltip='Expand Fig'),
@@ -614,8 +609,13 @@ class VasprunApp:
 
         # Observing
         self.InGui.html.observe(self.__update_input,"value")
+        self.InGui.html.observe(self._warn_to_load_graph,"value")
+        self.files_dd.observe(self._warn_to_load_graph,"value")
+        self.texts['kjoin'].observe(self._warn_to_load_graph,"value")
+        self.dds['band_dos'].observe(self._warn_to_load_graph,"value")
         self.dds['band_dos'].observe(self.__update_input,"value")
         self.texts['fermi'].observe(self.__update_input,"value")
+        self.texts['fermi'].observe(self.__update_fermi_level,"value")
         self.texts['kjoin'].observe(self.__update_input,"value")
         self.texts['kticks'].observe(self.__update_xyt,"value")
         self.texts['ktickv'].observe(self.__update_xyt,"value")
@@ -635,9 +635,34 @@ class VasprunApp:
         self.buttons['expand'].on_click(self.__expand_fig)
         self.buttons['load_graph'].on_click(self.__update_graph)
         self.dds['en_type'].observe(self.__update_table,"value") # This works from _click_data
-
         # Build Layout
         self.__build()
+
+    def __check_lsorbit(self):
+        if self.data:
+            lsorbit = self.data.sys_info.incar.to_dict().get('LSORBIT','F')
+            options = ['Fermi','VBM','CBM','None']
+            if lsorbit in 'T':
+                options = ['Fermi','VBM','CBM','so_max','so_min','None']
+            self.dds['en_type'].options = options
+            self.dds['en_type'].value = 'None'
+
+    def __update_fermi_level(self,change):
+        with self.fig.batch_animate():
+            old_fermi = float(change['old']) if change['old'] else 0 # Could be None before
+            new_fermi = float(change['new'])
+            for trace in self.fig.data: # Shift graph as Fermi Changes
+                if self.dds['band_dos'].value == 'Bands':
+                    trace.y = [y - new_fermi + old_fermi for y in trace.y]
+                else:
+                    trace.x = [x - new_fermi + old_fermi for x in trace.x]
+
+            self.__update_input(change = None) # Update input as well
+
+    def _warn_to_load_graph(self, change = None):
+        self.buttons['load_graph'].icon = 'refresh'
+        self.buttons['load_graph'].style.button_color = 'yellow'
+        self.buttons['load_graph'].description = 'Update Graph'
 
     def set_theme_colors(self,theme_colors):
         "Get self.theme_colors and after edit set back"
@@ -716,7 +741,6 @@ class VasprunApp:
                         self.htmls['table']],layout=Layout(max_width='40%'),
                         ).add_class('marginless').add_class('borderless')
         self.fig_gui.children = (left_box,right_box)
-        self.buttons['load_graph'].icon = 'fa-refresh'
         return self.fig_gui # Return for use in show
 
     @output.capture()
@@ -813,6 +837,13 @@ class VasprunApp:
 
     @output.capture(clear_output=True,wait=True)
     def __on_load(self,button):
+        if self.data and self.files_dd.value == self.__path: # Same load and data exists, keeps in fast
+            print('Data already loaded')
+            self.buttons['load_data'].description = 'Data already loaded'
+            sleep(1)
+            self.buttons['load_data'].description = 'Load Data'
+            return None
+
         self.__fill_ticks() # First fill ticks, then update input
         self.__update_input(change=None) # Fix input right here.
         self.__load_previous(change=button) # previous calculations.
@@ -844,7 +875,7 @@ class VasprunApp:
         self.buttons['load_data'].description='Load Data'
         self.__path = self.files_dd.value # Update in __on_load or graph to make sure data loads once
         self.buttons['load_data'].tooltip = "Current System\n{!r}".format(self.data.sys_info)
-        self.buttons['load_graph'].icon = 'fa-refresh'
+        self._warn_to_load_graph()
 
     @output.capture(clear_output=True,wait=True)
     def __update_input(self,change):
@@ -860,12 +891,13 @@ class VasprunApp:
             self.input['kseg_inds'] = [int(v) for v in kjoin_str if v!='-'] if kjoin_str else None
             self.input['ktick_inds'] = [int(v) for v in kticks_str if v!='-'] if kticks_str else [0,-1]
             self.input['ktick_vals'] = [v for v in ktickv_str if v!=''] if ktickv_str else ['A','B']
+
         else:
             self.input = {k:v for k,v in self.input.items() if k not in ['ktick_inds','ktick_vals','kseg_inds']}
         #Update at last
         self.InGui.output = self.input
         self.buttons['load_graph'].tooltip = "Current Input\n{!r}".format(serializer.Dict2Data(self.input))
-        self.buttons['load_graph'].icon = 'fa-refresh'
+
 
     @output.capture(clear_output=True,wait=True)
     def __update_table(self,change):
@@ -877,15 +909,15 @@ class VasprunApp:
         self.tab.selected_index = 2
         self.buttons['summary'].description = 'See STD(out/err) Tab'
         paths = [v for (k,v) in self.files_dd.options]
-        df = generate_summary(paths_list=paths)
-        display(df)
-        self.df = df # Assign
+        display(generate_summary(paths_list=paths))
         print('Get above DataFrame by app_name.df\nNote: app_name is variable name assigned to VasprunApp()')
-        print('==================== OR =========================')
-        _code = "import pivotpy as pp\npaths = ['{}']\ndf = pp.generate_summary(paths_list=paths)\ndf".format("',\n         '".join([str(p).replace('\\','/') for p in paths]))
-        _code += "\n#ax = pp.get_axes()\n#df.plot(ax=ax,x='sys',y=['V','a'])"
-        display(Markdown("```python\n{}\n```".format(_code)))
         self.buttons['summary'].description = 'Project Summary'
+
+    @property
+    def df(self):
+        "Access Results of all calculations as DataFrame"
+        paths = [v for (k,v) in self.files_dd.options]
+        return generate_summary(paths_list=paths)
 
     @output.capture(clear_output=True,wait=True)
     def __deleter(self,btn):
@@ -928,7 +960,8 @@ class VasprunApp:
         filename = os.path.join(s_p,'ConnectedFig.html')
         filename = gu.prevent_overwrite(filename)
         self.buttons['save_fig'].description = 'Saving...'
-        views = VBox([self.htmls['theme'],self.fig,self.htmls['table']],
+        theme = self.htmls['theme'].value.replace(f'.{self.main_class}','')
+        views = VBox([ipw.HTML(theme),self.fig,self.htmls['table']],
                 layout=Layout(width='500px',height='490px')).add_class('borderless')
         embed_minimal_html(filename, views=[views], state=dependency_state([views]))
         self.buttons['save_fig'].description = 'Save Fig'
@@ -942,33 +975,38 @@ class VasprunApp:
     # Garph
     @output.capture(clear_output=True,wait=True)
     def __update_graph(self,btn):
+        if (self.buttons['load_graph'].icon == 'check') and (self.data and self.files_dd.value == self.__path):
+            print('Graph is already updated with latest input!')
+            self.buttons['load_graph'].description = 'Graph Already Updated'
+            sleep(1)
+            self.buttons['load_graph'].description = 'Latest Graph'
+            return None
+
         path = self.files_dd.value
         if path:
             self.__fill_ticks() # First fill ticks, then update input
             self.__update_input(change=None) # Update input here as well
             self.tab.selected_index = 2
             self.fig.data = []
-            if self.data and path == self.__path: # Same load and data exists, heeps in fast
+            if self.data and path == self.__path: # Same load and data exists, keeps in fast
                 print('Data already loaded')
             else:
+                self.buttons['load_graph'].description = 'Loading Data...'
                 try:
-                    self.buttons['load_graph'].description = 'Loading pickle...'
                     print('Trying to Load Cache for Graph ...')
                     file = os.path.join(os.path.split(path)[0],'vasprun.pickle')
                     self.buttons['load_graph'].description = file
                     self.data = serializer.load(file)
-                    self.buttons['load_graph'].description = 'Load Graph'
                 except:
-                    self.buttons['load_graph'].description = 'Loading export...'
                     print('No cache found. Loading from file {} ...'.format(path))
                     self.data = vp.export_vasprun(path, **self.evr_kws)
-                self.buttons['load_graph'].description = "Load Graph"
 
+            self.buttons['load_graph'].description = 'Updating Graph...'
             print('Done')
 
             self.__path  = self.files_dd.value #update here or __on_load. Useful to match things
-            self.buttons['load_graph'].description = 'Load Graph'
             _ = self.__read_data(self.data.poscar,self.data.sys_info) # Update Table data
+            self.__check_lsorbit() # Check if LSORBIT is on, then set options accordingly
             # Do Not Read Fermi, its 0 or given by user
             if self.dds['band_dos'].value == 'Bands':
                 fig_data = ip.iplot_rgb_lines(path_evr=self.data,**self.input,**self.ibands_kws)
@@ -984,7 +1022,10 @@ class VasprunApp:
                 self.fig.layout = fig_data.layout
 
             _click_data(self.dds['en_type'],self.texts['fermi'],self.result,self.fig,self.dds['band_dos'])
-            self.buttons['load_graph'].icon = 'fa-check'
+
+            self.buttons['load_graph'].icon = 'check'
+            self.buttons['load_graph'].description = 'Latest Graph'
+            self.buttons['load_graph'].style.button_color = 'transparent'
 
     @output.capture(clear_output=True,wait=True)
     def __clear_cache(self):

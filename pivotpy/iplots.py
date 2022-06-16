@@ -262,7 +262,7 @@ def iplot_rgb_lines(path_evr    = None,
     if mode not in ('markers','bands','lines'):
         raise TypeError("Argument `mode` expects one of ['markers','bands','lines'], got '{}'.".format(mode))
 
-    vr = vp._validate_evr(path_evr=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
+    vr = vp._validate_evr(path_evr=path_evr,skipk=skipk,elim=elim)
 
     # Fix orbitals, elements and labels lengths very early.
     if query_data:
@@ -276,7 +276,7 @@ def iplot_rgb_lines(path_evr    = None,
 
     if E_Fermi == None:
         E_Fermi=vr.bands.E_Fermi
-    K = vp.join_ksegments(vr.kpath,kseg_inds=kseg_inds)
+    K = vp.join_ksegments(vr.kpath,kseg_inds = kseg_inds)
     xticks=[K[i] for i in ktick_inds]
     xlim=[min(K),max(K)]
     if(elim):

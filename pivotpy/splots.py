@@ -351,7 +351,7 @@ def splot_bands(path_evr=None,ax=None,skipk=None,kseg_inds=[],elim=[],ktick_inds
     - **Returns**
         - ax : matplotlib axes object with plotted bands.
     """
-    vr = vp._validate_evr(path_evr=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
+    vr = vp._validate_evr(path_evr=path_evr,skipk=skipk,elim=elim)
 
     # Main working here.
     K = vp.join_ksegments(vr.kpath,kseg_inds=kseg_inds)
@@ -856,7 +856,7 @@ def splot_rgb_lines(path_evr    = None,
     > Note: Two figures made by this function could be comapred quantitatively only if `scale_data=False, max_width=None, scale_color=False` as these parameters act internally on data.
     """
     # Fix input data
-    vr = vp._validate_evr(path_evr=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
+    vr = vp._validate_evr(path_evr=path_evr,skipk=skipk,elim=elim)
 
     # Fix orbitals, elements and labels lengths very early.
     if query_data:
@@ -874,7 +874,7 @@ def splot_rgb_lines(path_evr    = None,
     # Small things
     if E_Fermi == None:
         E_Fermi = vr.bands.E_Fermi
-    K = vp.join_ksegments(vr.kpath,kseg_inds=kseg_inds)
+    K = vp.join_ksegments(vr.kpath,kseg_inds = kseg_inds)
     xticks = [K[i] for i in ktick_inds]
     xlim = [min(K),max(K)]
     if elim:
@@ -1021,7 +1021,7 @@ def splot_color_lines(path_evr      = None,
     > Note: Two figures made by this function could be comapred quantitatively only if `scale_data=False, max_width=None` as these parameters act internally on data.
     """
     # Fix data input
-    vr = vp._validate_evr(path_evr=path_evr,skipk=skipk,elim=elim,kseg_inds=kseg_inds)
+    vr = vp._validate_evr(path_evr=path_evr,skipk=skipk,elim=elim)
     # Fix orbitals, elements and labels lengths very early.
     if query_data:
         elements, orbs, labels = _format_input(query_data=query_data,rgb=False)# preferred over elements, orbs, labels
