@@ -395,23 +395,16 @@ class InputGui:
 #mouse event handler
 def _click_data(sel_en_w,fermi_w,data_dict,fig,bd_w):
     def handle_click(trace, points, state):
-        if(points.ys!=[]):
-            e_fermi = (float(fermi_w.value) if fermi_w.value else 0)
+        if points.ys != []:
+            e_fermi = float(fermi_w.value) if fermi_w.value else 0
             v_clicked = points.ys[0] if bd_w.value=='Bands' else points.xs[0]
             val = np.round(float(v_clicked) + e_fermi,4) #exact value
+
             for key in sel_en_w.options:
                 if key in sel_en_w.value and key != 'None':
                     data_dict[key] = val # Assign value back
                 if 'Fermi' in sel_en_w.value:
-                    fermi_w.value = str(val) # change fermi
-            # Shift Graph for Fermi value
-            if 'Fermi' in sel_en_w.value:
-                with fig.batch_animate():
-                    for trace in fig.data: # Shift graph as Fermi Changes
-                        if bd_w.value == 'Bands':
-                            trace.y = [y - data_dict['Fermi'] + e_fermi for y in trace.y]
-                        else:
-                            trace.x = [x - data_dict['Fermi'] + e_fermi for x in trace.x]
+                    fermi_w.value = str(val) # change fermi text box which will update graph itself
 
             # Update Fermi, SO etc
             if data_dict['VBM'] and data_dict['CBM']:
@@ -461,30 +454,6 @@ def _save_data(out_w1,data_dict):
     serializer.dump(data_dict,dump_to='json',outfile=out_f)
 
 # Cell
-def _color_toggle(tog_w,fig,rd_btn):
-    if tog_w.icon == 'toggle-off':
-        tog_w.icon = 'toggle-on'
-        with fig.batch_animate():
-            if rd_btn.value == 'DOS':
-                for trace in fig.data:
-                    trace.fill='tozeroy'
-            else:
-                for trace in fig.data[:1]:
-                    trace.mode='markers+lines'
-                    trace.line.color='rgba(222,222,220,0.1)'
-    else:
-        tog_w.icon = 'toggle-off'
-        with fig.batch_animate():
-            if rd_btn.value == 'DOS':
-                for trace in fig.data:
-                    trace.fill=None
-            else:
-                for trace in fig.data[:1]:
-                    trace.mode='lines'
-                    trace.line.width=1.5
-                    trace.line.color='skyblue'
-
-# Cell
 def generate_summary(paths_list=None):
     # Make Data Frame
     result_paths = []
@@ -524,6 +493,8 @@ def generate_summary(paths_list=None):
     return pd.DataFrame(out_dict)
 
 # Cell
+
+#export
 class VasprunApp:
     """
     Display a GUI for vasp output analysis. `self.theme_colors` can be used to edit custom theme.
@@ -570,7 +541,7 @@ class VasprunApp:
         # Permeannet Parameters
         self.idos_kws   = dict(colormap='RGB',tdos_color=(0.5, 0.95, 0),linewidth=2,fill_area=True,
                                spin='both',interp_nk={},title=None)
-        self.ibands_kws = dict(mode='markers',skipk=None,max_width=6,title=None,interp_nk={})
+        self.ibands_kws = dict(mode='bands',skipk=None,max_width=6,title=None,interp_nk={}, scale_color = True)
         self.evr_kws = dict(skipk=None,elim=[])
         self.cache_data = True
 
@@ -580,7 +551,6 @@ class VasprunApp:
                         'confirm'   : Button(description='Confirm Delete',layout=l_btn,icon='trash'),
                         'summary'   : Button(description='Project Summary',layout=l_btn,tootltip='Make DataFrame'),
                         'expand'    : Button(icon = "fa-expand",layout=l_btn,tooltip='Expand Fig'),
-                        'toggle'    : Button(description='RGB',layout=l_btn,icon='toggle-on',tooltip='Toggle Colors'),
                         'save_fig'  : Button(description='Save Fig',icon='download',layout=l_btn,tooltip='')
                         }
 
@@ -602,7 +572,8 @@ class VasprunApp:
                       'kjoin' : Text(value='',layout=b_out,continuous_update=False),
                       'elim'  : Text(value='',layout=b_out,continuous_update=False),
                       'fermi' : Text(value='',layout=b_out,continuous_update=False),
-                      'xyt'   : Text(value='',continuous_update=False)
+                      'xyt'   : Text(value='',continuous_update=False),
+                      'load_elim'  : Text(value='-5,5',layout = Layout(width='5em'),continuous_update=False)
                       }
         self.htmls = {'theme': ipw.HTML(css_style(light_colors,_class = self.main_class)),
                       'table': ipw.HTML()}
@@ -624,19 +595,32 @@ class VasprunApp:
         self.dds['theme'].observe(self.__update_theme,"value")
         self.dds['style'].observe(self.__update_plot_style,"value")
         self.files_dd.observe(self.__load_previous,"value")
+        self.buttons['load_graph'].on_click(self.__load_previous,"value")
         self.buttons['load_data'].on_click(self.__on_load)
         self.dds['band_dos'].observe(self.__figure_tab,"value")
         self.files_dd.observe(self.__update_table,'value')
         self.buttons['load_data'].observe(self.__update_table,'value')
+        self.dds['en_type'].observe(self.__update_table,"value") # This works from _click_data
         self.buttons['summary'].on_click(self.__df_out)
         self.buttons['confirm'].on_click(self.__deleter)
-        self.buttons['toggle'].on_click(self.__tog_b)
         self.buttons['save_fig'].on_click(self.__save_connected)
         self.buttons['expand'].on_click(self.__expand_fig)
         self.buttons['load_graph'].on_click(self.__update_graph)
-        self.dds['en_type'].observe(self.__update_table,"value") # This works from _click_data
+        self.texts['load_elim'].observe(self.__elim_changed,"value")
         # Build Layout
         self.__build()
+        self.tab.on_displayed(self._on_displayed)
+
+    def _on_displayed(self, change = None):
+        self.tab.selected_index = 1
+        self.fig_gui.layout.width = '95%' # Just to send a signal to resize the graph
+        self.fig_gui.layout.width = '100%' # Just to send another signal for figure size
+        self.tab.selected_index = 0
+
+    def __elim_changed(self,change):
+        # Delete Cache and Data to make user reload data
+        self.dds['cache'].value = 'PWD Cache'
+        self.buttons['confirm'].click()
 
     def __check_lsorbit(self):
         if self.data:
@@ -679,7 +663,10 @@ class VasprunApp:
                 HBox([Label('File:',layout=Layout(width='50px')),self.files_dd
                     ]).add_class('borderless').add_class('marginless'),
                 HBox([Label('View:',layout=Layout(width='50px')),
-                        self.dds['band_dos'],self.buttons['load_data']
+                        self.dds['band_dos'],
+                        Label('elim:',layout=Layout(width='3em')),
+                        self.texts['load_elim'],
+                        self.buttons['load_data'],
                     ]).add_class('borderless').add_class('marginless')
                 ]).add_class('marginless').add_class('borderless')
 
@@ -719,7 +706,7 @@ class VasprunApp:
                            ]).add_class('marginless').add_class('borderless')
                       ]).add_class('marginless')]
             right_box.children = [top_right,fig_box,points_box]
-            self.buttons['toggle'].description = 'RGB'
+
         else:
             in_box.children = [Label('---------- Projections ----------'),self.InGui.box,
                                Label('---- Other Arguments/Options ----'),
@@ -730,13 +717,11 @@ class VasprunApp:
                       ]).add_class('marginless')]
             right_box.children = [top_right,fig_box,points_box]
             self.dds['en_type'].value = 'None' # no scatter collection in DOS.
-            self.buttons['toggle'].description = 'Fill'
-
 
         left_box = VBox([upper_box,
                         in_box,
                         HBox([Label('X, Y, Title'),self.texts['xyt']]).add_class('borderless'),
-                        HBox([Label('Options:'),self.buttons['summary'],self.buttons['save_fig'],self.buttons['toggle']]),
+                        HBox([Label('Options:'),self.buttons['summary'],self.buttons['save_fig']]),
                         cache_box,
                         self.htmls['table']],layout=Layout(max_width='40%'),
                         ).add_class('marginless').add_class('borderless')
@@ -819,7 +804,8 @@ class VasprunApp:
         try:
             _dir = os.path.split(path)[0]
             r_f = os.path.join(_dir,'result.json')
-            self.result = serializer.load(r_f,keep_as_dict=True)
+            self.result = serializer.load(r_f)
+            self.__update_table(change = None)
             print('Previous Analysis loaded in Table for {}'.format(path))
         except:
             print('Previous Analysis does not exist for {}'.format(path))
@@ -856,6 +842,9 @@ class VasprunApp:
             print('Cache Loaded')
         except:
             print('Trying Loading from Python ...')
+            elim = self.texts['load_elim'].value.split(',')[:2] # First two elements
+            if len(elim) == 2:
+                self.evr_kws['elim'] = [float(e) for e in elim]
             self.data = vp.export_vasprun(self.files_dd.value, **self.evr_kws)
             if self.cache_data:
                 print('Caching From: {}'.format(self.files_dd.value)) #Cache result
@@ -951,10 +940,6 @@ class VasprunApp:
                 self.fig.update_xaxes(range = self.input['elim'])
 
     @output.capture(clear_output=True,wait=True)
-    def __tog_b(self,tog_w):
-        _color_toggle(self.buttons['toggle'],self.fig,self.dds['band_dos'])
-
-    @output.capture(clear_output=True,wait=True)
     def __save_connected(self,btn):
         s_p = os.path.split(self.files_dd.value)[0]
         filename = os.path.join(s_p,'ConnectedFig.html')
@@ -999,6 +984,9 @@ class VasprunApp:
                     self.data = serializer.load(file)
                 except:
                     print('No cache found. Loading from file {} ...'.format(path))
+                    elim = self.texts['load_elim'].value.split(',')[:2] # First two elements
+                    if len(elim) == 2:
+                        self.evr_kws['elim'] = [float(e) for e in elim]
                     self.data = vp.export_vasprun(path, **self.evr_kws)
 
             self.buttons['load_graph'].description = 'Updating Graph...'
@@ -1038,11 +1026,16 @@ class VasprunApp:
         if 'PWD' in self.dds['cache'].value:
             _files = [os.path.join(_dir,f) for f in ['sys_info.pickle','vasprun.pickle']]
             _ = [[print("Deleting", _file),os.remove(_file)] for _file in _files if os.path.isfile(_file)]
+            self.data =  None
+            self._warn_to_load_graph(change=None)
         if 'All' in self.dds['cache'].value:
             for (key, value) in self.files_dd.options:
                 _dir = os.path.split(value)[0]
                 _files = [os.path.join(_dir,f) for f in ['sys_info.pickle','vasprun.pickle']]
                 _ = [[print("Deleting", _file),os.remove(_file)] for _file in _files if os.path.isfile(_file)]
+            self.data =  None
+            self._warn_to_load_graph(change=None)
+
         self.tab.selected_index = 1
 
     def iplot(self,**kwargs):
@@ -1327,9 +1320,13 @@ class KPathApp:
         _, k_str = self.get_data()
         return sio.str2kpath(k_str,**kws)
 
-    def splot(self,**kwargs):
-        "Same as `pp.splot_bz` except it also plots path on BZ. `kwargs` are passed to `pp.splot_bz`"
-        ax = sio.splot_bz(path_pos_bz=self.path,**kwargs)
+    def splot(self,text_kws = {}, plot_kws ={}, **kwargs):
+        """Same as `pp.splot_bz` except it also plots path on BZ.
+
+        - text_kws: dict of keyword arguments for `plt.text`
+        - plot_kws: dict of keyword arguments for `plt.plot`
+        `kwargs` are passed to `pp.splot_bz`"""
+        ax = sio.splot_bz(self.bz,**kwargs)
         coords,labels = self.get_coords_labels()
         plane = kwargs.get('plane',None)
         if plane != None and plane in 'xyzxzyx':
@@ -1338,8 +1335,8 @@ class KPathApp:
             ix,iy = arr[ind],arr[ind+1]
             coords = coords[:,[ix,iy]]
         if coords.any(): #To avoid errors if not coords
-            ax.plot(*coords.T,'-o',color='blue',lw=0.8)
-            _ = [ax.text(*vs,lab) for vs,lab in zip(coords,labels) if lab!='NaN']
+            ax.plot(*coords.T,'-o',**plot_kws)
+            _ = [ax.text(*vs,lab, **text_kws) for vs,lab in zip(coords,labels) if lab!='NaN']
         return ax
     def iplot(self):
         "Returns disconnected current plotly figure"

@@ -20,13 +20,15 @@ except:
     import pivotpy.utils as gu
 
 # Cell
-def _get_rgb_data(   kpath       = None,
+def _get_rgb_data(  kpath       = None,
                     evals_set   = None,
                     pros_set    = None,
                     elements    = [[0],[],[]],
                     orbs        = [[0],[],[]],
                     interp_nk   = {},
-                    scale_color = False
+                    scale_color = False,
+                    occs_set    = None,
+                    kpoints     = None,
     ):
     """
     - Returns a formatted RGB colored data to pass into `_rgb2plotly` function. Two arguments, `elements` and `orbs` should be in one-to-one correspondence. Returned item has transpose data shape, so that main iteration is over bands.
@@ -38,9 +40,11 @@ def _get_rgb_data(   kpath       = None,
         - orbs     : List of three lists of orbitals indices. `[[red],[green],[blue]]`, you can create any color by this combination. For example, to get `s-orbital in yellow color`, you will use `[[0],[0],[]]`. Do not remove empty list from there, it will not effect your orbital selection.
         - interp_nk   : Dictionary with keys 'n' and 'k' for interpolation.
         - scale_color: If True, colors are scaled to 1 at each points.
+        - occs_set: `export_vasprun`().bands.occs or `get_evals`().occs. If calculations are spin-polarized, it will be `...occs.SpinUp/SpinDown` for both. You need to apply twice for SpinUp and SpinDown separately.
     - **Returns**
         - kpath    : List of NKPTS. (interpolated if given.)
         - evals    : An (NBAND,NKPTS) numpy arry.
+        - occs     : An (NBAND,NKPTS) numpy arry.
         - colors   : An (NBANDS,NKPTS,3) numpy array.
         - widths   : An (NBAND,NKPTS) numpy arry, its actually colors summed along z-axis.
     """
@@ -61,24 +65,28 @@ def _get_rgb_data(   kpath       = None,
        if interp_nk:
            from pivotpy import utils as gu
            knew,evals = gu.interpolate_data(kpath,evals_set,**interp_nk)
+           _,occs = gu.interpolate_data(kpath,occs_set,**interp_nk)
+           _, kpoints = gu.interpolate_data(kpath,kpoints,**interp_nk)
            r  = gu.interpolate_data(kpath,r,**interp_nk)[1].clip(min=0)
            g  = gu.interpolate_data(kpath,g,**interp_nk)[1].clip(min=0)
            b  = gu.interpolate_data(kpath,b,**interp_nk)[1].clip(min=0)
        else:
-           knew,evals = kpath,evals_set
+           knew,evals, occs, kpoints = kpath,evals_set, occs_set, kpoints
+
        evals = np.transpose(evals)
+       occs = np.transpose(occs)
        max_c = max(max(map(max,r[:,:])),max(map(max,g[:,:])),max(map(max,b[:,:])))
-       if(max_c==0):
+       if max_c == 0:
            max_c=1 # Avoid divide by 0.
        _cl = np.concatenate((r,g,b)).reshape((3,-1,np.shape(r)[1])).swapaxes(0,2)
-       rgb = _cl/max_c # Normalized overall
+       rgb = _cl/max_c # Normalized overall data
        widths = 0.0001+ np.sum(rgb,axis=2) #should be before scale colors
-       if(scale_color==True):
+       if scale_color == True:
            cl_max=np.max(_cl,axis=2)
            # avoid divide by zero. Contributions are 4 digits only.
            cl_max[cl_max==0.0] = 1
            rgb = _cl/cl_max[:,:,np.newaxis] # Normalized per point
-       return knew,evals,rgb, widths
+       return knew,evals,occs, rgb, widths, kpoints
 
 # Cell
 def _flip_even_patches(array_1d, patch_length):
@@ -123,7 +131,7 @@ def _rgb2plotly(rgb_data=None,mode='markers',max_width=None,showlegend=False,nam
     if mode not in ('markers','bands','lines'):
         raise TypeError("Argument `mode` expects one of ['markers','bands','lines'], got '{}'.".format(mode))
     if rgb_data:
-        k,en,rgb,lws = rgb_data
+        k,en,occ, rgb,lws, kpoints = rgb_data
         _indices = range(np.shape(en)[1]) if bands_indices is None else bands_indices
 
         _names = [["<sub>{}</sub>".format(int(1+i)) for j in range(len(en[0]))]
@@ -131,16 +139,17 @@ def _rgb2plotly(rgb_data=None,mode='markers',max_width=None,showlegend=False,nam
         clrs=(255*rgb).astype(int).clip(min=0,max=255) #clip in color range
         _txt=(100*rgb).astype(int)
         colors=[['rgb({},{},{})'.format(*i) for i in _c] for _c in clrs]
-        txts=[['RGB({},{},{})'.format(*i) for i in _t] for _t in _txt]
+        txts=[['Projection: [{0}]</br>Norm (%): [{1}, {2}, {3}]'.format(', '.join(labels),*_t) for _t in _ts] for _ts in _txt]
 
         if max_width:
             lws = max_width*lws/np.max(lws)
 
-        h_template = "Proj: {} <br>{} </br>Band: {}{}</br>K-Index: {}"
-        h_text=[[h_template.format([*labels],t,name,l,i) for i,(t,l) in enumerate(zip(ts,ns))]
-                for ts,ns in zip(txts,_names)]
+        ktext = [f'{x:>7.3f}{y:>7.3f}{z:>7.3f}' for (x,y,z) in kpoints]
+        h_template = "</br>{} </br></br>Band: {}{}  Occ: {:>7.4f}</br>K<sub>{}</sub>: {}"
+        h_text=[[h_template.format(t,name,l,o,i, ktext[i]) for i,(t,l,o) in enumerate(zip(ts,ns,os))]
+                for ts,ns,os in zip(txts,_names,occ)]
         data=[]
-        if(mode=='lines'):
+        if mode == 'lines':
             lc = [[[k[i:i+2],ke[i:i+2]] for i in range(len(ke)-1)] for ke in en]
             lws = 0.5*(lws[:,:-1] + lws[:,1:])
             # Zip auto picks colors,lws,h_text in same number as en
@@ -150,7 +159,7 @@ def _rgb2plotly(rgb_data=None,mode='markers',max_width=None,showlegend=False,nam
                 for pts,cs,ws,hs in zip(lc,colors,lws,h_text)
                     for pt,c,w,h in zip(pts,cs,ws,hs)]
 
-        if(mode=='markers'):
+        if mode == 'markers':
             nkpts = len(k) # should not move up or down.
             k = [k for bands in range(len(en))]
             k,en,colors,lws,h_text = [np.reshape(item,(-1)) for item in [k,en,colors,lws,h_text]]
@@ -160,12 +169,14 @@ def _rgb2plotly(rgb_data=None,mode='markers',max_width=None,showlegend=False,nam
                         marker=dict(color=colors,size=lws,symbol=symbol),line=dict(width=0.001,
                         color='rgba(255,255,250,0)'),showlegend=showlegend,hovertext=h_text)
                         )
-        if(mode=='bands'):
+        if mode == 'bands':
             for i,e,c,w,t in zip(_indices,en,colors,lws,h_text):
+                line_color = 'rgb({},{},{})'.format(*np.max(clrs[i - _indices[0]],axis=0))
+                line_width = np.max(w)/8
                 data.append(go.Scatter(x=k,y=e,mode='markers+lines',
                             name="{}<sub>{}</sub>".format(name,str(i+1)),
-                            marker=dict(color=c,size=w,symbol=symbol),line=dict(width=0.001,
-                            color='rgba(255,255,250,0)'),showlegend=showlegend,hovertext=t)
+                            marker=dict(color=c,size=w,symbol=symbol),line_width= line_width,
+                            line_color=line_color,showlegend=showlegend,hovertext=t)
                            )
         return data
 
@@ -222,22 +233,24 @@ def iplot2html(fig,filename=None,out_string=False,modebar=True):
             return HTML(template)
 
 # Cell
-def iplot_rgb_lines(path_evr    = None,
-                    elements    = [[],[],[]],
-                    orbs        = [[],[],[]],
-                    labels      = ['','',''],
-                    mode        = 'markers',
-                    elim        = [],
-                    E_Fermi     = None,
-                    skipk       = None,
-                    kseg_inds  = [],
-                    max_width   = 6,
-                    title       = None,
-                    ktick_inds  = [0,-1],
-                    ktick_vals  = ['Γ','M'],
-                    figsize     = None,
-                    interp_nk   = {},
-                    query_data  = {}
+def iplot_rgb_lines(
+    path_evr    = None,
+    elements    = [[],[],[]],
+    orbs        = [[],[],[]],
+    labels      = ['','',''],
+    mode        = 'markers',
+    elim        = [],
+    E_Fermi     = None,
+    skipk       = None,
+    kseg_inds  = [],
+    max_width   = 6,
+    title       = None,
+    ktick_inds  = [0,-1],
+    ktick_vals  = ['Γ','M'],
+    figsize     = None,
+    interp_nk   = {},
+    query_data  = {},
+    scale_color = True,
 
     ):
     """
@@ -256,6 +269,7 @@ def iplot_rgb_lines(path_evr    = None,
         - figsize   : Tuple(width,height) in pixels, e.g. (700,400).
         - query_data : Dictionary with keys as label and values as list of length 2. len(query_data) <=3 should hold for RGB plots. If given, used in place of elements, orbs and labels arguments.
                         Example: {'s':([0,1],[0]),'p':([0,1],[1,2,3]),'d':([0,1],[4,5,6,7,8])} will pick up s,p,d orbitals of first two ions of system.
+        - scale_color : If True, color scale is scaled to the maximum value at each point.
         - **Other Parameters**
             - ktick_inds, ktick_vals,elim,kseg_inds,max_width,title etc.
     """
@@ -270,7 +284,7 @@ def iplot_rgb_lines(path_evr    = None,
     elements,orbs,labels = sp._validate_input(elements,orbs,labels,vr.sys_info,rgb=True)
 
     ## Main working here.
-    if(vr.pro_bands==None):
+    if vr.pro_bands == None:
         raise ValueError("Can not plot an empty eigenvalues object.\n"
                          "Try with large energy range.")
 
@@ -279,41 +293,45 @@ def iplot_rgb_lines(path_evr    = None,
     K = vp.join_ksegments(vr.kpath,kseg_inds = kseg_inds)
     xticks=[K[i] for i in ktick_inds]
     xlim=[min(K),max(K)]
-    if(elim):
-        ylim=[min(elim),max(elim)]
+    if elim:
+        ylim = [min(elim),max(elim)]
     else:
         ylim=[-10,10]
     #====Title Name======
     SYSTEM=vr.sys_info.SYSTEM
-    if(title==None):
+    if title == None:
         title= "{}[{}]".format(SYSTEM,','.join(labels))
     # After All Fixing
     ISPIN=vr.sys_info.ISPIN
-    args_dict=dict(orbs=orbs,elements=elements,interp_nk=interp_nk,scale_color=True) # Do not scale color there, scale here.
+    args_dict=dict(orbs=orbs,elements=elements,interp_nk=interp_nk,scale_color=scale_color) # Do not scale color there, scale here.
     data,showlegend,name=[],False,'' # Place holder
 
-    if(mode=='bands'):
+    if mode=='bands':
             showlegend=True
-    if(ISPIN==1):
+    kpoints = vr.kpoints
+    if ISPIN == 1:
         En=vr.bands.evals-E_Fermi
+        Oc = vr.bands.occs
         Pros=vr.pro_bands.pros
-        new_args=dict(kpath=K, evals_set=En, pros_set=Pros,**args_dict)
-        rgb_lines=_get_rgb_data(**new_args)
+        new_args=dict(kpath=K, evals_set=En, pros_set=Pros, occs_set = Oc, **args_dict)
+        rgb_lines=_get_rgb_data(kpoints = kpoints,**new_args)
         data=_rgb2plotly(rgb_data=rgb_lines,mode=mode,showlegend=showlegend,
                            labels=labels,name='B',max_width=max_width,bands_indices= vr.bands.indices)
-    if(ISPIN==2):
-        if(mode=='markers'):
+    if ISPIN == 2:
+        if mode == 'markers':
             showlegend=True
         En1=vr.bands.evals.SpinUp-E_Fermi
         En2=vr.bands.evals.SpinDown-E_Fermi
+        Oc1 = vr.bands.occs.SpinUp
+        Oc2 = vr.bands.occs.SpinDown
         Pros1=vr.pro_bands.pros.SpinUp
         Pros2=vr.pro_bands.pros.SpinDown
-        new_args1=dict(kpath=K, evals_set=En1, pros_set=Pros1,**args_dict)
-        rgb_lines1=_get_rgb_data(**new_args1)
+        new_args1=dict(kpath=K, evals_set=En1, pros_set=Pros1,occs_set = Oc1,**args_dict)
+        rgb_lines1=_get_rgb_data(kpoints = kpoints,**new_args1)
         data1=_rgb2plotly(rgb_data=rgb_lines1,mode=mode,symbol=0,showlegend=showlegend,
                             labels=labels,name='B<sup>↑</sup>',max_width=max_width,bands_indices= vr.bands.indices)
-        new_args2=dict(kpath=K, evals_set=En2, pros_set=Pros2,**args_dict)
-        rgb_lines2=_get_rgb_data(**new_args2)
+        new_args2=dict(kpath=K, evals_set=En2, pros_set=Pros2,occs_set = Oc2,**args_dict)
+        rgb_lines2=_get_rgb_data(kpoints = kpoints,**new_args2)
         data2=_rgb2plotly(rgb_data=rgb_lines2,mode=mode,symbol=100,showlegend=showlegend,
                             labels=labels,name='B<sup>↓</sup>',max_width=max_width,bands_indices= vr.bands.indices)
         data=[[d1,d2] for d1,d2 in zip(data1,data2)]
@@ -328,7 +346,7 @@ def iplot_rgb_lines(path_evr    = None,
     if(figsize!=None):
         fig.update_layout(width=figsize[0],height=figsize[1],autosize=False)
     #Draw lines at breakpoints
-    if(kseg_inds):
+    if kseg_inds:
         kargs_dict = dict(mode='lines',line=dict(color='rgb(222,222,222)',width=1.2),showlegend=False)
         for pt in kseg_inds:
             fig.add_trace(go.Scatter(x=[K[pt],K[pt]],y=ylim,**kargs_dict))
@@ -339,23 +357,24 @@ def iplot_rgb_lines(path_evr    = None,
     return fig
 
 # Cell
-def iplot_dos_lines(path_evr     = None,
-                    elements      = [[0,],],
-                    orbs          = [[0],],
-                    labels        = ['s',],
-                    elim          = [],
-                    colormap      = 'gist_rainbow',
-                    tdos_color    = (0.5,0.95,0),
-                    linewidth     = 2,
-                    fill_area     = True,
-                    vertical      = False,
-                    E_Fermi       = None,
-                    figsize       = None,
-                    spin          = 'both',
-                    interp_nk     = {},
-                    title         = None,
-                    query_data    = {}
-                    ):
+def iplot_dos_lines(
+    path_evr      = None,
+    elements      = [[0,],],
+    orbs          = [[0],],
+    labels        = ['s',],
+    elim          = [],
+    colormap      = 'gist_rainbow',
+    tdos_color    = (0.5,0.95,0),
+    linewidth     = 2,
+    fill_area     = True,
+    vertical      = False,
+    E_Fermi       = None,
+    figsize       = None,
+    spin          = 'both',
+    interp_nk     = {},
+    title         = None,
+    query_data    = {}
+    ):
         """
         - Returns plotly's figure. If given,elements,orbs colors, and labels must have same length. If not given, zeroth ions is plotted with s-orbital.
         - **Parameters**)
