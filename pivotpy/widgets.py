@@ -503,13 +503,15 @@ class VasprunApp:
     ```python
     import pivotpy as pp
     va = pp.VasprunApp()
-    va.cache_data = False #Turn off cache globally.
-    va.evr_kws['elim'] = [-2,2] #Only Bands in this range will be included. Global accross project, can change anytime.
-    va.ibands_kws['mode'] = 'bands' #Change graph mode from 'markers' to 'bands'. Setting it to 'lines' is not recommended in live graph, it could hang all UI.
+    va.set_options(
+        cache_data = False, #Turn off cache globally.
+        mode = 'bands', #Change graph mode from 'markers' to 'bands'. Setting it to 'lines' is not recommended in live graph, it could hang all UI.
+        interp_nk = dict(n = 2, k = 2), #Add 2 points between data points with quadratic interpolation.
+    )
     va.show() #Displays App and do work!
     va.theme_colors = pp.dark_colors #Set theme to dark externally and edit dictionary values to make your own theme
     va.splot(**kwargs) #Get matplotlib plot of current data.
-    va.df #After you do some analysis and hit `Project Summary` button, get DataFrame.
+    va.df #After you do some analysis and hit `Project Summary` button, get DataFrame or directly by.df
     va.fig #Get current fig in Notebook cell.
     ```
     """
@@ -610,6 +612,40 @@ class VasprunApp:
         # Build Layout
         self.__build()
         self.tab.on_displayed(self._on_displayed)
+
+    def set_options(self, cache_data = True, # general options
+        mode = 'bands', scale_color = True, max_width = 6, skipk = None, # bands only keywords
+        interp_nk = {}, title = None, # Mixed keywords
+        colormap='RGB',tdos_color=(0.5, 0.95, 0),linewidth=2,fill_area=True, spin='both' # DOS only keywords
+        ):
+        self.cache_data = cache_data
+        if mode not in ['bands','markers','lines']:
+            raise ValueError("mode must be 'bands','markers','lines'")
+        # bands only keywords
+        self.ibands_kws['mode'] = mode
+        self.ibands_kws['scale_color'] = scale_color
+        self.ibands_kws['max_width'] = max_width
+        self.ibands_kws['skipk'] = skipk
+
+        if ''.join(interp_nk.keys()) not in 'nk':
+            raise ValueError("interp_nk must be be of the form {'n': int, 'k': int}")
+        # Mixed keywords
+        self.ibands_kws['interp_nk'] = interp_nk
+        self.idos_kws['interp_nk'] = interp_nk
+        self.idos_kws['title'] = title
+        self.ibands_kws['title'] = title
+
+        if spin not in 'updownboth':
+            raise ValueError("spin must be in ('up','down','both')")
+        # DOS only keywords
+        self.idos_kws['colormap'] = colormap
+        self.idos_kws['tdos_color'] = tdos_color
+        self.idos_kws['linewidth'] = linewidth
+        self.idos_kws['fill_area'] = fill_area
+        self.idos_kws['spin'] = spin
+
+        self.evr_kws['skipk'] = skipk # Useful
+
 
     def _on_displayed(self, change = None):
         self.tab.selected_index = 1

@@ -600,6 +600,7 @@ class Vasprun:
         kwargs = self.__handle_kwargs(kwargs)
         return ip.iplot_rgb_lines(self._data,elements = elements, orbs = orbs, labels = labels, query_data = query_data,**kwargs)
 
+
     def get_band_info(self,b_i,k_i=None):
         """Get band information for given band index `b_i`. If `k_i` is given, returns info at that point
         Fermi energy is subtracted from all energies. When a plot commnad is called, the Fermi energy is updated if provided.

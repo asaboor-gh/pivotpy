@@ -20,15 +20,16 @@ except:
     import pivotpy.utils as gu
 
 # Cell
-def _get_rgb_data(  kpath       = None,
-                    evals_set   = None,
-                    pros_set    = None,
-                    elements    = [[0],[],[]],
-                    orbs        = [[0],[],[]],
-                    interp_nk   = {},
-                    scale_color = False,
-                    occs_set    = None,
-                    kpoints     = None,
+def _get_rgb_data(
+    kpath       = None,
+    evals_set   = None,
+    pros_set    = None,
+    elements    = [[0],[],[]],
+    orbs        = [[0],[],[]],
+    interp_nk   = {},
+    scale_color = False,
+    occs_set    = None,
+    kpoints     = None,
     ):
     """
     - Returns a formatted RGB colored data to pass into `_rgb2plotly` function. Two arguments, `elements` and `orbs` should be in one-to-one correspondence. Returned item has transpose data shape, so that main iteration is over bands.
@@ -42,11 +43,13 @@ def _get_rgb_data(  kpath       = None,
         - scale_color: If True, colors are scaled to 1 at each points.
         - occs_set: `export_vasprun`().bands.occs or `get_evals`().occs. If calculations are spin-polarized, it will be `...occs.SpinUp/SpinDown` for both. You need to apply twice for SpinUp and SpinDown separately.
     - **Returns**
-        - kpath    : List of NKPTS. (interpolated if given.)
+        - kpath    : List of path of NKPTS. (interpolated if given.)
         - evals    : An (NBAND,NKPTS) numpy arry.
         - occs     : An (NBAND,NKPTS) numpy arry.
         - colors   : An (NBANDS,NKPTS,3) numpy array.
         - widths   : An (NBAND,NKPTS) numpy arry, its actually colors summed along z-axis.
+        - norms    : An (NBAND,NKPTS) numpy arry, normalized as 100%.
+        - kpoints  : List of NKPTS. (interpolated if given.)
     """
     if pros_set == []:
         raise ValueError("Can not plot an empty eigenvalues object\n"
@@ -80,13 +83,14 @@ def _get_rgb_data(  kpath       = None,
            max_c=1 # Avoid divide by 0.
        _cl = np.concatenate((r,g,b)).reshape((3,-1,np.shape(r)[1])).swapaxes(0,2)
        rgb = _cl/max_c # Normalized overall data
+       norms = (rgb*100).astype(int) # Normalized overall data
        widths = 0.0001+ np.sum(rgb,axis=2) #should be before scale colors
        if scale_color == True:
            cl_max=np.max(_cl,axis=2)
            # avoid divide by zero. Contributions are 4 digits only.
            cl_max[cl_max==0.0] = 1
            rgb = _cl/cl_max[:,:,np.newaxis] # Normalized per point
-       return knew,evals,occs, rgb, widths, kpoints
+       return knew,evals,occs, rgb, widths, norms, kpoints
 
 # Cell
 def _flip_even_patches(array_1d, patch_length):
@@ -131,15 +135,14 @@ def _rgb2plotly(rgb_data=None,mode='markers',max_width=None,showlegend=False,nam
     if mode not in ('markers','bands','lines'):
         raise TypeError("Argument `mode` expects one of ['markers','bands','lines'], got '{}'.".format(mode))
     if rgb_data:
-        k,en,occ, rgb,lws, kpoints = rgb_data
+        k,en,occ, rgb,lws, norms, kpoints = rgb_data
         _indices = range(np.shape(en)[1]) if bands_indices is None else bands_indices
 
         _names = [["<sub>{}</sub>".format(int(1+i)) for j in range(len(en[0]))]
                   for i in _indices]
         clrs=(255*rgb).astype(int).clip(min=0,max=255) #clip in color range
-        _txt=(100*rgb).astype(int)
         colors=[['rgb({},{},{})'.format(*i) for i in _c] for _c in clrs]
-        txts=[['Projection: [{0}]</br>Norm (%): [{1}, {2}, {3}]'.format(', '.join(labels),*_t) for _t in _ts] for _ts in _txt]
+        txts=[['Projection: [{0}]</br>Norm (%): [{1}, {2}, {3}]'.format(', '.join(labels),*_n) for _n in _norm] for _norm in norms]
 
         if max_width:
             lws = max_width*lws/np.max(lws)

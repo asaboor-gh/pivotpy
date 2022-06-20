@@ -449,13 +449,11 @@ def add_colorbar(ax, cax = None, cmap_or_clist=None,N=256,ticks=None,\
 
     if ticks != []:
         if ticks is None: # should be before labels
-            ticks = (N * np.linspace(1/6,5/6,3, endpoint=True)).astype(int)
+            ticks = np.linspace(1/6,5/6,3, endpoint=True)
 
-        if isinstance(ticks,(list,tuple, np.ndarray)):
+        elif isinstance(ticks,(list,tuple, np.ndarray)):
             ticks = np.array(ticks)
-            if ticklabels is None: # Pick original values first
-                ticklabels = ticks.round(digits).astype(str)
-            ticks = (N * ((ticks - ticks.min())/np.ptp(ticks))).astype(int)
+            ticks = (ticks - ticks.min())/np.ptp(ticks)
 
         if ticklabels is None:
             ticklabels = ticks.round(digits).astype(str)
@@ -463,14 +461,14 @@ def add_colorbar(ax, cax = None, cmap_or_clist=None,N=256,ticks=None,\
         ticks = []
         ticklabels = []
 
-    c_vals = np.linspace(0,1,N).reshape((1,N)) # make 2D array
+    c_vals = np.linspace(0,1,N, endpoint = True).reshape((1,N)) # make 2D array
 
     ticks_param = dict(direction='out',pad= 2,length=2,width=0.3,top=False,left=False,
                         grid_color=(1,1,1,0), grid_alpha=0)
     ticks_param.update({tickloc:True}) # Only show on given side
     cax.tick_params(**ticks_param)
     if vertical == False:
-        cax.imshow(c_vals,aspect='auto',cmap=_hsv_,origin='lower')
+        cax.imshow(c_vals,aspect='auto',cmap=_hsv_,origin='lower', extent=[0,1,0,1])
         cax.set_yticks([])
         cax.xaxis.tick_top() # to show ticks on top by default
         if tickloc == 'bottom':
@@ -480,7 +478,7 @@ def add_colorbar(ax, cax = None, cmap_or_clist=None,N=256,ticks=None,\
 
     if vertical == True:
         c_vals = c_vals.transpose()
-        cax.imshow(c_vals,aspect='auto',cmap=_hsv_,origin='lower')
+        cax.imshow(c_vals,aspect='auto',cmap=_hsv_,origin='lower',extent=[0,1,0,1])
         cax.set_xticks([])
         cax.yaxis.tick_right() # Show right by default
         if tickloc == 'left':
@@ -748,7 +746,7 @@ def _validate_input(elements,orbs,labels,sys_info,rgb=False):
 
     return elements,orbs,labels
 
-def _format_input(query_data,rgb=False,include_bands=False):
+def _format_input(query_data,rgb=False):
     """
     Format input elements, orbs and labels according to query_data.
     query_data = {'Ga-s':(0,[1]),'Ga-p':(0,[1,2,3]),'Ga-d':(0,[4,5,6,7,8])} #for Ga in GaAs, to pick Ga-1, use [0] instead of 0 at first place
@@ -758,14 +756,12 @@ def _format_input(query_data,rgb=False,include_bands=False):
 
     # Set default values for different situations
     if rgb:
-        bands, elements, orbs, labels = [[],[],[]], [[],[],[]], [[],[],[]], ['','','']
+        elements, orbs, labels = [[],[],[]], [[],[],[]], ['','','']
     else:
-        bands, elements, orbs, labels = [[],],[[0],], [[0],], ['Element0-s',]
+        elements, orbs, labels = [[0],], [[0],], ['Element0-s',]
 
     for i, (k, v) in enumerate(query_data.items()):
-        if include_bands and len(v) != 3:
-            raise ValueError(f"{k!r}: {v} expects 3 items (band, elements, orbs), got {len(v)}.")
-        elif include_bands == False and len(v) != 2:
+        if len(v) != 2:
             raise ValueError(f"{k!r}: {v} expects 2 items (elements, orbs), got {len(v)}.")
 
         if rgb and i <= 2:
@@ -782,43 +778,35 @@ def _format_input(query_data,rgb=False,include_bands=False):
                 elements.append(v[-2])
                 orbs.append(v[-1])
 
-        if include_bands:
-            if i == 0:
-                bands[0] = v[-3]
-            else:
-                bands.append(v[-3])
-
-    if include_bands:
-        nt = namedtuple('Selection',['bands','elements','orbs','labels'])
-        return nt(bands, elements, orbs, labels)
     else:
         nt = namedtuple('Selection',['elements','orbs','labels'])
         return nt(elements, orbs, labels)
 
 # Cell
-def splot_rgb_lines(path_evr    = None,
-                    elements    = [[],[],[]],
-                    orbs        = [[],[],[]],
-                    labels      = ['','',''],
-                    ax          = None,
-                    skipk       = None,
-                    elim        = [],
-                    max_width   = None,
-                    ktick_inds  = [0,-1],
-                    ktick_vals  = [r'$\Gamma$','M'],
-                    kseg_inds   = [],
-                    E_Fermi     = None,
-                    txt         = None,
-                    xytxt       = [0.2,0.9],
-                    ctxt        = 'black',
-                    uni_width   = False,
-                    spin        = 'both',
-                    interp_nk   = {},
-                    scale_color = True,
-                    scale_data  = True,
-                    colorbar    = True,
-                    color_matrix= None,
-                    query_data  = {}
+def splot_rgb_lines(
+    path_evr    = None,
+    elements    = [[],[],[]],
+    orbs        = [[],[],[]],
+    labels      = ['','',''],
+    ax          = None,
+    skipk       = None,
+    elim        = [],
+    max_width   = None,
+    ktick_inds  = [0,-1],
+    ktick_vals  = [r'$\Gamma$','M'],
+    kseg_inds   = [],
+    E_Fermi     = None,
+    txt         = None,
+    xytxt       = [0.2,0.9],
+    ctxt        = 'black',
+    uni_width   = False,
+    spin        = 'both',
+    interp_nk   = {},
+    scale_color = True,
+    scale_data  = True,
+    colorbar    = True,
+    color_matrix= None,
+    query_data  = {}
     ):
     """
     - Returns axes object and plot on which all matplotlib allowed actions could be performed. In this function,orbs,labels,elements all have list of length 3. Inside list, sublists or strings could be any length but should be there even if empty.
@@ -966,30 +954,31 @@ def splot_rgb_lines(path_evr    = None,
     return ax
 
 # Cell
-def splot_color_lines(path_evr      = None,
-                      elements      = [[0]],
-                      orbs          = [[0]],
-                      labels        = ['s'],
-                      axes          = None,
-                      skipk         = None,
-                      kseg_inds     = [],
-                      elim          = [],
-                      colormap      = 'gist_rainbow',
-                      scale_data    = False,
-                      max_width     = None,
-                      spin          = 'both',
-                      ktick_inds    = [0, -1],
-                      ktick_vals     = ['$\\Gamma$', 'M'],
-                      E_Fermi       = None,
-                      showlegend    = True,
-                      xytxt         = [0.2, 0.85],
-                      ctxt          = 'black',
-                      interp_nk     = {},
-                      legend_kwargs = {'ncol': 4, 'anchor': (0, 1.05),
-                                     'handletextpad': 0.5, 'handlelength': 1,
-                                     'fontsize': 'small', 'frameon': False},
-                      query_data    = {},
-                       **subplots_adjust_kwargs):
+def splot_color_lines(
+    path_evr      = None,
+    elements      = [[0]],
+    orbs          = [[0]],
+    labels        = ['s'],
+    axes          = None,
+    skipk         = None,
+    kseg_inds     = [],
+    elim          = [],
+    colormap      = 'gist_rainbow',
+    scale_data    = False,
+    max_width     = None,
+    spin          = 'both',
+    ktick_inds    = [0, -1],
+    ktick_vals     = ['$\\Gamma$', 'M'],
+    E_Fermi       = None,
+    showlegend    = True,
+    xytxt         = [0.2, 0.85],
+    ctxt          = 'black',
+    interp_nk     = {},
+    legend_kwargs = {'ncol': 4, 'anchor': (0, 1.05),
+                   'handletextpad': 0.5, 'handlelength': 1,
+                   'fontsize': 'small', 'frameon': False},
+    query_data    = {},
+     **subplots_adjust_kwargs):
     """
     - Returns axes object and plot on which all matplotlib allowed actions could be performed. If given, elements, orbs, and labels must have same length. If not given, zeroth ion is plotted with s-orbital.
     - **Parameters**
@@ -1092,13 +1081,14 @@ def splot_color_lines(path_evr      = None,
     return axes
 
 # Cell
-def _select_pdos(tdos        = None,
-                pdos_set    = None,
-                ions        = [0,],
-                orbs        = [0,],
-                E_Fermi     = 0,
-                interp_nk   = {}
-                 ):
+def _select_pdos(
+    tdos        = None,
+    pdos_set    = None,
+    ions        = [0,],
+    orbs        = [0,],
+    E_Fermi     = 0,
+    interp_nk   = {}
+     ):
     """
     - Returns (interpolated/orginal) enrgy(N,), tdos(N,), and pdos(N,) of selected ions/orbitals.
     - **Parameters**
@@ -1126,14 +1116,15 @@ def _select_pdos(tdos        = None,
     return _en,_tdos,_pdos
 
 # Cell
-def _collect_dos(path_evr      = None,
-                elim          = [],
-                elements      = [[0],],
-                orbs          = [[0],],
-                labels        = ['s',],
-                E_Fermi       = None,
-                spin          = 'both',
-                interp_nk     = {}
+def _collect_dos(
+    path_evr      = None,
+    elim          = [],
+    elements      = [[0],],
+    orbs          = [[0],],
+    labels        = ['s',],
+    E_Fermi       = None,
+    spin          = 'both',
+    interp_nk     = {}
     ):
     """
     - Returns lists of energy,tdos, pdos and labels. If given,elements,orbs and labels must have same length. If not given, zeroth ions is collected with s-orbital.
@@ -1209,32 +1200,32 @@ def _collect_dos(path_evr      = None,
     return e,ts,ps,ls,vr
 
 # Cell
-def splot_dos_lines(path_evr      = None,
-                    elements      = [[0],],
-                    orbs          = [[0],],
-                    labels        = ['s',],
-                    ax            = None,
-                    elim          = [],
-                    include_dos   = 'both',
-                    colormap      = 'gist_rainbow',
-                    tdos_color    = (0.8,0.95,0.8),
-                    linewidth     = 0.5,
-                    fill_area     = True,
-                    vertical      = False,
-                    E_Fermi       = None,
-                    spin          = 'both',
-                    interp_nk     = {},
-                    showlegend    = True,
-                    legend_kwargs = {'ncol'         : 4,
-                                   'anchor'         : (0,1),
-                                   'handletextpad'  : 0.5,
-                                   'handlelength'   : 1,
-                                   'fontsize'       : 'small',
-                                   'frameon'        : False
-                                   },
-                    query_data    = {},
-
-                    ):
+def splot_dos_lines(
+    path_evr      = None,
+    elements      = [[0],],
+    orbs          = [[0],],
+    labels        = ['s',],
+    ax            = None,
+    elim          = [],
+    include_dos   = 'both',
+    colormap      = 'gist_rainbow',
+    tdos_color    = (0.8,0.95,0.8),
+    linewidth     = 0.5,
+    fill_area     = True,
+    vertical      = False,
+    E_Fermi       = None,
+    spin          = 'both',
+    interp_nk     = {},
+    showlegend    = True,
+    legend_kwargs = {'ncol'         : 4,
+                   'anchor'         : (0,1),
+                   'handletextpad'  : 0.5,
+                   'handlelength'   : 1,
+                   'fontsize'       : 'small',
+                   'frameon'        : False
+                   },
+    query_data    = {}
+    ):
         """
         - Returns ax object (if ax!=False) and plot on which all matplotlib allowed actions could be performed, returns lists of energy,tdos and pdos and labels. If given,elements,orbs colors, and labels must have same length. If not given, zeroth ions is plotted with s-orbital.
         - **Parameters**)

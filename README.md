@@ -50,7 +50,7 @@ See GIF here:
 # Live Slides in Jupyter Notebook
 Navigate to  [ipyslides](https://github.com/massgh/ipyslides) or do `pip install ipyslides` to create beautiful data driven presentation in Jupyter Notebook.
 
-```python
+```
 import os, pivotpy as pp
 with pp.set_dir('E:/Research/graphene_example/ISPIN_1/bands'):
     vr = pp.Vasprun(elim=[-5,5])
@@ -80,7 +80,7 @@ for v in dir(vr):
     vr.to_pickle
     
 
-```python
+```
 import matplotlib.pyplot as plt 
 ax1,ax2 = pp.get_axes((6,3),ncols=2)
 ax1.plot(vr.data.scsteps['e_fr_energy'],lw=3, label = 'e_fr_energy',color='k')
@@ -104,7 +104,7 @@ ax2.add_legend()
 - Add anything from legend,colorbar, colorwheel. In below figure, all three are shown.
 - Use aliases such as sbands, sdos,srgb,irgb,scolor,idos for plotting. 
 
-```python
+```
 #collapse_input
 import pivotpy as pp, numpy as np
 import matplotlib.pyplot as plt 
@@ -132,7 +132,7 @@ pp._show()
 
 ## Interactive plots using plotly
 
-```python
+```
 args_dict['labels'] = ['s','p_z','p_x+p_y']
 fig1 = vr1.iplot_rgb_lines(**args_dict)
 #pp.iplot2html(fig1) #Do inside Google Colab, fig1 inside Jupyter
@@ -159,7 +159,7 @@ Markdown("[See Interactive Plot](https://massgh.github.io/InteractiveHTMLs/iGrap
 ## Plotting Two Calculations Side by Side 
 - Here we will use `shift_kpath` to demonstrate plot of two calculations on same axes side by side
 
-```python
+```
 #nbdev_collapse_input
 import matplotlib.pyplot as plt
 import pivotpy as pp 
@@ -185,7 +185,7 @@ pp._show()
 ## Interpolation 
 Amost every bandstructure and DOS plot function has an argument `interp_nk` which is a dictionary with keys `n` (Number of additional points between adjacent points) and `k` (order of interpolation 0-3). `n > k` must hold.
 
-```python
+```
 #collapse_input
 import pivotpy as pp, matplotlib.pyplot as plt
 plt.style.use('ggplot')
@@ -209,17 +209,17 @@ check out the class `pivotpy.LOCPOT` to visulize local potential/charge and magn
 ## Running powershell commands from python.
 Some tasks are very tideious in python while just a click way in powershell. See below, and try to list processes in python yourself to see the difference!
 
-```python
+```
 pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
 ```
 
     [32;1m NPM(K)    PM(M)      WS(M)     CPU(s)     Id[0m
     [32;1m ------    -----      -----     ------     --[0m
-    22     7.01       3.52       0.38   9812
-    6     1.36       5.48       0.00   7844
-    19     6.78      18.03       0.00   5948
-    29    29.36      51.79       4.30   2496
-    8     1.57       7.31       0.00   2000
+    21     6.66       2.88       0.52  14720
+    6     1.21       5.00       0.00   7548
+    20     6.77      21.11       0.00   5652
+    22    21.99      33.93       1.25  11292
+    9     1.64       6.21       0.00   5412
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -250,7 +250,7 @@ c.ScriptMagics.script_paths = {
 }
 ```
 
-```python
+```
 %%ps 
 Get-ChildItem 'E:\Research\graphene_example\'
 ```
@@ -270,7 +270,7 @@ Get-ChildItem 'E:\Research\graphene_example\'
     
 
 
-```python
+```
 x = %ps (Get-ChildItem 'E:\Research\graphene_example\').Name
 x
 ```
