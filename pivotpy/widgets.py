@@ -294,12 +294,12 @@ class InputGui:
         layout = Layout(width='30%')
         l_width = Layout(width='20%')
         self.html = ipw.HTML() # For Display in Big App as well. Very important
-        self.dds = {
+        self._dds = {
             'elms': Dropdown(layout=layout),
             'orbs': Dropdown(layout=layout),
             'rgb' : Dropdown(options=[('Red',0),('Green',1),('Blue',2)],value=0,layout=layout)
             }
-        self.texts = {
+        self._texts = {
             'orbs' : Text(layout=layout,continuous_update=False),
             'elms' : Text(layout=layout,continuous_update=False),
             'label': Text(layout=layout,continuous_update=False)
@@ -310,27 +310,27 @@ class InputGui:
         html_style = css_style(theme_colors,_class = _class) if theme_colors else ''
         self.box = VBox([ipw.HTML(html_style),
                 self.html,
-                HBox([Label('Color: ',layout=l_width), self.dds['rgb'],
-                      Label('Label: ',layout=l_width),self.texts['label']
+                HBox([Label('Color: ',layout=l_width), self._dds['rgb'],
+                      Label('Label: ',layout=l_width),self._texts['label']
                     ]).add_class('borderless').add_class('marginless'),
-                HBox([Label('Ions: ',layout=l_width),self.dds['elms'],
-                      Label('::>>:: ',layout=l_width),self.texts['elms']
+                HBox([Label('Ions: ',layout=l_width),self._dds['elms'],
+                      Label('::>>:: ',layout=l_width),self._texts['elms']
                     ]).add_class('borderless').add_class('marginless'),
-                HBox([Label('Orbs: ',layout=l_width),self.dds['orbs'],
-                      Label('::>>:: ',layout=l_width),self.texts['orbs']
+                HBox([Label('Orbs: ',layout=l_width),self._dds['orbs'],
+                      Label('::>>:: ',layout=l_width),self._texts['orbs']
                     ]).add_class('borderless').add_class('marginless')
                 ],layout=Layout(height="{}px".format(height))
                 ).add_class(_class).add_class('marginless')
 
 
         #Obsever
-        self.dds['rgb'].observe(self.__see_input,'value')
-        self.texts['label'].observe(self.__read_pro,'value')
-        self.texts['orbs'].observe(self.__read_pro,'value')
-        self.texts['elms'].observe(self.__read_pro,'value')
+        self._dds['rgb'].observe(self.__see_input,'value')
+        self._texts['label'].observe(self.__read_pro,'value')
+        self._texts['orbs'].observe(self.__read_pro,'value')
+        self._texts['elms'].observe(self.__read_pro,'value')
         # Link
-        ipw.dlink((self.dds['elms'],'value'),(self.texts['elms'],'value'))
-        ipw.dlink((self.dds['orbs'],'value'),(self.texts['orbs'],'value'))
+        ipw.dlink((self._dds['elms'],'value'),(self._texts['elms'],'value'))
+        ipw.dlink((self._dds['orbs'],'value'),(self._texts['orbs'],'value'))
 
 
     def update_options(self,sys_info=None):
@@ -345,8 +345,8 @@ class InputGui:
             inds = sys_info.ElemIndex
             ions_opts = [("{}-{}: {}".format(inds[i],inds[i+1]-1,item),"{}-{}".format(
                                     inds[i],inds[i+1]-1)) for i,item in enumerate(sys_info.ElemName)]
-            self.dds['elms'].options = [*ions_opts,('0-{}: All'.format(inds[-1]-1),'0-{}'.format(inds[-1]-1))]
-            self.dds['orbs'].options = orbs_opts
+            self._dds['elms'].options = [*ions_opts,('0-{}: All'.format(inds[-1]-1),'0-{}'.format(inds[-1]-1))]
+            self._dds['orbs'].options = orbs_opts
             self.sys_info = sys_info # Update it as well.
 
     def __read_pro(self,btn):
@@ -360,33 +360,32 @@ class InputGui:
                     _out = [*_out,int(v)]
             return _out
 
-        index = self.dds['rgb'].value
-        self.output['elements'][index] = read(self.texts['elms'].value)
-        self.output['orbs'][index] = read(self.texts['orbs'].value)
-        _text,_ion,_orb = self.texts['label'].value,self.texts['elms'].value,self.texts['orbs'].value
+        index = self._dds['rgb'].value
+        self.output['elements'][index] = read(self._texts['elms'].value)
+        self.output['orbs'][index] = read(self._texts['orbs'].value)
+        _text,_ion,_orb = self._texts['label'].value,self._texts['elms'].value,self._texts['orbs'].value
         self.output['labels'][index] = _text if _text else "{}:{}".format(_ion,_orb)
         self.html.value = """<div style='border: 2px solid {0}!important;
                              background-color:{0} !important;'> </div>
-                             """.format(self.dds['rgb'].label.lower())
-        sleep(1)
+                             """.format(self._dds['rgb'].label.lower())
+        sleep(0.3)
         self.html.value = ''
-
 
     def __see_input(self,change):
         # Unobserve first to avoid overwriting
-        self.texts['label'].unobserve(self.__read_pro,'value')
-        self.texts['orbs'].unobserve(self.__read_pro,'value')
-        self.texts['elms'].unobserve(self.__read_pro,'value')
+        self._texts['label'].unobserve(self.__read_pro,'value')
+        self._texts['orbs'].unobserve(self.__read_pro,'value')
+        self._texts['elms'].unobserve(self.__read_pro,'value')
 
         # Look up while not observing
-        x = self.dds['rgb'].value
-        self.texts['elms'].value = ','.join([str(i) for i in self.output['elements'][x]])
-        self.texts['orbs'].value = ','.join([str(i) for i in self.output['orbs'][x]])
-        self.texts['label'].value = self.output['labels'][x]
+        x = self._dds['rgb'].value
+        self._texts['elms'].value = ','.join([str(i) for i in self.output['elements'][x]])
+        self._texts['orbs'].value = ','.join([str(i) for i in self.output['orbs'][x]])
+        self._texts['label'].value = self.output['labels'][x]
         # Observe Back Again
-        self.texts['label'].observe(self.__read_pro,'value')
-        self.texts['orbs'].observe(self.__read_pro,'value')
-        self.texts['elms'].observe(self.__read_pro,'value')
+        self._texts['label'].observe(self.__read_pro,'value')
+        self._texts['orbs'].observe(self.__read_pro,'value')
+        self._texts['elms'].observe(self.__read_pro,'value')
 
     def show(self):
         return self.box
@@ -498,8 +497,8 @@ def generate_summary(paths_list=None):
 class VasprunApp:
     """
     Display a GUI for vasp output analysis. `self.theme_colors` can be used to edit custom theme.
-    - **Usage Example**
 
+    **Usage Example**
     ```python
     import pivotpy as pp
     va = pp.VasprunApp()
@@ -515,7 +514,7 @@ class VasprunApp:
     va.fig #Get current fig in Notebook cell.
     ```
     """
-    output = ipw.Output().add_class('output')
+    _output = ipw.Output().add_class('output')
     def __init__(self,height = 610):
         self.height = height
         tab = ipw.Tab(layout = ipw.Layout(min_height=f'{height}px', max_height='100vh',
@@ -526,29 +525,29 @@ class VasprunApp:
                 tab.set_title(i,item)
         except:
             tab.titles = ['Home','Graphs','STD(out/err)']
-        self.main_class = 'custom-'+''.join(np.random.randint(9,size=(22,)).astype(str)) #Random class
-        self.tab     = tab.add_class(self.main_class) # Main layout
-        self.data   = None # Export vasprun object.
-        self.__path = None # current path
-        self.fig    = go.FigureWidget() # plotly's figure widget
-        self.fig.update_layout(autosize=True)
-        self.result = {'sys':'','V':'','a':'','b':'','c':'','Fermi': None,
+        self._main_class = 'custom-'+''.join(np.random.randint(9,size=(22,)).astype(str)) #Random class
+        self._tab     = tab.add_class(self._main_class) # Main layout
+        self._data   = None # Export vasprun object.
+        self._path = None # current path
+        self._fig    = go.FigureWidget() # plotly's figure widget
+        self._fig.update_layout(autosize=True)
+        self._result = {'sys':'','V':'','a':'','b':'','c':'','Fermi': None,
                      'VBM':'','CBM':'','so_max':'','so_min':''} # Table widget value
 
-        self.files_gui,self.files_dd = get_files_gui(height=300)
-        self.InGui  = InputGui(height=None)
-        self.input  = {'E_Fermi':0} # Dictionary for input
-        self.fig_gui = HBox() # Middle Tab
+        self._files_gui,self._files_dd = get_files_gui(height=300)
+        self._InGui  = InputGui(height=None)
+        self._input  = {'E_Fermi':0} # Dictionary for input
+        self._fig_gui = HBox() # Middle Tab
         self.theme_colors = light_colors.copy() # Avoid Modification
         # Permeannet Parameters
-        self.idos_kws   = dict(colormap='RGB',tdos_color=(0.5, 0.95, 0),linewidth=2,fill_area=True,
+        self._idos_kws   = dict(colormap='RGB',tdos_color=(0.5, 0.95, 0),linewidth=2,fill_area=True,
                                spin='both',interp_nk={},title=None)
-        self.ibands_kws = dict(mode='bands',skipk=None,max_width=6,title=None,interp_nk={}, scale_color = True)
-        self.evr_kws = dict(skipk=None,elim=[])
-        self.cache_data = True
+        self._ibands_kws = dict(mode='bands',skipk=None,max_width=6,title=None,interp_nk={}, scale_color = True)
+        self._evr_kws = dict(skipk=None,elim=[])
+        self._cache_data = True
 
         l_btn = ipw.Layout(width='max-content')
-        self.buttons = {'load_data' : Button(description='Load Data',layout=l_btn,tooltip='Load and Cache Data'),
+        self._buttons = {'load_data' : Button(description='Load Data',layout=l_btn,tooltip='Load and Cache Data'),
                         'load_graph': Button(description='Update Graph',layout=l_btn,tooltip='Create Graph'),
                         'confirm'   : Button(description='Confirm Delete',layout=l_btn,icon='trash'),
                         'summary'   : Button(description='Project Summary',layout=l_btn,tootltip='Make DataFrame'),
@@ -558,7 +557,7 @@ class VasprunApp:
 
         b_out = Layout(width='30%')
         en_options = ['Fermi','VBM','CBM','so_max','so_min','None']
-        self.dds   = {'band_dos': Dropdown(options=['Bands','DOS'],value='Bands',
+        self._dds   = {'band_dos': Dropdown(options=['Bands','DOS'],value='Bands',
                                                 layout= Layout(width='80px')),
                       'en_type' : Dropdown(options = en_options,value='None',layout=b_out),
                       'cache'   : Dropdown(options=['Table Data','PWD Cache','All Cache','None'],
@@ -569,7 +568,7 @@ class VasprunApp:
                                     "ggplot2", "seaborn", "simple_white", "none"],layout=l_btn),
                                     }
 
-        self.texts = {'kticks': Text(value='',layout=b_out,continuous_update=False),
+        self._texts = {'kticks': Text(value='',layout=b_out,continuous_update=False),
                       'ktickv': Text(value='',layout=b_out,continuous_update=False),
                       'kjoin' : Text(value='',layout=b_out,continuous_update=False),
                       'elim'  : Text(value='',layout=b_out,continuous_update=False),
@@ -577,102 +576,135 @@ class VasprunApp:
                       'xyt'   : Text(value='',continuous_update=False),
                       'load_elim'  : Text(value='-5,5',layout = Layout(width='5em'),continuous_update=False)
                       }
-        self.htmls = {'theme': ipw.HTML(css_style(light_colors,_class = self.main_class)),
+        self._htmls = {'theme': ipw.HTML(css_style(light_colors,_class = self._main_class)),
                       'table': ipw.HTML()}
 
         # Observing
-        self.InGui.html.observe(self.__update_input,"value")
-        self.InGui.html.observe(self._warn_to_load_graph,"value")
-        self.files_dd.observe(self._warn_to_load_graph,"value")
-        self.texts['kjoin'].observe(self._warn_to_load_graph,"value")
-        self.dds['band_dos'].observe(self._warn_to_load_graph,"value")
-        self.dds['band_dos'].observe(self.__update_input,"value")
-        self.texts['fermi'].observe(self.__update_input,"value")
-        self.texts['fermi'].observe(self.__update_fermi_level,"value")
-        self.texts['kjoin'].observe(self.__update_input,"value")
-        self.texts['kticks'].observe(self.__update_xyt,"value")
-        self.texts['ktickv'].observe(self.__update_xyt,"value")
-        self.texts['elim'].observe(self.__update_xyt,"value")
-        self.texts['xyt'].observe(self.__update_xyt)
-        self.dds['theme'].observe(self.__update_theme,"value")
-        self.dds['style'].observe(self.__update_plot_style,"value")
-        self.files_dd.observe(self.__load_previous,"value")
-        self.buttons['load_graph'].on_click(self.__load_previous,"value")
-        self.buttons['load_data'].on_click(self.__on_load)
-        self.dds['band_dos'].observe(self.__figure_tab,"value")
-        self.files_dd.observe(self.__update_table,'value')
-        self.buttons['load_data'].observe(self.__update_table,'value')
-        self.dds['en_type'].observe(self.__update_table,"value") # This works from _click_data
-        self.buttons['summary'].on_click(self.__df_out)
-        self.buttons['confirm'].on_click(self.__deleter)
-        self.buttons['save_fig'].on_click(self.__save_connected)
-        self.buttons['expand'].on_click(self.__expand_fig)
-        self.buttons['load_graph'].on_click(self.__update_graph)
-        self.texts['load_elim'].observe(self.__elim_changed,"value")
+        self._InGui.html.observe(self.__update_input,"value")
+        self._InGui.html.observe(self._warn_to_load_graph,"value")
+        self._files_dd.observe(self._warn_to_load_graph,"value")
+        self._texts['kjoin'].observe(self._warn_to_load_graph,"value")
+        self._dds['band_dos'].observe(self._warn_to_load_graph,"value")
+        self._dds['band_dos'].observe(self.__update_input,"value")
+        self._texts['fermi'].observe(self.__update_input,"value")
+        self._texts['fermi'].observe(self.__update_fermi_level,"value")
+        self._texts['kjoin'].observe(self.__update_input,"value")
+        self._texts['kticks'].observe(self.__update_xyt,"value")
+        self._texts['ktickv'].observe(self.__update_xyt,"value")
+        self._texts['elim'].observe(self.__update_xyt,"value")
+        self._texts['xyt'].observe(self.__update_xyt)
+        self._dds['theme'].observe(self.__update_theme,"value")
+        self._dds['style'].observe(self.__update_plot_style,"value")
+        self._files_dd.observe(self.__load_previous,"value")
+        self._buttons['load_graph'].on_click(self.__load_previous,"value")
+        self._buttons['load_data'].on_click(self.__on_load)
+        self._dds['band_dos'].observe(self.__figure_tab,"value")
+        self._files_dd.observe(self.__update_table,'value')
+        self._buttons['load_data'].observe(self.__update_table,'value')
+        self._dds['en_type'].observe(self.__update_table,"value") # This works from _click_data
+        self._buttons['summary'].on_click(self.__df_out)
+        self._buttons['confirm'].on_click(self.__deleter)
+        self._buttons['save_fig'].on_click(self.__save_connected)
+        self._buttons['expand'].on_click(self.__expand_fig)
+        self._buttons['load_graph'].on_click(self.__update_graph)
+        self._texts['load_elim'].observe(self.__elim_changed,"value")
         # Build Layout
         self.__build()
-        self.tab.on_displayed(self._on_displayed)
+        self._tab.on_displayed(self._on_displayed)
+
+    @property
+    def data(self): return self._data
+
+    @property
+    def fig(self): return self._fig
+
+    @property
+    def result(self): return self._result
+
+    @property
+    def input(self): return self._input
+
+    @property
+    def htmls(self): return self._htmls
+
+    @property
+    def texts(self): return self._texts
+
+    @property
+    def dds(self): return self._dds
+
+    @property
+    def buttons(self): return self._buttons
+
+    @property
+    def files_dd(self): return self._files_dd
+
+    @property
+    def path(self): return self._path
+
+    @property
+    def output(self): return self.__class__._output
 
     def set_options(self, cache_data = True, # general options
         mode = 'bands', scale_color = True, max_width = 6, skipk = None, # bands only keywords
         interp_nk = {}, title = None, # Mixed keywords
         colormap='RGB',tdos_color=(0.5, 0.95, 0),linewidth=2,fill_area=True, spin='both' # DOS only keywords
         ):
-        self.cache_data = cache_data
+        self._cache_data = cache_data
         if mode not in ['bands','markers','lines']:
             raise ValueError("mode must be 'bands','markers','lines'")
         # bands only keywords
-        self.ibands_kws['mode'] = mode
-        self.ibands_kws['scale_color'] = scale_color
-        self.ibands_kws['max_width'] = max_width
-        self.ibands_kws['skipk'] = skipk
+        self._ibands_kws['mode'] = mode
+        self._ibands_kws['scale_color'] = scale_color
+        self._ibands_kws['max_width'] = max_width
+        self._ibands_kws['skipk'] = skipk
 
         if ''.join(interp_nk.keys()) not in 'nk':
             raise ValueError("interp_nk must be be of the form {'n': int, 'k': int}")
         # Mixed keywords
-        self.ibands_kws['interp_nk'] = interp_nk
-        self.idos_kws['interp_nk'] = interp_nk
-        self.idos_kws['title'] = title
-        self.ibands_kws['title'] = title
+        self._ibands_kws['interp_nk'] = interp_nk
+        self._idos_kws['interp_nk'] = interp_nk
+        self._idos_kws['title'] = title
+        self._ibands_kws['title'] = title
 
         if spin not in 'updownboth':
             raise ValueError("spin must be in ('up','down','both')")
         # DOS only keywords
-        self.idos_kws['colormap'] = colormap
-        self.idos_kws['tdos_color'] = tdos_color
-        self.idos_kws['linewidth'] = linewidth
-        self.idos_kws['fill_area'] = fill_area
-        self.idos_kws['spin'] = spin
+        self._idos_kws['colormap'] = colormap
+        self._idos_kws['tdos_color'] = tdos_color
+        self._idos_kws['linewidth'] = linewidth
+        self._idos_kws['fill_area'] = fill_area
+        self._idos_kws['spin'] = spin
 
-        self.evr_kws['skipk'] = skipk # Useful
+        self._evr_kws['skipk'] = skipk # Useful
 
 
     def _on_displayed(self, change = None):
-        self.tab.selected_index = 1
-        self.fig_gui.layout.width = '95%' # Just to send a signal to resize the graph
-        self.fig_gui.layout.width = '100%' # Just to send another signal for figure size
-        self.tab.selected_index = 0
+        self._tab.selected_index = 1
+        self._fig_gui.layout.width = '95%' # Just to send a signal to resize the graph
+        self._fig_gui.layout.width = '100%' # Just to send another signal for figure size
+        self._tab.selected_index = 0
 
     def __elim_changed(self,change):
         # Delete Cache and Data to make user reload data
-        self.dds['cache'].value = 'PWD Cache'
-        self.buttons['confirm'].click()
+        self._dds['cache'].value = 'PWD Cache'
+        self._buttons['confirm'].click()
 
     def __check_lsorbit(self):
-        if self.data:
-            lsorbit = self.data.sys_info.incar.to_dict().get('LSORBIT','F')
+        if self._data:
+            lsorbit = self._data.sys_info.incar.to_dict().get('LSORBIT','F')
             options = ['Fermi','VBM','CBM','None']
             if lsorbit in 'T':
                 options = ['Fermi','VBM','CBM','so_max','so_min','None']
-            self.dds['en_type'].options = options
-            self.dds['en_type'].value = 'None'
+            self._dds['en_type'].options = options
+            self._dds['en_type'].value = 'None'
 
     def __update_fermi_level(self,change):
-        with self.fig.batch_animate():
+        with self._fig.batch_animate():
             old_fermi = float(change['old']) if change['old'] else 0 # Could be None before
             new_fermi = float(change['new'])
-            for trace in self.fig.data: # Shift graph as Fermi Changes
-                if self.dds['band_dos'].value == 'Bands':
+            for trace in self._fig.data: # Shift graph as Fermi Changes
+                if self._dds['band_dos'].value == 'Bands':
                     trace.y = [y - new_fermi + old_fermi for y in trace.y]
                 else:
                     trace.x = [x - new_fermi + old_fermi for x in trace.x]
@@ -680,91 +712,91 @@ class VasprunApp:
             self.__update_input(change = None) # Update input as well
 
     def _warn_to_load_graph(self, change = None):
-        self.buttons['load_graph'].icon = 'refresh'
-        self.buttons['load_graph'].style.button_color = 'yellow'
-        self.buttons['load_graph'].description = 'Update Graph'
+        self._buttons['load_graph'].icon = 'refresh'
+        self._buttons['load_graph'].style.button_color = 'yellow'
+        self._buttons['load_graph'].description = 'Update Graph'
 
     def set_theme_colors(self,theme_colors):
         "Get self.theme_colors and after edit set back"
         if 'dds' in self.__dict__.keys():
-            self.dds['theme'].value = 'Custom'
+            self._dds['theme'].value = 'Custom'
         if 'htmls' in self.__dict__.keys():
-            self.htmls['theme'].value = css_style(theme_colors)
+            self._htmls['theme'].value = css_style(theme_colors)
 
     def __figure_tab(self,change):
         l_out = Layout(width='20%')
-        cache_box = HBox([Label('Delete Cache:'),self.dds['cache'],self.buttons['confirm']]
+        cache_box = HBox([Label('Delete Cache:'),self._dds['cache'],self._buttons['confirm']]
                         ).add_class('marginless')
         upper_box = VBox([
-                HBox([Label('File:',layout=Layout(width='50px')),self.files_dd
+                HBox([Label('File:',layout=Layout(width='50px')),self._files_dd
                     ]).add_class('borderless').add_class('marginless'),
                 HBox([Label('View:',layout=Layout(width='50px')),
-                        self.dds['band_dos'],
+                        self._dds['band_dos'],
                         Label('elim:',layout=Layout(width='3em')),
-                        self.texts['load_elim'],
-                        self.buttons['load_data'],
+                        self._texts['load_elim'],
+                        self._buttons['load_data'],
                     ]).add_class('borderless').add_class('marginless')
                 ]).add_class('marginless').add_class('borderless')
 
         points_box = HBox([Box([Label('E Type:',layout=l_out),
-                                self.dds['en_type'],
+                                self._dds['en_type'],
                                 Label('E-Fermi:',layout=l_out),
-                                self.texts['fermi']
+                                self._texts['fermi']
                     ]).add_class('marginless').add_class('borderless'),
-                    self.buttons['load_graph']
+                    self._buttons['load_graph']
                     ],layout=Layout(width='100%')).add_class('marginless')
-        in_box = VBox([self.InGui.box,
+        in_box = VBox([self._InGui.box,
                     ]).add_class('marginless').add_class('borderless')
-        top_right = HBox([self.buttons['load_graph'],
+        top_right = HBox([self._buttons['load_graph'],
                           Label('Style:'),
-                          self.dds['style'],
+                          self._dds['style'],
                           Label('Theme:'),
-                          self.dds['theme'],
-                          self.buttons['expand']
+                          self._dds['theme'],
+                          self._buttons['expand']
                     ]).add_class('marginless')
-        fig_box = Box([self.fig],layout=Layout(min_height='380px')).add_class('marginless')
-        right_box = VBox([top_right,fig_box,self.htmls['table']
+        fig_box = Box([self._fig],layout=Layout(min_height='380px')).add_class('marginless')
+        right_box = VBox([top_right,fig_box,self._htmls['table']
                  ],layout=Layout(min_width='60%')).add_class('marginless').add_class('borderless')
 
 
-        if 'Bands' in self.dds['band_dos'].value:
-            in_box.children = [Label('---------- Projections ----------'),self.InGui.box,
+        if 'Bands' in self._dds['band_dos'].value:
+            in_box.children = [Label('---------- Projections ----------'),self._InGui.box,
                                Label('---- Other Arguments/Options ----'),
                       VBox([HBox([Label('Ticks At: ',layout=l_out),
-                                  self.texts['kticks'],
+                                  self._texts['kticks'],
                                   Label('Labels: ',layout=l_out),
-                                  self.texts['ktickv']
+                                  self._texts['ktickv']
                                  ]).add_class('borderless').add_class('marginless'),
                       HBox([Label('Join At: ',layout=l_out),
-                            self.texts['kjoin'],
+                            self._texts['kjoin'],
                             Label('E Range: ',layout=l_out),
-                            self.texts['elim']
+                            self._texts['elim']
                            ]).add_class('marginless').add_class('borderless')
                       ]).add_class('marginless')]
             right_box.children = [top_right,fig_box,points_box]
 
         else:
-            in_box.children = [Label('---------- Projections ----------'),self.InGui.box,
+            in_box.children = [Label('---------- Projections ----------'),self._InGui.box,
                                Label('---- Other Arguments/Options ----'),
                       HBox([Label('E Range:',layout=l_out),
-                      self.texts['elim'],
+                      self._texts['elim'],
                       Label('E-Fermi:',layout=l_out),
-                      self.texts['fermi']
+                      self._texts['fermi']
                       ]).add_class('marginless')]
             right_box.children = [top_right,fig_box,points_box]
-            self.dds['en_type'].value = 'None' # no scatter collection in DOS.
+            self._dds['en_type'].value = 'None' # no scatter collection in DOS.
 
         left_box = VBox([upper_box,
                         in_box,
-                        HBox([Label('X, Y, Title'),self.texts['xyt']]).add_class('borderless'),
-                        HBox([Label('Options:'),self.buttons['summary'],self.buttons['save_fig']]),
+                        HBox([Label('X, Y, Title'),self._texts['xyt']]).add_class('borderless'),
+                        HBox([Label('Options:'),self._buttons['summary'],self._buttons['save_fig']]),
                         cache_box,
-                        self.htmls['table']],layout=Layout(max_width='40%'),
+                        self._htmls['table']],layout=Layout(max_width='40%'),
                         ).add_class('marginless').add_class('borderless')
-        self.fig_gui.children = (left_box,right_box)
-        return self.fig_gui # Return for use in show
+        self._fig_gui.children = (left_box,right_box)
+        return self._fig_gui # Return for use in show
 
-    @output.capture()
+    @_output.capture()
     def __build(self):
         intro_html = ipw.HTML(("<h2>Pivotpy</h2><p>Filter files here and switch tab to Graphs. "
                                "You can create cache ahead of time to load quickly while working. "
@@ -773,322 +805,322 @@ class VasprunApp:
                                "</p><marquee style='color:blue'>Pivotpy GUI based on ipywidgets!</marquee>"))
         header_box = HBox([intro_html,
                            Label('Theme:',layout=Layout(width='80px')),
-                           self.dds['theme']
+                           self._dds['theme']
                     ]).add_class('marginless').add_class('borderless')
         summary_gui = HBox([ipw.Label(),
-                            self.buttons['summary']]
+                            self._buttons['summary']]
                             ).add_class('borderless')
-        intro_box = VBox([self.htmls['theme'],
+        intro_box = VBox([self._htmls['theme'],
                       header_box,
-                      self.files_gui,
+                      self._files_gui,
                       summary_gui]
                       ).add_class('marginless').add_class('borderless').add_class('marginless')
-        self.fig_gui = self.__figure_tab(1) #Start
-        self.tab.children = (intro_box,
-                             self.fig_gui,
+        self._fig_gui = self.__figure_tab(1) #Start
+        self._tab.children = (intro_box,
+                             self._fig_gui,
                              VBox([HBox([ipw.HTML("<h3>Functions Logging/Output</h3>"),
                                           Box([
                                           Label('Theme:',layout=Layout(width='80px')),
-                                          self.dds['theme']],layout=Layout(left='50%')).add_class('borderless')
+                                          self._dds['theme']],layout=Layout(left='50%')).add_class('borderless')
                                           ]).add_class('borderless').add_class('marginless'),
-                                    VasprunApp.output])
+                                    self.__class__._output])
                              )
-        self.dds['style'].value = 'plotly' # to trigger first callback on graph.
-        self.app = self.tab #Need to access it
+        self._dds['style'].value = 'plotly' # to trigger first callback on graph.
+        self.app = self._tab #Need to access it
         self.__update_theme(True) #Good option in jupyterlab for following theme.
 
     def show(self):
-        return display(self.tab)
+        return display(self._tab)
 
     def _ipython_display_(self):
         self.show()
 
     def __fill_ticks(self):
-        kpath = os.path.join(os.path.split(self.files_dd.value)[0],'KPOINTS')
+        kpath = os.path.join(os.path.split(self._files_dd.value)[0],'KPOINTS')
         tvs = sio.read_ticks(kpath) #ticks values segments
         if tvs['ktick_inds']: #If is must, if not present, avoid overwritting custom input
-            self.texts['kticks'].value = ','.join([str(v) for v in tvs['ktick_inds']])
+            self._texts['kticks'].value = ','.join([str(v) for v in tvs['ktick_inds']])
         if tvs['ktick_vals']:
-            self.texts['ktickv'].value = ','.join(tvs['ktick_vals'])
+            self._texts['ktickv'].value = ','.join(tvs['ktick_vals'])
         if tvs['kseg_inds']:
-            self.texts['kjoin'].value = ','.join([str(v) for v in tvs['kseg_inds']])
+            self._texts['kjoin'].value = ','.join([str(v) for v in tvs['kseg_inds']])
 
     def __update_theme(self,change):
-        if self.dds['theme'].value == 'Dark':
-            self.htmls['theme'].value = css_style(dark_colors,_class=self.main_class)
-            self.fig.update_layout(template='plotly_dark')
-            self.dds['style'].value = 'plotly_dark'
-        elif self.dds['theme'].value == 'Light':
-            self.htmls['theme'].value = css_style(light_colors,_class=self.main_class)
-            self.fig.update_layout(template='ggplot2')
-            self.dds['style'].value = 'ggplot2'
-        elif self.dds['theme'].value == 'Custom':
-            self.htmls['theme'].value = css_style(simple_colors,_class=self.main_class)
-            self.fig.update_layout(template='none')
-            self.dds['style'].value = 'none'
+        if self._dds['theme'].value == 'Dark':
+            self._htmls['theme'].value = css_style(dark_colors,_class=self._main_class)
+            self._fig.update_layout(template='plotly_dark')
+            self._dds['style'].value = 'plotly_dark'
+        elif self._dds['theme'].value == 'Light':
+            self._htmls['theme'].value = css_style(light_colors,_class=self._main_class)
+            self._fig.update_layout(template='ggplot2')
+            self._dds['style'].value = 'ggplot2'
+        elif self._dds['theme'].value == 'Custom':
+            self._htmls['theme'].value = css_style(simple_colors,_class=self._main_class)
+            self._fig.update_layout(template='none')
+            self._dds['style'].value = 'none'
         else:
-            self.htmls['theme'].value = css_style(default_colors,_class=self.main_class)
-            self.fig.update_layout(template='plotly')
-            self.dds['style'].value = 'plotly'
+            self._htmls['theme'].value = css_style(default_colors,_class=self._main_class)
+            self._fig.update_layout(template='plotly')
+            self._dds['style'].value = 'plotly'
 
     def __update_plot_style(self,change):
-        self.fig.update_layout(template = self.dds['style'].value)
+        self._fig.update_layout(template = self._dds['style'].value)
 
-    @output.capture(clear_output=True,wait=True)
+    @_output.capture(clear_output=True,wait=True)
     def __load_previous(self,change):
-        path = self.files_dd.value
+        path = self._files_dd.value
         try:
             _dir = os.path.split(path)[0]
             r_f = os.path.join(_dir,'result.json')
-            self.result = serializer.load(r_f)
+            self._result = serializer.load(r_f)
             self.__update_table(change = None)
             print('Previous Analysis loaded in Table for {}'.format(path))
         except:
             print('Previous Analysis does not exist for {}'.format(path))
 
-    @output.capture(clear_output=True,wait=True)
+    @_output.capture(clear_output=True,wait=True)
     def __read_data(self,poscar=None,sys_info=None):
         if sys_info != None:
-            self.result["sys"] = sys_info.SYSTEM
+            self._result["sys"] = sys_info.SYSTEM
         if poscar != None:
-            self.result["V"] = np.round(poscar.volume,5)
+            self._result["V"] = np.round(poscar.volume,5)
             a,b,c = np.round(np.linalg.norm(poscar.basis,axis=1),5)
-            self.result["a"] = a
-            self.result["b"] = b
-            self.result["c"] = c
+            self._result["a"] = a
+            self._result["b"] = b
+            self._result["c"] = c
 
-    @output.capture(clear_output=True,wait=True)
+    @_output.capture(clear_output=True,wait=True)
     def __on_load(self,button):
-        if self.data and self.files_dd.value == self.__path: # Same load and data exists, keeps in fast
+        if self._data and self._files_dd.value == self._path: # Same load and data exists, keeps in fast
             print('Data already loaded')
-            self.buttons['load_data'].description = 'Data already loaded'
+            self._buttons['load_data'].description = 'Data already loaded'
             sleep(1)
-            self.buttons['load_data'].description = 'Load Data'
+            self._buttons['load_data'].description = 'Load Data'
             return None
 
         self.__fill_ticks() # First fill ticks, then update input
         self.__update_input(change=None) # Fix input right here.
         self.__load_previous(change=button) # previous calculations.
-        self.tab.selected_index = 2
-        self.buttons['load_data'].description='Loading ...'
-        _dir = os.path.split(self.files_dd.value)[0] # directory
+        self._tab.selected_index = 2
+        self._buttons['load_data'].description='Loading ...'
+        _dir = os.path.split(self._files_dd.value)[0] # directory
         try:
             sys_info = serializer.load(os.path.join(_dir,'sys_info.pickle'))
-            self.data = serializer.load(os.path.join(_dir,'vasprun.pickle'))
+            self._data = serializer.load(os.path.join(_dir,'vasprun.pickle'))
             print('Cache Loaded')
         except:
             print('Trying Loading from Python ...')
-            elim = self.texts['load_elim'].value.split(',')[:2] # First two elements
+            elim = self._texts['load_elim'].value.split(',')[:2] # First two elements
             if len(elim) == 2:
-                self.evr_kws['elim'] = [float(e) for e in elim]
-            self.data = vp.export_vasprun(self.files_dd.value, **self.evr_kws)
-            if self.cache_data:
-                print('Caching From: {}'.format(self.files_dd.value)) #Cache result
-                serializer.dump(self.data.sys_info,outfile=os.path.join(_dir,'sys_info.pickle'))
-                serializer.dump(self.data,outfile=os.path.join(_dir,'vasprun.pickle'))
+                self._evr_kws['elim'] = [float(e) for e in elim]
+            self._data = vp.export_vasprun(self._files_dd.value, **self._evr_kws)
+            if self._cache_data:
+                print('Caching From: {}'.format(self._files_dd.value)) #Cache result
+                serializer.dump(self._data.sys_info,outfile=os.path.join(_dir,'sys_info.pickle'))
+                serializer.dump(self._data,outfile=os.path.join(_dir,'vasprun.pickle'))
 
-            sys_info = self.data.sys_info # required here.
+            sys_info = self._data.sys_info # required here.
             print('Done')
 
-        _ = self.__read_data(self.data.poscar,sys_info) # Update Table data on load
-        self.texts['fermi'].value = str(sys_info.E_Fermi) # Needs each time new data loads up.
+        _ = self.__read_data(self._data.poscar,sys_info) # Update Table data on load
+        self._texts['fermi'].value = str(sys_info.E_Fermi) # Needs each time new data loads up.
 
-        self.tab.selected_index = 1
+        self._tab.selected_index = 1
         # Revamp input dropdowns on load  ==========
-        self.InGui.update_options(sys_info=sys_info) #Upadate elements/orbs/labels
+        self._InGui.update_options(sys_info=sys_info) #Upadate elements/orbs/labels
         #===========================================
-        self.buttons['load_data'].description='Load Data'
-        self.__path = self.files_dd.value # Update in __on_load or graph to make sure data loads once
-        self.buttons['load_data'].tooltip = "Current System\n{!r}".format(self.data.sys_info)
+        self._buttons['load_data'].description='Load Data'
+        self._path = self._files_dd.value # Update in __on_load or graph to make sure data loads once
+        self._buttons['load_data'].tooltip = "Current System\n{!r}".format(self._data.sys_info)
         self._warn_to_load_graph()
 
-    @output.capture(clear_output=True,wait=True)
+    @_output.capture(clear_output=True,wait=True)
     def __update_input(self,change):
-        self.input.update(self.InGui.output)
-        elim_str  = [v for v in self.texts['elim'].value.split(',') if v!='']
-        fermi_str = self.texts['fermi'].value
-        self.input['E_Fermi'] = float(fermi_str) if fermi_str else 0 # Change now, keep zero else must.
-        self.input['elim'] = [float(v) for v in elim_str if v!='-'][:2] if len(elim_str) >= 2 else None
-        if self.dds['band_dos'].value == 'Bands':
-            kjoin_str  = [v for v in self.texts['kjoin'].value.split(',') if v!='']
-            kticks_str = [v for v in self.texts['kticks'].value.split(',') if v!='']
-            ktickv_str = [v for v in self.texts['ktickv'].value.split(',') if v!='']
-            self.input['kseg_inds'] = [int(v) for v in kjoin_str if v!='-'] if kjoin_str else None
-            self.input['ktick_inds'] = [int(v) for v in kticks_str if v!='-'] if kticks_str else [0,-1]
-            self.input['ktick_vals'] = [v for v in ktickv_str if v!=''] if ktickv_str else ['A','B']
+        self._input.update(self._InGui.output)
+        elim_str  = [v for v in self._texts['elim'].value.split(',') if v!='']
+        fermi_str = self._texts['fermi'].value
+        self._input['E_Fermi'] = float(fermi_str) if fermi_str else 0 # Change now, keep zero else must.
+        self._input['elim'] = [float(v) for v in elim_str if v!='-'][:2] if len(elim_str) >= 2 else None
+        if self._dds['band_dos'].value == 'Bands':
+            kjoin_str  = [v for v in self._texts['kjoin'].value.split(',') if v!='']
+            kticks_str = [v for v in self._texts['kticks'].value.split(',') if v!='']
+            ktickv_str = [v for v in self._texts['ktickv'].value.split(',') if v!='']
+            self._input['kseg_inds'] = [int(v) for v in kjoin_str if v!='-'] if kjoin_str else None
+            self._input['ktick_inds'] = [int(v) for v in kticks_str if v!='-'] if kticks_str else [0,-1]
+            self._input['ktick_vals'] = [v for v in ktickv_str if v!=''] if ktickv_str else ['A','B']
 
         else:
-            self.input = {k:v for k,v in self.input.items() if k not in ['ktick_inds','ktick_vals','kseg_inds']}
+            self._input = {k:v for k,v in self._input.items() if k not in ['ktick_inds','ktick_vals','kseg_inds']}
         #Update at last
-        self.InGui.output = self.input
-        self.buttons['load_graph'].tooltip = "Current Input\n{!r}".format(serializer.Dict2Data(self.input))
+        self._InGui.output = self._input
+        self._buttons['load_graph'].tooltip = "Current Input\n{!r}".format(serializer.Dict2Data(self._input))
 
 
-    @output.capture(clear_output=True,wait=True)
+    @_output.capture(clear_output=True,wait=True)
     def __update_table(self,change):
-        self.htmls['table'].value = _tabulate_data(self.result)
-        _save_data(self.files_dd,self.result) # save data as well.
+        self._htmls['table'].value = _tabulate_data(self._result)
+        _save_data(self._files_dd,self._result) # save data as well.
 
-    @output.capture(clear_output=True,wait=True)
+    @_output.capture(clear_output=True,wait=True)
     def __df_out(self,btn):
-        self.tab.selected_index = 2
-        self.buttons['summary'].description = 'See STD(out/err) Tab'
-        paths = [v for (k,v) in self.files_dd.options]
+        self._tab.selected_index = 2
+        self._buttons['summary'].description = 'See STD(out/err) Tab'
+        paths = [v for (k,v) in self._files_dd.options]
         display(generate_summary(paths_list=paths))
         print('Get above DataFrame by app_name.df\nNote: app_name is variable name assigned to VasprunApp()')
-        self.buttons['summary'].description = 'Project Summary'
+        self._buttons['summary'].description = 'Project Summary'
 
     @property
     def df(self):
         "Access Results of all calculations as DataFrame"
-        paths = [v for (k,v) in self.files_dd.options]
+        paths = [v for (k,v) in self._files_dd.options]
         return generate_summary(paths_list=paths)
 
-    @output.capture(clear_output=True,wait=True)
+    @_output.capture(clear_output=True,wait=True)
     def __deleter(self,btn):
-        self.buttons['confirm'].description = 'Deleting ...'
-        if self.files_dd.value:
+        self._buttons['confirm'].description = 'Deleting ...'
+        if self._files_dd.value:
             print('Deleting Selected Cache...')
             self.__clear_cache() # Deleting
             print('Done')
         self.__update_table(1) #Update when delete data
-        self.buttons['confirm'].description='Confirm Delete'
+        self._buttons['confirm'].description='Confirm Delete'
 
-    @output.capture(clear_output=True,wait=True)
+    @_output.capture(clear_output=True,wait=True)
     def __update_xyt(self,change):
-        if self.texts['xyt'].value:
-            xyt_text = self.texts['xyt'].value.split(',')
+        if self._texts['xyt'].value:
+            xyt_text = self._texts['xyt'].value.split(',')
             try:
-                self.fig.update_xaxes(title=xyt_text[0])
-                self.fig.update_yaxes(title=xyt_text[1])
-                self.fig.update_layout(title=xyt_text[2])
+                self._fig.update_xaxes(title=xyt_text[0])
+                self._fig.update_yaxes(title=xyt_text[1])
+                self._fig.update_layout(title=xyt_text[2])
             except: pass #do nothing else
 
-        if self.texts['ktickv'].value or self.texts['kticks'].value or self.texts['elim'].value:
+        if self._texts['ktickv'].value or self._texts['kticks'].value or self._texts['elim'].value:
             self.__update_input(change=None)
-        if self.dds['band_dos'].value == 'Bands' and self.data:
-            tickvals = [self.data.kpath[i] for i in self.input['ktick_inds']]
-            self.fig.update_xaxes(ticktext=self.input['ktick_vals'], tickvals=tickvals)
-        if self.texts['elim'].value and self.input['elim'] != None and len(self.input['elim']) == 2:
-            if self.dds['band_dos'].value == 'Bands':
-                self.fig.update_yaxes(range = self.input['elim'])
+        if self._dds['band_dos'].value == 'Bands' and self._data:
+            tickvals = [self._data.kpath[i] for i in self._input['ktick_inds']]
+            self._fig.update_xaxes(ticktext=self._input['ktick_vals'], tickvals=tickvals)
+        if self._texts['elim'].value and self._input['elim'] != None and len(self._input['elim']) == 2:
+            if self._dds['band_dos'].value == 'Bands':
+                self._fig.update_yaxes(range = self._input['elim'])
             else:
-                self.fig.update_xaxes(range = self.input['elim'])
+                self._fig.update_xaxes(range = self._input['elim'])
 
-    @output.capture(clear_output=True,wait=True)
+    @_output.capture(clear_output=True,wait=True)
     def __save_connected(self,btn):
-        s_p = os.path.split(self.files_dd.value)[0]
+        s_p = os.path.split(self._files_dd.value)[0]
         filename = os.path.join(s_p,'ConnectedFig.html')
         filename = gu.prevent_overwrite(filename)
-        self.buttons['save_fig'].description = 'Saving...'
-        theme = self.htmls['theme'].value.replace(f'.{self.main_class}','')
-        views = VBox([ipw.HTML(theme),self.fig,self.htmls['table']],
+        self._buttons['save_fig'].description = 'Saving...'
+        theme = self._htmls['theme'].value.replace(f'.{self._main_class}','')
+        views = VBox([ipw.HTML(theme),self._fig,self._htmls['table']],
                 layout=Layout(width='500px',height='490px')).add_class('borderless')
         embed_minimal_html(filename, views=[views], state=dependency_state([views]))
-        self.buttons['save_fig'].description = 'Save Fig'
-        self.buttons['save_fig'].tooltip = 'Recently Saved\n{!r}'.format(filename)
+        self._buttons['save_fig'].description = 'Save Fig'
+        self._buttons['save_fig'].tooltip = 'Recently Saved\n{!r}'.format(filename)
 
-    @output.capture(clear_output=True,wait=True)
+    @_output.capture(clear_output=True,wait=True)
     def __expand_fig(self,btn):
-        self.tab.selected_index = 2
-        self.dds['en_type'].value = 'None' # To avoid accidental clicks
-        display(self.fig)
+        self._tab.selected_index = 2
+        self._dds['en_type'].value = 'None' # To avoid accidental clicks
+        display(self._fig)
     # Garph
-    @output.capture(clear_output=True,wait=True)
+    @_output.capture(clear_output=True,wait=True)
     def __update_graph(self,btn):
-        if (self.buttons['load_graph'].icon == 'check') and (self.data and self.files_dd.value == self.__path):
+        if (self._buttons['load_graph'].icon == 'check') and (self._data and self._files_dd.value == self._path):
             print('Graph is already updated with latest input!')
-            self.buttons['load_graph'].description = 'Graph Already Updated'
+            self._buttons['load_graph'].description = 'Graph Already Updated'
             sleep(1)
-            self.buttons['load_graph'].description = 'Latest Graph'
+            self._buttons['load_graph'].description = 'Latest Graph'
             return None
 
-        path = self.files_dd.value
+        path = self._files_dd.value
         if path:
             self.__fill_ticks() # First fill ticks, then update input
             self.__update_input(change=None) # Update input here as well
-            self.tab.selected_index = 2
-            self.fig.data = []
-            if self.data and path == self.__path: # Same load and data exists, keeps in fast
+            self._tab.selected_index = 2
+            self._fig.data = []
+            if self._data and path == self._path: # Same load and data exists, keeps in fast
                 print('Data already loaded')
             else:
-                self.buttons['load_graph'].description = 'Loading Data...'
+                self._buttons['load_graph'].description = 'Loading Data...'
                 try:
                     print('Trying to Load Cache for Graph ...')
                     file = os.path.join(os.path.split(path)[0],'vasprun.pickle')
-                    self.buttons['load_graph'].description = file
-                    self.data = serializer.load(file)
+                    self._buttons['load_graph'].description = file
+                    self._data = serializer.load(file)
                 except:
                     print('No cache found. Loading from file {} ...'.format(path))
-                    elim = self.texts['load_elim'].value.split(',')[:2] # First two elements
+                    elim = self._texts['load_elim'].value.split(',')[:2] # First two elements
                     if len(elim) == 2:
-                        self.evr_kws['elim'] = [float(e) for e in elim]
-                    self.data = vp.export_vasprun(path, **self.evr_kws)
+                        self._evr_kws['elim'] = [float(e) for e in elim]
+                    self._data = vp.export_vasprun(path, **self._evr_kws)
 
-            self.buttons['load_graph'].description = 'Updating Graph...'
+            self._buttons['load_graph'].description = 'Updating Graph...'
             print('Done')
 
-            self.__path  = self.files_dd.value #update here or __on_load. Useful to match things
-            _ = self.__read_data(self.data.poscar,self.data.sys_info) # Update Table data
+            self._path  = self._files_dd.value #update here or __on_load. Useful to match things
+            _ = self.__read_data(self._data.poscar,self._data.sys_info) # Update Table data
             self.__check_lsorbit() # Check if LSORBIT is on, then set options accordingly
             # Do Not Read Fermi, its 0 or given by user
-            if self.dds['band_dos'].value == 'Bands':
-                fig_data = ip.iplot_rgb_lines(path_evr=self.data,**self.input,**self.ibands_kws)
+            if self._dds['band_dos'].value == 'Bands':
+                fig_data = ip.iplot_rgb_lines(path_evr=self._data,**self._input,**self._ibands_kws)
             else:
-                self.dds['en_type'].value = 'None' # Avoid random clicks
-                fig_data = ip.iplot_dos_lines(path_evr=self.data,**self.input,**self.idos_kws) # input auto-modified
+                self._dds['en_type'].value = 'None' # Avoid random clicks
+                fig_data = ip.iplot_dos_lines(path_evr=self._data,**self._input,**self._idos_kws) # input auto-modified
 
-            self.tab.selected_index = 1
-            with self.fig.batch_animate():
+            self._tab.selected_index = 1
+            with self._fig.batch_animate():
                 for d in fig_data.data:
-                    self.fig.add_trace(d)
-                fig_data.layout.template = self.dds['style'].value # before layout to avoid color blink
-                self.fig.layout = fig_data.layout
+                    self._fig.add_trace(d)
+                fig_data.layout.template = self._dds['style'].value # before layout to avoid color blink
+                self._fig.layout = fig_data.layout
 
-            _click_data(self.dds['en_type'],self.texts['fermi'],self.result,self.fig,self.dds['band_dos'])
+            _click_data(self._dds['en_type'],self._texts['fermi'],self._result,self._fig,self._dds['band_dos'])
 
-            self.buttons['load_graph'].icon = 'check'
-            self.buttons['load_graph'].description = 'Latest Graph'
-            self.buttons['load_graph'].style.button_color = 'transparent'
+            self._buttons['load_graph'].icon = 'check'
+            self._buttons['load_graph'].description = 'Latest Graph'
+            self._buttons['load_graph'].style.button_color = 'transparent'
 
-    @output.capture(clear_output=True,wait=True)
+    @_output.capture(clear_output=True,wait=True)
     def __clear_cache(self):
-        self.tab.selected_index = 2
-        _dir = os.path.split(self.files_dd.value)[0]
-        if 'Table' in self.dds['cache'].value:
-            for k in self.result.keys(): # Avoid deleting V,a,b,Fermi
+        self._tab.selected_index = 2
+        _dir = os.path.split(self._files_dd.value)[0]
+        if 'Table' in self._dds['cache'].value:
+            for k in self._result.keys(): # Avoid deleting V,a,b,Fermi
                 if k not in ['sys','V','a','b','c','Fermi']:
-                    self.result[k] = ''
-        if 'PWD' in self.dds['cache'].value:
+                    self._result[k] = ''
+        if 'PWD' in self._dds['cache'].value:
             _files = [os.path.join(_dir,f) for f in ['sys_info.pickle','vasprun.pickle']]
             _ = [[print("Deleting", _file),os.remove(_file)] for _file in _files if os.path.isfile(_file)]
-            self.data =  None
+            self._data =  None
             self._warn_to_load_graph(change=None)
-        if 'All' in self.dds['cache'].value:
-            for (key, value) in self.files_dd.options:
+        if 'All' in self._dds['cache'].value:
+            for (key, value) in self._files_dd.options:
                 _dir = os.path.split(value)[0]
                 _files = [os.path.join(_dir,f) for f in ['sys_info.pickle','vasprun.pickle']]
                 _ = [[print("Deleting", _file),os.remove(_file)] for _file in _files if os.path.isfile(_file)]
-            self.data =  None
+            self._data =  None
             self._warn_to_load_graph(change=None)
 
-        self.tab.selected_index = 1
+        self._tab.selected_index = 1
 
     def iplot(self,**kwargs):
-        "Returns a detached interactive Figure. `kwargs` are passed to `iplot_rgb_lines` or `iplot_dos_lines` based on current figure. `kwargs` should exclude whatever inside `self.input` and `path_evr`"
-        kwargs = {k:v for k,v in kwargs.items() if k not in self.input.keys() or k!='path_evr'}
-        if self.dds['band_dos'].value == 'Bands':
-            return ip.iplot_rgb_lines(path_evr=self.data,**self.input,**kwargs)
+        "Returns a detached interactive Figure. `kwargs` are passed to `iplot_rgb_lines` or `iplot_dos_lines` based on current figure. `kwargs` should exclude whatever inside `self._input` and `path_evr`"
+        kwargs = {k:v for k,v in kwargs.items() if k not in self._input.keys() or k!='path_evr'}
+        if self._dds['band_dos'].value == 'Bands':
+            return ip.iplot_rgb_lines(path_evr=self._data,**self._input,**kwargs)
         else:
-            return ip.iplot_dos_lines(path_evr=self.data,**self.input,**kwargs)
+            return ip.iplot_dos_lines(path_evr=self._data,**self._input,**kwargs)
 
     def splot(self,**kwargs):
-        "Returns matplotlib Axes.`kwargs` are passed to `splot_rgb_lines` or `splot_dos_lines` based on current figure. `kwargs` should exclude whatever inside `self.input` and `path_evr`"
-        kwargs = {k:v for k,v in kwargs.items() if k not in self.input.keys() or k!='path_evr'}
-        if self.dds['band_dos'].value == 'Bands':
-            return sp.splot_rgb_lines(path_evr=self.data,**self.input,**kwargs)
+        "Returns matplotlib Axes.`kwargs` are passed to `splot_rgb_lines` or `splot_dos_lines` based on current figure. `kwargs` should exclude whatever inside `self._input` and `path_evr`"
+        kwargs = {k:v for k,v in kwargs.items() if k not in self._input.keys() or k!='path_evr'}
+        if self._dds['band_dos'].value == 'Bands':
+            return sp.splot_rgb_lines(path_evr=self._data,**self._input,**kwargs)
         else:
-            return sp.splot_dos_lines(path_evr=self.data,**self.input,**kwargs)
+            return sp.splot_dos_lines(path_evr=self._data,**self._input,**kwargs)
 
 # Cell
 class KPathApp:
@@ -1098,47 +1130,51 @@ class KPathApp:
         > ka.show() #Display app
         > ka.splot() #get matplotlib figure
     """
-    output = ipw.Output().add_class('output')
+    _output = ipw.Output().add_class('output')
     def __init__(self,path='POSCAR'):
         self.path = path
-        self.files_gui, self.files_dd = get_files_gui(auto_fill='POSCAR')
-        self.files_dd.layout.width = '50%'
-        self.main_class = 'custom-'+''.join(np.random.randint(9,size=(21,)).astype(str)) #Random class
-        self.tab = ipw.Tab(children=[self.files_gui,Box([]),KPathApp.output]).add_class(self.main_class)
-        self.tab.add_class('marginless').add_class('borderless')
-        self.tab.layout = Layout(width='100%',min_width='600px',height='450px',min_height='450px')
+        self._files_gui, self._files_dd = get_files_gui(auto_fill='POSCAR')
+        self._files_dd.layout.width = '50%'
+        self._main_class = 'custom-'+''.join(np.random.randint(9,size=(21,)).astype(str)) #Random class
+        self._tab = ipw.Tab(children=[self._files_gui,Box([]),self.__class__._output]).add_class(self._main_class)
+        self._tab.add_class('marginless').add_class('borderless')
+        self._tab.layout = Layout(width='100%',min_width='600px',height='450px',min_height='450px')
         try:
             for i,title in enumerate(['Home','Main','STDERR']):
-                self.tab.set_title(i,title)
+                self._tab.set_title(i,title)
         except:
-            self.tab.titles = ['Home','Main','STDERR']
-        self.app = self.tab
-        self.fig = go.FigureWidget()
-        self.fig.layout.template = 'plotly_white' #Forces to avoid colored patch in background
+            self._tab.titles = ['Home','Main','STDERR']
+        self.app = self._tab
+        self._fig = go.FigureWidget()
+        self._fig.layout.template = 'plotly_white' #Forces to avoid colored patch in background
         self.bz = None
         self.kcsn = [] #KPOINTS, COORDS,SYMBOLS, N_per_interval and box symbol in dictionary per item
-        self.buttons = {'delete':Button(description='Delete Selection'),
+        self._buttons = {'delete':Button(description='Delete Selection'),
                         'add':Button(description='Add Point'),
                         'patch':Button(description='Split Path'),
                         'fig_up': Button(description='Update Figure'),
                         'theme': Button(description='Dark Theme')}
         self.sm = SelectMultiple(layout=Layout(width='100%'))
-        self.texts = {'label':Text(description='Label, N',indent=False),
+        self._texts = {'label':Text(description='Label, N',indent=False),
                       'kxyz':Text(description='kx, ky, kz',indent=False)}
-        self.theme_html = ipw.HTML(css_style(light_colors,_class=self.main_class))
+        self.theme_html = ipw.HTML(css_style(light_colors,_class=self._main_class))
 
-        self.buttons['delete'].on_click(self.__delete)
-        self.buttons['add'].on_click(self.__add)
-        self.buttons['patch'].on_click(self.__add_patch)
-        self.buttons['theme'].on_click(self.__toggle_theme)
-        self.buttons['fig_up'].on_click(self.__update_fig)
-        self.texts['label'].on_submit(self.__label)
-        self.texts['kxyz'].on_submit(self.__manual_k)
+        self._buttons['delete'].on_click(self.__delete)
+        self._buttons['add'].on_click(self.__add)
+        self._buttons['patch'].on_click(self.__add_patch)
+        self._buttons['theme'].on_click(self.__toggle_theme)
+        self._buttons['fig_up'].on_click(self.__update_fig)
+        self._texts['label'].on_submit(self.__label)
+        self._texts['kxyz'].on_submit(self.__manual_k)
 
         self.__update_fig()
         self.__build()
 
-    @output.capture(clear_output=True,wait=True)
+    @property
+    def fig(self):
+        return self._fig
+
+    @_output.capture(clear_output=True,wait=True)
     def __toggle_theme(self,change):
         _style = '''<style>.widget-select-multiple>select {{
             font-family: "Cascadia Code","Ubuntu Mono","SimSun-ExtB","Courier New";
@@ -1146,23 +1182,23 @@ class KPathApp:
             height:auto;min-height:160px;padding:5px;margin:0px;overflow:auto;}}
         .widget-select-multiple>select>option:hover,
         .widget-select-multiple>select>option:focus{{background:{hover_bg};}}</style>'''
-        if self.buttons['theme'].description == 'Dark Theme':
-            self.theme_html.value = css_style(dark_colors,_class = self.main_class) + _style.format(**dark_colors)
-            self.fig.layout.template = 'plotly_dark'
-            self.fig.layout.paper_bgcolor = dark_colors['main_bg'] #important
-            self.buttons['theme'].description = 'Light Theme'
+        if self._buttons['theme'].description == 'Dark Theme':
+            self.theme_html.value = css_style(dark_colors,_class = self._main_class) + _style.format(**dark_colors)
+            self._fig.layout.template = 'plotly_dark'
+            self._fig.layout.paper_bgcolor = dark_colors['main_bg'] #important
+            self._buttons['theme'].description = 'Light Theme'
         else:
-            self.theme_html.value = css_style(light_colors,_class=self.main_class) + _style.format(**light_colors)
-            self.fig.layout.template = 'plotly_white'
-            self.fig.layout.paper_bgcolor = light_colors['main_bg']
-            self.buttons['theme'].description = 'Dark Theme'
+            self.theme_html.value = css_style(light_colors,_class=self._main_class) + _style.format(**light_colors)
+            self._fig.layout.template = 'plotly_white'
+            self._fig.layout.paper_bgcolor = light_colors['main_bg']
+            self._buttons['theme'].description = 'Dark Theme'
 
-    @output.capture(clear_output=True,wait=True)
+    @_output.capture(clear_output=True,wait=True)
     def __manual_k(self,change):
         for i in self.sm.value:
-            self.kcsn[i]['k'] = [float(v) for v in self.texts['kxyz'].value.split(',') if v != ''][:3]
+            self.kcsn[i]['k'] = [float(v) for v in self._texts['kxyz'].value.split(',') if v != ''][:3]
 
-        self.texts['kxyz'].value = '' # clean it
+        self._texts['kxyz'].value = '' # clean it
         self.__update_label()
         self.__update_selection() #Change on graph too
 
@@ -1181,34 +1217,34 @@ class KPathApp:
 
         self.sm.options = tuple(opt)
 
-    @output.capture(clear_output=True,wait=True)
+    @_output.capture(clear_output=True,wait=True)
     def __build(self):
-        for k,b in self.buttons.items():
+        for k,b in self._buttons.items():
             b.layout.width = 'max-content'
-        for k,t in self.texts.items():
+        for k,t in self._texts.items():
             t.layout.width='85%'
-        top_row = HBox([self.files_dd,self.buttons['fig_up']]).add_class('borderless')
-        _buttons1 = HBox([self.buttons[b] for b in ['add','delete']]).add_class('borderless')
-        _buttons2 = HBox([self.buttons[b] for b in ['patch','theme']]).add_class('borderless')
-        self.tab.children = [self.tab.children[0],
+        top_row = HBox([self._files_dd,self._buttons['fig_up']]).add_class('borderless')
+        _buttons1 = HBox([self._buttons[b] for b in ['add','delete']]).add_class('borderless')
+        _buttons2 = HBox([self._buttons[b] for b in ['patch','theme']]).add_class('borderless')
+        self._tab.children = [self._tab.children[0],
                             HBox([
                                   VBox([self.theme_html,
                                         VBox([top_row,_buttons1,_buttons2],
                                         layout = Layout(min_height='140px')),
                                         Box([self.sm]).add_class('marginless').add_class('borderless'),
-                                        *self.texts.values()],
+                                        *self._texts.values()],
                                   layout=Layout(min_width='320px')).add_class('borderless'),
-                                  Box([self.fig]).add_class('borderless')],
+                                  Box([self._fig]).add_class('borderless')],
                             layout=Layout(height='400px',width='auto')).add_class('borderless'),
-                            self.tab.children[-1]]
+                            self._tab.children[-1]]
 
     def show(self):
-        return display(self.tab)
+        return display(self._tab)
 
     def _ipython_display_(self):
         self.show()
 
-    @output.capture(clear_output=True,wait=True)
+    @_output.capture(clear_output=True,wait=True)
     def __delete(self,change):
         v = self.sm.value
         for i, kp in enumerate(self.kcsn):
@@ -1216,7 +1252,7 @@ class KPathApp:
         self.kcsn = [k for i,k in enumerate(self.kcsn) if i not in v]
         self.sm.options = [(self.__label_at(i),i) for i,op in enumerate(self.kcsn)]
 
-    @output.capture(clear_output=True,wait=True)
+    @_output.capture(clear_output=True,wait=True)
     def __add(self,change):
         if self.kcsn:
             self.kcsn.append({'k':[],'c':[],'s':'','n':'', 'b': '└'})
@@ -1228,7 +1264,7 @@ class KPathApp:
         self.sm.options = [*self.sm.options,('You just added me',len(self.sm.options))]
         self.sm.value = (len(self.sm.options) - 1,) # make available
 
-    @output.capture(clear_output=True,wait=True)
+    @_output.capture(clear_output=True,wait=True)
     def __add_patch(self,change):
         vs = [v for v in self.sm.value if v > 1 and v < len(self.sm.options) - 1]
         opts = list(self.sm.options)
@@ -1248,7 +1284,7 @@ class KPathApp:
         self.__update_selection()
 
 
-    @output.capture(clear_output=True,wait=True)
+    @_output.capture(clear_output=True,wait=True)
     def get_coords_labels(self):
         "`coords` are calculated for current `bz` even if `kpoints` were from other one. Useful in case of same kind of Zones with just basis changed."
         if self.bz:
@@ -1267,18 +1303,18 @@ class KPathApp:
         labels = [l for l in labels if l]
         return coords,labels
 
-    @output.capture(clear_output=True,wait=True)
+    @_output.capture(clear_output=True,wait=True)
     def __update_selection(self):
         coords,labels = self.get_coords_labels()
-        with self.fig.batch_animate():
-            for trace in self.fig.data:
+        with self._fig.batch_animate():
+            for trace in self._fig.data:
                 if 'path' in trace.name and coords.any():
                     trace.x = coords[:,0]
                     trace.y = coords[:,1]
                     trace.z = coords[:,2]
                     trace.text = labels
 
-    @output.capture(clear_output=True,wait=True)
+    @_output.capture(clear_output=True,wait=True)
     def __click(self):
         def handle_click(trace, points, state):
             if points.ys != []:
@@ -1293,40 +1329,40 @@ class KPathApp:
                 self.__update_label()
                 self.__update_selection()
 
-        for trace in self.fig.data:
+        for trace in self._fig.data:
             if 'HSK' in trace.name:
                 trace.on_click(handle_click)
 
-    @output.capture(clear_output=True,wait=True)
+    @_output.capture(clear_output=True,wait=True)
     def __update_fig(self,change=None):
-        if self.files_dd.value:
-            self.path = self.files_dd.value
+        if self._files_dd.value:
+            self.path = self._files_dd.value
             self.bz = sio.get_bz(self.path)
             fig_data = sio.iplot_bz(self.bz,fill=False,color='red',background='rgba(1,1,1,0)')
-            self.fig.data = []
-            with self.fig.batch_animate():
-                self.fig.add_trace(go.Scatter3d(x = [],y = [],z = [],
+            self._fig.data = []
+            with self._fig.batch_animate():
+                self._fig.add_trace(go.Scatter3d(x = [],y = [],z = [],
                     mode='lines+text+markers',name='path',text=[],
                     textfont_size=18))
                 self.__update_selection() #Show previous path on current fig.
                 for trace in fig_data.data:
-                    self.fig.add_trace(trace)
+                    self._fig.add_trace(trace)
 
-                self.fig.layout = fig_data.layout
-                self.fig.layout.autosize=True
-                self.fig.layout.scene.aspectmode = 'data' #very important
+                self._fig.layout = fig_data.layout
+                self._fig.layout.autosize=True
+                self._fig.layout.scene.aspectmode = 'data' #very important
 
             self.__click()
 
 
-    @output.capture(clear_output=True,wait=True)
+    @_output.capture(clear_output=True,wait=True)
     def __label(self,change):
         for i in self.sm.value:
-            inbox = self.texts['label'].value.split(',')
+            inbox = self._texts['label'].value.split(',')
             self.kcsn[i]['s'] = 'Γ' if 'am' in inbox[0] else inbox[0] #fix gamma
             try: self.kcsn[i]['n'] = int(inbox[1])
             except: pass
-            self.texts['label'].value = '' # Clear it
+            self._texts['label'].value = '' # Clear it
         self.__update_label()
         self.__update_selection()
 
@@ -1376,4 +1412,4 @@ class KPathApp:
         return ax
     def iplot(self):
         "Returns disconnected current plotly figure"
-        return go.Figure(data=self.fig.data, layout=self.fig.layout)
+        return go.Figure(data=self._fig.data, layout=self._fig.layout)
