@@ -542,7 +542,7 @@ class VasprunApp:
         # Permeannet Parameters
         self._idos_kws   = dict(colormap='RGB',tdos_color=(0.5, 0.95, 0),linewidth=2,fill_area=True,
                                spin='both',interp_nk={},title=None)
-        self._ibands_kws = dict(mode='bands',skipk=None,max_width=6,title=None,interp_nk={}, scale_color = True)
+        self._ibands_kws = dict(mode='bands',skipk=None,max_width=6,title=None,interp_nk={})
         self._evr_kws = dict(skipk=None,elim=[])
         self._cache_data = True
 
@@ -646,7 +646,7 @@ class VasprunApp:
     def output(self): return self.__class__._output
 
     def set_options(self, cache_data = True, # general options
-        mode = 'bands', scale_color = True, max_width = 6, skipk = None, # bands only keywords
+        mode = 'bands', max_width = 6, skipk = None, # bands only keywords
         interp_nk = {}, title = None, # Mixed keywords
         colormap='RGB',tdos_color=(0.5, 0.95, 0),linewidth=2,fill_area=True, spin='both' # DOS only keywords
         ):
@@ -655,7 +655,6 @@ class VasprunApp:
             raise ValueError("mode must be 'bands','markers','lines'")
         # bands only keywords
         self._ibands_kws['mode'] = mode
-        self._ibands_kws['scale_color'] = scale_color
         self._ibands_kws['max_width'] = max_width
         self._ibands_kws['skipk'] = skipk
 

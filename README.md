@@ -213,13 +213,18 @@ Some tasks are very tideious in python while just a click way in powershell. See
 pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
 ```
 
-    [32;1m NPM(K)    PM(M)      WS(M)     CPU(s)     Id[0m
-    [32;1m ------    -----      -----     ------     --[0m
-    22     7.02       8.21       0.42   7132
-    6     1.33       5.16       0.00   7032
-    19     7.47      20.30       0.00   5224
-    26    31.40      44.88       1.19  17240
-    9     1.64       6.48       0.00   4372
+    [32;1m NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI Pr[0m
+    [32;1m                                                   oc[0m
+    [32;1m                                                   es[0m
+    [32;1m                                                   sN[0m
+    [32;1m                                                   am[0m
+    [32;1m                                                   e[0m
+    [32;1m ------    -----      -----     ------      --  -- --[0m
+    22     7.06       2.64       0.78    7132   1 A…
+    5     1.41       4.35       0.00    7032   0 A…
+    17     5.91      16.82       0.00    4772   0 A…
+    27    29.16      18.07      20.78   17240   1 A…
+    8     1.63       7.00       0.00   13480   0 A…
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -260,12 +265,21 @@ Get-ChildItem 'E:\Research\graphene_example\'
         Directory: E:\Research\graphene_example
     
     
-    Mode                 LastWriteTime     Length
-    ----                 -------------     ------
-    da----          6/9/2022  10:33 AM           
-    da----          5/9/2020   1:05 PM           
-    -a----          5/9/2020   1:01 PM      75331
-    -a----          5/9/2020   1:01 PM     240755
+    Mode                 LastWriteTime         Length Nam
+                                                      e  
+    ----                 -------------         ------ ---
+    da----          6/9/2022  10:33 AM                ISP
+                                                      IN_
+                                                      1  
+    da----          5/9/2020   1:05 PM                ISP
+                                                      IN_
+                                                      2  
+    -a----          5/9/2020   1:01 PM          75331 OUT
+                                                      CAR
+    -a----          5/9/2020   1:01 PM         240755 vas
+                                                      pru
+                                                      n.x
+                                                      ml 
     
     
 

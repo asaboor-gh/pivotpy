@@ -605,7 +605,6 @@ def _make_line_collection(max_width   = None,
                          colors_list = None,
                          rgb         = False,
                          uni_width   = False,
-                         scale_color = False,
                          **pros_data):
     """
     - Returns a tuple of line collections. If rgb = True (at len(orbs) = 3 in `_get_pros_data`), returns a tuple of two entries, multicolored line collection and RGB maximum values, otherwise return tuple of single colored multiple lines.
@@ -615,7 +614,6 @@ def _make_line_collection(max_width   = None,
         - colors_list: List of colors for multiple lines, length equal to 3rd axis length of colors.
         - rgb        : Default is False. If True and np.shape(colors)[-1] == 3, RGB line collection is returned in a tuple of length 1. Tuple is just to support iteration.
         - uni_width  : Default is False, If True, makes linewidth uniform at width = max_width/2.
-        - scale_color: If True, normalizes each point's color value, as (0,0,0.5) --> (0,0,1). If False, clips colors in range [0,1] but does not effect linewidth.
     """
     if not pros_data:
         raise ValueError("No pros_data given.")
@@ -623,7 +621,7 @@ def _make_line_collection(max_width   = None,
         kpath  = pros_data.get('kpath')
         evals  = pros_data.get('evals')
         pros   = pros_data.get('pros')
-    req_args = [kpath, evals, pros]
+
     for a,t in zip([kpath, evals, pros],['kpath', 'evals', 'pros']):
         if not np.any(a):
             raise ValueError("Missing {!r} from output of `_get_pros_data()`".format(t))
@@ -632,7 +630,7 @@ def _make_line_collection(max_width   = None,
     colors = pros[1:,:,:]/2 + pros[:-1,:,:]/2 # Near kpoints avearge
     colors = colors.transpose((1,0,2)).reshape((-1,np.shape(colors)[-1])) # Must before lws
 
-    # Linwidths in orginal shape, but according to scale_data. Should be before scale_color
+    # Linwidths in orginal shape, but according to scale_data. Should be before color normalization per point
     if uni_width:
         lws = [max_width/2 if max_width else 2.5 for c in colors]
     else:
@@ -649,15 +647,6 @@ def _make_line_collection(max_width   = None,
             # here division does not fail as min(lws)==0.1
             lws = max_width*lws/(2.5*np.max(lws)) # Only if not None or zero.
 
-    # scale_color only after linewidths
-    if scale_color: # Normalize each point color
-        c_max = np.max(colors,axis=1)
-        c_max[c_max == 0] = 1 #Avoid division error:
-        for i in [0,1,2]:
-            colors[:,i] = colors[:,i]/c_max
-    else:
-        colors = colors.clip(min=0,max=1) # make sure RGB range.
-
     if np.any(colors_list):
         lc_colors = colors_list
     else:
@@ -672,8 +661,7 @@ def _make_line_collection(max_width   = None,
 
     # Make Line collection
     if rgb and np.shape(colors)[-1] == 3:
-        _scales = np.max(colors,axis=0) # Need for colorbar
-        return (LineCollection(marr,colors=colors,linewidths=lws),_scales)
+        return LineCollection(marr,colors=colors,linewidths=lws)
     else:
         lcs = [LineCollection(marr,colors=_cl,linewidths=lw) for _cl,lw in zip(lc_colors,lws)]
         return tuple(lcs)
@@ -802,10 +790,10 @@ def splot_rgb_lines(
     uni_width   = False,
     spin        = 'both',
     interp_nk   = {},
-    scale_color = True,
     scale_data  = True,
     colorbar    = True,
     color_matrix= None,
+    colormap    = 'viridis',
     query_data  = {}
     ):
     """
@@ -829,10 +817,10 @@ def splot_rgb_lines(
         - uni_width  : If True, width of bands kept uniform.
         - spin       : Plot spin-polarized for spin {'up','down','both'}. Default is both.
         - interp_nk  : Dictionary with keys 'n' and 'k' for interpolation.
-        - scale_color: Boolean. Default True, colors are scaled to 1 at each point. If False, clips colors in range [0,1] but does not effect linewidth.
-        - scale_data : Default is True and normalizes projection data to 1. Has no visual effect if scale_color = True too.
+        - scale_data : Default is True and normalizes projection data to 1.
         - colorbar   : Default is True. Displays a vertical RGB colorbar.
-        - color_matrix: Only works if `scale_color==True`. 3x3 or 3x4 numpy array or list to transform from RGB to another space,provided that sum(color_matrix[i,:3]) <= 1.
+        - colormap   : 1.2.7+, Default is 'viridis'. Only works if one or two projections are given, rest empty.
+        - color_matrix: Only work if all three projections are not empty. 3x3 or 3x4 numpy array or list to transform from RGB to another space,provided that sum(color_matrix[i,:3]) <= 1.
                         4th column, if given can be used to control the saturation,contrast and brightness as s,c,b = color_matrix[:,3]
                         For simply changing the color intensity use np.diag([r,g,b]) with r,g,b interval in [0,1].
                         Try `pivotpy.color_matrix` as suggested color matrix and modify, which at s=0 returns gray scale.!
@@ -841,7 +829,7 @@ def splot_rgb_lines(
     - **Returns**
         - ax : matplotlib axes object with plotted projected bands.
         - Registers as colormap `RGB_m` to use in DOS to plot in same colors and `RGB_f` to display bands colorbar on another axes.
-    > Note: Two figures made by this function could be comapred quantitatively only if `scale_data=False, max_width=None, scale_color=False` as these parameters act internally on data.
+    > Note: Two figures made by this function could be comapred quantitatively only if `scale_data=False, max_width=None` as these parameters act internally on data.
     """
     # Fix input data
     vr = vp._validate_evr(path_evr=path_evr,skipk=skipk,elim=elim)
@@ -883,27 +871,43 @@ def splot_rgb_lines(
             s,c,b = color_matrix[:3,3] #could be 4, so up to 0,1,2 in rows
         except: pass
 
-    colorbar_scales = [1,1,1] # default for colorbar
+    non_zero_inds = [i for i,e in enumerate(elements) if e]
     #=====================================================
     def _add_collection(gpd_args,mlc_args,ax):
         pros_data = _get_pros_data(**gpd_args)
         _lws_ = 0.1 + 2.5*np.sum(pros_data['pros'],axis=2) # Before changing color, get linewidths
+        ax._min_max_c = [(np.min(_lws_) -0.1)/2.5,(np.max(_lws_) - 0.1)/2.5] # Save for later use.
         pros_data['lws']  = np.transpose(_lws_[:-1,:]/2 + _lws_[1:,:]/2).ravel() # NBANDS[NKPTS-1] repeatition.
         # These 'lws' are passed in to _make_line_collection to keep true linwidths even color changes
 
-        if scale_color and None not in np.unique(color_matrix):
-            colors = pros_data['pros']
-            c_max = np.max(colors,axis=0).max(axis=0) # ndims = 3
-            c_max[c_max == 0] = 1 #Avoid division error:
-            colors = colors/c_max
-            colors = gu.transform_color(colors,s=s,c=c,b=b,mixing_matrix=mix_matrix)
-            pros_data['pros'] = colors
-            mlc_args['scale_color'] = False # do not scale more, it turns out to be weird.
+        colors = pros_data['pros']
 
-        line_coll,scales = _make_line_collection(**pros_data,**mlc_args)
-        colorbar_scales[:] = scales
-        if scale_color and None not in np.unique(color_matrix): # Act color matrix only on if scale_color is True.
-            colorbar_scales[:] = gu.transform_color(scales,s=s,c=c,b=b,mixing_matrix=mix_matrix)
+        if len(non_zero_inds) == 1:
+            percent_colors = colors[:,:,non_zero_inds[0]]
+            percent_colors = percent_colors/np.max(percent_colors)
+            pros_data['pros'] = plt.cm.get_cmap(colormap)(percent_colors)[:,:,:3] # Get colors in RGB space.
+
+        elif len(non_zero_inds) == 2:
+            d2_colors = colors[:,:,non_zero_inds]
+            _sum = np.sum(d2_colors,axis=2)
+            _sum[_sum == 0] = 1
+            percent_colors = d2_colors[:,:,0]/_sum
+            pros_data['pros'] = plt.cm.get_cmap(colormap)(percent_colors)[:,:,:3] # Get colors in RGB space.
+
+        else:
+            # Normalize color at each point only for 3 projections.
+            if None not in np.unique(color_matrix):
+                colors = gu.transform_color(colors,s=s,c=c,b=b,mixing_matrix=mix_matrix)
+
+            c_max = np.max(colors,axis=2, keepdims= True)
+            c_max[c_max == 0] = 1 #Avoid division error:
+
+            colors = colors/c_max
+
+            colors = colors.clip(min=0,max=1) # make sure RGB range.
+            pros_data['pros'] = colors
+
+        line_coll = _make_line_collection(**pros_data,**mlc_args)
         ax.add_collection(line_coll)
         ax.autoscale_view()
     #====================================================
@@ -912,7 +916,7 @@ def splot_rgb_lines(
     ISPIN=vr.sys_info.ISPIN
     # Arguments for _get_pros_data and _make_line_collection
     gpd_args = dict(elements=elements,orbs=orbs,interp_nk=interp_nk,scale_data=scale_data)
-    mlc_args = dict(rgb=True,uni_width=uni_width,scale_color = scale_color,colors_list= None, max_width=max_width)
+    mlc_args = dict(rgb=True,uni_width=uni_width,colors_list= None, max_width=max_width)
 
     if ISPIN == 1:
         gpd_args.update(dict(kpath=K, evals_set=vr.bands.evals-E_Fermi, pros_set=vr.pro_bands.pros))
@@ -932,13 +936,12 @@ def splot_rgb_lines(
         txt=vr.sys_info.SYSTEM
     add_text(ax=ax,xs=xytxt[0],ys=xytxt[1],txts=txt,colors=ctxt)
     modify_axes(ax=ax,xticks=xticks,xt_labels=ktick_vals,xlim=xlim,ylim=ylim,vlines=True)
+
     # Colorbar and Colormap
-    _colors_ = np.multiply([[1,0,1],[1,0,0],[1,1,0],[0,1,0],[0,1,1],
-                                [0,0,1],[1,0,1]],colorbar_scales)
-    if scale_color and None not in np.unique(color_matrix): # Only apply color_matrix on scaled colors
-        zero_inds = np.where(colorbar_scales == 0)
-        mix_matrix[zero_inds,:] = 0 # No mixing for zero projection.
+    _colors_ = np.array([[1,0,1],[1,0,0],[1,1,0],[0,1,0],[0,1,1],[0,0,1],[1,0,1]])
+    if None not in np.unique(color_matrix): # Only apply color_matrix
         _colors_ = gu.transform_color(_colors_,s=s,c=c,b=b,mixing_matrix=mix_matrix)
+
     # register a colormap to use in DOS of same color
     from matplotlib.colors import LinearSegmentedColormap as LSC
     plt.register_cmap('RGB_f',LSC.from_list('RGB_f',_colors_)) #Register cmap for Bands
@@ -949,7 +952,21 @@ def splot_rgb_lines(
         for i,label in enumerate(labels):
             if label and ISPIN==2:
                 _tls_[i] = (label+'$^↑$' if spin=='up' else label+'$^↓$' if spin=='down' else label+'$^{↑↓}$')
-        _ = add_colorbar(ax=ax,vertical=True,ticklabels=_tls_,cmap_or_clist = _colors_)
+
+        if len(non_zero_inds) ==  1:
+            ticks = np.linspace(*ax._min_max_c,5, endpoint=True)
+            ticklabels = [f'{t:4.2f}' for t in ticks]
+        elif len(non_zero_inds) == 2:
+            ticks = [0,1]
+            ticklabels = [_tls_[i] for i in non_zero_inds]
+        else:
+            ticks = None
+            ticklabels = _tls_
+
+        cmap = 'RGB_f' if len(non_zero_inds) == 3 else colormap
+        cax = add_colorbar(ax=ax,vertical=True,ticklabels = ticklabels,ticks=ticks,cmap_or_clist = cmap)
+        if len(non_zero_inds) ==  1:
+            cax.set_title(_tls_[non_zero_inds[0]])
 
     return ax
 
@@ -1049,7 +1066,7 @@ def splot_color_lines(
     ISPIN=vr.sys_info.ISPIN
     # Arguments for _get_pros_data and _make_line_collection
     gpd_args = dict(elements=elements,orbs=orbs,interp_nk=interp_nk,scale_data=scale_data)
-    mlc_args = dict(rgb=False,uni_width=False,scale_color = False,colors_list= colors, max_width=max_width)
+    mlc_args = dict(rgb=False,uni_width=False,colors_list= colors, max_width=max_width)
 
     if(ISPIN==1):
         gpd_args.update(dict(kpath=K,evals_set=vr.bands.evals-E_Fermi,pros_set=vr.pro_bands.pros))

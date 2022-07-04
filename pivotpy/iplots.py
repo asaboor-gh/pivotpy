@@ -27,7 +27,6 @@ def _get_rgb_data(
     elements    = [[0],[],[]],
     orbs        = [[0],[],[]],
     interp_nk   = {},
-    scale_color = False,
     occs_set    = None,
     kpoints     = None,
     ):
@@ -40,7 +39,6 @@ def _get_rgb_data(
         - elements : List three lists of ions to project on, each element could be `range(start,stop,step)` as well, remember that `stop` is not included in python. so `range(0,2)` will generate 0 and 1 indices.
         - orbs     : List of three lists of orbitals indices. `[[red],[green],[blue]]`, you can create any color by this combination. For example, to get `s-orbital in yellow color`, you will use `[[0],[0],[]]`. Do not remove empty list from there, it will not effect your orbital selection.
         - interp_nk   : Dictionary with keys 'n' and 'k' for interpolation.
-        - scale_color: If True, colors are scaled to 1 at each points.
         - occs_set: `export_vasprun`().bands.occs or `get_evals`().occs. If calculations are spin-polarized, it will be `...occs.SpinUp/SpinDown` for both. You need to apply twice for SpinUp and SpinDown separately.
     - **Returns**
         - kpath    : List of path of NKPTS. (interpolated if given.)
@@ -85,11 +83,12 @@ def _get_rgb_data(
        rgb = _cl/max_c # Normalized overall data
        norms = (rgb*100).astype(int) # Normalized overall data
        widths = 0.0001+ np.sum(rgb,axis=2) #should be before scale colors
-       if scale_color == True:
-           cl_max=np.max(_cl,axis=2)
-           # avoid divide by zero. Contributions are 4 digits only.
-           cl_max[cl_max==0.0] = 1
-           rgb = _cl/cl_max[:,:,np.newaxis] # Normalized per point
+
+       # Now scale colors to 1 at each point.
+       cl_max=np.max(_cl,axis=2)
+       cl_max[cl_max==0.0] = 1 # avoid divide by zero. Contributions are 4 digits only.
+       rgb = _cl/cl_max[:,:,np.newaxis] # Normalized per point
+
        return knew,evals,occs, rgb, widths, norms, kpoints
 
 # Cell
@@ -252,9 +251,7 @@ def iplot_rgb_lines(
     ktick_vals  = ['Γ','M'],
     figsize     = None,
     interp_nk   = {},
-    query_data  = {},
-    scale_color = True,
-
+    query_data  = {}
     ):
     """
     - Returns plotly's figure object, takes care of spin-polarized calculations automatically. `elements`,`orbs` and `labels` are required to be one-to-one lists of size 3 where each item in list could be another list or integer.
@@ -272,7 +269,6 @@ def iplot_rgb_lines(
         - figsize   : Tuple(width,height) in pixels, e.g. (700,400).
         - query_data : Dictionary with keys as label and values as list of length 2. len(query_data) <=3 should hold for RGB plots. If given, used in place of elements, orbs and labels arguments.
                         Example: {'s':([0,1],[0]),'p':([0,1],[1,2,3]),'d':([0,1],[4,5,6,7,8])} will pick up s,p,d orbitals of first two ions of system.
-        - scale_color : If True, color scale is scaled to the maximum value at each point.
         - **Other Parameters**
             - ktick_inds, ktick_vals,elim,kseg_inds,max_width,title etc.
     """
@@ -306,7 +302,7 @@ def iplot_rgb_lines(
         title= "{}[{}]".format(SYSTEM,','.join(labels))
     # After All Fixing
     ISPIN=vr.sys_info.ISPIN
-    args_dict=dict(orbs=orbs,elements=elements,interp_nk=interp_nk,scale_color=scale_color) # Do not scale color there, scale here.
+    args_dict=dict(orbs=orbs,elements=elements,interp_nk=interp_nk) # Do not scale color there, scale here.
     data,showlegend,name=[],False,'' # Place holder
 
     if mode=='bands':
