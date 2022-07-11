@@ -117,9 +117,9 @@ labels=['s','$p_z$','$(p_x+p_y)$']
 ti_cks=dict(ktick_inds=[0,30,60,-1],ktick_vals=['Γ','M','K','Γ'])
 args_dict=dict(elements=elements,orbs=orbs,labels=labels,elim=[-20,15])
 vr1.splot_bands(ax=axs[0],**ti_cks,elim=[-20,15])
-vr1.splot_rgb_lines(ax=axs[2],**args_dict,**ti_cks,colorbar=True,)
-vr2.splot_dos_lines(ax=axs[1],vertical=True,spin='both',include_dos='pdos',**args_dict,legend_kwargs={'ncol': 3},colormap='RGB_m')
-axs[2].color_wheel(xy=(0.7,1.15),scale=0.2,labels=[l+'$^{⇅}$' for l in labels])
+vr1.splot_rgb_lines(ax=axs[2],**args_dict,**ti_cks,colorbar=False)
+vr2.splot_dos_lines(ax=axs[1],vertical=True,spin='both',include_dos='pdos',**args_dict,legend_kwargs={'ncol': 3},colormap='RGB')
+axs[2].color_hex(loc=(0.4,1.02),size=0.5,labels=[l+'$^{⇅}$' for l in labels])
 pp._show() 
 ```
 
@@ -220,11 +220,11 @@ pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
     [32;1m                                                   am[0m
     [32;1m                                                   e[0m
     [32;1m ------    -----      -----     ------      --  -- --[0m
-    22     7.06       2.64       0.78    7132   1 A…
-    5     1.41       4.35       0.00    7032   0 A…
-    17     5.91      16.82       0.00    4772   0 A…
-    27    29.16      18.07      20.78   17240   1 A…
-    8     1.63       7.00       0.00   13480   0 A…
+    22     7.05       8.18       0.91    7132   1 A…
+    5     1.48       4.46       0.00    7032   0 A…
+    19     7.23      20.39       0.00    4772   0 A…
+    26    27.39      15.60      23.75   17240   1 A…
+    8     1.59       7.15       0.00    6320   0 A…
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`

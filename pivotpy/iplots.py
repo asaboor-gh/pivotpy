@@ -383,11 +383,11 @@ def iplot_dos_lines(
             - labels     : List [str,] of orbitals labels. len(labels) == len(orbs) must hold.
             - elim       : [min,max] of energy range.
             - E_Fermi    : If not given, automatically picked from `export_vasprun`.
-            - colormap  : Matplotlib's standard color maps. Default is 'gist_ranibow'. Use 'RGB' if want to compare with `iplot_rgb_lines` with 3 projection inputs (len(orbs)==3).
+            - colormap   : Matplotlib's standard color maps. Default is 'gist_ranibow'. Use 'RGB' if want to compare with `iplot_rgb_lines` with 3 projection inputs (len(orbs)==3).
             - fill_area  : Default is True and plots filled area for dos. If False, plots lines only.
             - vertical   : False, If True, plots along y-axis.
-            - interp_nk   : Dictionary with keys 'n' and 'k' for interpolation.
-            - figsize   : Tuple(width,height) in pixels, e.g. (700,400).
+            - interp_nk  : Dictionary with keys 'n' and 'k' for interpolation.
+            - figsize    : Tuple(width,height) in pixels, e.g. (700,400).
             - query_data : Dictionary with keys as label and values as list of length 2. If given, used in place of elements, orbs and labels arguments.
                         Example: {'s':([0,1],[0]),'p':([0,1],[1,2,3]),'d':([0,1],[4,5,6,7,8])} will pick up s,p,d orbitals of first two ions of system.
         - **Returns**
