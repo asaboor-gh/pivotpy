@@ -114,14 +114,14 @@ vr1=pp.Vasprun('E:/Research/graphene_example/ISPIN_2/bands/vasprun.xml')
 vr2=pp.Vasprun('E:/Research/graphene_example/ISPIN_2/dos/vasprun.xml')
 axs = pp.get_axes(ncols=3,widths=[2,1,2.2],sharey=True,wspace=0.05,figsize=(8,2.6))
 elements=[0,[0],[0,1]]
-orbs=[[0],[1],[2,3]]
+orbs=[[0],[2],[1,3]]
 labels=['s','$p_z$','$(p_x+p_y)$']
 ti_cks=dict(ktick_inds=[0,30,60,-1],ktick_vals=['Γ','M','K','Γ'])
-args_dict=dict(elements=elements,orbs=orbs,labels=labels,elim=[-20,15])
+args_dict=dict(elements=elements,orbs=orbs,labels=labels,elim=[-20,15],colormap='viridis',)
 vr1.splot_bands(ax=axs[0],**ti_cks,elim=[-20,15])
 vr1.splot_rgb_lines(ax=axs[2],**args_dict,**ti_cks,colorbar=False)
-vr2.splot_dos_lines(ax=axs[1],vertical=True,spin='both',include_dos='pdos',**args_dict,legend_kwargs={'ncol': 3},colormap='RGB')
-axs[2].color_hex(loc=(0.4,1.02),size=0.5,labels=[l+'$^{⇅}$' for l in labels])
+vr2.splot_dos_lines(ax=axs[1],vertical=True,spin='both',include_dos='pdos',**args_dict,legend_kwargs={'ncol': 3})
+axs[2].color_cube(loc=(0.7,0.25),size=0.35)
 pp._show() 
 ```
 
@@ -136,6 +136,7 @@ pp._show()
 
 ```python
 args_dict['labels'] = ['s','p_z','p_x+p_y']
+args_dict.pop('colormap')
 fig1 = vr1.iplot_rgb_lines(**args_dict)
 #pp.iplot2html(fig1) #Do inside Google Colab, fig1 inside Jupyter
 from IPython.display import Markdown
@@ -222,11 +223,11 @@ pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
     [32;1m                                                   am[0m
     [32;1m                                                   e[0m
     [32;1m ------    -----      -----     ------      --  -- --[0m
-    21     6.96       8.92       0.94    7132   1 A…
-    6     1.57       4.79       0.00    7032   0 A…
-    19     7.59      20.57       0.00    4772   0 A…
-    26    25.45      16.53      25.09   17240   1 A…
-    8     1.61       7.50       0.00    6320   0 A…
+    21     6.96       8.93       0.94    7132   1 A…
+    6     1.55       4.64       0.00    7032   0 A…
+    19     7.29      19.05       0.00    4772   0 A…
+    26    27.61      16.46      26.16   17240   1 A…
+    8     1.59       7.49       0.00    6320   0 A…
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`

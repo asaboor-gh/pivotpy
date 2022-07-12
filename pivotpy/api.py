@@ -83,6 +83,8 @@ _memebers = (
     sp.append_axes,
     sp.join_axes,
     sp.add_colorbar,
+    sp.color_cube,
+    sp.color_wheel,
     sp.add_legend,
     sp.add_text,
     wdg.VasprunApp,
@@ -559,6 +561,7 @@ class Vasprun:
         "Fermi energy given in vasprun.xml."
         return self.data.bands.E_Fermi
 
+
     def select(self,kpoints_inds = None, bands_inds = None, kseg_inds = None):
         """Seletc data based on kpoints and bands indices.
         This is useful to select only a subset of data and even reorder kpoints after calculations.
@@ -603,30 +606,29 @@ class Vasprun:
         return sp.splot_bands(self._data,ax = ax, **kwargs)
 
     @_sub_doc(sp.splot_dos_lines,'- path_evr')
-    def splot_dos_lines(self,elements = [[0],], orbs = [[0],], labels = ['s',], ax = None, query_data= {}, **kwargs):
+    def splot_dos_lines(self, query_data= {}, *, ax = None, **kwargs):
         kwargs = self.__handle_kwargs(kwargs,dos=True)
-        return sp.splot_dos_lines(self._data,elements = elements, orbs = orbs, labels = labels, ax = ax, query_data = query_data,**kwargs)
+        return sp.splot_dos_lines(self._data, ax = ax, query_data = query_data,**kwargs)
 
     @_sub_doc(sp.splot_rgb_lines,'- path_evr')
-    def splot_rgb_lines(self,elements = [[],[],[]], orbs = [[],[],[]], labels = ['','',''], ax = None, query_data= {}, **kwargs):
+    def splot_rgb_lines(self,query_data= {},*, ax = None,  **kwargs):
         kwargs = self.__handle_kwargs(kwargs)
-        return sp.splot_rgb_lines(self._data,elements = elements, orbs = orbs, labels = labels, ax = ax, query_data = query_data,**kwargs)
+        return sp.splot_rgb_lines(self._data, ax = ax, query_data = query_data,**kwargs)
 
     @_sub_doc(sp.splot_color_lines,'- path_evr')
-    def splot_color_lines(self,elements = [[0],], orbs = [[0],], labels = ['s',],axes = None, query_data= {}, **kwargs):
+    def splot_color_lines(self,query_data= {},*,axes = None, **kwargs):
         kwargs = self.__handle_kwargs(kwargs)
-        return sp.splot_color_lines(self._data,elements = elements, orbs = orbs, labels = labels, axes = axes, query_data = query_data,**kwargs)
+        return sp.splot_color_lines(self._data, axes = axes, query_data = query_data,**kwargs)
 
     @_sub_doc(ip.iplot_dos_lines,'- path_evr')
-    def iplot_dos_lines(self,elements = [[0],], orbs = [[0],], labels = ['s',], query_data= {}, **kwargs):
+    def iplot_dos_lines(self,query_data= {}, **kwargs):
         kwargs = self.__handle_kwargs(kwargs, dos=True)
-        return ip.iplot_dos_lines(self._data,elements = elements, orbs = orbs, labels = labels, query_data = query_data,**kwargs)
+        return ip.iplot_dos_lines(self._data, query_data = query_data,**kwargs)
 
     @_sub_doc(ip.iplot_rgb_lines,'- path_evr')
-    def iplot_rgb_lines(self,elements = [[],[],[]], orbs = [[],[],[]], labels = ['','',''], query_data= {}, **kwargs):
+    def iplot_rgb_lines(self, query_data = {}, **kwargs):
         kwargs = self.__handle_kwargs(kwargs)
-        return ip.iplot_rgb_lines(self._data,elements = elements, orbs = orbs, labels = labels, query_data = query_data,**kwargs)
-
+        return ip.iplot_rgb_lines(self._data, query_data = query_data,**kwargs)
 
     def get_band_info(self,b_i,k_i=None):
         """Get band information for given band index `b_i`. If `k_i` is given, returns info at that point
