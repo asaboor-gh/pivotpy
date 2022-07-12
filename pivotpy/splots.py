@@ -747,9 +747,12 @@ from itertools import combinations
 from matplotlib import tri
 from matplotlib.collections import PolyCollection
 
-def color_cube(ax, colormap = 'brg', loc = (0.67,0.67), size=0.3,
+def color_cube(ax, colormap = 'brg', loc = (1,0.4), size = 0.2,
               N = 7, labels=['s','p','d'],color='k',fontsize=10):
     "Color-mapped hexagon that serves as a legend for `splot_rgb_lines`"
+    if N < 3:
+        raise ValueError("N must be >= 3 to map colors correctly.")
+
     X, Y = np.mgrid[0:1:N*1j,0:1:N*1j]
     x = X.flatten()
     y = Y.flatten()
