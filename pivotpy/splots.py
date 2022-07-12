@@ -10,6 +10,7 @@ import numpy as np
 from io import BytesIO
 import PIL #For text image.
 from collections import namedtuple
+from functools import partial
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -65,10 +66,10 @@ def modify_axes(ax=None,xticks=[],xt_labels=[],xlim=[],\
     else:
         if xticks:
             ax.set_xticks(xticks)
-            ax.set_xticklabels(xt_labels)
+            ax.set_xticklabels(xt_labels if xt_labels else list(map(str,xticks)))
         if yticks:
             ax.set_yticks(yticks)
-            ax.set_yticklabels(yt_labels)
+            ax.set_yticklabels(yt_labels if yt_labels else list(map(str,yticks)))
         if xlim:
             ax.set_xlim(xlim)
             if zeroline:
@@ -742,7 +743,8 @@ def _format_input(query_data,rgb=False):
 from matplotlib import tri
 from matplotlib.collections import PolyCollection
 
-def color_hex(ax, colormap = 'brg', loc = (0.67,0.67), size=0.3, N = 7, labels=['s','p','d']):
+def color_hex(ax, colormap = 'brg', loc = (0.67,0.67), size=0.3,
+              N = 7, labels=['s','p','d'],color='k',fontsize=10):
     "Color-mapped hexagon that serves as a legend for `splot_rgb_lines`"
     X, Y = np.mgrid[0:1:N*1j,0:1:N*1j]
     x = X.flatten()
@@ -786,13 +788,13 @@ def color_hex(ax, colormap = 'brg', loc = (0.67,0.67), size=0.3, N = 7, labels=[
     cax.set_facecolor([1,1,1,0])
     cax.set_axis_off()
 
-    cax.plot([0,-1/16, np.sqrt(3)**2/2 + 1/8],[0,np.sqrt(3)/16,np.sqrt(3)/16],color='k', lw=0.7)
-    cax.plot([0,-1/16,np.sqrt(3)**2/2 + 1/8],[-np.sqrt(3),-17*np.sqrt(3)/16,-17*np.sqrt(3)/16],color='k', lw=0.7)
-    cax.plot([np.sqrt(3)**2/2, np.sqrt(3)**2/2 + 1/8],[-np.sqrt(3)/2,-np.sqrt(3)/2],color='k', lw=0.7)
+    cax.plot([0,-1/16, np.sqrt(3)**2/2 + 1/8],[0,np.sqrt(3)/16,np.sqrt(3)/16],color=color, lw=0.7)
+    cax.plot([0,-1/16,np.sqrt(3)**2/2 + 1/8],[-np.sqrt(3),-17*np.sqrt(3)/16,-17*np.sqrt(3)/16],color=color, lw=0.7)
+    cax.plot([np.sqrt(3)**2/2, np.sqrt(3)**2/2 + 1/8],[-np.sqrt(3)/2,-np.sqrt(3)/2],color=color, lw=0.7)
 
-    cax.text(np.sqrt(3)**2/2 + 1/4,-np.sqrt(3)/2,labels[0],va='center',ha='left')
-    cax.text(np.sqrt(3)**2/2 + 1/4,-np.sqrt(3) - 1/8,labels[1],va='center',ha='left')
-    cax.text(np.sqrt(3)**2/2 + 1/4,np.sqrt(3)/16,labels[2],va='center',ha='left')
+    cax.text(np.sqrt(3)**2/2 + 1/4,-np.sqrt(3)/2,labels[0],color=color,fontsize=fontsize,va='center',ha='left')
+    cax.text(np.sqrt(3)**2/2 + 1/4,-np.sqrt(3) - 1/8,labels[1],color=color,fontsize=fontsize,va='center',ha='left')
+    cax.text(np.sqrt(3)**2/2 + 1/4,np.sqrt(3)/16,labels[2],color=color,fontsize=fontsize,va='center',ha='left')
 
     return cax
 
@@ -817,8 +819,8 @@ def splot_rgb_lines(
     interp_nk   = {},
     scale_data  = True,
     colorbar    = True,
-    color_matrix= None,
     colormap    = None,
+    N           = 11,
     query_data  = {}
     ):
     """
@@ -844,6 +846,7 @@ def splot_rgb_lines(
         - scale_data : Default is True and normalizes projection data to 1.
         - colorbar   : Default is True. Displays a vertical RGB colorbar.
         - colormap   : 1.2.7+, Default is None and picks suitable for each case. For all three projections given, only first, middle and last colors are used to interpolate between them.
+        - N          : Number of distinct colors in colormap.
         - query_data : Dictionary with keys as label and values as list of length 2. Should be <= 3 for RGB plots. If given, used in place of elements, orbs and labels arguments.
                         Example: {'s':([0,1],[0]),'p':([0,1],[1,2,3]),'d':([0,1],[4,5,6,7,8])} will pick up s,p,d orbitals of first two ions of system.
     - **Returns**
@@ -882,9 +885,6 @@ def splot_rgb_lines(
     if not np.any([ax]):
         ax = get_axes()
 
-    if color_matrix is not None:
-        print("User warning: color_matrix is deprecated. Use colormap instead.")
-
     non_zero_inds = [i for i,e in enumerate(elements) if e]
     #=====================================================
     def _add_collection(gpd_args,mlc_args,ax):
@@ -899,14 +899,14 @@ def splot_rgb_lines(
         if len(non_zero_inds) == 1:
             percent_colors = colors[:,:,non_zero_inds[0]]
             percent_colors = percent_colors/np.max(percent_colors)
-            pros_data['pros'] = plt.cm.get_cmap(colormap or 'copper')(percent_colors)[:,:,:3] # Get colors in RGB space.
+            pros_data['pros'] = plt.cm.get_cmap(colormap or 'copper',N)(percent_colors)[:,:,:3] # Get colors in RGB space.
 
         elif len(non_zero_inds) == 2:
             d2_colors = colors[:,:,non_zero_inds]
             _sum = np.sum(d2_colors,axis=2)
             _sum[_sum == 0] = 1
             percent_colors = d2_colors[:,:,1]/_sum # second one is on top
-            pros_data['pros'] = plt.cm.get_cmap(colormap or 'coolwarm')(percent_colors)[:,:,:3] # Get colors in RGB space.
+            pros_data['pros'] = plt.cm.get_cmap(colormap or 'coolwarm',N)(percent_colors)[:,:,:3] # Get colors in RGB space.
 
         else:
             # Normalize color at each point only for 3 projections.
@@ -914,8 +914,11 @@ def splot_rgb_lines(
             c_max[c_max == 0] = 1 #Avoid division error:
 
             colors = colors/c_max # Weights to be used for color interpolation.
+            nsegs = np.linspace(0,1,N,endpoint = True)
+            for low,high in zip(nsegs[:-1],nsegs[1:]):
+                colors[(colors >= low) & (colors < high)] = low
 
-            A, B, C = plt.cm.get_cmap(colormap or 'brg')([0,0.5,1])[:,:3]
+            A, B, C = plt.cm.get_cmap(colormap or 'brg',N)([0,0.5,1])[:,:3]
             pros_data['pros'] = np.array([
                 [(r*A + g*B + b*C)/((r + g + b) or 1) for r,g,b in _cols]
                 for _cols in colors
@@ -977,11 +980,14 @@ def splot_rgb_lines(
             cmap = colormap or 'brg'
 
         if len(non_zero_inds) < 3:
-            cax = add_colorbar(ax=ax,vertical=True,ticklabels = ticklabels,ticks=ticks,cmap_or_clist = cmap)
+            cax = add_colorbar(ax=ax,N = N, vertical=True,ticklabels = ticklabels,ticks=ticks,cmap_or_clist = cmap)
             if len(non_zero_inds) ==  1:
                 cax.set_title(_tls_[non_zero_inds[0]])
         else:
-            color_hex(ax,colormap = colormap or 'brg', labels = _tls_)
+            color_hex(ax,colormap = colormap or 'brg', labels = _tls_, N = N)
+    else:
+        # MAKE PARTIAL COLOR HEX AND COLORBAR HERE FOR LATER USE.
+        pass
 
     return ax
 

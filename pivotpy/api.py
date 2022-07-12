@@ -507,6 +507,8 @@ class Vasprun:
 
     def __handle_kwargs(self, kwargs,dos=False):
         kwargs = {'elim': self.elim, **kwargs}
+        if kwargs.get('E_Fermi',None) is None:
+            kwargs['E_Fermi'] = self.fermi # Calculated from occupancy
         if dos:
             return kwargs
         ticks = {k:self.kticks[k] for k in ['ktick_inds','ktick_vals','kseg_inds']}
@@ -531,6 +533,31 @@ class Vasprun:
     def data(self):
         "Get exported data."
         return self._data
+
+    @property
+    def fermi(self):
+        "Fermi energy based on occupancy. Returns `self.Fermi` if occupancies cannot be resolved."
+        try:
+            if self.data.sys_info.ISPIN == 1:
+                occs = self.data.bands.occs
+                xinds, yinds = np.where(occs > 0)
+                return self.data.bands.evals[np.max(xinds), np.max(yinds)]
+
+            else: # ISPIN 2
+                energies = []
+                for attr in ['SpinUp','SpinDown']:
+                    occs = self.data.bands.occs[attr]
+                    xinds, yinds = np.where(occs > 0)
+                    energies.append(self.data.bands.evals[attr][np.max(xinds), np.max(yinds)])
+
+                return max(energies)
+        except:
+            return self.Fermi
+
+    @property
+    def Fermi(self):
+        "Fermi energy given in vasprun.xml."
+        return self.data.bands.E_Fermi
 
     def select(self,kpoints_inds = None, bands_inds = None, kseg_inds = None):
         """Seletc data based on kpoints and bands indices.

@@ -248,12 +248,12 @@ def get_evals(xml_data, skipk = None, elim = []):
         skipk = exclude_kpts(xml_data=xml_data) #that much to skip by default
     for neighbor in xml_data.root.iter('eigenvalues'):
         for item in neighbor[0].iter('set'):
-            if(ISPIN==1):
+            if ISPIN == 1:
                 if(item.attrib=={'comment': 'spin 1'}):
                     evals = np.array([[[float(t) for t in th.text.split()] for th in thing] for thing in item])[skipk:]
                     evals, occs = evals[:,:,0], evals[:,:,1]
                     NBANDS = len(evals[0])
-            if(ISPIN==2):
+            if ISPIN == 2:
                 if(item.attrib=={'comment': 'spin 1'}):
                     eval_1 = np.array([[[float(t) for t in th.text.split()] for th in thing] for thing in item])[skipk:]
                     eval_1, occs_1 = eval_1[:,:,0], eval_1[:,:,1]
@@ -265,18 +265,18 @@ def get_evals(xml_data, skipk = None, elim = []):
                     NBANDS=len(eval_1[0])
 
     for i in xml_data.root.iter('i'): #efermi for condition required.
-        if(i.attrib=={'name': 'efermi'}):
+        if i.attrib == {'name': 'efermi'}:
             efermi=float(i.text)
     evals_dic={'E_Fermi':efermi,'ISPIN':ISPIN,'NBANDS':NBANDS,'evals':evals,'indices': range(NBANDS),'occs':occs}
     if elim: #check if elim not empty
-        if(ISPIN==1):
-            up_ind=np.max(np.where(evals[:,:]-efermi<=np.max(elim))[1])+1
-            lo_ind=np.min(np.where(evals[:,:]-efermi>=np.min(elim))[1])
+        if ISPIN == 1:
+            up_ind = np.max(np.where(evals[:,:]-efermi <= np.max(elim))[1])+1
+            lo_ind = np.min(np.where(evals[:,:]-efermi >= np.min(elim))[1])
             evals = evals[:,lo_ind:up_ind]
             occs = occs[:,lo_ind:up_ind]
-        if(ISPIN==2):
-            up_ind=np.max(np.where(eval_1[:,:]-efermi<=np.max(elim))[1])+1
-            lo_ind=np.min(np.where(eval_1[:,:]-efermi>=np.min(elim))[1])
+        if ISPIN == 2:
+            up_ind=np.max(np.where(eval_1[:,:]-efermi <= np.max(elim))[1])+1
+            lo_ind=np.min(np.where(eval_1[:,:]-efermi >= np.min(elim))[1])
             evals={'SpinUp':eval_1[:,lo_ind:up_ind],'SpinDown':eval_2[:,lo_ind:up_ind]}
             occs = {'SpinUp':occs_1[:,lo_ind:up_ind],'SpinDown':occs_2[:,lo_ind:up_ind]}
         NBANDS = int(up_ind - lo_ind) #update Bands
@@ -284,6 +284,7 @@ def get_evals(xml_data, skipk = None, elim = []):
         evals_dic['indices'] = range(lo_ind,up_ind)
         evals_dic['evals'] = evals
         evals_dic['occs'] = occs
+        
     return serializer.Dict2Data(evals_dic)
 
 def get_bands_pro_set(xml_data, spin_set=1, skipk=0, bands_range=None, set_path=None):

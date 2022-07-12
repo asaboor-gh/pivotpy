@@ -62,8 +62,10 @@ for v in dir(vr):
 ```
 
     Try Follwing Methods:
+    vr.Fermi
     vr.data
     vr.elim
+    vr.fermi
     vr.get_band_info
     vr.get_en_diff
     vr.iplot_dos_lines
@@ -220,11 +222,11 @@ pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
     [32;1m                                                   am[0m
     [32;1m                                                   e[0m
     [32;1m ------    -----      -----     ------      --  -- --[0m
-    22     7.05       8.18       0.91    7132   1 A…
-    5     1.48       4.46       0.00    7032   0 A…
-    19     7.23      20.39       0.00    4772   0 A…
-    26    27.39      15.60      23.75   17240   1 A…
-    8     1.59       7.15       0.00    6320   0 A…
+    21     6.96       8.92       0.94    7132   1 A…
+    6     1.57       4.79       0.00    7032   0 A…
+    19     7.59      20.57       0.00    4772   0 A…
+    26    25.45      16.53      25.09   17240   1 A…
+    8     1.61       7.50       0.00    6320   0 A…
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
