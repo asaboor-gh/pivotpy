@@ -193,7 +193,7 @@ Amost every bandstructure and DOS plot function has an argument `interp_nk` whic
 import pivotpy as pp, matplotlib.pyplot as plt
 plt.style.use('ggplot')
 k = vr1.data.kpath
-ef = vr1.data.bands.E_Fermi
+ef = vr1.data.bands.Fermi
 evals = vr1.data.bands.evals-ef
 #Let's interpolate our graph to see effect. It is useful for colored graphs.
 knew,enew=pp.interpolate_data(x=k,y=evals,n=10,k=3)
@@ -223,11 +223,11 @@ pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
     [32;1m                                                   am[0m
     [32;1m                                                   e[0m
     [32;1m ------    -----      -----     ------      --  -- --[0m
-    22     7.07       8.93       0.97    7132   1 A…
-    6     1.55       4.61       0.00    7032   0 A…
-    19     7.26      20.38       0.00    4772   0 A…
-    27    29.34      22.73      26.73   17240   1 A…
-    8     1.59       7.46       0.00    6320   0 A…
+    22     7.07       9.00       0.97    7132   1 A…
+    6     1.55       4.51       0.00    7032   0 A…
+    19     7.46      19.08       0.00    4772   0 A…
+    27    26.35      17.87      27.78   17240   1 A…
+    8     1.61       7.52       0.00    6320   0 A…
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`

@@ -2,6 +2,7 @@ import os
 import json
 import pickle
 from collections import namedtuple
+from contextlib import suppress
 
 import numpy as np
 
@@ -150,13 +151,55 @@ class VasprunData(Dict2Data):
     def __repr__(self):
         return super().__repr__().replace("Data","VasprunData",1)
     
+    @property
+    def fermi(self):
+        "Fermi energy based on occupancy. Returns `self.Fermi` if occupancies cannot be resolved."
+        try:
+            if self.sys_info.ISPIN == 1:
+                return float(self.bands.evals[self.bands.occs > 0].max())
+                
+            else: # ISPIN 2
+                energies = []
+                for attr in ['SpinUp','SpinDown']:
+                    energies.append(self.bands.evals[attr][self.bands.occs[attr] > 0].max())
+                return float(max(energies))
+        except:
+            return self.Fermi
+    
+    @property
+    def Fermi(self):
+        "Fermi energy given in vasprun.xml."
+        return self.bands.Fermi
+    
 class SpinData(Dict2Data):
     _req_keys = ('kpoints','spins','poscar')
     def __init__(self,d):
         super().__init__(d)
+        with suppress(BaseException): # Silently set fermi if not present
+            self.sys_info.fermi = self.fermi
     
     def __repr__(self):
         return super().__repr__().replace("Data","SpinData",1)
+    
+    @property
+    def fermi(self):
+        "Fermi energy based on occupancy. Returns `self.Fermi` if occupancies cannot be resolved."
+        try:
+            if self.sys_info.ISPIN == 1:
+                return float(self.evals.e[self.evals.occs > 0].max())
+                
+            else: # ISPIN 2
+                energies = []
+                for a, b in [('u','SpinUp'),('d','SpinDown')]:
+                    energies.append(self.evals[a][self.evals.occs[b] > 0].max())
+                return float(max(energies))
+        except:
+            return self.Fermi
+    
+    @property
+    def Fermi(self):
+        "Fermi energy given in vasprun.xml."
+        return self.evals.Fermi
     
 class PoscarData(Dict2Data):
     _req_keys = ('basis','rec_basis','extra_info')

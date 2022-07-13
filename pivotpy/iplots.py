@@ -242,7 +242,7 @@ def iplot_rgb_lines(
     labels      = ['','',''],
     mode        = 'markers',
     elim        = [],
-    E_Fermi     = None,
+    Fermi     = None,
     skipk       = None,
     kseg_inds  = [],
     max_width   = 6,
@@ -287,8 +287,8 @@ def iplot_rgb_lines(
         raise ValueError("Can not plot an empty eigenvalues object.\n"
                          "Try with large energy range.")
 
-    if E_Fermi == None:
-        E_Fermi=vr.bands.E_Fermi
+    if Fermi == None:
+        Fermi = vr.fermi
     K = vp.join_ksegments(vr.kpath,kseg_inds = kseg_inds)
     xticks=[K[i] for i in ktick_inds]
     xlim=[min(K),max(K)]
@@ -309,7 +309,7 @@ def iplot_rgb_lines(
             showlegend=True
     kpoints = vr.kpoints
     if ISPIN == 1:
-        En=vr.bands.evals-E_Fermi
+        En=vr.bands.evals-Fermi
         Oc = vr.bands.occs
         Pros=vr.pro_bands.pros
         new_args=dict(kpath=K, evals_set=En, pros_set=Pros, occs_set = Oc, **args_dict)
@@ -319,8 +319,8 @@ def iplot_rgb_lines(
     if ISPIN == 2:
         if mode == 'markers':
             showlegend=True
-        En1=vr.bands.evals.SpinUp-E_Fermi
-        En2=vr.bands.evals.SpinDown-E_Fermi
+        En1=vr.bands.evals.SpinUp-Fermi
+        En2=vr.bands.evals.SpinDown-Fermi
         Oc1 = vr.bands.occs.SpinUp
         Oc2 = vr.bands.occs.SpinDown
         Pros1=vr.pro_bands.pros.SpinUp
@@ -367,7 +367,7 @@ def iplot_dos_lines(
     linewidth     = 2,
     fill_area     = True,
     vertical      = False,
-    E_Fermi       = None,
+    Fermi       = None,
     figsize       = None,
     spin          = 'both',
     interp_nk     = {},
@@ -382,7 +382,7 @@ def iplot_dos_lines(
             - orbs       : List [[0,],] lists of indices of orbitals, could be empty.
             - labels     : List [str,] of orbitals labels. len(labels) == len(orbs) must hold.
             - elim       : [min,max] of energy range.
-            - E_Fermi    : If not given, automatically picked from `export_vasprun`.
+            - Fermi    : If not given, automatically picked from `export_vasprun`.
             - colormap   : Matplotlib's standard color maps. Default is 'gist_ranibow'. Use 'RGB' if want to compare with `iplot_rgb_lines` with 3 projection inputs (len(orbs)==3).
             - fill_area  : Default is True and plots filled area for dos. If False, plots lines only.
             - vertical   : False, If True, plots along y-axis.
@@ -399,7 +399,7 @@ def iplot_dos_lines(
         en,tdos,pdos,vr=None,None,None,None # Place holders for defining
         cl_dos = sp._collect_dos(path_evr=path_evr,elim=elim,
                             elements=elements, orbs=orbs,labels=labels,
-                            E_Fermi=E_Fermi, spin='both',interp_nk=interp_nk)
+                            Fermi=Fermi, spin='both',interp_nk=interp_nk)
         try:
             en,tdos,pdos,labels,vr = cl_dos
         except:

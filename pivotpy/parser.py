@@ -178,7 +178,7 @@ def get_summary(xml_data):
     #Writing information to a dictionary
     space_info = get_space_info(xml_data=xml_data)
     info_dic={'SYSTEM':incar['SYSTEM'],'NION':n_ions,'NELECT':NELECT,'TypeION':type_ions,
-              'ElemName':elem_name,'ElemIndex':elem_index,'E_Fermi': efermi,'ISPIN':ISPIN,
+              'ElemName':elem_name,'ElemIndex':elem_index,'Fermi': efermi,'ISPIN':ISPIN,
               'fields':dos_fields,'incar':incar, 'space_info':space_info}
     return serializer.Dict2Data(info_dic)
 
@@ -221,7 +221,7 @@ def get_tdos(xml_data,spin_set=1,elim=[]):
     for i in xml_data.root.iter('i'): #efermi for condition required.
         if(i.attrib=={'name': 'efermi'}):
             efermi=float(i.text)
-    dos_dic= {'E_Fermi':efermi,'ISPIN':ISPIN,'tdos':tdos}
+    dos_dic= {'Fermi':efermi,'ISPIN':ISPIN,'tdos':tdos}
     #Filtering in energy range.
     if elim: #check if elim not empty
         if(ISPIN==1 and spin_set==1):
@@ -236,7 +236,7 @@ def get_tdos(xml_data,spin_set=1,elim=[]):
             up_ind=np.max(np.where(tdos[:,0]-efermi<=np.max(elim)))+1
             lo_ind=np.min(np.where(tdos[:,0]-efermi>=np.min(elim)))
             tdos=tdos[lo_ind:up_ind,:]
-        dos_dic= {'E_Fermi':efermi,'ISPIN':ISPIN,'grid_range':range(lo_ind,up_ind),'tdos':tdos}
+        dos_dic= {'Fermi':efermi,'ISPIN':ISPIN,'grid_range':range(lo_ind,up_ind),'tdos':tdos}
     return serializer.Dict2Data(dos_dic)
 
 def get_evals(xml_data, skipk = None, elim = []):
@@ -267,7 +267,7 @@ def get_evals(xml_data, skipk = None, elim = []):
     for i in xml_data.root.iter('i'): #efermi for condition required.
         if i.attrib == {'name': 'efermi'}:
             efermi=float(i.text)
-    evals_dic={'E_Fermi':efermi,'ISPIN':ISPIN,'NBANDS':NBANDS,'evals':evals,'indices': range(NBANDS),'occs':occs}
+    evals_dic={'Fermi':efermi,'ISPIN':ISPIN,'NBANDS':NBANDS,'evals':evals,'indices': range(NBANDS),'occs':occs}
     if elim: #check if elim not empty
         if ISPIN == 1:
             up_ind = np.max(np.where(evals[:,:]-efermi <= np.max(elim))[1])+1
@@ -759,7 +759,8 @@ def export_spin_data(path = None, spins = 's', skipk = None, elim = None):
     bands = get_evals(xml_data, skipk = skipk,elim = elim).to_dict()
     evals = bands['evals']
     bands.update({'u': evals['SpinUp'], 'd': evals['SpinDown']} if ISPIN == 2 else {'e': evals})
-    del bands['evals']
+    
+    del bands['evals'] # Do not Delete occupancies here
     full_dic['evals'] = bands
 
     bands_range = full_dic['bands'].indices if elim else None #indices in range form.

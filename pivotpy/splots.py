@@ -234,7 +234,7 @@ def break_spines(ax,spines,symbol=u'\u2571',**kwargs):
         ax.text(1,0,symbol,**kwargs)
 
 # Cell
-def _plot_bands(ax=None,kpath=None,bands=None,showlegend=False,E_Fermi=None,interp_nk = {},**kwargs):
+def _plot_bands(ax=None,kpath=None,bands=None,showlegend=False,Fermi=None,interp_nk = {},**kwargs):
     """
     - Returns axes object and plot on which all matplotlib allowed actions could be performed.
     - **Parameters**
@@ -242,7 +242,7 @@ def _plot_bands(ax=None,kpath=None,bands=None,showlegend=False,E_Fermi=None,inte
         - kpath      : 1D array from `get_kpts`().kpath or `export_vasprun`().kpath.
         - bands      : Dictionary Object from `get_evals` or `export_vasprun`().bands.
         - showlegend : Boolean, default is False, if true, gives legend for spin-polarized calculations.
-        - E_Fermi    : If not given, automatically picked from bands object.
+        - Fermi    : If not given, automatically picked from bands object.
         - interp_nk  : Dictionary with keys 'n' and 'k' for interpolation.
 
     Additional kwargs are passed to matplotlib.lines.Lin2D. For passing a keyword to spindown channel, append an underscore, e.g 'lw' goes to SpinUp and 'lw_' goes to SpinDown.
@@ -257,8 +257,8 @@ def _plot_bands(ax=None,kpath=None,bands=None,showlegend=False,E_Fermi=None,inte
     # Fixing bands arguement
     if bands==None:
         raise ValueError("bands object is not provided. Use get_evals() or export_vasprun().bands to generate it.")
-    if E_Fermi==None:
-       E_Fermi = bands.E_Fermi
+    if Fermi==None:
+       Fermi = bands.Fermi
 
     # Plotting
     kws_u = {k:v for k,v in kwargs.items() if not k.endswith('_')}
@@ -273,7 +273,7 @@ def _plot_bands(ax=None,kpath=None,bands=None,showlegend=False,E_Fermi=None,inte
             raise ValueError("Can not plot an empty eigenvalues object.\n"
                             "Try with large energy range.")
 
-        en = bands.evals-E_Fermi
+        en = bands.evals-Fermi
         if interp_nk:
             kpath,en = gu.interpolate_data(kpath,en,**interp_nk)
 
@@ -283,8 +283,8 @@ def _plot_bands(ax=None,kpath=None,bands=None,showlegend=False,E_Fermi=None,inte
         if not bands.evals.SpinUp.any():
             raise ValueError("Can not plot an empty eigenvalues object.\n"
                              "Try with large energy range.")
-        enUp = bands.evals.SpinUp-E_Fermi
-        enDown = bands.evals.SpinDown-E_Fermi
+        enUp = bands.evals.SpinUp-Fermi
+        enDown = bands.evals.SpinDown-Fermi
         if interp_nk:
             _, enUp = gu.interpolate_data(kpath,enUp,**interp_nk)
             #Do not reassign kpath in first line, it will throw error in next
@@ -333,7 +333,7 @@ def add_text(ax=None,xs=0.25,ys=0.9,txts='[List]',colors='r',transform=True,**kw
                     ax.text(x,y,txt,color=colors,**args_dict,**kwargs)
 
 # Cell
-def splot_bands(path_evr=None,ax=None,skipk=None,kseg_inds=[],elim=[],ktick_inds=[],ktick_vals=[],E_Fermi=None,txt=None,xytxt=[0.2,0.9],ctxt='black',interp_nk = {}, **kwargs):
+def splot_bands(path_evr=None,ax=None,skipk=None,kseg_inds=[],elim=[],ktick_inds=[],ktick_vals=[],Fermi=None,txt=None,xytxt=[0.2,0.9],ctxt='black',interp_nk = {}, **kwargs):
     """
     - Returns axes object and plot on which all matplotlib allowed actions could be performed.
     - **Parameters**
@@ -342,7 +342,7 @@ def splot_bands(path_evr=None,ax=None,skipk=None,kseg_inds=[],elim=[],ktick_inds
         - skipk      : Number of kpoints to skip, default will be from IBZKPT.
         - kseg_inds : Points where kpath is broken.
         - elim       : [min,max] of energy range.
-        - E_Fermi    : If not given, automatically picked from `export_vasprun`.
+        - Fermi    : If not given, automatically picked from `export_vasprun`.
         - ktick_inds : High symmetry kpoints indices.abs
         - ktick_vals  : High Symmetry kpoints labels.
         - txt,xytxt and ctxt are extra arguments for text on figure.
@@ -364,8 +364,11 @@ def splot_bands(path_evr=None,ax=None,skipk=None,kseg_inds=[],elim=[],ktick_inds
         ylim=[]
     if ax==None:
         ax = get_axes()
+    if Fermi is None:
+        Fermi = vr.fermi
+
     modify_axes(ax=ax,ylabel='Energy (eV)',xticks=xticks,xt_labels=ktick_vals,xlim=xlim,ylim=ylim,vlines=True)
-    _plot_bands(ax=ax,kpath=K,bands=vr.bands,showlegend=True,interp_nk = interp_nk, E_Fermi=E_Fermi,**kwargs)
+    _plot_bands(ax=ax,kpath=K,bands=vr.bands,showlegend=True,interp_nk = interp_nk, Fermi=Fermi,**kwargs)
     text = txt if txt != None else vr.sys_info.SYSTEM
     add_text(ax,*xytxt,text,colors=ctxt)
     return ax
@@ -542,6 +545,7 @@ def color_wheel(ax=None,
     return cax
 
 # Cell
+import matplotlib.patheffects as path_effects
 def _get_pros_data(
     kpath       = None,
     evals_set   = None,
@@ -600,6 +604,7 @@ def _get_pros_data(
 def _make_line_collection(max_width   = None,
                          colors_list = None,
                          rgb         = False,
+                         shadow      = True,
                          **pros_data):
     """
     - Returns a tuple of line collections. If rgb = True (at len(orbs) = 3 in `_get_pros_data`), returns a tuple of two entries, multicolored line collection and RGB maximum values, otherwise return tuple of single colored multiple lines.
@@ -650,10 +655,13 @@ def _make_line_collection(max_width   = None,
     marr  = np.concatenate((narr[:,:-1,:],narr[:,1:,:]),axis=0).transpose().reshape((-1,2,2))
 
     # Make Line collection
+    path_shadow = None
+    if shadow:
+        path_shadow = [path_effects.SimpleLineShadow(offset=(0,-0.8),rho=0.2),path_effects.Normal()]
     if rgb and np.shape(colors)[-1] == 3:
-        return (LineCollection(marr,colors=colors,linewidths=lws),)
+        return (LineCollection(marr,colors=colors,linewidths=lws, path_effects = path_shadow),)
     else:
-        lcs = [LineCollection(marr,colors=_cl,linewidths=lw) for _cl,lw in zip(lc_colors,lws)]
+        lcs = [LineCollection(marr,colors=_cl,linewidths=lw, path_effects = path_shadow) for _cl,lw in zip(lc_colors,lws)]
         return tuple(lcs)
 
 # Cell
@@ -743,7 +751,6 @@ def _format_input(query_data,rgb=False):
         return nt(elements, orbs, labels)
 
 # Cell
-from itertools import combinations
 from matplotlib import tri
 from matplotlib.collections import PolyCollection
 
@@ -789,11 +796,11 @@ def color_cube(ax, colormap = 'brg', loc = (1,0.4), size = 0.2,
     colors = []
     for t in tr1.triangles:
         a, b, c = C[t] # a,b,c are the 3 points of the triangle
-        long_side = np.linalg.norm(a-b)
-        mid_point = (a + b)/2
-        for v1,v2 in combinations([a, b, c],2):
-            if np.linalg.norm(v1 - v2) > long_side:
-                mid_point = (v1 + v2)/2
+        mid_point = (a + b)/2 # Right angle at c
+        if np.dot(a - b, a - c) == 0: # Right angle at a
+            mid_point = (b + c)/2
+        elif np.dot(b - a, b - c) == 0: # Right angle at b
+            mid_point = (a + c)/2
 
         colors.append(mid_point)
 
@@ -805,7 +812,7 @@ def color_cube(ax, colormap = 'brg', loc = (1,0.4), size = 0.2,
     _max[_max == 0] = 1
     _colors = _colors/_max
 
-    col = PolyCollection([pts[t] for t in tr1.triangles],color=_colors,linewidths=0,edgecolor='none',alpha=1)
+    col = PolyCollection([pts[t] for t in tr1.triangles],color=_colors,linewidth=0.1,edgecolor='face',alpha=1)
     cax.add_collection(col)
     cax.autoscale_view()
     cax.set_aspect('equal')
@@ -836,7 +843,7 @@ def splot_rgb_lines(
     ktick_inds  = [0,-1],
     ktick_vals  = [r'$\Gamma$','M'],
     kseg_inds   = [],
-    E_Fermi     = None,
+    Fermi     = None,
     txt         = None,
     xytxt       = [0.2,0.9],
     ctxt        = 'black',
@@ -846,6 +853,7 @@ def splot_rgb_lines(
     colorbar    = True,
     colormap    = None,
     N           = 9,
+    shadow      = True,
     query_data  = {}
     ):
     """
@@ -859,7 +867,7 @@ def splot_rgb_lines(
         - skipk      : Number of kpoints to skip, default will be from IBZKPT.
         - kseg_inds  : Points where kpath is broken.
         - elim       : [min,max] of energy range.
-        - E_Fermi    : If not given, automatically picked from `export_vasprun`.
+        - Fermi    : If not given, automatically picked from `export_vasprun`.
         - ktick_inds : High symmetry kpoints indices.abs
         - ktick_vals : High Symmetry kpoints labels.
         - max_width  : Default is None and linewidth at any point = 2.5*sum(ions+orbitals projection of all three input at that point). Linewidth is scaled to max_width if an int or float is given.
@@ -896,8 +904,8 @@ def splot_rgb_lines(
         raise ValueError("spin can take any of ['up','down'. 'both'] only.")
 
     # Small things
-    if E_Fermi == None:
-        E_Fermi = vr.bands.E_Fermi
+    if Fermi == None:
+        Fermi = vr.fermi
     K = vp.join_ksegments(vr.kpath,kseg_inds = kseg_inds)
     xticks = [K[i] for i in ktick_inds]
     xlim = [min(K),max(K)]
@@ -964,15 +972,15 @@ def splot_rgb_lines(
     ISPIN=vr.sys_info.ISPIN
     # Arguments for _get_pros_data and _make_line_collection
     gpd_args = dict(elements=elements,orbs=orbs,interp_nk=interp_nk,scale_data=scale_data)
-    mlc_args = dict(rgb=True,colors_list= None, max_width=max_width)
+    mlc_args = dict(rgb=True,colors_list= None, max_width=max_width, shadow = shadow)
 
     if ISPIN == 1:
-        gpd_args.update(dict(kpath=K, evals_set=vr.bands.evals-E_Fermi, pros_set=vr.pro_bands.pros))
+        gpd_args.update(dict(kpath=K, evals_set=vr.bands.evals-Fermi, pros_set=vr.pro_bands.pros))
         _add_collection(gpd_args,mlc_args,ax=ax)
     if ISPIN == 2:
-        gpd_args1 = dict(kpath=K,evals_set=vr.bands.evals.SpinUp-E_Fermi,
+        gpd_args1 = dict(kpath=K,evals_set=vr.bands.evals.SpinUp-Fermi,
                         pros_set=vr.pro_bands.pros.SpinUp,**gpd_args)
-        gpd_args2 = dict(kpath=K,evals_set=vr.bands.evals.SpinDown-E_Fermi,
+        gpd_args2 = dict(kpath=K,evals_set=vr.bands.evals.SpinDown-Fermi,
                         pros_set=vr.pro_bands.pros.SpinDown,**gpd_args)
         if spin in ['up','both']:
             _add_collection(gpd_args1,mlc_args,ax=ax)
@@ -1038,12 +1046,13 @@ def splot_color_lines(
     kseg_inds     = [],
     elim          = [],
     colormap      = 'gist_rainbow',
+    shadow        = True,
     scale_data    = False,
     max_width     = None,
     spin          = 'both',
     ktick_inds    = [0, -1],
     ktick_vals     = ['$\\Gamma$', 'M'],
-    E_Fermi       = None,
+    Fermi       = None,
     showlegend    = True,
     xytxt         = [0.2, 0.85],
     ctxt          = 'black',
@@ -1064,7 +1073,7 @@ def splot_color_lines(
         - skipk      : Number of kpoints to skip, default will be from IBZKPT.
         - kseg_inds : Points where kpath is broken.
         - elim       : [min,max] of energy range.
-        - E_Fermi    : If not given, automatically picked from `export_vasprun`.
+        - Fermi    : If not given, automatically picked from `export_vasprun`.
         - ktick_inds : High symmetry kpoints indices.abs
         - ktick_vals  : High Symmetry kpoints labels.
         - colormap  : Matplotlib's standard color maps. Default is 'gist_ranibow'.
@@ -1100,8 +1109,8 @@ def splot_color_lines(
 
 
     # Small things
-    if E_Fermi == None:
-        E_Fermi = vr.bands.E_Fermi
+    if Fermi == None:
+        Fermi = vr.fermi
     K = vp.join_ksegments(vr.kpath,kseg_inds=kseg_inds)
     xticks = [K[i] for i in ktick_inds]
     xlim = [min(K),max(K)]
@@ -1123,7 +1132,7 @@ def splot_color_lines(
     ISPIN=vr.sys_info.ISPIN
     # Arguments for _get_pros_data and _make_line_collection
     gpd_args = dict(elements=elements,orbs=orbs,interp_nk=interp_nk,scale_data=scale_data)
-    mlc_args = dict(rgb=False,colors_list= colors, max_width=max_width)
+    mlc_args = dict(rgb=False,colors_list= colors, max_width=max_width, shadow = shadow)
 
     #============================================================
     def _plot_collection(gpd_args,mlc_args,axes=None):
@@ -1139,13 +1148,13 @@ def splot_color_lines(
         return axes
     #============================================================
 
-    if(ISPIN==1):
-        gpd_args.update(dict(kpath=K,evals_set=vr.bands.evals-E_Fermi,pros_set=vr.pro_bands.pros))
+    if ISPIN == 1:
+        gpd_args.update(dict(kpath=K,evals_set=vr.bands.evals-Fermi,pros_set=vr.pro_bands.pros))
         axes = _plot_collection(gpd_args,mlc_args,axes=axes)
     if ISPIN == 2:
-        gpd_args1 = dict(kpath=K,evals_set=vr.bands.evals.SpinUp-E_Fermi,
+        gpd_args1 = dict(kpath=K,evals_set=vr.bands.evals.SpinUp-Fermi,
                         pros_set=vr.pro_bands.pros.SpinUp,**gpd_args)
-        gpd_args2 = dict(kpath=K,evals_set=vr.bands.evals.SpinDown-E_Fermi,
+        gpd_args2 = dict(kpath=K,evals_set=vr.bands.evals.SpinDown-Fermi,
                         pros_set=vr.pro_bands.pros.SpinDown,**gpd_args)
         if spin in ['up','both']:
             axes = _plot_collection(gpd_args1,mlc_args,axes=axes)
@@ -1174,7 +1183,7 @@ def _select_pdos(
     pdos_set    = None,
     ions        = [0,],
     orbs        = [0,],
-    E_Fermi     = 0,
+    Fermi     = 0,
     interp_nk   = {}
      ):
     """
@@ -1184,12 +1193,12 @@ def _select_pdos(
         - pdos_set : `export_vasprun().pro_dos.pros` or `get_dos_pro_set`().pros. If calculations are spin-polarized, it will be `...pros.SpinUp/SpinDown` for both.
         - ions     : List of ions to project on, could be `range(start,stop,step)` as well, remember that `stop` is not included in python. so `range(0,2)` will generate 0 and 1 indices.
         - orbs     : List of orbitals indices to pick.
-        - E_Fermi  : Here it is zero. Needs to be input.
+        - Fermi  : Here it is zero. Needs to be input.
         - interp_nk   : Dictionary with keys 'n' and 'k' for interpolation.
     """
     if tdos==[]:
         raise ValueError("Can not plot empty DOS.")
-    en = tdos[:,0]-E_Fermi
+    en = tdos[:,0]-Fermi
     t_dos = tdos[:,1]
     pros = np.take(pdos_set[:,:,1:],list(ions),axis=0).sum(axis=0)
     p_dos = np.take(pros,orbs,axis=1).sum(axis=1)
@@ -1199,7 +1208,7 @@ def _select_pdos(
         _tdos = _tdos.clip(min=0)
         _pdos = gu.interpolate_data(en,p_dos,**interp_nk)[1].clip(min=0)
     else:
-        _en,_tdos,_pdos=pdos_set[0,:,0]-E_Fermi,t_dos,p_dos # reading _en from projected dos if not interpolated.
+        _en,_tdos,_pdos=pdos_set[0,:,0]-Fermi,t_dos,p_dos # reading _en from projected dos if not interpolated.
 
     return _en,_tdos,_pdos
 
@@ -1210,7 +1219,7 @@ def _collect_dos(
     elements      = [[0],],
     orbs          = [[0],],
     labels        = ['s',],
-    E_Fermi       = None,
+    Fermi       = None,
     spin          = 'both',
     interp_nk     = {}
     ):
@@ -1219,7 +1228,7 @@ def _collect_dos(
     - **Parameters**)
         - path_evr   : Path/to/vasprun.xml or output of `export_vasprun`. Auto picks in CWD.
         - elim       : [min,max] of energy range.
-        - E_Fermi    : If not given, automatically picked from `export_vasprun`.
+        - Fermi    : If not given, automatically picked from `export_vasprun`.
         - elements   : List [[0],], by defualt and plot first ion's projections.
         - orbs       : List [[0],] lists of indices of orbitals, could be empty.
         - labels     : List [str,] of orbitals labels. len(labels)==len(orbs) must hold.  Auto adds `↑`,`↓` for ISPIN=2.
@@ -1245,8 +1254,8 @@ def _collect_dos(
             "spin can take `up`,`down` or `both` values only.")
         return
 
-    if(E_Fermi==None):
-        E_Fermi=vr.tdos.E_Fermi
+    if(Fermi==None):
+        Fermi=vr.tdos.Fermi
     nfields = len(vr.pro_dos.labels) - 1 #
 
 
@@ -1254,7 +1263,7 @@ def _collect_dos(
     ISPIN=vr.sys_info.ISPIN
     e,ts,ps,ls=None,None,[],[] # to collect all total/projected dos.
     for elem,orb,label in zip(elements,orbs,labels):
-        args_dict=dict(ions=elem,orbs=orb,interp_nk=interp_nk,E_Fermi=E_Fermi)
+        args_dict=dict(ions=elem,orbs=orb,interp_nk=interp_nk,Fermi=Fermi)
         if ISPIN==1:
             tdos=vr.tdos.tdos
             pdos_set=vr.pro_dos.pros
@@ -1301,7 +1310,7 @@ def splot_dos_lines(
     linewidth     = 0.5,
     fill_area     = True,
     vertical      = False,
-    E_Fermi       = None,
+    Fermi       = None,
     spin          = 'both',
     interp_nk     = {},
     showlegend    = True,
@@ -1324,7 +1333,7 @@ def splot_dos_lines(
             - ax         : Matplotlib axes object, if None, one is created. If False, data lists are returned.
             - include_dos: One of {'both','tdos','pdos'}.
             - elim       : [min,max] of energy range.
-            - E_Fermi    : If not given, automatically picked from `export_vasprun`.
+            - Fermi    : If not given, automatically picked from `export_vasprun`.
             - colormap   : Matplotlib's standard color maps. Default is 'gist_ranibow'.
             - fill_area  : Default is True and plots filled area for dos. If False, plots lines only.
             - vertical   : False, If True, plots along y-axis.
@@ -1349,7 +1358,7 @@ def splot_dos_lines(
                             elements=elements,
                             orbs=orbs,
                             labels=labels,
-                            E_Fermi=E_Fermi,
+                            Fermi=Fermi,
                             spin=spin,
                             interp_nk=interp_nk)
         try:

@@ -483,7 +483,7 @@ class Vasprun:
 
         self.elim = elim
         self._kpath = self._data.kpath  # For info only, get updated with plot commands
-        self._efermi = self._data.bands.E_Fermi   # For info only, get updated with plot commands
+        self._efermi = self._data.fermi   # For info only, get updated with plot commands
 
         if path == None:
             self.kticks = sio.read_ticks('KPOINTS')
@@ -509,8 +509,8 @@ class Vasprun:
 
     def __handle_kwargs(self, kwargs,dos=False):
         kwargs = {'elim': self.elim, **kwargs}
-        if kwargs.get('E_Fermi',None) is None:
-            kwargs['E_Fermi'] = self.fermi # Calculated from occupancy
+        if kwargs.get('Fermi',None) is None:
+            kwargs['Fermi'] = self.fermi # Calculated from occupancy
         if dos:
             return kwargs
         ticks = {k:self.kticks[k] for k in ['ktick_inds','ktick_vals','kseg_inds']}
@@ -519,8 +519,8 @@ class Vasprun:
         # Set for info only in case of bandstructure
         if  'kseg_inds' in kwargs and kwargs['kseg_inds']:
             self._kpath =  vp.join_ksegments(self._data.kpath,kwargs['kseg_inds'])
-        if 'E_Fermi' in kwargs and kwargs['E_Fermi'] != None: #None is important to pick 0 as fermi as well
-            self._efermi = kwargs['E_Fermi']
+        if 'Fermi' in kwargs and kwargs['Fermi'] != None: #None is important to pick 0 as fermi as well
+            self._efermi = kwargs['Fermi']
         return kwargs
 
     @_sub_doc(serializer.Dict2Data.to_json,'')
@@ -539,27 +539,12 @@ class Vasprun:
     @property
     def fermi(self):
         "Fermi energy based on occupancy. Returns `self.Fermi` if occupancies cannot be resolved."
-        try:
-            if self.data.sys_info.ISPIN == 1:
-                occs = self.data.bands.occs
-                xinds, yinds = np.where(occs > 0)
-                return self.data.bands.evals[np.max(xinds), np.max(yinds)]
-
-            else: # ISPIN 2
-                energies = []
-                for attr in ['SpinUp','SpinDown']:
-                    occs = self.data.bands.occs[attr]
-                    xinds, yinds = np.where(occs > 0)
-                    energies.append(self.data.bands.evals[attr][np.max(xinds), np.max(yinds)])
-
-                return max(energies)
-        except:
-            return self.Fermi
+        return self._data.fermi
 
     @property
     def Fermi(self):
         "Fermi energy given in vasprun.xml."
-        return self.data.bands.E_Fermi
+        return self._data.Fermi
 
 
     def select(self,kpoints_inds = None, bands_inds = None, kseg_inds = None):
@@ -685,7 +670,7 @@ class Vasprun:
 
         Returns: Data with follwoing attributes which can be used to annotate the difference on plot.
             de     : energy difference
-            coords : np.array([[k1,e1],[k2,e2]]) #E_Fermi is subtracted either from system or when user provides in a plot command.
+            coords : np.array([[k1,e1],[k2,e2]]) #Fermi is subtracted either from system or when user provides in a plot command.
             eqv_coords: list(coords) at equivalent k-points if exit. Do not appear if k1_i and k2_i are provided.
 
         For spin-polarized case, 4 blocks of above data are returned which are accessible by
@@ -748,7 +733,7 @@ class Vasprun:
     def splot_en_diff(self, coords, ax, **kwargs):
         """Plot energy difference at given ax. Provide `coords` from output of `get_en_diff().coords` or `get_en_diff().eqv_coords[i]` if exist.
         Provide `ax` on which bandstructure is plotted.
-        E_Fermi is already subtracted in `coords` from system or by user input when bandstructure plot commands are run.
+        Fermi is already subtracted in `coords` from system or by user input when bandstructure plot commands are run.
         kwargs are passed to `ax.step`.
         Returns ax.
         """

@@ -20,12 +20,11 @@ except:
     import pivotpy.splots._validate_input as _validate_input
 
 # Cell
-def _collect_spin_data(exported_spin_data, bands = [0], elements = [[0],], orbs = [[0],], scale_data = False, E_Fermi = None):
+def _collect_spin_data(exported_spin_data, bands = [0], elements = [[0],], orbs = [[0],], scale_data = False):
     if not isinstance(bands,(list,tuple)):
         raise TypeError('`bands` must be list/tuple of integer.')
     elements, orbs, _ = _validate_input(elements,orbs,[str(i) for i,o in enumerate(orbs)],sys_info = exported_spin_data.sys_info, rgb = False)
 
-    fermi = E_Fermi or exported_spin_data.evals.E_Fermi
     def per_band_data(band):
         kpoints = exported_spin_data.kpoints
         evals = {k: v[:,band] for k,v in exported_spin_data.evals.items() if k in 'eud'}
@@ -35,7 +34,7 @@ def _collect_spin_data(exported_spin_data, bands = [0], elements = [[0],], orbs 
         df_dict['band'] = [(band + exported_spin_data.evals.indices[0] + 1) for i in range(len(kpoints))]
 
         for k,v in evals.items():
-            df_dict[k if k=='e' else f'e{k}'] = v.T.flatten() - fermi
+            df_dict[k if k=='e' else f'e{k}'] = v.T.flatten() - exported_spin_data.sys_info.fermi
 
         for i, (e, o) in enumerate(zip(elements,orbs)):
             for k,v in spins.items():
@@ -72,13 +71,12 @@ class SpinDataFrame(pd.DataFrame):
         - elements: list of elements to plot. inner list contains ions indices. Can leave empty to discard projection data.
         - orbs: list of orbitals to plot. inner list contains orbitals indices. Can leave empty to discard projection data
         - scale_data: if True, spin data is scaled to -1 to 1.
-        - E_Fermi: if not None, auto picked as Fermi level from vasprun.xml.
         - skipk: if not None, auto skipped unnecessary k-points.
         - elim: if not None, filtered out unnecessary bands.
         - data: if not None, data is loaded from given data/pickle/json/dict and validated. Many other parameters are ignored when data is given.
 
     - **Returns**:
-        - SpinDataFrame: dataframe with colums as k-points, eigenvalues, spin components projected over selected ions and orbtials.
+        - SpinDataFrame: dataframe with colums as k-points, eigenvalues[with fermi energy subtracted], spin components projected over selected ions and orbtials.
 
     - **Methods**:
         - sliced: Slice data in a plane orthogonal to given `column` at given `value`.
@@ -92,7 +90,7 @@ class SpinDataFrame(pd.DataFrame):
         All other methods are inherited from pd.DataFrame. If you apply some method that do not pass metadat, then use `send_metadata` to copy metadata to traget SpinDataFrame.
     """
     _metadata = ['_current_attrs','scale_data','sys_info','poscar','projection'] # These are passed after operations to new dataframe.
-    def __init__(self, *args, path = None, bands = [0], elements = [[0],], orbs = [[0],], scale_data = False, E_Fermi = None, elim = None, skipk=None, data = None, **kwargs):
+    def __init__(self, *args, path = None, bands = [0], elements = [[0],], orbs = [[0],], scale_data = False, elim = None, skipk=None, data = None, **kwargs):
         if not (path or args): # It works fine without path given, but it is not recommended.
             path = './vasprun.xml'
         if path or data: # Don't updates args otherwise
@@ -111,7 +109,7 @@ class SpinDataFrame(pd.DataFrame):
                 raise ValueError('Invalid path or data!')
 
             if spin_data:
-                out_dict = _collect_spin_data(spin_data, bands = bands, elements = elements, orbs = orbs, scale_data = scale_data, E_Fermi = E_Fermi)
+                out_dict = _collect_spin_data(spin_data, bands = bands, elements = elements, orbs = orbs, scale_data = scale_data)
                 super().__init__(out_dict)
                 self.scale_data = scale_data
                 self.sys_info = spin_data.sys_info
@@ -131,6 +129,16 @@ class SpinDataFrame(pd.DataFrame):
     def _constructor(self):
         "That's main hero of this class. This is called when you apply some method of slice it."
         return SpinDataFrame
+
+    @property
+    def fermi(self):
+        "Fermi energy based on occupancy. Returns `self.Fermi` if occupancies cannot be resolved."
+        return self.sys_info.fermi
+
+    @property
+    def Fermi(self):
+        "Fermi energy given in vasprun.xml."
+        return self.sys_info.Fermi
 
     def append(self, other):
         "Append another SpinDataFrame to this one with same columns."

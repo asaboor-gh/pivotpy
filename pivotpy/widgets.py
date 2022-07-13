@@ -392,20 +392,17 @@ class InputGui:
 
 # Cell
 #mouse event handler
-def _click_data(sel_en_w,fermi_w,data_dict,fig,bd_w):
+def _click_data(sel_en_w,Fermi,data_dict,fig,bd_w):
     def handle_click(trace, points, state):
         if points.ys != []:
-            e_fermi = float(fermi_w.value) if fermi_w.value else 0
             v_clicked = points.ys[0] if bd_w.value=='Bands' else points.xs[0]
-            val = np.round(float(v_clicked) + e_fermi,4) #exact value
+            val = np.round(float(v_clicked) + Fermi,4) #exact value
 
             for key in sel_en_w.options:
                 if key in sel_en_w.value and key != 'None':
                     data_dict[key] = val # Assign value back
-                if 'Fermi' in sel_en_w.value:
-                    fermi_w.value = str(val) # change fermi text box which will update graph itself
 
-            # Update Fermi, SO etc
+            # Update E_gap, SO etc
             if data_dict['VBM'] and data_dict['CBM']:
                 data_dict['E_gap'] = np.round(data_dict['CBM'] - data_dict['VBM'], 4)
             if data_dict['so_max'] and data_dict['so_min']:
@@ -423,7 +420,7 @@ def _click_data(sel_en_w,fermi_w,data_dict,fig,bd_w):
 
 # Display Table
 def _tabulate_data(data_dict):
-    new_dict = {k:v for k,v in data_dict.items() if v != '' and k not in ['sys','so_max','so_min','Fermi']}
+    new_dict = {k:v for k,v in data_dict.items() if v != '' and k not in ['sys','so_max','so_min']}
     ls = list(new_dict.keys())
     ds = list(new_dict.values())
 
@@ -486,9 +483,6 @@ def generate_summary(paths_list=None):
                 if k not in d.keys():
                     out_dict[k].append(np.nan)
 
-    if out_dict.get('Fermi',None):
-        out_dict.pop('Fermi',None) # Remove Fermi as not necessary
-
     return pd.DataFrame(out_dict)
 
 # Cell
@@ -531,12 +525,12 @@ class VasprunApp:
         self._path = None # current path
         self._fig    = go.FigureWidget() # plotly's figure widget
         self._fig.update_layout(autosize=True)
-        self._result = {'sys':'','V':'','a':'','b':'','c':'','Fermi': None,
+        self._result = {'sys':'','V':'','a':'','b':'','c':'',
                      'VBM':'','CBM':'','so_max':'','so_min':''} # Table widget value
 
         self._files_gui,self._files_dd = get_files_gui(height=300)
         self._InGui  = InputGui(height=None)
-        self._input  = {'E_Fermi':0} # Dictionary for input
+        self._input  = {'Fermi': 0} # Dictionary for input Should be zero, not None
         self._fig_gui = HBox() # Middle Tab
         self.theme_colors = light_colors.copy() # Avoid Modification
         # Permeannet Parameters
@@ -556,7 +550,7 @@ class VasprunApp:
                         }
 
         b_out = Layout(width='30%')
-        en_options = ['Fermi','VBM','CBM','so_max','so_min','None']
+        en_options = ['VBM','CBM','so_max','so_min','None']
         self._dds   = {'band_dos': Dropdown(options=['Bands','DOS'],value='Bands',
                                                 layout= Layout(width='80px')),
                       'en_type' : Dropdown(options = en_options,value='None',layout=b_out),
@@ -572,7 +566,6 @@ class VasprunApp:
                       'ktickv': Text(value='',layout=b_out,continuous_update=False),
                       'kjoin' : Text(value='',layout=b_out,continuous_update=False),
                       'elim'  : Text(value='',layout=b_out,continuous_update=False),
-                      'fermi' : Text(value='',layout=b_out,continuous_update=False),
                       'xyt'   : Text(value='',continuous_update=False),
                       'load_elim'  : Text(value='-5,5',layout = Layout(width='5em'),continuous_update=False)
                       }
@@ -586,8 +579,6 @@ class VasprunApp:
         self._texts['kjoin'].observe(self._warn_to_load_graph,"value")
         self._dds['band_dos'].observe(self._warn_to_load_graph,"value")
         self._dds['band_dos'].observe(self.__update_input,"value")
-        self._texts['fermi'].observe(self.__update_input,"value")
-        self._texts['fermi'].observe(self.__update_fermi_level,"value")
         self._texts['kjoin'].observe(self.__update_input,"value")
         self._texts['kticks'].observe(self.__update_xyt,"value")
         self._texts['ktickv'].observe(self.__update_xyt,"value")
@@ -692,23 +683,11 @@ class VasprunApp:
     def __check_lsorbit(self):
         if self._data:
             lsorbit = self._data.sys_info.incar.to_dict().get('LSORBIT','F')
-            options = ['Fermi','VBM','CBM','None']
+            options = ['VBM','CBM','None']
             if lsorbit in 'T':
-                options = ['Fermi','VBM','CBM','so_max','so_min','None']
+                options = ['VBM','CBM','so_max','so_min','None']
             self._dds['en_type'].options = options
             self._dds['en_type'].value = 'None'
-
-    def __update_fermi_level(self,change):
-        with self._fig.batch_animate():
-            old_fermi = float(change['old']) if change['old'] else 0 # Could be None before
-            new_fermi = float(change['new'])
-            for trace in self._fig.data: # Shift graph as Fermi Changes
-                if self._dds['band_dos'].value == 'Bands':
-                    trace.y = [y - new_fermi + old_fermi for y in trace.y]
-                else:
-                    trace.x = [x - new_fermi + old_fermi for x in trace.x]
-
-            self.__update_input(change = None) # Update input as well
 
     def _warn_to_load_graph(self, change = None):
         self._buttons['load_graph'].icon = 'refresh'
@@ -737,11 +716,9 @@ class VasprunApp:
                     ]).add_class('borderless').add_class('marginless')
                 ]).add_class('marginless').add_class('borderless')
 
-        points_box = HBox([Box([Label('E Type:',layout=l_out),
+        points_box = HBox([Box([Label('E Type:',layout=Layout(min_width='5em')),
                                 self._dds['en_type'],
-                                Label('E-Fermi:',layout=l_out),
-                                self._texts['fermi']
-                    ]).add_class('marginless').add_class('borderless'),
+                    ],layout = Layout(min_width='50%')).add_class('marginless').add_class('borderless'),
                     self._buttons['load_graph']
                     ],layout=Layout(width='100%')).add_class('marginless')
         in_box = VBox([self._InGui.box,
@@ -779,8 +756,6 @@ class VasprunApp:
                                Label('---- Other Arguments/Options ----'),
                       HBox([Label('E Range:',layout=l_out),
                       self._texts['elim'],
-                      Label('E-Fermi:',layout=l_out),
-                      self._texts['fermi']
                       ]).add_class('marginless')]
             right_box.children = [top_right,fig_box,points_box]
             self._dds['en_type'].value = 'None' # no scatter collection in DOS.
@@ -922,8 +897,6 @@ class VasprunApp:
             print('Done')
 
         _ = self.__read_data(self._data.poscar,sys_info) # Update Table data on load
-        self._texts['fermi'].value = str(sys_info.E_Fermi) # Needs each time new data loads up.
-
         self._tab.selected_index = 1
         # Revamp input dropdowns on load  ==========
         self._InGui.update_options(sys_info=sys_info) #Upadate elements/orbs/labels
@@ -931,14 +904,15 @@ class VasprunApp:
         self._buttons['load_data'].description='Load Data'
         self._path = self._files_dd.value # Update in __on_load or graph to make sure data loads once
         self._buttons['load_data'].tooltip = "Current System\n{!r}".format(self._data.sys_info)
+        self.__update_input(change=None) # Update to have new Fermi value
         self._warn_to_load_graph()
 
     @_output.capture(clear_output=True,wait=True)
     def __update_input(self,change):
         self._input.update(self._InGui.output)
         elim_str  = [v for v in self._texts['elim'].value.split(',') if v!='']
-        fermi_str = self._texts['fermi'].value
-        self._input['E_Fermi'] = float(fermi_str) if fermi_str else 0 # Change now, keep zero else must.
+        if self._data:
+            self._input['Fermi'] = float(self._data.fermi)
         self._input['elim'] = [float(v) for v in elim_str if v!='-'][:2] if len(elim_str) >= 2 else None
         if self._dds['band_dos'].value == 'Bands':
             kjoin_str  = [v for v in self._texts['kjoin'].value.split(',') if v!='']
@@ -1062,7 +1036,8 @@ class VasprunApp:
             self._path  = self._files_dd.value #update here or __on_load. Useful to match things
             _ = self.__read_data(self._data.poscar,self._data.sys_info) # Update Table data
             self.__check_lsorbit() # Check if LSORBIT is on, then set options accordingly
-            # Do Not Read Fermi, its 0 or given by user
+
+            self._input['Fermi'] = float(self._data.fermi) # Update Fermi before plot
             if self._dds['band_dos'].value == 'Bands':
                 fig_data = ip.iplot_rgb_lines(path_evr=self._data,**self._input,**self._ibands_kws)
             else:
@@ -1076,7 +1051,7 @@ class VasprunApp:
                 fig_data.layout.template = self._dds['style'].value # before layout to avoid color blink
                 self._fig.layout = fig_data.layout
 
-            _click_data(self._dds['en_type'],self._texts['fermi'],self._result,self._fig,self._dds['band_dos'])
+            _click_data(self._dds['en_type'],self._input['Fermi'],self._result,self._fig,self._dds['band_dos']) # click after updating fermi
 
             self._buttons['load_graph'].icon = 'check'
             self._buttons['load_graph'].description = 'Latest Graph'
@@ -1088,7 +1063,7 @@ class VasprunApp:
         _dir = os.path.split(self._files_dd.value)[0]
         if 'Table' in self._dds['cache'].value:
             for k in self._result.keys(): # Avoid deleting V,a,b,Fermi
-                if k not in ['sys','V','a','b','c','Fermi']:
+                if k not in ['sys','V','a','b','c']:
                     self._result[k] = ''
         if 'PWD' in self._dds['cache'].value:
             _files = [os.path.join(_dir,f) for f in ['sys_info.pickle','vasprun.pickle']]
