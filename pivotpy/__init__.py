@@ -58,7 +58,9 @@ __all__.extend(mpl_imported)
 from matplotlib.colors import LinearSegmentedColormap as __LSC
 import matplotlib.pyplot as __plt, numpy as __np
 RGB = __LSC.from_list('RGB',[(0.9,0,0),(0.9,0.9,0),(0,0.9,0),(0,0.9,0.9),(0,0,0.9)])
+CMY = __LSC.from_list('CMY',[(0,0.9,0.9),(0,0,0.9),(0.9,0,0.9),(0.9,0,0),(0.9,0.9,0)])
 __plt.register_cmap('RGB',RGB)
+__plt.register_cmap('CMY',CMY)
 
 def create_colormap(name='RB',colors=[(0.9,0,0),(0,0,0.9)]):
     """

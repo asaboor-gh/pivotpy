@@ -760,8 +760,9 @@ def color_cube(ax, colormap = 'brg', loc = (1,0.4), size = 0.2,
     points_y = np.array([x,np.ones_like(x),y]).T
     points_x = np.array([np.ones_like(x), x, y]).T
 
-    all_points = []
     from .sio import to_R3, rotation # Avoids circular import
+
+    all_points = []
     ps = to_R3([[1,0,0],[-0.5,-np.sqrt(3)/2,0],[0,0,1]],points_z)
     all_points.extend(ps)
     ps1 = rotation(angle_deg=-120,axis_vec=[0,0,1]).apply(ps+[0,np.sqrt(3),0])
@@ -797,15 +798,6 @@ def color_cube(ax, colormap = 'brg', loc = (1,0.4), size = 0.2,
         colors.append(mid_point)
 
     colors = np.array(colors)
-    sx,sy,sz = colors.min(axis=0)
-    colors[colors[:,0] == 1] -= [0, sy, sz]
-    colors[colors[:,1] == 1] -= [sx, 0, sz]
-    colors[colors[:,2] == 1] -= [sx, sy, 0]
-
-    # Do not dim center of hexagon
-    colors[(colors[:,0] > 0.5) & (colors[:,0] <= (1 - 2*sx))] += [2*sx, 0, 0]
-    colors[(colors[:,1] > 0.5) & (colors[:,1] <= (1 - 2*sy))] += [0, 2*sy, 0]
-    colors[(colors[:,2] > 0.5) & (colors[:,2] <= (1 - 2*sz))] += [0, 0, 2*sz]
 
     A,B,_C = plt.cm.get_cmap(colormap)([0,0.5,1])[:,:3]
     _colors = np.array([(r*A + g*B + b*_C)/((r+g+b) or 1) for r,g,b in colors])
@@ -853,7 +845,7 @@ def splot_rgb_lines(
     scale_data  = True,
     colorbar    = True,
     colormap    = None,
-    N           = 11,
+    N           = 9,
     query_data  = {}
     ):
     """
@@ -949,7 +941,7 @@ def splot_rgb_lines(
             colors = colors/c_max # Weights to be used for color interpolation.
             nsegs = np.linspace(0,1,N,endpoint = True)
             for low,high in zip(nsegs[:-1],nsegs[1:]):
-                colors[(colors >= low) & (colors < high)] = low
+                colors[(colors >= low) & (colors < high)] = (low + high)/2 # Center of squre is taken in color_cube
 
             A, B, C = plt.cm.get_cmap(colormap or 'brg',N)([0,0.5,1])[:,:3]
             pros_data['pros'] = np.array([
