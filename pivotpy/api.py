@@ -584,7 +584,6 @@ class Vasprun:
 
         return self.__class__(data = serializer.VasprunData(d).to_json())
 
-
     @_sub_doc(sp.splot_bands,'- path_evr')
     def splot_bands(self,ax = None,**kwargs):
         kwargs = self.__handle_kwargs(kwargs)

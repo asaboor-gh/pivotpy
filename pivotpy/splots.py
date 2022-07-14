@@ -667,9 +667,6 @@ def _make_line_collection(max_width   = None,
 # Cell
 def _validate_input(elements,orbs,labels,sys_info,rgb=False):
     "Fix input elements, orbs and labels according to given sys_info. Returns (Bool, elements, orbs,labels)."
-    if isinstance(elements,dict): # If elements is a dictionary, it's query_data
-        elements, orbs, labels = _format_input(query_data = elements,rgb = rgb)
-
     if len(elements) != len(orbs) or len(elements) != len(labels):
         raise ValueError("`elements`, `orbs` and `labels` expect same length, even if empty.")
 

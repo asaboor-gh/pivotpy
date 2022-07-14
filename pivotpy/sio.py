@@ -1216,10 +1216,11 @@ def fix_sites(poscar_data,tol=1e-2,eqv_sites=True,translate=None):
                     return_counts=True)
         eleminds = np.cumsum([0,*ui]) #Element ranges.
         uelems = {l:range(eleminds[i],eleminds[i+1]) for i,l in enumerate(ul)}
+
         # Update Things
         out_dict['positions'] = new_pos
         out_dict['labels'] = new_labs
-        out_dict['unique'] = uelems
+        out_dict['unique'] = {key:uelems[key] for key in out_dict['unique']} # Keep ordr of elements.
     else:
         xinds,yinds = np.where(pos > 1-tol)
         for i,j in zip(xinds,yinds):

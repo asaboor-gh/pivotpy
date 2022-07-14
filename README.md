@@ -216,18 +216,13 @@ Some tasks are very tideious in python while just a click way in powershell. See
 pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
 ```
 
-    [32;1m NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI Pr[0m
-    [32;1m                                                   oc[0m
-    [32;1m                                                   es[0m
-    [32;1m                                                   sN[0m
-    [32;1m                                                   am[0m
-    [32;1m                                                   e[0m
-    [32;1m ------    -----      -----     ------      --  -- --[0m
-    22     7.06       8.93       1.03    7132   1 A…
-    5     1.48       4.57       0.00    7032   0 A…
-    19     7.56      20.55       0.00    4772   0 A…
-    27    29.40      21.59      28.38   17240   1 A…
-    8     1.59       7.38       0.00    6320   0 A…
+    [32;1m NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName[0m
+    [32;1m ------    -----      -----     ------      --  -- -----------[0m
+    22     7.06       8.93       1.03    7132   1 AcrobatNotificationClient
+    6     1.58       4.80       0.00    7032   0 AggregatorHost
+    19     7.55      21.88       0.00    4772   0 AppHelperCap
+    26    28.35      19.14      30.17   17240   1 ApplicationFrameHost
+    8     1.61       7.45       0.00    6320   0 AppVShNotify
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -268,21 +263,12 @@ Get-ChildItem 'E:\Research\graphene_example\'
         Directory: E:\Research\graphene_example
     
     
-    Mode                 LastWriteTime         Length Nam
-                                                      e  
-    ----                 -------------         ------ ---
-    da----          6/9/2022  10:33 AM                ISP
-                                                      IN_
-                                                      1  
-    da----          5/9/2020   1:05 PM                ISP
-                                                      IN_
-                                                      2  
-    -a----          5/9/2020   1:01 PM          75331 OUT
-                                                      CAR
-    -a----          5/9/2020   1:01 PM         240755 vas
-                                                      pru
-                                                      n.x
-                                                      ml 
+    Mode                 LastWriteTime         Length Name                                                                 
+    ----                 -------------         ------ ----                                                                 
+    da----          6/9/2022  10:33 AM                ISPIN_1                                                              
+    da----          5/9/2020   1:05 PM                ISPIN_2                                                              
+    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                               
+    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                          
     
     
 
