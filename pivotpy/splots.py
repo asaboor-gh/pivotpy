@@ -879,7 +879,7 @@ def splot_rgb_lines(
         - scale_data : Default is True and normalizes projection data to 1.
         - colorbar   : Default is True. Displays a vertical RGB colorbar. Forfine control, set it False and use `plot_handle.add_colorbar` and `plot_handle.color_cube` just afer plotting.
         - colormap   : 1.2.7+, Default is None and picks suitable for each case. For all three projections given, only first, middle and last colors are used to interpolate between them.
-        - N          : Number of distinct colors in colormap.
+        - N          : Number of distinct colors in colormap. For given three non-zero projections, even number will be rounded up to greater odd number, so 4 and 5 are same in that case.
         - query_data : Dictionary with keys as label and values as list of length 2. Should be <= 3 for RGB plots. If given, used in place of elements, orbs and labels arguments.
                         Example: {'s':([0,1],[0]),'p':([0,1],[1,2,3]),'d':([0,1],[4,5,6,7,8])} will pick up s,p,d orbitals of first two ions of system.
     - **Returns**
@@ -918,7 +918,11 @@ def splot_rgb_lines(
     if not np.any([ax]):
         ax = get_axes()
 
+
+
     non_zero_inds = [i for i,e in enumerate(elements) if e]
+    if N % 2 == 0 and len(non_zero_inds) == 3:
+        N += 1 # N should be odd because even numbers mess up color mapping in 3.
     #=====================================================
     def _add_collection(gpd_args,mlc_args,ax):
         pros_data = _get_pros_data(**gpd_args)
@@ -943,10 +947,10 @@ def splot_rgb_lines(
 
         else:
             # Normalize color at each point only for 3 projections.
-            c_max = np.max(colors,axis=2, keepdims= True)
+            c_max = np.max(colors,axis=2, keepdims =True)
             c_max[c_max == 0] = 1 #Avoid division error:
-
             colors = colors/c_max # Weights to be used for color interpolation.
+
             nsegs = np.linspace(0,1,N,endpoint = True)
             for low,high in zip(nsegs[:-1],nsegs[1:]):
                 colors[(colors >= low) & (colors < high)] = (low + high)/2 # Center of squre is taken in color_cube
