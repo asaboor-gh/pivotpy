@@ -297,9 +297,18 @@ class POSCAR:
     def fix_sites(self, tol=0.01, eqv_sites=True, translate=None):
         return self.__class__(data = sio.fix_sites(self._data, tol=tol, eqv_sites=eqv_sites, translate=translate))
 
-    @_sub_doc(sio.fix_sites,'- poscar_data')
+    @_sub_doc(sio.get_kmesh,'- poscar_data')
     def get_kmesh(self, *args, shift = 0, weight=None, cartesian = False, ibzkpt=None, outfile=None):
         return sio.get_kmesh(self.data, *args, shift = shift, weight = weight, cartesian = cartesian,ibzkpt= ibzkpt, outfile=outfile)
+
+    @_sub_doc(sio.get_kpath,'- poscar_data')
+    def get_kpath(self,*patches, n = 5,weight= None ,ibzkpt = None,outfile=None):
+        return sio.get_kpath(*patches, n = n,weight= weight ,ibzkpt = weight,outfile=outfile, _poscar_class_instance = self)
+
+    @_sub_doc(sio.str2kpath,'- poscar_data')
+    def str2kpath(self, kpath_str,n = 5, weight = None, ibzkpt = None, outfile = None):
+        return sio.str2kpath(kpath_str, n = n, weight = weight, ibzkpt = ibzkpt, outfile = outfile, _poscar_class_instance = self)
+
 
     def bring_in_cell(self,points):
         """Brings atoms's positions inside Cell and returns their R3 coordinates.

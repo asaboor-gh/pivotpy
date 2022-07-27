@@ -43,7 +43,7 @@ def poscar():
     if output:
         for car in output:
             print("\ncar\n{('='*66}")
-            print(car.export_poscar().text_plain)
+            car.export_poscar().write(outfile = None) # write POSCAR to stdout
     else:
         print('No POSCAR found with provided input, try increasing range')
         

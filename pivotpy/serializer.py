@@ -137,8 +137,13 @@ class Dict2Data:
     # Dictionary-wise access
     def keys(self):
         return self.__dict__.keys()
+    
+    def values(self):
+        return self.__dict__.values()
+    
     def __getitem__(self,key):
         return self.__dict__[key]
+    
     def items(self):
         return self.__dict__.items()
 

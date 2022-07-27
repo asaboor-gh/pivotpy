@@ -424,40 +424,57 @@ class InvokeMaterialsProject:
         return structures
 
 # Cell
-def get_kpath(hsk_list=[],labels=[], n = 5,weight= None ,ibzkpt = None,outfile=None):
+def get_kpath(*patches, n = 5,weight= None ,ibzkpt = None,outfile=None, _poscar_class_instance = None):
     """
     Generate list of kpoints along high symmetry path. Options are write to file or return KPOINTS list.
     It generates uniformly spaced point with input `n` as just a scale factor of number of points per unit length.
     You can also specify custom number of kpoints in an interval by putting number of kpoints as 4th entry in left kpoint.
     - **Parameters**
-        - hsk_list : N x 3 list of N high symmetry points, if broken path then [[N x 3],[M x 3],...].
-                    Optionally you can put a 4 values point where 4th entry will decide number of kpoints in current interval.
-                    Make sure that points in a connected path patch are at least two i.e. `[[x1,y1,z1],[x2,y2,z2]]` or `[[x1,y1,z1,N],[x2,y2,z2]]`.
+        - *ptaches : Any number of disconnected patches where a single patch is a dictionary like {'label': (x,y,z,[N]), ...} where x,y,z is high symmetry point and
+                    N (optional) is number of points in current inteval, points in a connected path patch are at least two i.e. `{'p1':[x1,y1,z1],'p2':[x2,y2,z2]}`.
+                    A key of a patch should be string reperenting the label of the high symmetry point. A key that starts with '_' is ignored, so you can add points without high symmetry points as well.
         - n        : int, number per unit length, this makes uniform steps based on distance between points.
         - weight : Float, if None, auto generates weights.
         - ibzkpt : Path to ibzkpt file, required for HSE calculations.
-        - labels : Hight symmetry points labels. Good for keeping record of lables and points indices for later use.
-                    > Note: If you do not want to label a point, label it as 'skip' at its index and it will be removed.
         - outfile: Path/to/file to write kpoints.
 
     If `outfile = None`, KPONITS file content is printed.
     """
-    if hsk_list:
-        try: hsk_list[0][0][0]
-        except: hsk_list = [hsk_list] # Make overall 3 dimensions to include breaks in path
-        if not labels:
-            ['' for ks in hsk_list for k in ks] #make flatten empty labels
-    else: raise ValueError('Give at least non empty first argument.')
+    if len(patches) == 0:
+        raise ValueError("Please provide at least one high symmetry path consisting of two points.")
+
+    hsk_list, labels = [], []
+    for patch in patches:
+        if not isinstance(patch,dict):
+            raise TypeError("Patche must be a dictionary as {'label': (x,y,z,[N]), ...}")
+        if len(patch.keys()) < 2:
+            raise ValueError("Please provide at least one high symmetry path consisting of two points.")
+        _patch = []
+        for k,v in patch.items():
+            if not isinstance(k,str):
+                raise TypeError("Label must be a string")
+            if (not isinstance(v,(list,tuple,set,np.ndarray))) and (len(v) not in [3,4]):
+                raise TypeError("Value must be a list or tuple of length 3 or 4, like (x,y,z,[N])")
+            labels.append('skip' if k.startswith('_') else k)
+            _patch.append(v)
+        hsk_list.append(_patch)
 
     xs,ys,zs, inds,joinat = [],[],[],[0],[] # 0 in inds list is important
     _labels = []
     _len_prev = 0
     for j,a in enumerate(hsk_list):
         for i in range(len(a)-1):
-            _vec = [_a-_b for _a,_b in zip(a[i][:3],a[i+1] )] # restruct point if 4 entries
-            _m = np.rint(np.linalg.norm(_vec)*n).astype(int) # Calculate
-            try: _m = a[i][3] # number of points given explicitly.
-            except: pass
+            try:
+                _m = a[i][3] # number of points given explicitly.
+            except IndexError:
+                if hasattr(_poscar_class_instance, 'bring_in_bz'):
+                    coords = to_R3(_poscar_class_instance.data.rec_basis,[a[i][:3],a[i+1][:3]])
+                    largest_dist = np.ptp(_poscar_class_instance.data.rec_basis, axis=0).max()
+                    _m = np.rint(np.linalg.norm(coords[0] - coords[1])*n/largest_dist).astype(int)
+                else:
+                    _vec = [_a-_b for _a,_b in zip(a[i][:3],a[i+1] )] # restruct point if 4 entries
+                    _m = np.rint(np.linalg.norm(_vec)*n).astype(int) # Calculate
+
 
             inds.append(inds[-1]+_m) #Append first then do next
             _labels.append(labels[i+_len_prev])
@@ -523,7 +540,7 @@ def read_ticks(kpoints_file_path):
     return out_dict
 
 # Cell
-def str2kpath(kpath_str,n = 5, weight = None, ibzkpt = None, outfile = None):
+def str2kpath(kpath_str,n = 5, weight = None, ibzkpt = None, outfile = None, _poscar_class_instance = None):
     """Get Kpath from a string of kpoints (Line-Mode like). Useful in Terminal.
     - **Parameters**
         - kpath_str: str, a multiline string similiar to line mode of KPOINTS, initial 4 lines are not required.
@@ -578,13 +595,13 @@ def str2kpath(kpath_str,n = 5, weight = None, ibzkpt = None, outfile = None):
         filtered = [w-i for i,w in enumerate(where_blanks)]
         where_blanks = np.unique([0,*filtered,len(hsk_list)]).tolist()
 
-    new_list = [] if where_blanks else hsk_list #Fix up both
+    patches = [] if where_blanks else [{k:v for v,k in zip(hsk_list,labels)},] #Fix up both
     for a,b in zip(where_blanks[:-1], where_blanks[1:]):
         if b - a < 2:
             raise ValueError(f"There should be at least two points in a patch of path at line {a+1}!")
-        new_list.append(hsk_list[a:b])
+        patches.append({k:v for v,k in zip(hsk_list[a:b],labels[a:b])})
 
-    return get_kpath(hsk_list = new_list, labels = labels,n=n,weight=weight,ibzkpt=ibzkpt,outfile=outfile)
+    return get_kpath(*patches,n=n,weight=weight,ibzkpt=ibzkpt,outfile=outfile, _poscar_class_instance = _poscar_class_instance)
 
 # Cell
 def _get_basis(path_pos):

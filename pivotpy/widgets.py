@@ -1362,9 +1362,10 @@ class KPathApp:
 
     def get_kpath(self,n=5,weight=None,ibzkpt=None,outfile=None):
         "See Docs of pp.str2kpath for details."
+        from pivotpy import POSCAR
         kws = dict(n=n,weight=weight,ibzkpt=ibzkpt,outfile=outfile)
         _, k_str = self.get_data()
-        return sio.str2kpath(k_str,**kws)
+        return POSCAR(self.path).str2kpath(k_str,**kws)
 
     def splot(self,text_kws = {}, plot_kws ={}, **kwargs):
         """Same as `pp.splot_bz` except it also plots path on BZ.

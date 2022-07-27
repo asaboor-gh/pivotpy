@@ -1,4 +1,4 @@
-Automatically generated using PivotPy with HSK-INDS = [0, 29, -1], LABELS = ['M', 'Γ|M', 'L|K', 'N'], SEG-INDS = [21, 29]
+Automatically generated using PivotPy with HSK-INDS = [0, 29, -1], LABELS = ['M', 'G', 'M|L', 'K'], SEG-INDS = [21, 29]
 	34
 Reciprocal Lattice
     0.3750000000    0.3750000000    0.5000000000    0.029412
