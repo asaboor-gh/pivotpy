@@ -301,13 +301,13 @@ class POSCAR:
     def get_kmesh(self, *args, shift = 0, weight=None, cartesian = False, ibzkpt=None, outfile=None):
         return sio.get_kmesh(self.data, *args, shift = shift, weight = weight, cartesian = cartesian,ibzkpt= ibzkpt, outfile=outfile)
 
-    @_sub_doc(sio.get_kpath,'- poscar_data')
+    @_sub_doc(sio.get_kpath,'- rec_basis')
     def get_kpath(self,*patches, n = 5,weight= None ,ibzkpt = None,outfile=None):
-        return sio.get_kpath(*patches, n = n,weight= weight ,ibzkpt = weight,outfile=outfile, _poscar_class_instance = self)
+        return sio.get_kpath(*patches, n = n,weight= weight ,ibzkpt = weight,outfile=outfile, rec_basis = self.data.rec_basis)
 
-    @_sub_doc(sio.str2kpath,'- poscar_data')
+    @_sub_doc(sio.str2kpath,'- rec_basis')
     def str2kpath(self, kpath_str,n = 5, weight = None, ibzkpt = None, outfile = None):
-        return sio.str2kpath(kpath_str, n = n, weight = weight, ibzkpt = ibzkpt, outfile = outfile, _poscar_class_instance = self)
+        return sio.str2kpath(kpath_str, n = n, weight = weight, ibzkpt = ibzkpt, outfile = outfile, rec_basis = self.data.rec_basis)
 
 
     def bring_in_cell(self,points):
@@ -464,7 +464,6 @@ class Vasprun:
     - **Optional Parameters** (only useful if path is `vasprun.xml` file)
         - skipk      : int: Skip initial kpoints.
         - elim       : list: Energy range e.g. [-5,5].
-        - shift_kpath: float: Shift in kpath values for side by side plotting.
         - dos_only   : bool: False by default, If True, load mimimal bands data to save memeory.
         - data   : json/pickle file/str or VasprunData or a valid dictionary. Takes precedence over path parameter.
 
@@ -484,11 +483,11 @@ class Vasprun:
     # The object `vr` is destroyed here and memory is freed.
     ```
     """
-    def __init__(self,path = None,skipk = None,elim=[],shift_kpath=0,dos_only=False,data=None):
+    def __init__(self,path = None,skipk = None,elim=[],dos_only=False,data=None):
         if data: #json/pickle data strings
             self._data = serializer.VasprunData.validated(data)
         else:
-            self._data = vp.export_vasprun(path=path,skipk=skipk,elim=elim,shift_kpath=shift_kpath,dos_only=dos_only)
+            self._data = vp.export_vasprun(path=path,skipk=skipk,elim=elim,dos_only=dos_only)
 
         self.elim = elim
         self._kpath = self._data.kpath  # For info only, get updated with plot commands
@@ -547,8 +546,13 @@ class Vasprun:
 
     @property
     def fermi(self):
-        "Fermi energy based on occupancy. Returns `self.Fermi` if occupancies cannot be resolved."
+        "Fermi energy based on occupancy. Use .get_fermi() if you want to limit the occupancy tolerance."
         return self._data.fermi
+
+    def get_fermi(self, tol=1e-3):
+        "Fermi energy based on occupancy. Returns `self.Fermi` if occupancies cannot be resolved. `tol` is the value of occupnacy to ignore as filled."
+        return self._data.get_fermi(tol=tol)
+
 
     @property
     def Fermi(self):
@@ -556,11 +560,10 @@ class Vasprun:
         return self._data.Fermi
 
 
-    def select(self,kpoints_inds = None, bands_inds = None, kseg_inds = None):
+    def select(self,kpoints_inds = None, bands_inds = None):
         """Seletc data based on kpoints and bands indices.
         This is useful to select only a subset of data and even reorder kpoints after calculations.
-        Both   `kpoints_inds` and `bands_inds` are based on current data and should be based on zero indexing.
-        `kseg_inds` is index of disconnected kpoints in `kpoints_inds`, e.g. in `kpoints_inds = [0,5,6,7]`, if 0 and 5 are disconnected, `kseg_inds = [1]`.
+        Both `kpoints_inds` and `bands_inds` are based on current data and should be based on zero indexing.
 
         **Returns** `Vasprun` object with selected data that can be plotted using `splot_[...]` or `iplot_[...]` functions.
 
@@ -577,17 +580,26 @@ class Vasprun:
         bands_inds = range(len(d['bands']['indices'])) if bands_inds is None else bands_inds
 
         d['kpoints'] = d['kpoints'][kpoints_inds]
-        d['kpath'] = [0, *np.linalg.norm(d['kpoints'][1:] - d['kpoints'][:-1],axis=1).cumsum().round(6)]
-        d['kpath'] = vp.join_ksegments(d['kpath'],kseg_inds) # If broken kpath is provided, join it
+        old_kpath = np.array(d['kpath']) # Safe array
+        rel_dist = [np.abs(d1-d2) for d1,d2 in zip(old_kpath[kpoints_inds][1:], old_kpath[kpoints_inds][:-1])]
+        rel_dist = [old_kpath[0], *rel_dist]
+        all_dist = np.cumsum(rel_dist).round(6)
+        all_dist = all_dist - all_dist[0]  #Shift to start from 0
 
+        d['kpath'] = all_dist/all_dist[-1] #Normalize to [0,1] for plotting on shared axes
         d['bands']['indices'] = tuple([d['bands']['indices'].start + b for b in bands_inds]) # It is range in original data
 
         if self.data.sys_info.ISPIN == 1:
             d['bands']['evals'] = d['bands']['evals'][kpoints_inds][:,bands_inds]
+            d['bands']['occs'] = d['bands']['occs'][kpoints_inds][:,bands_inds]
             d['pro_bands']['pros'] = d['pro_bands']['pros'][:,kpoints_inds][:,:,bands_inds,...]
         else:
             d['bands']['evals']['SpinUp'] = d['bands']['evals']['SpinUp'][kpoints_inds][:,bands_inds]
             d['bands']['evals']['SpinDown'] = d['bands']['evals']['SpinDown'][kpoints_inds][:,bands_inds]
+
+            ['bands']['occs']['SpinUp'] = d['bands']['occs']['SpinUp'][kpoints_inds][:,bands_inds]
+            d['bands']['occs']['SpinDown'] = d['bands']['occs']['SpinDown'][kpoints_inds][:,bands_inds]
+
             d['pro_bands']['pros']['SpinUp'] = d['pro_bands']['pros']['SpinUp'][:,kpoints_inds][:,:,bands_inds,...]
             d['pro_bands']['pros']['SpinDown'] = d['pro_bands']['pros']['SpinDown'][:,kpoints_inds][:,:,bands_inds,...]
 

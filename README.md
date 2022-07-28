@@ -68,6 +68,7 @@ for v in dir(vr):
     vr.fermi
     vr.get_band_info
     vr.get_en_diff
+    vr.get_fermi
     vr.iplot_dos_lines
     vr.iplot_rgb_lines
     vr.kticks
@@ -159,32 +160,6 @@ Markdown("[See Interactive Plot](https://massgh.github.io/InteractiveHTMLs/iGrap
 ![Energy](docs\images\energy.jpg)
 [See Interactive BZ Plot](https://massgh.github.io/InteractiveHTMLs/BZ.html)
 
-## Plotting Two Calculations Side by Side 
-- Here we will use `shift_kpath` to demonstrate plot of two calculations on same axes side by side
-
-```python
-#nbdev_collapse_input
-import matplotlib.pyplot as plt
-import pivotpy as pp 
-plt.style.use('bmh')
-vr1=pp.Vasprun('E:/Research/graphene_example/ISPIN_1/bands/vasprun.xml')
-shift_kpath=vr1.data.kpath[-1] # Add last point from first export in second one.
-vr2=pp.Vasprun('E:/Research/graphene_example/ISPIN_2/bands/vasprun.xml',shift_kpath=shift_kpath)
-last_k=vr2.data.kpath[-1]
-axs=pp.get_axes(figsize=(5,2.6))
-K_all=[*vr1.data.kpath,*vr2.data.kpath] # Merge kpath for ticks
-kticks=[K_all[i] for i in [0,30,60,90,120,150,-1]]
-ti_cks=dict(xticks=kticks,xt_labels=['Γ','M','K','Γ','M','K','Γ'])
-vr1.splot_bands(ax=axs)
-vr2.splot_bands(ax=axs,txt='Graphene(Left: ISPIN=1, Right: ISPIN=2)',ctxt='m')
-axs.modify_axes(xlim=[0,last_k],ylim=[-10,10],**ti_cks)
-pp._show()
-```
-
-
-![svg](docs/images/output_15_0.svg)
-
-
 ## Interpolation 
 Amost every bandstructure and DOS plot function has an argument `interp_nk` which is a dictionary with keys `n` (Number of additional points between adjacent points) and `k` (order of interpolation 0-3). `n > k` must hold.
 
@@ -194,7 +169,7 @@ import pivotpy as pp, matplotlib.pyplot as plt
 plt.style.use('ggplot')
 k = vr1.data.kpath
 ef = vr1.data.bands.Fermi
-evals = vr1.data.bands.evals-ef
+evals = vr1.data.bands.evals.SpinUp - ef
 #Let's interpolate our graph to see effect. It is useful for colored graphs.
 knew,enew=pp.interpolate_data(x=k,y=evals,n=10,k=3)
 plot = plt.plot(k,evals,'m',lw=5,label='real data')
@@ -203,7 +178,7 @@ pp.splots.add_text(ax=plt.gca(),txts='Graphene')
 ```
 
 
-![svg](docs/images/output_17_0.svg)
+![svg](docs/images/output_15_0.svg)
 
 
 ## LOCPOT,CHG Visualization
@@ -223,11 +198,11 @@ pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
     [32;1m                                                   am[0m
     [32;1m                                                   e[0m
     [32;1m ------    -----      -----     ------      --  -- --[0m
-    22     7.03       2.32       0.41   24936   3 A…
-    6     1.48       4.59       0.00    6900   0 A…
-    19     9.38      14.56       0.00    5128   0 A…
-    28    31.97      24.62       7.28   13596   3 A…
-    8     1.63       5.50       0.00    2220   0 A…
+    22     7.09       2.48       0.42   24936   3 A…
+    6     1.51       4.08       0.00    6900   0 A…
+    19     9.39      10.60       0.00    5128   0 A…
+    32    40.71      31.83      18.50   13596   3 A…
+    8     1.57       4.77       0.00    2220   0 A…
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`

@@ -846,7 +846,7 @@ def splot_rgb_lines(
     ctxt        = 'black',
     spin        = 'both',
     interp_nk   = {},
-    scale_data  = True,
+    scale_data  = False,
     colorbar    = True,
     colormap    = None,
     N           = 9,
@@ -873,7 +873,7 @@ def splot_rgb_lines(
         - ctxt       : color of text.
         - spin       : Plot spin-polarized for spin {'up','down','both'}. Default is both.
         - interp_nk  : Dictionary with keys 'n' and 'k' for interpolation.
-        - scale_data : Default is True and normalizes projection data to 1.
+        - scale_data : Default is False. If True, normalizes projection data to 1.
         - colorbar   : Default is True. Displays a vertical RGB colorbar. Forfine control, set it False and use `plot_handle.add_colorbar` and `plot_handle.color_cube` just afer plotting.
         - colormap   : 1.2.7+, Default is None and picks suitable for each case. For all three projections given, only first, middle and last colors are used to interpolate between them.
         - N          : Number of distinct colors in colormap. For given three non-zero projections, even number will be rounded up to greater odd number, so 4 and 5 are same in that case.

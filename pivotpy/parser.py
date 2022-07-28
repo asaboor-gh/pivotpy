@@ -198,6 +198,7 @@ def get_kpts(xml_data, skipk = 0):
     #KPath solved.
     kpath = get_space_info(xml_data).cartesian_kpath[skipk:]
     kpath = kpath - kpath[0] # Shift to start at 0
+    kpath = kpath/kpath[-1] # Normaliz to 1 to see all bandstuructres on common axis in full range
     # Do Not Join KPath if it is broken, leave that to plotting functions
     return serializer.Dict2Data({'NKPTS':len(kpoints),'kpoints':kpoints,'kpath':kpath})
 
@@ -440,15 +441,14 @@ def get_structure(xml_data):
             'positions': np.array(positions),'labels':labels,'unique': unique_d}
     return serializer.PoscarData(st_dic)
 
-def export_vasprun(path = None, skipk = None, elim = [], shift_kpath = 0, dos_only = False):
+def export_vasprun(path = None, skipk = None, elim = [], dos_only = False):
     """
     - Returns a full dictionary of all objects from `vasprun.xml` file. It first try to load the data exported by powershell's `Export-VR(Vasprun)`, which is very fast for large files. It is recommended to export large files in powershell first.
     - **Parameters**
         - path       : Path to `vasprun.xml` file. Default is `'./vasprun.xml'`.
         - skipk      : Default is None. Automatically detects kpoints to skip.
         - elim       : List [min,max] of energy interval. Default is [], covers all bands.
-        - shift_kpath: Default 0. Can be used to merge multiple calculations on single axes side by side.
-    
+        
     **Returns**: `pivotpy.serializer.VasprunData` object.
     """
     path = path or './vasprun.xml'
@@ -504,8 +504,7 @@ def export_vasprun(path = None, skipk = None, elim = [], shift_kpath = 0, dos_on
     #Dimensions dictionary.
     dim_dic={'kpoints':'(NKPTS,3)','kpath':'(NKPTS,1)','bands':'⇅(NKPTS,NBANDS)','dos':'⇅(grid_size,3)','pro_dos':'⇅(NION,grid_size,en+pro_fields)','pro_bands':'⇅(NION,NKPTS,NBANDS,pro_fields)'}
     #Writing everything to be accessible via dot notation
-    kpath = [k + shift_kpath for k in kpts.kpath]  # shift kpath for side by side calculations.
-    full_dic={'sys_info':info_dic,'dim_info':dim_dic,'kpoints':kpts.kpoints,'kpath':kpath,'bands':eigenvals,
+    full_dic={'sys_info':info_dic,'dim_info':dim_dic,'kpoints':kpts.kpoints,'kpath':kpts.kpath,'bands':eigenvals,
              'tdos':tot_dos,'pro_bands':pro_bands,'pro_dos':pro_dos,'poscar': poscar,
              'force':force,'scsteps':scsteps}
     return serializer.VasprunData(full_dic)

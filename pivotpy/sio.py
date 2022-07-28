@@ -424,7 +424,7 @@ class InvokeMaterialsProject:
         return structures
 
 # Cell
-def get_kpath(*patches, n = 5,weight= None ,ibzkpt = None,outfile=None, _poscar_class_instance = None):
+def get_kpath(*patches, n = 5,weight= None ,ibzkpt = None,outfile=None, rec_basis = None):
     """
     Generate list of kpoints along high symmetry path. Options are write to file or return KPOINTS list.
     It generates uniformly spaced point with input `n` as just a scale factor of number of points per unit length.
@@ -433,10 +433,11 @@ def get_kpath(*patches, n = 5,weight= None ,ibzkpt = None,outfile=None, _poscar_
         - *ptaches : Any number of disconnected patches where a single patch is a dictionary like {'label': (x,y,z,[N]), ...} where x,y,z is high symmetry point and
                     N (optional) is number of points in current inteval, points in a connected path patch are at least two i.e. `{'p1':[x1,y1,z1],'p2':[x2,y2,z2]}`.
                     A key of a patch should be string reperenting the label of the high symmetry point. A key that starts with '_' is ignored, so you can add points without high symmetry points as well.
-        - n        : int, number per unit length, this makes uniform steps based on distance between points.
+        - n        : int, number per length of body diagonal of rec_basis, this makes uniform steps based on distance between points.
         - weight : Float, if None, auto generates weights.
         - ibzkpt : Path to ibzkpt file, required for HSE calculations.
         - outfile: Path/to/file to write kpoints.
+        - rec_basis: Reciprocal basis 3x3 array to use for calculating uniform points.
 
     If `outfile = None`, KPONITS file content is printed.
     """
@@ -467,14 +468,16 @@ def get_kpath(*patches, n = 5,weight= None ,ibzkpt = None,outfile=None, _poscar_
             try:
                 _m = a[i][3] # number of points given explicitly.
             except IndexError:
-                if hasattr(_poscar_class_instance, 'bring_in_bz'):
-                    coords = to_R3(_poscar_class_instance.data.rec_basis,[a[i][:3],a[i+1][:3]])
-                    largest_dist = np.ptp(_poscar_class_instance.data.rec_basis, axis=0).max()
+                if rec_basis is not None and np.size(rec_basis) == 9:
+                    basis = np.array(rec_basis)
+                    coords = to_R3(basis,[a[i][:3],a[i+1][:3]])
+                    largest_dist = np.linalg.norm(basis.sum(axis=0)) # body diagonal
                     _m = np.rint(np.linalg.norm(coords[0] - coords[1])*n/largest_dist).astype(int)
                 else:
                     _vec = [_a-_b for _a,_b in zip(a[i][:3],a[i+1] )] # restruct point if 4 entries
                     _m = np.rint(np.linalg.norm(_vec)*n).astype(int) # Calculate
 
+            _m = _m if _m >= 2 else 2 # minimum of 2 points in a path
 
             inds.append(inds[-1]+_m) #Append first then do next
             _labels.append(labels[i+_len_prev])
@@ -540,17 +543,18 @@ def read_ticks(kpoints_file_path):
     return out_dict
 
 # Cell
-def str2kpath(kpath_str,n = 5, weight = None, ibzkpt = None, outfile = None, _poscar_class_instance = None):
+def str2kpath(kpath_str,n = 5, weight = None, ibzkpt = None, outfile = None, rec_basis = None):
     """Get Kpath from a string of kpoints (Line-Mode like). Useful in Terminal.
     - **Parameters**
         - kpath_str: str, a multiline string similiar to line mode of KPOINTS, initial 4 lines are not required.
             - If you do not want to label a point, label it as 'skip' and it will be removed.
             - You can add an interger at end of a line to customize number of points in a given patch.
             - Each empty line breaks the path, so similar points before and after empty line are useless here.
-        - n      : int, number per unit length, this makes uniform steps based on distance between points.
+        - n      : int, number per length of body diagonal of rec_basis, this makes uniform steps based on distance between points.
         - weight : Float, if None, auto generates weights.
         - ibzkpt : Path to ibzkpt file, required for HSE calculations.
         - outfile: Path/to/file to write kpoints.
+        - rec_basis: Reciprocal basis 3x3 array to use for calculating uniform points.
 
     - **Example**
         > str2kpath('''0 0 0 !$\Gamma$ 3
@@ -601,7 +605,7 @@ def str2kpath(kpath_str,n = 5, weight = None, ibzkpt = None, outfile = None, _po
             raise ValueError(f"There should be at least two points in a patch of path at line {a+1}!")
         patches.append({k:v for v,k in zip(hsk_list[a:b],labels[a:b])})
 
-    return get_kpath(*patches,n=n,weight=weight,ibzkpt=ibzkpt,outfile=outfile, _poscar_class_instance = _poscar_class_instance)
+    return get_kpath(*patches,n=n,weight=weight,ibzkpt=ibzkpt,outfile=outfile, rec_basis = rec_basis)
 
 # Cell
 def _get_basis(path_pos):
