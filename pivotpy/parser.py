@@ -827,9 +827,9 @@ def export_outcar(path=None):
     final_dict = {'ion_pot':pot_arr,'positions':pos_arr,'site_pot':pos_pot,'basis':basis[:,:3],'rec_basis':basis[:,3:],'n_kbi':n_kbi}
     return serializer.OutcarData(final_dict)
 
-def export_locpot(locpot=None,e = True,m = False):
+def export_locpot(locpot = None,e = True,m = False):
     """
-    - Returns Data from LOCPOT and similar structure files like CHG. Loads only single set out of 2/4 magnetization data to avoid performance/memory cost while can load electrostatic and one set of magnetization together.
+    - Returns Data from LOCPOT and similar structure files like CHG/PARCHG etc. Loads only single set out of 2/4 magnetization data to avoid performance/memory cost while can load electrostatic and one set of magnetization together.
     - **Parameters**
         - locpot: path/to/LOCPOT or similar stuructured file like CHG. LOCPOT is auto picked in CWD.
         - e     : Electric potential/charge density. Default is True.
@@ -837,14 +837,9 @@ def export_locpot(locpot=None,e = True,m = False):
     - **Exceptions**
         - Would raise index error if magnetization density set is not present in LOCPOT/CHG in case `m` is not False.
     """
-    if locpot is None:
-        if os.path.isfile('LOCPOT'):
-            locpot = 'LOCPOT'
-        else:
-            raise FileNotFoundError('./LOCPOT not found.')
-    else:
-        if not os.path.isfile(locpot):
-            raise FileNotFoundError("File {!r} does not exist!".format(locpot))
+    path = locpot or './LOCPOT'
+    if not os.path.isfile(locpot):
+        raise FileNotFoundError("File {!r} does not exist!".format(path))
     if m not in [True,False,'x','y','z']:
         raise ValueError("m expects one of [True,False,'x','y','z'], got {}".format(e))
     # data fixing after reading islice from file.
@@ -857,7 +852,7 @@ def export_locpot(locpot=None,e = True,m = False):
         data = data.reshape(N_reshape).transpose([2,1,0])
         return data
     # Reading File
-    with open(locpot,'r') as f:
+    with open(path,'r') as f:
         lines = []
         f.seek(0)
         for i in range(8):
@@ -896,12 +891,5 @@ def export_locpot(locpot=None,e = True,m = False):
     # Read Info
     from .sio import export_poscar # Keep inside to avoid import loop
     poscar_data = export_poscar(text_plain = '\n'.join(p.strip() for p in poscar))
-    basis = poscar_data.basis
-    system = poscar_data.SYSTEM
-    ElemName = list(poscar_data.unique.keys())
-    ElemIndex = [0,*[v[-1]+ 1 for v in poscar_data.unique.values()]]
-    positions = poscar_data.positions
-
-    final_dict = dict(SYSTEM=system,ElemName=ElemName,ElemIndex=ElemIndex,basis=basis,positions=positions)
-    final_dict = {**final_dict,**pot_dict}
-    return serializer.LocpotData(final_dict)
+    final_dict = dict(SYSTEM = poscar_data.SYSTEM, path = path, **pot_dict, poscar = poscar_data)
+    return serializer.GridData(final_dict)

@@ -369,7 +369,7 @@ def splot_bands(path_evr=None,ax=None,skipk=None,kseg_inds=[],elim=[],ktick_inds
 
     modify_axes(ax=ax,ylabel='Energy (eV)',xticks=xticks,xt_labels=ktick_vals,xlim=xlim,ylim=ylim,vlines=True)
     _plot_bands(ax=ax,kpath=K,bands=vr.bands,showlegend=True,interp_nk = interp_nk, Fermi=Fermi,**kwargs)
-    text = txt if txt != None else vr.sys_info.SYSTEM
+    text = txt if txt else vr.sys_info.SYSTEM
     add_text(ax,*xytxt,text,colors=ctxt)
     return ax
 
@@ -840,7 +840,7 @@ def splot_rgb_lines(
     ktick_inds  = [0,-1],
     ktick_vals  = [r'$\Gamma$','M'],
     kseg_inds   = [],
-    Fermi     = None,
+    Fermi       = None,
     txt         = None,
     xytxt       = [0.2,0.9],
     ctxt        = 'black',
@@ -989,9 +989,8 @@ def splot_rgb_lines(
             _add_collection(gpd_args2,mlc_args,ax=ax)
 
     # Aethetcis of plot.
-    if not txt:
-        txt=vr.sys_info.SYSTEM
-    add_text(ax=ax,xs=xytxt[0],ys=xytxt[1],txts=txt,colors=ctxt)
+    text = txt if txt else vr.sys_info.SYSTEM
+    add_text(ax=ax,xs=xytxt[0],ys=xytxt[1],txts=text,colors=ctxt)
     modify_axes(ax = ax, xticks=xticks,xt_labels=ktick_vals,xlim=xlim,ylim=ylim,vlines=True)
 
     _tls_ = [l for l in labels] # To avoid side effects, new labels array.
@@ -1581,7 +1580,7 @@ def plot_potential(basis = None,
         print('`e_or_m` or `basis` not given, trying to autopick LOCPOT...')
         try:
             ep = vp.export_locpot()
-            basis = ep.basis
+            basis = ep.poscar.basis
             e_or_m= ep.e
         except:
             raise Exception('Could not auto fix. Make sure `basis` and `e_or_m` are provided.')

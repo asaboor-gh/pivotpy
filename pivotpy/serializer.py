@@ -156,9 +156,8 @@ class VasprunData(Dict2Data):
     def __repr__(self):
         return super().__repr__().replace("Data","VasprunData",1)
     
-    @property
-    def fermi(self):
-        "Fermi energy based on occupancy. Returns `self.Fermi` if occupancies cannot be resolved."
+    def get_fermi(self,tol=1e-3):
+        "Fermi energy based on occupancy. Returns `self.Fermi` if occupancies cannot be resolved. `tol` is the value of occupnacy to ignore as filled."
         try:
             if self.sys_info.ISPIN == 1:
                 return float(self.bands.evals[self.bands.occs > 0].max())
@@ -170,6 +169,11 @@ class VasprunData(Dict2Data):
                 return float(max(energies))
         except:
             return self.Fermi
+    
+    @property
+    def fermi(self):
+        "Fermi energy based on occupancy. Use .get_fermi() if you want to limit the occupancy tolerance."
+        return self.get_fermi(tol=1e-3)
     
     @property
     def Fermi(self):
@@ -232,13 +236,13 @@ class PoscarData(Dict2Data):
         return write_poscar(self,sd_list = sd_list,outfile = outfile,overwrite = overwrite)
         
 
-class LocpotData(Dict2Data):
-    _req_keys = ('ElemName','ElemIndex','SYSTEM')
+class GridData(Dict2Data):
+    _req_keys = ('path','poscar','SYSTEM')
     def __init__(self,d):
         super().__init__(d)
     
     def __repr__(self):
-        return super().__repr__().replace("Data","LocpotData",1)
+        return super().__repr__().replace("Data","GridData",1)
 
 class OutcarData(Dict2Data):
     _req_keys = ('site_pot','ion_pot','basis')
