@@ -409,17 +409,32 @@ def add_legend(ax=None,colors=[],labels=[],styles='solid',\
     return None
 
 # Cell
-def add_colorbar(ax, cax = None, cmap_or_clist=None,N=256,ticks=None,\
-            ticklabels=None,tickloc='right',vertical=True, digits=2,fontsize=8):
+
+#export
+def add_colorbar(
+    ax,
+    cmap_or_clist = None,
+    N             = 256,
+    ticks         = None,
+    ticklabels    = None,
+    vmin          = None,
+    vmax          = None,
+    cax           = None,
+    tickloc       = 'right',
+    vertical      = True,
+    digits        = 2,
+    fontsize      = 8
+    ):
     """
     - Plots colorbar on a given axes. This axes should be only for colorbar. Returns None or throws ValueError for given colors.
     - **Parameters**
         - ax         : Matplotlib axes for which colorbar will be added.
-        - cax        : Matplotlib axes for colorbar. If not given, one is created.
         - cmap_or_clist: List/array of colors in or colormap's name. If None (default), matplotlib's default colormap is plotted.
         - N          : int, number of color points Default 256.
         - ticks      : List of tick values to show on colorbar. To turn off, give [].
         - ticklabels : List of labels for ticks.
+        - vmin,vmax  : Minimum and maximum values. Only work if ticks are given.
+        - cax        : Matplotlib axes for colorbar. If not given, one is created.
         - tickloc    : Default 'right'. Any of ['right','left','top','bottom'].
         - digits     : Number of digits to show in tick if ticklabels are not given.
         - vertical   : Boolean, default is Fasle.
@@ -451,7 +466,11 @@ def add_colorbar(ax, cax = None, cmap_or_clist=None,N=256,ticks=None,\
 
         elif isinstance(ticks,(list,tuple, np.ndarray)):
             ticks = np.array(ticks)
-            ticks = (ticks - ticks.min())/np.ptp(ticks)
+            _vmin = vmin if vmin is not None else np.min(ticks)
+            _vmax = vmax if vmax is not None else np.max(ticks)
+            if _vmin > _vmax:
+                raise ValueError("vmin > vmax is not valid!")
+            ticks = (ticks - _vmin)/(_vmax - _vmin)
 
         if ticklabels is None:
             ticklabels = ticks.round(digits).astype(str)
@@ -473,6 +492,7 @@ def add_colorbar(ax, cax = None, cmap_or_clist=None,N=256,ticks=None,\
             cax.xaxis.tick_bottom() # top is by default
         cax.set_xticks(ticks)
         cax.set_xticklabels(ticklabels,rotation=0,ha='center')
+        cax.set_xlim([0,1]) #enforce limit
 
     if vertical == True:
         c_vals = c_vals.transpose()
@@ -483,6 +503,7 @@ def add_colorbar(ax, cax = None, cmap_or_clist=None,N=256,ticks=None,\
             cax.yaxis.tick_left() # right is by default
         cax.set_yticks(ticks)
         cax.set_yticklabels(ticklabels,rotation=90,va='center')
+        cax.set_ylim([0,1]) # enforce limit
 
     for tick in cax.xaxis.get_major_ticks():
         tick.label.set_fontsize(fontsize)
@@ -1551,9 +1572,10 @@ def plot_potential(basis = None,
            e_or_m=None,
            operation='mean_z',
            ax=None,
-           period=None,
+           period = None,
+           period_right = None,
+           interface = None,
            lr_pos=(0.25,0.75),
-           lr_widths = [0.5,0.5],
            labels=(r'$V(z)$',r'$\langle V \rangle _{roll}(z)$',r'$\langle V \rangle $'),
            colors = ((0,0.2,0.7),'b','r'),
            annotate = True
@@ -1565,8 +1587,9 @@ def plot_potential(basis = None,
         - operation: Default is 'mean_z'. What to do with provided volumetric potential data. Anyone of these 'mean_x','min_x','max_x','mean_y','min_y','max_y','mean_z','min_z','max_z'.
         - ax: Matplotlib axes, if not given auto picks.
         - period: Periodicity of potential in fraction between 0 and 1. For example if a slab is made of 4 super cells in z-direction, period=0.25.
+        - period_right: Periodicity of potential in fraction between 0 and 1 if right half of slab has different periodicity.
         - lr_pos: Locations around which averages are taken.Default (0.25,0.75). Provide in fraction between 0 and 1. Center of period is located at these given fractions. Work only if period is given.
-        - lr_widths: Default is [0.5,0.5], you may have slabs which have different lengths on left and right side. Provide a pair proportional to widths e.g (1,1), (1,1.1) etc. and it is auto normalized to 1. Works only if period is given.
+        - interface: Default is 0.5 if not given, you may have slabs which have different lengths on left and right side. Provide in fraction between 0 and 1 where slab is divided in left and right halves.
         - labels: List of three labels for legend. Use plt.legend() or pp.add_legend() for labels to appear. First entry is data plot, second is its convolution and third is complete average.
         - colors: List of three colors for lines.
         - annotate: True by default, writes difference of right and left averages on plot.
@@ -1597,28 +1620,21 @@ def plot_potential(basis = None,
     if period == None:
         return (ax,serializer.Dict2Data(ret_dict)) # Simple Return
     if period != None:
-        period = int(period*len(pot))
-        arr_con = np.convolve(pot, np.ones((period,))/period, mode='valid')
+        arr_con = gu.rolling_mean(pot,period,period_right = period_right,interface = interface, mode= 'wrap')
         x_con =  np.linspace(0,x[-1],len(arr_con))
         ax.plot(x_con,arr_con,linestyle='dashed',lw=0.7,label=labels[1],c=colors[1]) # Convolved plot
         # Find Averages
         left,right = lr_pos
         ind_1 = int(left*len(pot))
         ind_2 = int(right*len(pot))
-        lr_widths = [l/sum(lr_widths) for l in lr_widths] # Normalize widths
-        div_1 = int(period*lr_widths[0]) # left half range
-        div_2 = int(period*lr_widths[1]) # right half range
-        v_1 = np.mean(pot[ind_1-div_1:ind_1+div_1+1]).astype(float)
-        v_2 = np.mean(pot[ind_2-div_2:ind_2+div_2+1]).astype(float)
-        ret_dict.update({'left':{'v':float(v_1),'av_range':[ind_1-div_1,ind_1+div_1]}})
-        ret_dict.update({'right':{'v':float(v_2),'av_range':[ind_2-div_2,ind_2+div_2]}})
-        ret_dict.update({'deltav':float(v_2-v_1)})
+        x_1, v_1 = x_con[ind_1], arr_con[ind_1]
+        x_2, v_2 = x_con[ind_2], arr_con[ind_2]
+
+        ret_dict.update({'left':{'y':float(v_1),'x':float(x_1)}})
+        ret_dict.update({'right':{'y':float(v_2),'x':float(x_2)}})
+        ret_dict.update({'deltav':float(v_2 - v_1)})
         #Level plot
-        middle = int((ind_1+ind_2)/2)
-        ax.plot([x[ind_1],x[middle],x[middle], x[ind_2]],[v_1,v_1,v_2,v_2],c=colors[2],lw=0.7)
-        # Thick Plots
-        ax.plot([x[ind_1-div_1],x[ind_1+div_1]],[v_1,v_1],c=colors[2],lw=2,label=labels[2])
-        ax.plot([x[ind_2-div_2],x[ind_2+div_2]],[v_2,v_2],c=colors[2],lw=2)
+        ax.step([x_1, x_2],[v_1, v_2],lw = 0.7,where='mid',marker='.',markersize=5, color=colors[2],label=labels[2])
         # Annotate
         if annotate == True:
             ax.text(0.5,0.07,r'$\Delta _{R,L} = %9.6f$'%(np.round(v_2-v_1,6)),ha="center", va="center",

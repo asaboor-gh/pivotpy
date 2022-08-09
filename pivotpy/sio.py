@@ -2,8 +2,8 @@
 
 __all__ = ['atoms_color', 'periodic_table', 'Arrow3D', 'fancy_quiver3d', 'write_poscar', 'export_poscar',
            'InvokeMaterialsProject', 'get_kpath', 'read_ticks', 'str2kpath', 'get_kmesh', 'order', 'rotation', 'get_bz',
-           'splot_bz', 'iplot_bz', 'to_R3', 'to_basis', 'kpoints2bz', 'fix_sites', 'get_pairs', 'iplot_lat',
-           'splot_lat', 'join_poscars', 'scale_poscar', 'rotate_poscar']
+           'splot_bz', 'iplot_bz', 'to_R3', 'to_basis', 'kpoints2bz', 'fix_sites', 'translate_poscar', 'get_pairs',
+           'iplot_lat', 'splot_lat', 'join_poscars', 'scale_poscar', 'rotate_poscar', 'repeat_poscar', 'mirror_poscar']
 
 # Cell
 import sys, os, re
@@ -157,8 +157,8 @@ def write_poscar(poscar_data, sd_list = None, outfile = None,overwrite = False):
     out_str += "\n  {:<20.14f}\n".format(scale)
     out_str += '\n'.join(["{:>22.16f}{:>22.16f}{:>22.16f}".format(*a) for a in poscar_data.basis/scale])
     uelems = poscar_data.unique.to_dict()
-    out_str += "\n  " + '\t'.join(uelems.keys())
-    out_str += "\n  " + '\t'.join([str(len(v)) for v in uelems.values()])
+    out_str += "\n  " + '    '.join(uelems.keys())
+    out_str += "\n  " + '    '.join([str(len(v)) for v in uelems.values()])
     if sd_list:
         out_str += "\nSelective Dynamics"
 
@@ -1200,7 +1200,7 @@ def kpoints2bz(bz_data,kpoints,sys_info = None, primitive=False, shift = 0):
     return out_coords # These may have duplicates, apply np.unique(out_coords,axis=0). do this in surface plots
 
 # Cell
-def fix_sites(poscar_data,tol=1e-2,eqv_sites=True,translate=None):
+def fix_sites(poscar_data,tol=1e-2,eqv_sites=False,translate=None):
     """Add equivalent sites to make a full data shape of lattice. Returns same data after fixing.
     - **Parameters**
         - poscar_data: Output of `export_poscar` or `export_vasprun().poscar`.
@@ -1258,6 +1258,14 @@ def fix_sites(poscar_data,tol=1e-2,eqv_sites=True,translate=None):
         out_dict['extra_info']['comment'] = 'Modified by Pivotpy'
 
     return serializer.PoscarData(out_dict)
+
+def translate_poscar(poscar_data, offset):
+    """ Translate sites of a PPSCAR. Usully a farction of integarers like 1/2,1/4 etc.
+    - **Parameters**
+        - poscar_data: Output of `export_poscar` or `export_vasprun().poscar`.
+        - offset: A number(+/-) or list of three numbers to translate in x,y,z directions.
+    """
+    return fix_sites(poscar_data, translate = offset, eqv_sites=False)
 
 def get_pairs(poscar_data, positions, r, eps=1e-2):
     """Returns a tuple of Lattice (coords,pairs), so coords[pairs] given nearest site bonds.
@@ -1453,9 +1461,9 @@ def join_poscars(poscar1,poscar2,direction='z',tol=1e-2):
     a2,b2,c2 = np.linalg.norm(_poscar2.basis,axis=1)
     basis = _poscar1.basis.copy() # Must be copied, otherwise change outside.
 
-    # Processing in orthogonal space
+    # Processing in orthogonal space since a.(b x c) = abc sin(theta)cos(phi), and theta and phi are same for both.
     if direction in ['z','c']:
-        c2 = (a2*b2)/(a1*b1)*c2
+        c2 = (a2*b2)/(a1*b1)*c2 # Conservation of volume for right side to stretch in c-direction.
         netc = c1+c2
         s1, s2 = c1/netc, c2/netc
         pos1[:,2] = s1*pos1[:,2]
@@ -1463,7 +1471,7 @@ def join_poscars(poscar1,poscar2,direction='z',tol=1e-2):
         basis[2] = netc*basis[2]/np.linalg.norm(basis[2]) #Update 3rd vector
 
     elif direction in ['y','b']:
-        b2 = (a2*c2)/(a1*c1)*b2
+        b2 = (a2*c2)/(a1*c1)*b2 # Conservation of volume for right side to stretch in b-direction.
         netb = b1+b2
         s1, s2 = b1/netb, b2/netb
         pos1[:,1] = s1*pos1[:,1]
@@ -1471,7 +1479,7 @@ def join_poscars(poscar1,poscar2,direction='z',tol=1e-2):
         basis[1] = netb*basis[1]/np.linalg.norm(basis[1]) #Update 2nd vector
 
     elif direction in ['x','a']:
-        a2 = (b2*c2)/(b1*c1)*a2
+        a2 = (b2*c2)/(b1*c1)*a2 # Conservation of volume for right side to stretch in a-direction.
         neta = a1+a2
         s1, s2 = a1/neta, a2/neta
         pos1[:,0] = s1*pos1[:,0]
@@ -1486,7 +1494,7 @@ def join_poscars(poscar1,poscar2,direction='z',tol=1e-2):
     volume = np.dot(basis[0],np.cross(basis[1],basis[2]))
     u1 = _poscar1.unique.to_dict()
     u2 = _poscar2.unique.to_dict()
-    u_all = np.unique([*u1.keys(),*u2.keys()])
+    u_all = ({**u1,**u2}).keys() # Union of unique elements to keep track of order.
 
 
     pos_all = []
@@ -1510,6 +1518,7 @@ def join_poscars(poscar1,poscar2,direction='z',tol=1e-2):
     out_dict = {'SYSTEM':sys,'volume':volume,'basis':basis,'rec_basis':rec_basis,'extra_info':extra_info,'positions':np.array(pos_all),'labels':labels,'unique':uelems}
     return serializer.PoscarData(out_dict)
 
+
 # Cell
 def scale_poscar(poscar_data,scale=(1,1,1),tol=1e-2):
     """Create larger/smaller cell from a given POSCAR.
@@ -1517,7 +1526,8 @@ def scale_poscar(poscar_data,scale=(1,1,1),tol=1e-2):
         - poscar_data: `poscar` data object.
         - scale: Tuple of three values along (a,b,c) vectors. int or float values. If number of sites are not as expected in output, tweak `tol` instead of `scale`. You can put a minus sign with `tol` to get more sites and plus sign to reduce sites.
         - tol: It is used such that site positions are blow `1 - tol`, as 1 belongs to next cell, not previous one.
-    > Tip: scale = (2,2,2) enlarges a cell and next operation of (1/2,1/2,1/2) should bring original cell back.
+    **Tip:** scale = (2,2,2) enlarges a cell and next operation of (1/2,1/2,1/2) should bring original cell back.
+    **Caveat:** Do not use this function to create a slab from a given POSCAR file. Use `repeat_poscar` or `POSCAR.repeat` instead.
     """
     ii, jj, kk = np.ceil(scale).astype(int) # Need int for joining.
     _orig_poscar = poscar_data # Assign base for x
@@ -1583,3 +1593,24 @@ def rotate_poscar(poscar_data,angle_deg,axis_vec):
     p_dict['rec_basis'] = np.linalg.inv(p_dict['basis']).T # invert rotated basis
     p_dict['extra_info']['comment'] = f'Modified by Pivotpy'
     return serializer.PoscarData(p_dict)
+
+def repeat_poscar(poscar_data, n, direction):
+    """Repeat a given POSCAR.
+    - **Parameters**
+        - path_poscar: Path/to/POSCAR or `poscar` data object.
+        - n: Number of repetitions.
+        - direction: Direction of repetition. Can be 'x', 'y' or 'z'.
+    """
+    if not isinstance(n, int) and n < 2:
+        raise ValueError("n must be an integer greater than 1.")
+    given_poscar = poscar_data
+    for i in range(1,n):
+        poscar_data = join_poscars(given_poscar, poscar_data,direction = direction)
+    return poscar_data
+
+def mirror_poscar(poscar_data, direction):
+    "Mirror a POSCAR in a given direction. Sometime you need it before joining two POSCARs"
+    poscar = poscar_data.to_dict() # Avoid modifying original
+    idx = 'xyz'.index(direction) # Check if direction is valid
+    poscar['positions'][:,idx] = 1 - poscar['positions'][:,idx] # Trick: Mirror by subtracting from 1. not by multiplying with -1.
+    return serializer.PoscarData(poscar) # Return new POSCAR

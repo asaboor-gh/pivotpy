@@ -8,6 +8,7 @@ from contextlib import contextmanager
 
 import numpy as np
 from scipy.interpolate import make_interp_spline
+from scipy.ndimage.filters import convolve1d
 
 
 def get_file_size(path):
@@ -58,6 +59,60 @@ def interpolate_data(x,y,n=10,k=3):
     spl = make_interp_spline(x, y, k=k) #BSpline object
     ynew = spl(xnew)
     return xnew,ynew
+
+def rolling_mean(X:np.ndarray, period:float, period_right:float = None, interface:float = None, mode:str = 'wrap') -> np.ndarray:
+    """Caluate rolling mean of array X using scipy.ndimage.filters.convolve1d.
+    
+    - **Parameters**
+        - X: 1D numpy array.
+        - period: float in range [0,1]. Period of rolling mean. Applies left side of X from center if period_right is given.
+        - period_right: float in range [0,1]. Period of rolling mean on right side of X from center.
+        - interface: float in range [0,1]. The point that divides X into left and right, like in a slab calculation.
+        - mode: string. Mode of convolution. Default is wrap to keep periodcity of crystal in slab caluation. Read scipy.ndimage.filters.convolve1d for more info.
+    
+    Returns convolved array of same size as X.
+    """
+    if period_right is None:
+        N = int(X.size*period)
+        kernel = np.ones((N,)) / N
+        return convolve1d(X, kernel, mode=mode)
+    
+    if interface is None:
+        interface = 0.5
+    
+    L = int(period*X.size) # Left periodictity
+    R = int(period_right*X.size) # Right Periodicity
+    C = int(X.size*interface) # Interface divider
+    
+    weights_L, weights_R = np.ones((2,X.size))
+    weights_L[C:] = 0
+    weights_R[:C] = 0 
+    
+    hL, hR = L//2, R//2 # Need convolution weights to be half on boundaries so both make full period
+    
+    # Left Side 
+    weights_L[:hL] = np.linspace(0.5,1,hL) 
+    weights_R[:hL] = np.linspace(0.5,0,hL) 
+    
+    # Middle 
+    weights_L[C-hL:C+hR] = np.linspace(1,0,hL+hR)
+    weights_R[C-hL:C+hR] = np.linspace(0,1,hL+hR)
+    
+    # Righ Side
+    weights_L[-hR:] = np.linspace(0,0.5,hR)
+    weights_R[-hR:] = np.linspace(1,0.5,hR)
+    
+    # .----.____.  # Left weights look like this
+    # .____.----.  # Right weights look like this
+    
+    kernel_L = np.ones((L,))/L
+    kernel_R = np.ones((R,))/R
+    
+    mean_L = convolve1d(X,kernel_L,mode = mode)
+    mean_R = convolve1d(X,kernel_R,mode = mode)
+    
+    mean_all = weights_L*mean_L + weights_R*mean_R
+    return mean_all
 
 def ps2py(ps_command='Get-ChildItem', exec_type='-Command', path_to_ps='powershell.exe'):
     """

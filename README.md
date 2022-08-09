@@ -191,18 +191,23 @@ Some tasks are very tideious in python while just a click way in powershell. See
 pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
 ```
 
-    [32;1m NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI Pr[0m
-    [32;1m                                                   oc[0m
-    [32;1m                                                   es[0m
-    [32;1m                                                   sN[0m
-    [32;1m                                                   am[0m
+    [32;1m NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI P[0m
+    [32;1m                                                   r[0m
+    [32;1m                                                   o[0m
+    [32;1m                                                   c[0m
     [32;1m                                                   e[0m
-    [32;1m ------    -----      -----     ------      --  -- --[0m
-    21     6.85       3.85       0.53   24936   3 A…
-    6     1.50       2.42       0.00    6900   0 A…
-    19    10.82      15.21       0.00    5128   0 A…
-    26    30.64      20.98      29.97   13596   3 A…
-    8     1.60       4.91       0.00    2220   0 A…
+    [32;1m                                                   s[0m
+    [32;1m                                                   s[0m
+    [32;1m                                                   N[0m
+    [32;1m                                                   a[0m
+    [32;1m                                                   m[0m
+    [32;1m                                                   e[0m
+    [32;1m ------    -----      -----     ------      --  -- -[0m
+    21     6.96       1.66       0.86   24936   3 A
+    6     1.57       2.29       0.00    6900   0 A
+    19     7.21       9.66       0.00    2976   0 A
+    29    28.52      20.63      83.83   13596   3 A
+    8     1.88       7.46       0.02   23296   3 A
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -243,21 +248,26 @@ Get-ChildItem 'E:\Research\graphene_example\'
         Directory: E:\Research\graphene_example
     
     
-    Mode                 LastWriteTime         Length Nam
-                                                      e  
-    ----                 -------------         ------ ---
-    da----          6/9/2022  10:33 AM                ISP
-                                                      IN_
-                                                      1  
-    da----          5/9/2020   1:05 PM                ISP
-                                                      IN_
-                                                      2  
-    -a----          5/9/2020   1:01 PM          75331 OUT
-                                                      CAR
-    -a----          5/9/2020   1:01 PM         240755 vas
-                                                      pru
-                                                      n.x
-                                                      ml 
+    Mode                 LastWriteTime         Length Na
+                                                      me
+    ----                 -------------         ------ --
+    da----          6/9/2022  10:33 AM                IS
+                                                      PI
+                                                      N_
+                                                      1 
+    da----          5/9/2020   1:05 PM                IS
+                                                      PI
+                                                      N_
+                                                      2 
+    -a----          5/9/2020   1:01 PM          75331 OU
+                                                      TC
+                                                      AR
+    -a----          5/9/2020   1:01 PM         240755 va
+                                                      sp
+                                                      ru
+                                                      n.
+                                                      xm
+                                                      l 
     
     
 

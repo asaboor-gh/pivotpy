@@ -441,5 +441,5 @@ class SpinDataFrame(pd.DataFrame):
         if ax.name == '3d':
             cax = cax or plt.gcf().add_axes([0.85, 0.15, 0.03, 0.7])
 
-        return splots.add_colorbar(ax, cax, cmap ,ticks = np.linspace(*minmax_c,nticks,endpoint=True),digits = digits, **kwargs)
+        return splots.add_colorbar(ax, cmap ,cax = cax ,ticks = np.linspace(*minmax_c,nticks,endpoint=True),digits = digits, **kwargs)
 
