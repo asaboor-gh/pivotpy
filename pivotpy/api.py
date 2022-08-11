@@ -279,8 +279,8 @@ class POSCAR:
         return sio.iplot_lat(self._data, sizes=sizes, colors=colors, bond_length=bond_length, tol=tol, eps=eps, eqv_sites=eqv_sites, translate=translate, line_width=line_width, edge_color=edge_color, fill=fill, alpha=alpha, ortho3d=ortho3d, fig=fig)
 
     @_sub_doc(sio.write_poscar,'- poscar_data')
-    def write(self, sd_list=None, outfile=None, overwrite=False):
-        return sio.write_poscar(self._data, sd_list=sd_list, outfile=outfile, overwrite=overwrite)
+    def write(self, outfile=None, sd_list=None , overwrite=False):
+        return sio.write_poscar(self._data, outfile=outfile, sd_list=sd_list, overwrite=overwrite)
 
     @_sub_doc(sio.join_poscars,'- poscar1',replace={'poscar2':'other'})
     def join(self,other, direction='z', tol=0.01):
@@ -341,9 +341,6 @@ class POSCAR:
         return sio.kpoints2bz(self._bz, kpoints= kpoints,primitive = self.primitive, sys_info = sys_info, shift = shift)
 
 # Cell
-from pyrsistent import b
-
-
 class LOCPOT:
     """
     - Returns Data from LOCPOT and similar structure files. Loads only single set out of 2/4 magnetization data to avoid performance/memory cost while can load electrostatic and one set of magnetization together.
@@ -366,6 +363,8 @@ class LOCPOT:
         self.m = m # Required to put in plots.
         self._data = vp.export_locpot(locpot = path, e=e,m=m)
 
+        self.rolling_mean = gu.rolling_mean # For quick access to rolling mean function.
+
     def __enter__(self):
         import weakref
         return weakref.proxy(self)
@@ -384,16 +383,16 @@ class LOCPOT:
 
     @_sub_doc(sp.plot_potential,'- e_or_m')
     def splot_e(self,operation='mean_z',ax=None,period=None, period_right=None,
-                 lr_pos=(0.25,0.75),interface=None,
+                 lr_pos=(0.25,0.75),interface=None, smoothness=2,
                  labels=(r'$V(z)$',r'$\langle V \rangle _{roll}(z)$',r'$\langle V \rangle $'),
                  colors = ((0,0.2,0.7),'b','r'),annotate=True):
         return sp.plot_potential(basis=self._data.poscar.basis,e_or_m=self._data.e,operation=operation,
-                                    ax=ax,period=period,lr_pos=lr_pos,period_right=period_right,interface=interface,
+                                    ax=ax,period=period,lr_pos=lr_pos,period_right=period_right, smoothness=smoothness,interface=interface,
                                     labels=labels,colors=colors,annotate=annotate)
 
     @_sub_doc(sp.plot_potential,'- e_or_m')
     def splot_m(self,operation='mean_z',ax=None,period=None,period_right=None,
-                lr_pos = (0.25,0.75),interface=None,
+                lr_pos = (0.25,0.75),interface=None, smoothness = 2,
                 labels = (r'$M(z)$',r'$\langle M \rangle _{roll}(z)$',r'$\langle M \rangle $'),
                 colors = ((0,0.2,0.7),'b','r'),annotate=True):
         if self.m:
@@ -403,19 +402,16 @@ class LOCPOT:
                 e_or_m = self._data.to_dict()[f'm_{self.m}']
         else:
             raise ValueError("Magnetization data set does not exist in {}".format(self.path))
-        return sp.plot_potential(basis=self._data.poscar.basis,e_or_m=e_or_m,operation=operation,
+        return sp.plot_potential(basis=self._data.poscar.basis,e_or_m=e_or_m,operation=operation,smoothness=smoothness,
                                     ax=ax,period=period,lr_pos=lr_pos,period_right=period_right,interface=interface,
                                     labels=labels,colors=colors,annotate=annotate)
 
-    @_sub_doc(gu.rolling_mean,'- Something Not there')
-    def rolling_mean(self,X:np.ndarray,period:float, period_right:float=None, interface:float=None, mode:str='wrap'):
-        return gu.rolling_mean(X,period, period_right=period_right,interface=interface, mode = mode)
-
-    def check_period(self,which: str, operation: str = 'mean_z',interface = 0.5,**kwargs):
+    def check_period(self,which: str, operation: str = 'mean_z',interface = 0.5,smoothness = 2,**kwargs):
         """Check periodicity using ipywidgets interactive plot.
         - which: 'e', 'm', 'm_x', 'm_y', 'm_z' etc.
         - operation: What to do, such as 'mean_z' or 'mean_x' etc.
         - interface: Interface in range [0,1] to divide left and right halves.
+        - smoothness: int. Default is 2. Smoothing parameter for rolling mean. Larger is better.
         kwargs are passed to the plt.Axes.set(kwargs) method to handle the plot styling.
         """
         check = ['mean_x','min_x','max_x','mean_y','min_y','max_y','mean_z','min_z','max_z']
@@ -438,7 +434,7 @@ class LOCPOT:
         def checker(period, period_right):
             ax = plt.gca()
             ax.plot(X_1,label=operation)
-            X_2 = self.rolling_mean(X_1,period,period_right=period_right,interface=interface)
+            X_2 = self.rolling_mean(X_1,period,period_right=period_right,interface=interface, smoothness=smoothness)
             ax.plot(X_2,label='rolling_mean')
             ax.axhline(X_2.min(),color='k',alpha=0.5,lw=0.5,ls= '--')
             ax.axhline(X_2.max(),color='k',alpha=0.5,lw=0.5,ls='--')

@@ -141,12 +141,12 @@ def fancy_quiver3d(X,Y,Z,U,V,W,ax=None,C = 'r',L = 0.7,mutation_scale=10,**kwarg
     return ax
 
 # Cell
-def write_poscar(poscar_data, sd_list = None, outfile = None,overwrite = False):
+def write_poscar(poscar_data, outfile = None, sd_list = None, overwrite = False):
     """Writes poscar data object to a file or returns string
     - **Parameters**
         - poscar_data: Output of `export_poscar`,`join_poscars` etc.
-        - sd_list  : A list ['T T T','F F F',...] strings to turn on selective dynamics at required sites. len(sd_list)==len(sites) should hold.
         - outfile  : str,file path to write on.
+        - sd_list  : A list ['T T T','F F F',...] strings to turn on selective dynamics at required sites. len(sd_list)==len(sites) should hold.
         - overwrite: bool, if file already exists, overwrite=True changes it.
 
     **Note**: POSCAR is only written in direct format even if it was loaded from cartesian format.

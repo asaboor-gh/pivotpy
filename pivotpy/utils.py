@@ -60,7 +60,7 @@ def interpolate_data(x,y,n=10,k=3):
     ynew = spl(xnew)
     return xnew,ynew
 
-def rolling_mean(X:np.ndarray, period:float, period_right:float = None, interface:float = None, mode:str = 'wrap') -> np.ndarray:
+def rolling_mean(X:np.ndarray, period:float, period_right:float = None, interface:float = None, mode:str = 'wrap', smoothness:int = 2) -> np.ndarray:
     """Caluate rolling mean of array X using scipy.ndimage.filters.convolve1d.
     
     - **Parameters**
@@ -69,41 +69,42 @@ def rolling_mean(X:np.ndarray, period:float, period_right:float = None, interfac
         - period_right: float in range [0,1]. Period of rolling mean on right side of X from center.
         - interface: float in range [0,1]. The point that divides X into left and right, like in a slab calculation.
         - mode: string. Mode of convolution. Default is wrap to keep periodcity of crystal in slab caluation. Read scipy.ndimage.filters.convolve1d for more info.
+        - smoothness: int. Default is 2. Order of making the output smoother. Larger is better but can't be too large as there will be points lost at each convolution.
     
-    Returns convolved array of same size as X.
+    Returns convolved array of same size as X if mode is 'wrap'. May be smaller if mode is something else.
     """
     if period_right is None:
-        N = int(X.size*period)
-        kernel = np.ones((N,)) / N
-        return convolve1d(X, kernel, mode=mode)
+        period_right = period
     
     if interface is None:
         interface = 0.5
+        
+    if smoothness < 1:
+        raise ValueError('smoothness must be >= 1')
+    
+    wx = np.linspace(0, 1, X.size, endpoint = False) # x-axis for making weights for convolution, 0 to 1 - (last point is not included in VASP grid).
+    x1, x2, x3, x4 = period_right, interface - period, interface + period_right, 1 - period
+    m1, m2, m3 = 0.5/x1, 1/(x2-x3), 0.5/(1-x4) # Slopes
+    weights_L = np.piecewise(wx,  # .----.____. Looks like this
+                [
+                    wx < x1, # left side reflected by right side
+                    (wx >= x1) & (wx <= x2), # left side
+                    (wx > x2) & (wx<x3), # middle contribution from left and right
+                    (wx>=x3) & (wx<=x4), # right side
+                    wx > x4 # right side reflected by left side
+                ], 
+                [
+                    lambda z:  m1*(z-x1)+1,
+                    1, 
+                    lambda z: m2*(z-x2) + 1,
+                    0, 
+                    lambda z: m3*(z-x4)
+                ])
+    
+    weights_R =  1 - weights_L # .____.----. Looks like this
     
     L = int(period*X.size) # Left periodictity
     R = int(period_right*X.size) # Right Periodicity
-    C = int(X.size*interface) # Interface divider
-    
-    weights_L, weights_R = np.ones((2,X.size))
-    weights_L[C:] = 0
-    weights_R[:C] = 0 
-    
-    hL, hR = L//2, R//2 # Need convolution weights to be half on boundaries so both make full period
-    
-    # Left Side 
-    weights_L[:hL] = np.linspace(0.5,1,hL) 
-    weights_R[:hL] = np.linspace(0.5,0,hL) 
-    
-    # Middle 
-    weights_L[C-hL:C+hR] = np.linspace(1,0,hL+hR)
-    weights_R[C-hL:C+hR] = np.linspace(0,1,hL+hR)
-    
-    # Righ Side
-    weights_L[-hR:] = np.linspace(0,0.5,hR)
-    weights_R[-hR:] = np.linspace(1,0.5,hR)
-    
-    # .----.____.  # Left weights look like this
-    # .____.----.  # Right weights look like this
     
     kernel_L = np.ones((L,))/L
     kernel_R = np.ones((R,))/R
@@ -112,6 +113,13 @@ def rolling_mean(X:np.ndarray, period:float, period_right:float = None, interfac
     mean_R = convolve1d(X,kernel_R,mode = mode)
     
     mean_all = weights_L*mean_L + weights_R*mean_R
+    
+    if smoothness > 1:
+        p_l, p_r = period/2, period_right/2 # Should be half of period for smoothing each time
+        for _ in range(smoothness - 1):
+            mean_all = rolling_mean(mean_all, period = p_l, period_right = p_r, interface = interface, mode = mode, smoothness = 1)
+            p_l, p_r = p_l/2, p_r/2
+    
     return mean_all
 
 def ps2py(ps_command='Get-ChildItem', exec_type='-Command', path_to_ps='powershell.exe'):

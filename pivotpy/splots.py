@@ -470,10 +470,11 @@ def add_colorbar(
             _vmax = vmax if vmax is not None else np.max(ticks)
             if _vmin > _vmax:
                 raise ValueError("vmin > vmax is not valid!")
-            ticks = (ticks - _vmin)/(_vmax - _vmin)
 
-        if ticklabels is None:
-            ticklabels = ticks.round(digits).astype(str)
+            if ticklabels is None:
+                ticklabels = ticks.round(digits).astype(str)
+            # Renormalize ticks after assigning ticklabels
+            ticks = (ticks - _vmin)/(_vmax - _vmin)
     else:
         ticks = []
         ticklabels = []
@@ -1576,6 +1577,7 @@ def plot_potential(basis = None,
            period_right = None,
            interface = None,
            lr_pos=(0.25,0.75),
+           smoothness = 2,
            labels=(r'$V(z)$',r'$\langle V \rangle _{roll}(z)$',r'$\langle V \rangle $'),
            colors = ((0,0.2,0.7),'b','r'),
            annotate = True
@@ -1590,6 +1592,7 @@ def plot_potential(basis = None,
         - period_right: Periodicity of potential in fraction between 0 and 1 if right half of slab has different periodicity.
         - lr_pos: Locations around which averages are taken.Default (0.25,0.75). Provide in fraction between 0 and 1. Center of period is located at these given fractions. Work only if period is given.
         - interface: Default is 0.5 if not given, you may have slabs which have different lengths on left and right side. Provide in fraction between 0 and 1 where slab is divided in left and right halves.
+        - smoothness: Default is 3. Large value will smooth the curve of potential. Only works if period is given.
         - labels: List of three labels for legend. Use plt.legend() or pp.add_legend() for labels to appear. First entry is data plot, second is its convolution and third is complete average.
         - colors: List of three colors for lines.
         - annotate: True by default, writes difference of right and left averages on plot.
@@ -1613,15 +1616,15 @@ def plot_potential(basis = None,
     pot = _func_(e_or_m, axis= other_inds)
 
     # Direction axis
-    x = np.linalg.norm(basis[x_ind])*np.linspace(0,1,len(pot))
+    x = np.linalg.norm(basis[x_ind])*np.linspace(0,1,len(pot),endpoint = False) # VASP does not include last point, it is same as firts one
     ax.plot(x,pot,lw=0.8,c=colors[0],label=labels[0]) #Potential plot
     ret_dict = {'direction':operation.split('_')[1]}
     # Only go below if periodicity is given
     if period == None:
         return (ax,serializer.Dict2Data(ret_dict)) # Simple Return
     if period != None:
-        arr_con = gu.rolling_mean(pot,period,period_right = period_right,interface = interface, mode= 'wrap')
-        x_con =  np.linspace(0,x[-1],len(arr_con))
+        arr_con = gu.rolling_mean(pot,period,period_right = period_right,interface = interface, mode= 'wrap',smoothness=smoothness)
+        x_con =  np.linspace(0,x[-1],len(arr_con),endpoint = False)
         ax.plot(x_con,arr_con,linestyle='dashed',lw=0.7,label=labels[1],c=colors[1]) # Convolved plot
         # Find Averages
         left,right = lr_pos
