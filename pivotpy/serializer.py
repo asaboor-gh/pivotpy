@@ -273,14 +273,25 @@ class PoscarData(Dict2Data):
         return np.abs(np.linalg.det(self.basis)) # Didn't think much if negative or positive
     
     @property
+    def rec_volume(self):
+        "Returns the volume of the reciprocal lattice."
+        return np.abs(np.linalg.det(self.rec_basis))
+    
+    @property
     def labels(self):
         "Returns the labels of the atoms in the poscar data."
         return np.array([f'{k} {v - vs.start + 1}' for k,vs in self.unique.items() for v in vs])
     
     def get_bond_length(self,atom1,atom2):
         "Returns the bond length between two atoms names should be as 'Ga', 'As'"
-        idx, others = self.unique[atom1][0], self.unique[atom2]
-        return np.sort(np.linalg.norm(self.coords[others] - self.coords[idx,:]))[1] # Get the second closest distance, first is itself
+        all_dist =[]
+        for idx in self.unique[atom1]:
+            others = self.unique[atom2]
+            all_dist = [*all_dist,*np.linalg.norm(self.coords[others] - self.coords[idx,:], axis = 1)] # Get the second closest distance, first is itself
+        
+        all_dist = np.array(all_dist)
+        all_dist = all_dist[all_dist > 0] # Remove 0 distances
+        return np.min(all_dist)
     
     def write(self,sd_list = None, outfile = None, overwrite = False):
         """Writes the poscar data to a file.

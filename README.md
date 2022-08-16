@@ -191,14 +191,23 @@ Some tasks are very tideious in python while just a click way in powershell. See
 pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
 ```
 
-    [32;1m NPM(K)    PM(M)      WS(M) CPU(s[0m
-    [32;1m                                )[0m
-    [32;1m ------    -----      ----- -----[0m
-    21     6.75      13.05  0.39
-    6     1.35       5.11  0.00
-    19     7.89      18.45  0.00
-    29    33.34      48.36  4.02
-    9     1.65       6.13  0.00
+    [32;1m NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI P[0m
+    [32;1m                                                   r[0m
+    [32;1m                                                   o[0m
+    [32;1m                                                   c[0m
+    [32;1m                                                   e[0m
+    [32;1m                                                   s[0m
+    [32;1m                                                   s[0m
+    [32;1m                                                   N[0m
+    [32;1m                                                   a[0m
+    [32;1m                                                   m[0m
+    [32;1m                                                   e[0m
+    [32;1m ------    -----      -----     ------      --  -- -[0m
+    21     6.75      13.02       0.39   11856   2 A
+    6     1.35       5.06       0.00    7388   0 A
+    19     7.74      19.27       0.00    5096   0 A
+    29    33.34      49.01       4.06   17340   2 A
+    9     1.65       6.13       0.00    5080   0 a
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -236,16 +245,29 @@ Get-ChildItem 'E:\Research\graphene_example\'
 
     
     
-        Directory: 
-        E:\Research\graphene_example
+        Directory: E:\Research\graphene_example
     
     
-    Mode                LastWriteTime
-    ----                -------------
-    da----         6/9/2022  10:33 AM
-    da----         5/9/2020   1:05 PM
-    -a----         5/9/2020   1:01 PM
-    -a----         5/9/2020   1:01 PM
+    Mode                 LastWriteTime         Length Na
+                                                      me
+    ----                 -------------         ------ --
+    da----          6/9/2022  10:33 AM                IS
+                                                      PI
+                                                      N_
+                                                      1 
+    da----          5/9/2020   1:05 PM                IS
+                                                      PI
+                                                      N_
+                                                      2 
+    -a----          5/9/2020   1:01 PM          75331 OU
+                                                      TC
+                                                      AR
+    -a----          5/9/2020   1:01 PM         240755 va
+                                                      sp
+                                                      ru
+                                                      n.
+                                                      xm
+                                                      l 
     
     
 
