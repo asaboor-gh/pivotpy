@@ -5,7 +5,7 @@ __all__ = ['atomic_number', 'atoms_color', 'periodic_table', 'Arrow3D', 'fancy_q
            'rotation', 'get_bz', 'splot_bz', 'iplot_bz', 'to_R3', 'to_basis', 'kpoints2bz', 'fix_sites',
            'translate_poscar', 'get_pairs', 'iplot_lat', 'splot_lat', 'join_poscars', 'repeat_poscar', 'scale_poscar',
            'rotate_poscar', 'mirror_poscar', 'convert_poscar', 'get_transform_matrix', 'transform_poscar', 'add_vaccum',
-           'add_atoms', 'remove_atoms', 'replace_atoms']
+           'transpose_poscar', 'add_atoms']
 
 # Cell
 import sys, os, re
@@ -136,11 +136,11 @@ def fancy_quiver3d(X,Y,Z,U,V,W,ax=None,C = 'r',L = 0.7,mutation_scale=10,**kwarg
     """
     if not ax:
         ax = sp.get_axes(figsize=(3.4,3.4),axes_3d=True) # Same aspect ratio.
-    if not isinstance(C,(list,np.ndarray)):
+    if not isinstance(C,(list,tuple,np.ndarray)):
         C = [[*mplc.to_rgb(C)] for x in X]
     C = np.array(C) # Safe for list
 
-    if not isinstance(L,(list,np.ndarray)):
+    if not isinstance(L,(list,tuple,np.ndarray)):
         L = [L for x in X]
     args_dict = dict(mutation_scale=mutation_scale,shrinkA=0, shrinkB=0)
     for x,y,z,u,v,w,c,l in zip(X,Y,Z,U,V,W,C,L):
@@ -623,7 +623,7 @@ def _get_basis(path_pos):
     """Returns given(computed) and inverted basis as tuple(given,inverted).
     - **Parameters**
         - path_pos: path/to/POSCAR or 3 given vectors as rows of a matrix."""
-    if isinstance(path_pos,(list,np.ndarray)) and np.ndim(path_pos) ==2:
+    if isinstance(path_pos,(list,tuple,np.ndarray)) and np.ndim(path_pos) ==2:
         basis = np.array(path_pos)
     elif isinstance(path_pos,str) or isinstance(path_pos,type(None)):
         basis = export_poscar(path_pos).basis
@@ -1217,7 +1217,7 @@ def fix_sites(poscar_data,tol=1e-2,eqv_sites=False,translate=None):
         - poscar_data: Output of `export_poscar` or `export_vasprun().poscar`.
         - tol   : Tolerance value. Default is 0.01.
         - eqv_sites: If True, add sites on edges and faces. If False, just fix coordinates, i.e. `pos > 1 - tol -> pos - 1`, useful for merging poscars to make slabs.
-        - translate: A number(+/-) or list of three numbers to translate in x,y,z directions.
+        - translate: A number(+/-) or list of three numbers to translate in a,b,c directions.
     """
     pos = poscar_data.positions.copy()
     labels = poscar_data.labels
@@ -1259,7 +1259,7 @@ def translate_poscar(poscar_data, offset):
     """ Translate sites of a PPSCAR. Usully a farction of integarers like 1/2,1/4 etc.
     - **Parameters**
         - poscar_data: Output of `export_poscar` or `export_vasprun().poscar`.
-        - offset: A number(+/-) or list of three numbers to translate in x,y,z directions.
+        - offset: A number(+/-) or list of three numbers to translate in a,b,c directions.
     """
     return fix_sites(poscar_data, translate = offset, eqv_sites=False)
 
@@ -1452,11 +1452,11 @@ def splot_lat(poscar_data,plane = None, sizes=50,colors=None,colormap=None,
     return ax
 
 # Cell
-def join_poscars(poscar1,poscar2,direction='z',tol=1e-2, system = None):
+def join_poscars(poscar1,poscar2,direction='c',tol=1e-2, system = None):
     """Joins two POSCARs in a given direction. In-plane lattice parameters are kept from `poscar1` and basis of `poscar2` parallel to `direction` is modified while volume is kept same.
     - **Parameters**
         - poscar1, poscar2:  Base and secondary POSCARs respectivly. Output of `export_poscar` or similar object from other functions.
-        - direction: The joining direction. It is general and can join in any direction along basis. Expect one of ['a','b','c','x','y','z'].
+        - direction: The joining direction. It is general and can join in any direction along basis. Expect one of ['a','b','c'].
         - tol: Default is 0.01. It is used to bring sites near 1 to near zero in order to complete sites in plane. Vasp relaxation could move a point, say at 0.00100 to 0.99800 which is not useful while merging sites.
         - system: If system is given, it is written on top of file. Otherwise, it is infered from atomic species.
     """
@@ -1471,7 +1471,7 @@ def join_poscars(poscar1,poscar2,direction='z',tol=1e-2, system = None):
     basis = _poscar1.basis.copy() # Must be copied, otherwise change outside.
 
     # Processing in orthogonal space since a.(b x c) = abc sin(theta)cos(phi), and theta and phi are same for both.
-    if direction in ['z','c']:
+    if direction in 'cC':
         c2 = (a2*b2)/(a1*b1)*c2 # Conservation of volume for right side to stretch in c-direction.
         netc = c1+c2
         s1, s2 = c1/netc, c2/netc
@@ -1479,7 +1479,7 @@ def join_poscars(poscar1,poscar2,direction='z',tol=1e-2, system = None):
         pos2[:,2] = s2*pos2[:,2] + s1
         basis[2] = netc*basis[2]/np.linalg.norm(basis[2]) #Update 3rd vector
 
-    elif direction in ['y','b']:
+    elif direction in 'bB':
         b2 = (a2*c2)/(a1*c1)*b2 # Conservation of volume for right side to stretch in b-direction.
         netb = b1+b2
         s1, s2 = b1/netb, b2/netb
@@ -1487,7 +1487,7 @@ def join_poscars(poscar1,poscar2,direction='z',tol=1e-2, system = None):
         pos2[:,1] = s2*pos2[:,1] + s1
         basis[1] = netb*basis[1]/np.linalg.norm(basis[1]) #Update 2nd vector
 
-    elif direction in ['x','a']:
+    elif direction in 'aA':
         a2 = (b2*c2)/(b1*c1)*a2 # Conservation of volume for right side to stretch in a-direction.
         neta = a1+a2
         s1, s2 = a1/neta, a2/neta
@@ -1496,7 +1496,7 @@ def join_poscars(poscar1,poscar2,direction='z',tol=1e-2, system = None):
         basis[0] = neta*basis[0]/np.linalg.norm(basis[0]) #Update 1st vector
 
     else:
-        raise Exception("direction expects one of ['a','b','c','x','y','z']")
+        raise Exception("direction expects one of ['a','b','c']")
 
     scale = np.linalg.norm(basis[0])
     u1 = _poscar1.unique.to_dict()
@@ -1531,7 +1531,7 @@ def repeat_poscar(poscar_data, n, direction):
     - **Parameters**
         - path_poscar: Path/to/POSCAR or `poscar` data object.
         - n: Number of repetitions.
-        - direction: Direction of repetition. Can be 'x', 'y' or 'z'.
+        - direction: Direction of repetition. Can be 'a', 'b' or 'c'.
     """
     if not isinstance(n, int) and n < 2:
         raise ValueError("n must be an integer greater than 1.")
@@ -1555,13 +1555,13 @@ def scale_poscar(poscar_data,scale = (1,1,1),tol=1e-2):
         return poscar_data
 
     if ii >= 2:
-        poscar_data = repeat_poscar(poscar_data,ii,direction='x')
+        poscar_data = repeat_poscar(poscar_data,ii,direction='a')
 
     if jj >= 2:
-        poscar_data = repeat_poscar(poscar_data,jj,direction='y')
+        poscar_data = repeat_poscar(poscar_data,jj,direction='b')
 
     if kk >= 2:
-        poscar_data = repeat_poscar(poscar_data,kk,direction='z')
+        poscar_data = repeat_poscar(poscar_data,kk,direction='c')
 
     if np.all([s == int(s) for s in scale]):
         return poscar_data # No need to prcess further in case of integer scaling.
@@ -1615,7 +1615,7 @@ def rotate_poscar(poscar_data,angle_deg,axis_vec):
 def mirror_poscar(poscar_data, direction):
     "Mirror a POSCAR in a given direction. Sometime you need it before joining two POSCARs"
     poscar = poscar_data.to_dict() # Avoid modifying original
-    idx = 'xyz'.index(direction) # Check if direction is valid
+    idx = 'abc'.index(direction) # Check if direction is valid
     poscar['positions'][:,idx] = 1 - poscar['positions'][:,idx] # Trick: Mirror by subtracting from 1. not by multiplying with -1.
     return serializer.PoscarData(poscar) # Return new POSCAR
 
@@ -1663,10 +1663,10 @@ def transform_poscar(poscar_data, transform_matrix, repeat_given = [2,2,2],tol =
         raise ValueError('`repeat_given` must be a list of three integers.')
 
     for rep in repeat_given: # Repeat if needed
-        if not isinstance(rep,int) and rep >= 1:
+        if not isinstance(rep,(int,np.int)) and rep >= 1:
             raise ValueError('`repeat_given` must have all values as integer >= 1.')
 
-    for n, _dir in zip(repeat_given,'xyz'): # Repeat if needed for including atoms in new cell
+    for n, _dir in zip(repeat_given,'abc'): # Repeat if needed for including atoms in new cell
         poscar_data = repeat_poscar(poscar_data,n,direction=_dir)
 
     center_coords = poscar_data.coords - poscar_data.coords.mean(axis=0, keepdims=True) # Center around origin
@@ -1699,16 +1699,16 @@ def add_vaccum(poscar_data, thickness, direction, left = False):
     - **Parameters**
         - poscar_data: `poscar` data object.
         - thickness: Thickness of vacuum in Angstrom.
-        - direction: Direction of vacuum. Can be 'x', 'y' or 'z'.
+        - direction: Direction of vacuum. Can be 'a', 'b' or 'c'.
         - left: If True, vacuum is added to left of sites. By default, vacuum is added to right of sites.
     """
-    if direction not in 'xyz':
-        raise Exception('Direction must be x, y or z.')
+    if direction not in 'abc':
+        raise Exception('Direction must be a, b or c.')
 
     poscar_dict = poscar_data.to_dict() # Avoid modifying original
     basis = poscar_dict['basis'].copy() # Copy basis to avoid modifying original
     pos = poscar_dict['positions'].copy() # Copy positions to avoid modifying original
-    idx = 'xyz'.index(direction)
+    idx = 'abc'.index(direction)
     norm = np.linalg.norm(basis[idx]) # Get length of basis vector
     s1, s2 = norm/(norm + thickness), thickness/(norm + thickness) # Get scaling factors
     basis[idx,:] *= (thickness + norm)/norm # Add thickness to basis
@@ -1724,15 +1724,40 @@ def add_vaccum(poscar_data, thickness, direction, left = False):
     return serializer.PoscarData(poscar_dict) # Return new POSCAR
 
 
-def add_atoms(poscar_data, **name_pos_kwargs): # Ga = [[1,0,0],[0,1,0],[0,0,1]] like that
+# Cell
+def transpose_poscar(poscar_data, axes = [1,0,2]):
+    "Transpose a POSCAR by switching basis from [0,1,2] -> `axes`. By Default, x and y are transposed."
+    if isinstance(axes,(list,tuple, np.ndarray)) and len(axes) == 3:
+        if not all(isinstance(i,(int,np.int)) for i in axes):
+            raise ValueError('`axes` must be a list of three integers.')
+
+        poscar_data = poscar_data.to_dict() #
+        basis = poscar_data['basis'].copy() # Copy basis to avoid modifying original
+        positions = poscar_data['positions'].copy() # Copy positions to avoid modifying original
+        poscar_data['basis'] = basis[axes] # Transpose basis
+        poscar_data['positions'] = positions[:,axes] # Transpose positions
+        return serializer.PoscarData(poscar_data) # Return new POSCAR
+    else:
+        raise Exception('`axes` must be a squence of length 3.')
+
+def add_atoms(poscar_data, name, positions):
     "Add atoms with a `name` to a POSCAR at given `positions` in fractional coordinates."
+    if name in poscar_data.unique.keys():
+        raise Exception(f'{name!r} already exists in POSCAR. Cannot add duplicate atoms.')
+
     positions = np.array(positions)
-    raise NotImplementedError("Not implemented yet.")
+    if (not np.ndim(positions) == 2) or (not positions.shape[1] == 3):
+        raise ValueError('`positions` must be a 2D array of shape (n,3)')
 
-def remove_atoms(poscar_data, name, positions): # {'name;:positions} is better for all cases above and below
-    "Remove atoms with a `name` from a POSCAR."
-    raise NotImplementedError("Not implemented yet.")
+    new_pos = np.vstack([poscar_data.positions,positions]) # Add new positions to existing ones
 
-def replace_atoms(poscar_data, old_name, new_name, positions): # {'name;:positions} is better for all cases above and below
-    "Replace atoms in a POSCAR with another type at given `positions`."
-    raise NotImplementedError("Not implemented yet.")
+    unique = poscar_data.unique.to_dict() # Copy unique dictionary to avoid modifying original
+    unique[name] = range(len(poscar_data.positions),len(new_pos)) # Add new unique element
+
+    data = poscar_data.to_dict() # Copy data to avoid modifying original
+    data['unique'] = unique # Update unique dictionary
+    data['positions'] = new_pos # Update positions
+    data['SYSTEM'] = f'{data["SYSTEM"]}+{name}' # Update SYSTEM
+    data['extra_info']['comment'] = f'{data["extra_info"]["comment"]} + Added {name!r}' # Update comment
+
+    return serializer.PoscarData(data) # Return new POSCAR

@@ -323,19 +323,24 @@ class POSCAR:
         return sio.iplot_bz(bz_data = self._cell, fill=fill, color=color, background=background, vname=vname, alpha=alpha, ortho3d=ortho3d, fig=fig)
 
     @_sub_doc(sio.splot_lat,'- poscar_data')
-    def splot_lat(self, plane = None, sizes=50, colors = None, colormap=None, bond_length=None, tol=1e-2, bond_tol = 1e-3, eqv_sites=True, translate=None, line_width=1, edge_color=(1, 0.5, 0, 0.4), vectors=True, v3=False, light_from=(1, 1, 1), fill=False, alpha=0.4, ax=None):
-        return sio.splot_lat(self._data, sizes=sizes, colors=colors, colormap=colormap, bond_length=bond_length, tol=tol, bond_tol = bond_tol, eqv_sites=eqv_sites, translate=translate, line_width=line_width, edge_color=edge_color, vectors=vectors, v3=v3, plane=plane, light_from=light_from, fill=fill, alpha=alpha, ax=ax)
+    def splot_lat(self, plane = None, sizes=50, colors = None, colormap=None, bond_length=None, tol=1e-2, bond_tol = 1e-3, eqv_sites=True, translate=None, line_width=1,
+                  edge_color=(1, 0.5, 0, 0.4), vectors=True, v3=False, light_from=(1, 1, 1), fill=False, alpha=0.4, ax=None, alpha_points = 0.7):
+        return sio.splot_lat(self._data, sizes=sizes, colors=colors, colormap=colormap, bond_length=bond_length, tol=tol, bond_tol = bond_tol, eqv_sites=eqv_sites,
+                             translate=translate, line_width=line_width, edge_color=edge_color, vectors=vectors, v3=v3, plane=plane, light_from=light_from, fill=fill,
+                             alpha=alpha, alpha_points= alpha_points, ax=ax)
 
     @_sub_doc(sio.iplot_lat,'- poscar_data')
-    def iplot_lat(self, sizes=10, colors = None, bond_length=None, tol=1e-2, bond_tol = 1e-3, eqv_sites=True, translate=None, line_width=4, edge_color='black', fill=False, alpha=0.4, ortho3d=True, fig=None):
-        return sio.iplot_lat(self._data, sizes=sizes, colors=colors, bond_length=bond_length, tol=tol, bond_tol=bond_tol, eqv_sites=eqv_sites, translate=translate, line_width=line_width, edge_color=edge_color, fill=fill, alpha=alpha, ortho3d=ortho3d, fig=fig)
+    def iplot_lat(self, sizes=10, colors = None, bond_length=None, tol=1e-2, bond_tol = 1e-3, eqv_sites=True, translate=None, line_width=4, edge_color='black',
+                  fill=False, alpha=0.4, ortho3d=True, fig=None):
+        return sio.iplot_lat(self._data, sizes=sizes, colors=colors, bond_length=bond_length, tol=tol, bond_tol=bond_tol, eqv_sites=eqv_sites, translate=translate,
+                             line_width=line_width, edge_color=edge_color,fill=fill, alpha=alpha, ortho3d=ortho3d, fig=fig)
 
     @_sub_doc(sio.write_poscar,'- poscar_data')
     def write(self, outfile=None, sd_list=None , overwrite=False):
         return sio.write_poscar(self._data, outfile=outfile, sd_list=sd_list, overwrite=overwrite)
 
     @_sub_doc(sio.join_poscars,'- poscar1',replace={'poscar2':'other'})
-    def join(self,other, direction='z', tol=0.01, system = None):
+    def join(self,other, direction='c', tol=0.01, system = None):
         return self.__class__(data = sio.join_poscars(poscar1=self._data, poscar2=other.data, direction=direction, tol=tol,system = system))
 
     @_sub_doc(sio.scale_poscar,'- poscar_data')
@@ -370,9 +375,17 @@ class POSCAR:
     def transform(self, transform_matrix, repeat_given = [2,2,2],tol = 1e-2):
         return self.__class__(data = sio.transform_poscar(self._data, transform_matrix=transform_matrix, repeat_given=repeat_given, tol=tol))
 
+    @_sub_doc(sio.transpose_poscar,'- poscar_data')
+    def transpose(self, axes = [1,0,2]):
+        return self.__class__(data = sio.transpose_poscar(self._data, axes=axes))
+
     @_sub_doc(sio.add_vaccum,'- poscar_data')
     def add_vaccum(self, thickness, direction, left = False):
         return self.__class__(data = sio.add_vaccum(self._data, thickness=thickness, direction=direction, left=left))
+
+    @_sub_doc(sio.add_atoms,'- poscar_data')
+    def add_atoms(self,name, positions):
+        return self.__class__(data = sio.add_atoms(self._data, name=name, positions=positions))
 
     @_sub_doc(sio.convert_poscar,'- poscar_data')
     def convert(self, atoms_mapping, basis_factor):
@@ -450,7 +463,7 @@ class LOCPOT:
         return self._data
 
     @_sub_doc(sp.plot_potential,'- e_or_m')
-    def splot_e(self,operation='mean_z',ax=None,period=None, period_right=None,
+    def splot_e(self,operation='mean_c',ax=None,period=None, period_right=None,
                  lr_pos=(0.25,0.75),interface=None, smoothness=2,
                  labels=(r'$V(z)$',r'$\langle V \rangle _{roll}(z)$',r'$\langle V \rangle $'),
                  colors = ((0,0.2,0.7),'b','r'),annotate=True):
@@ -459,7 +472,7 @@ class LOCPOT:
                                     labels=labels,colors=colors,annotate=annotate)
 
     @_sub_doc(sp.plot_potential,'- e_or_m')
-    def splot_m(self,operation='mean_z',ax=None,period=None,period_right=None,
+    def splot_m(self,operation='mean_c',ax=None,period=None,period_right=None,
                 lr_pos = (0.25,0.75),interface=None, smoothness = 2,
                 labels = (r'$M(z)$',r'$\langle M \rangle _{roll}(z)$',r'$\langle M \rangle $'),
                 colors = ((0,0.2,0.7),'b','r'),annotate=True):
@@ -474,21 +487,21 @@ class LOCPOT:
                                     ax=ax,period=period,lr_pos=lr_pos,period_right=period_right,interface=interface,
                                     labels=labels,colors=colors,annotate=annotate)
 
-    def check_period(self,which: str, operation: str = 'mean_z',interface = 0.5,smoothness = 2,**kwargs):
+    def check_period(self,which: str, operation: str = 'mean_c',interface = 0.5,smoothness = 2,**kwargs):
         """Check periodicity using ipywidgets interactive plot.
         - which: 'e', 'm', 'm_x', 'm_y', 'm_z' etc.
-        - operation: What to do, such as 'mean_z' or 'mean_x' etc.
+        - operation: What to do, such as 'mean_c' or 'mean_a' etc.
         - interface: Interface in range [0,1] to divide left and right halves.
         - smoothness: int. Default is 2. Smoothing parameter for rolling mean. Larger is better.
         kwargs are passed to the plt.Axes.set(kwargs) method to handle the plot styling.
         """
-        check = ['mean_x','min_x','max_x','mean_y','min_y','max_y','mean_z','min_z','max_z']
+        check = ['mean_a','min_a','max_a','mean_b','min_b','max_b','mean_c','min_c','max_c']
         if operation not in check:
             raise ValueError("operation expects any of {!r}, got {}".format(check,operation))
 
         data = getattr(self._data,which)
         opr, _dir = operation.split('_')
-        x_ind = 'xyz'.index(_dir)
+        x_ind = 'abc'.index(_dir)
         other_inds = tuple([i for i in [0,1,2] if i != x_ind])
         _func_ = getattr(np,opr)
         X_1 = _func_(data,axis = other_inds)
@@ -517,17 +530,17 @@ class LOCPOT:
                 )
 
 
-    def view_period(self,period_guess=0.25,operation='mean_z',nslice=10,e_or_m=None,):
+    def view_period(self,period_guess=0.25,operation='mean_c',nslice=10,e_or_m=None,):
         """
         - Periodicity check by plotly's interactive plot.
         - **Parameters**
             - period_guess: Initial guess of period. Default is 0.25. Should be in [0,1].
-            - operation   : Any of ['mean_x','min_x','max_x','mean_y','min_y','max_y','mean_z','min_z','max_z'].
+            - operation   : Any of ['mean_a','min_a','max_a','mean_b','min_b','max_b','mean_c','min_c','max_c'].
             - nslice      : Default is 10. Number of periods around and including period_guess. e.g. If you give 0.25 as period_guess and nslice is 10, you will get 10 lines of rolling average over given data from where you can choose best fit or try another guess and so on.
             - e_or_m      : None by default. Not required in most cases as `view_period()` will try to get data itself from top class in order of `self._data.[e,m,m_x,m_y,m_z]` and if `self._data.e` exists it never goes to others, so you can overwrite this by setting `e_or_m = self._data.[your choice]`.
         """
         pos = period_guess
-        check = ['mean_x','min_x','max_x','mean_y','min_y','max_y','mean_z','min_z','max_z']
+        check = ['mean_a','min_a','max_a','mean_b','min_b','max_b','mean_c','min_c','max_c']
         if operation not in check:
             raise ValueError("operation expects any of {!r}, got {}".format(check,operation))
         if e_or_m is None:
@@ -544,7 +557,7 @@ class LOCPOT:
             data = e_or_m
 
         _opr,_dir = operation.split('_')
-        x_ind = 'xyz'.index(_dir)
+        x_ind = 'abc'.index(_dir)
         other_inds = tuple([i for i in [0,1,2] if i != x_ind])
         _func_ = np.min if _opr == 'min' else np.max if _opr == 'max' else np.mean
 
