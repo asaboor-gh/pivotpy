@@ -72,6 +72,8 @@ _memebers = (
     sio.str2kpath,
     sio.fancy_quiver3d,
     sio.rotation,
+    sio.to_basis,
+    sio.to_R3,
     sio.periodic_table,
     wdg.generate_summary,
     vp.split_vasprun,
@@ -163,29 +165,79 @@ def parse_text(path,
     return vp.islice2array(path_or_islice=path,**extra_kws)
 
 # Cell
+from contextlib import redirect_stdout
+from io import StringIO
+from pandas.io.clipboard import clipboard_get, clipboard_set
+
 class POSCAR:
     "POSACR class to contain data and related methods, data is PoscarData, json/tuple file/string."
-    def __init__(self,path = None,text_plain = None,data = None):
+    def __init__(self,path = None,content = None,data = None):
         """Do not use `data` yourself, it's for operations on poscar.
-        Prefrence order: data, text_plain, path"""
-        self.path = path
-        self.text_plain = text_plain
+        - **Parameters**
+            - content: string of POSCAR content
+            - path: path to file
+            - data: PoscarData object.
+
+        Prefrence order: data, content, path"""
+        self._path = path
+        self._content = content
         if data:
             self._data = serializer.PoscarData.validated(data)
         else:
-            self._data = sio.export_poscar(path=path,text_plain=text_plain)
+            self._data = sio.export_poscar(path=path,content = content)
         # These after data to work with data
-        self.primitive = False
+        self._primitive = False
         self._bz = self.get_bz(primitive = False) # Get defualt regular BZ from sio
         self._cell = self.get_cell() # Get defualt cell
         self._plane = None # Get defualt plane, changed with splot_bz
         self._ax = None # Get defualt axis, changed with splot_bz
 
+    def __repr__(self):
+        atoms = ', '.join([f'{k}={len(v)}' for k,v in self._data.unique.items()])
+        lat = ', '.join([f'{k}={v}' for k,v in zip('abcαβγ',(*self._data.norms.round(3), *self._data.angles))])
+        return f"{self.__class__.__name__}({atoms}, {lat})"
+
+    def __str__(self):
+        return self.content
+
+    @classmethod
+    def from_file(cls,path):
+        "path is path to POSCAR file"
+        return cls(path = path)
+
+    @classmethod
+    def from_string(cls,content):
+        "content should be a valid POSCAR string"
+        try:
+            return cls(content = content)
+        except:
+            raise ValueError(f"Invalid POSCAR string!!!!!\n{content}")
+
+    @classmethod
+    def from_materials_project(cls,formula, mp_id, api_key = None, save_key = False):
+        "Downloads POSCAR from materials project. `mp_id` should be string associated with a material on their website. `api_key` is optional if not saved."
+        return cls(data = download_structure(formula=formula,mp_id=mp_id,api_key=api_key,save_key=save_key)[0].export_poscar())
+
+    @classmethod
+    def from_clipborad(cls):
+        "Read POSCAR from clipboard (based on clipboard reader impelemented by pandas library) It picks the latest from clipboard."
+        return cls.from_string(content = clipboard_get()) # Handles error data is bad.
+
+    def to_clipboard(self):
+        "Writes POSCAR to clipboard (as implemented by pandas library) for copy in other programs such as vim."
+        clipboard_set(self.content)
 
     @property
     def data(self):
         "Data object in POSCAR."
         return self._data
+
+    @property
+    def content(self):
+        "POSCAR content."
+        with redirect_stdout(StringIO()) as f:
+            self.write(outfile = None) # print to stdout
+            return f.getvalue()
 
     @property
     def bz(self):
@@ -198,7 +250,7 @@ class POSCAR:
     @_sub_doc(sio.get_bz,'- path_pos')
     def get_bz(self, loop=True, digits=8, primitive=False):
         self._bz = sio.get_bz(path_pos = self._data.basis, loop=loop, digits=digits, primitive=primitive)
-        self.primitive = primitive
+        self._primitive = primitive
         return self._bz
 
     def set_bz(self,primitive=False,loop=True,digits=8):
@@ -271,20 +323,20 @@ class POSCAR:
         return sio.iplot_bz(bz_data = self._cell, fill=fill, color=color, background=background, vname=vname, alpha=alpha, ortho3d=ortho3d, fig=fig)
 
     @_sub_doc(sio.splot_lat,'- poscar_data')
-    def splot_lat(self, sizes=50, colors = None, colormap=None, bond_length=None, tol=0.1, eps=0.01, eqv_sites=True, translate=None, line_width=1, edge_color=(1, 0.5, 0, 0.4), vectors=True, v3=False, plane=None, light_from=(1, 1, 1), fill=False, alpha=0.4, ax=None):
-        return sio.splot_lat(self._data, sizes=sizes, colors=colors, colormap=colormap, bond_length=bond_length, tol=tol, eps=eps, eqv_sites=eqv_sites, translate=translate, line_width=line_width, edge_color=edge_color, vectors=vectors, v3=v3, plane=plane, light_from=light_from, fill=fill, alpha=alpha, ax=ax)
+    def splot_lat(self, plane = None, sizes=50, colors = None, colormap=None, bond_length=None, tol=1e-2, bond_tol = 1e-3, eqv_sites=True, translate=None, line_width=1, edge_color=(1, 0.5, 0, 0.4), vectors=True, v3=False, light_from=(1, 1, 1), fill=False, alpha=0.4, ax=None):
+        return sio.splot_lat(self._data, sizes=sizes, colors=colors, colormap=colormap, bond_length=bond_length, tol=tol, bond_tol = bond_tol, eqv_sites=eqv_sites, translate=translate, line_width=line_width, edge_color=edge_color, vectors=vectors, v3=v3, plane=plane, light_from=light_from, fill=fill, alpha=alpha, ax=ax)
 
     @_sub_doc(sio.iplot_lat,'- poscar_data')
-    def iplot_lat(self, sizes=10, colors = None, bond_length=None, tol=0.1, eps=0.01, eqv_sites=True, translate=None, line_width=4, edge_color='black', fill=False, alpha=0.4, ortho3d=True, fig=None):
-        return sio.iplot_lat(self._data, sizes=sizes, colors=colors, bond_length=bond_length, tol=tol, eps=eps, eqv_sites=eqv_sites, translate=translate, line_width=line_width, edge_color=edge_color, fill=fill, alpha=alpha, ortho3d=ortho3d, fig=fig)
+    def iplot_lat(self, sizes=10, colors = None, bond_length=None, tol=1e-2, bond_tol = 1e-3, eqv_sites=True, translate=None, line_width=4, edge_color='black', fill=False, alpha=0.4, ortho3d=True, fig=None):
+        return sio.iplot_lat(self._data, sizes=sizes, colors=colors, bond_length=bond_length, tol=tol, bond_tol=bond_tol, eqv_sites=eqv_sites, translate=translate, line_width=line_width, edge_color=edge_color, fill=fill, alpha=alpha, ortho3d=ortho3d, fig=fig)
 
     @_sub_doc(sio.write_poscar,'- poscar_data')
     def write(self, outfile=None, sd_list=None , overwrite=False):
         return sio.write_poscar(self._data, outfile=outfile, sd_list=sd_list, overwrite=overwrite)
 
     @_sub_doc(sio.join_poscars,'- poscar1',replace={'poscar2':'other'})
-    def join(self,other, direction='z', tol=0.01):
-        return self.__class__(data = sio.join_poscars(poscar1=self._data, poscar2=other.data, direction=direction, tol=tol))
+    def join(self,other, direction='z', tol=0.01, system = None):
+        return self.__class__(data = sio.join_poscars(poscar1=self._data, poscar2=other.data, direction=direction, tol=tol,system = system))
 
     @_sub_doc(sio.scale_poscar,'- poscar_data')
     def scale(self, scale=(1, 1, 1), tol=0.01):
@@ -295,7 +347,7 @@ class POSCAR:
         return self.__class__(data = sio.rotate_poscar(self._data, angle_deg = angle_deg, axis_vec=axis_vec))
 
     @_sub_doc(sio.fix_sites,'- poscar_data')
-    def fix_sites(self, tol=0.01, eqv_sites=True, translate=None):
+    def fix_sites(self, tol=0.01, eqv_sites=False, translate=None):
         return self.__class__(data = sio.fix_sites(self._data, tol=tol, eqv_sites=eqv_sites, translate=translate))
 
     @_sub_doc(sio.translate_poscar,'- poscar_data')
@@ -309,6 +361,22 @@ class POSCAR:
     @_sub_doc(sio.mirror_poscar,'- poscar_data')
     def mirror(self, direction):
         return self.__class__(data = sio.mirror_poscar(self._data, direction=direction))
+
+    @_sub_doc(sio.get_transform_matrix,'- poscar_data')
+    def get_transform_matrix(self, target_basis):
+        return sio.get_transform_matrix(self._data, target_basis)
+
+    @_sub_doc(sio.transform_poscar,'- poscar_data')
+    def transform(self, transform_matrix, repeat_given = [2,2,2],tol = 1e-2):
+        return self.__class__(data = sio.transform_poscar(self._data, transform_matrix=transform_matrix, repeat_given=repeat_given, tol=tol))
+
+    @_sub_doc(sio.add_vaccum,'- poscar_data')
+    def add_vaccum(self, thickness, direction, left = False):
+        return self.__class__(data = sio.add_vaccum(self._data, thickness=thickness, direction=direction, left=left))
+
+    @_sub_doc(sio.convert_poscar,'- poscar_data')
+    def convert(self, atoms_mapping, basis_factor):
+        return self.__class__(data = sio.convert_poscar(self._data, atoms_mapping=atoms_mapping, basis_factor=basis_factor))
 
     @_sub_doc(sio.get_kmesh,'- poscar_data')
     def get_kmesh(self, *args, shift = 0, weight=None, cartesian = False, ibzkpt=None, outfile=None):
@@ -338,7 +406,7 @@ class POSCAR:
         """
         if not self._bz:
             raise RuntimeError('No BZ found. Please run `get_bz()` first.')
-        return sio.kpoints2bz(self._bz, kpoints= kpoints,primitive = self.primitive, sys_info = sys_info, shift = shift)
+        return sio.kpoints2bz(self._bz, kpoints= kpoints,primitive = self._primitive, sys_info = sys_info, shift = shift)
 
 # Cell
 class LOCPOT:
@@ -359,7 +427,7 @@ class LOCPOT:
     ```
     """
     def __init__(self,path = None,e = True,m = False):
-        self.path = path # Must be
+        self._path = path # Must be
         self.m = m # Required to put in plots.
         self._data = vp.export_locpot(locpot = path, e=e,m=m)
 
@@ -401,7 +469,7 @@ class LOCPOT:
             except:
                 e_or_m = self._data.to_dict()[f'm_{self.m}']
         else:
-            raise ValueError("Magnetization data set does not exist in {}".format(self.path))
+            raise ValueError("Magnetization data set does not exist in {}".format(self._path))
         return sp.plot_potential(basis=self._data.poscar.basis,e_or_m=e_or_m,operation=operation,smoothness=smoothness,
                                     ax=ax,period=period,lr_pos=lr_pos,period_right=period_right,interface=interface,
                                     labels=labels,colors=colors,annotate=annotate)
@@ -471,7 +539,7 @@ class LOCPOT:
                 except:
                    data = self._data.to_dict()[f'm_{self.m}']
                 else:
-                    raise ValueError("Magnetization data set does not exist in {}".format(self.path))
+                    raise ValueError("Magnetization data set does not exist in {}".format(self._path))
         else:
             data = e_or_m
 

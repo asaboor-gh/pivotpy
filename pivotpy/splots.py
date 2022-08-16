@@ -463,6 +463,8 @@ def add_colorbar(
     if ticks != []:
         if ticks is None: # should be before labels
             ticks = np.linspace(1/6,5/6,3, endpoint=True)
+            if ticklabels is None:
+                ticklabels = ticks.round(digits).astype(str)
 
         elif isinstance(ticks,(list,tuple, np.ndarray)):
             ticks = np.array(ticks)

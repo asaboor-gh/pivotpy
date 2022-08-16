@@ -215,7 +215,7 @@ class SpinData(Dict2Data):
         return self.evals.Fermi
     
 class PoscarData(Dict2Data):
-    _req_keys = ('basis','rec_basis','extra_info')
+    _req_keys = ('basis','unique','extra_info')
     def __init__(self,d):
         super().__init__(d)
     
@@ -228,6 +228,59 @@ class PoscarData(Dict2Data):
         """
         from .sio import to_R3 # To avoid circular import
         return to_R3(self.basis, self.positions)
+    
+    @property
+    def rec_basis(self):
+        "Returns the reciprocal lattice basis of the atoms in the poscar data. Gets automatically updated when the lattice is changed."
+        return np.linalg.inv(self.basis).T
+    
+    @property
+    def norms(self):
+        "Returns the norm of the lattice basis of the atoms in the poscar data. Gets automatically updated when the lattice is changed."
+        return np.linalg.norm(self.basis,axis=1)
+    
+    @property
+    def rec_norms(self):
+        "Returns the norm of the reciprocal lattice basis of the atoms in the poscar data. Gets automatically updated when the lattice is changed."
+        return np.linalg.norm(self.rec_basis,axis=1)
+    
+    @property
+    def angles(self):
+        "Returns the angles of the lattice basis of the atoms in the poscar data. Gets automatically updated when the lattice is changed."
+        norms = self.norms # Calculate once
+        rad_angles = np.array([
+            np.abs(np.arccos(np.dot(self.basis[:,2],self.basis[:,1])/norms[2]/norms[1])),
+            np.abs(np.arccos(np.dot(self.basis[:,2],self.basis[:,0])/norms[2]/norms[0])),
+            np.abs(np.arccos(np.dot(self.basis[:,1],self.basis[:,0])/norms[1]/norms[0]))
+        ])
+        return np.degrees(rad_angles)
+        
+    @property
+    def rec_angles(self):
+        "Returns the angles of reciprocal lattice basis of the atoms in the poscar data. Gets automatically updated when the lattice is changed."
+        rec_norms = self.rec_norms # Calculate once
+        rec_basis = self.rec_basis # Calculate once
+        rad_angles = np.array([
+            np.abs(np.arccos(np.dot(rec_basis[:,2],rec_basis[:,1])/rec_norms[2]/rec_norms[1])),
+            np.abs(np.arccos(np.dot(rec_basis[:,2],rec_basis[:,0])/rec_norms[2]/rec_norms[0])),
+            np.abs(np.arccos(np.dot(rec_basis[:,1],rec_basis[:,0])/rec_norms[1]/rec_norms[0]))
+        ])
+        return np.degrees(rad_angles)
+    
+    @property
+    def volume(self):
+        "Returns the volume of the lattice."
+        return np.abs(np.linalg.det(self.basis)) # Didn't think much if negative or positive
+    
+    @property
+    def labels(self):
+        "Returns the labels of the atoms in the poscar data."
+        return np.array([f'{k} {v - vs.start + 1}' for k,vs in self.unique.items() for v in vs])
+    
+    def get_bond_length(self,atom1,atom2):
+        "Returns the bond length between two atoms names should be as 'Ga', 'As'"
+        idx, others = self.unique[atom1][0], self.unique[atom2]
+        return np.sort(np.linalg.norm(self.coords[others] - self.coords[idx,:]))[1] # Get the second closest distance, first is itself
     
     def write(self,sd_list = None, outfile = None, overwrite = False):
         """Writes the poscar data to a file.

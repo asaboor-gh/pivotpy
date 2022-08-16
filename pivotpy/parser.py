@@ -414,21 +414,15 @@ def get_structure(xml_data):
 
     for final in xml_data.root.iter('structure'):
         if(final.attrib=={'name': 'finalpos'}):
-            for i in final.iter('i'):
-                volume=float(i.text)
             for arr in final.iter('varray'):
                 if(arr.attrib=={'name': 'basis'}):
                     basis=[[float(a) for a in v.text.split()] for v in arr.iter('v')]
-                if(arr.attrib=={'name': 'rec_basis'}):
-                    rec_basis=[[float(a) for a in v.text.split()] for v in arr.iter('v')]
                 if(arr.attrib=={'name': 'positions'}):
                     positions=[[float(a) for a in v.text.split()] for v in arr.iter('v')]
     # element labels
     types  = [int(_type.text) for _type in xml_data.root.iter('types')][0]
     elems  = [info[0].text.strip() for info in xml_data.root.iter('rc')]
     _inds  = np.array([int(a) for a in elems[-types:]])
-    _nums  = [k + 1 for i in _inds for k in range(i)]
-    labels = [f"{e} {i}" for i, e in zip(_nums,elems)]
 
     INDS = np.cumsum([0,*_inds]).astype(int)
     Names = list(np.unique(elems[:-types]))
@@ -436,9 +430,9 @@ def get_structure(xml_data):
     space_info = get_space_info(xml_data)
     scale = space_info.scale
     cartesian = space_info.cartesian_positions
-    st_dic={'SYSTEM':SYSTEM,'volume': volume,'basis': np.array(basis),'rec_basis': np.array(rec_basis), 'scale': 1.0,
+    st_dic={'SYSTEM':SYSTEM,'basis': np.array(basis),
             'extra_info': {'comment':'Exported from vasprun.xml','cartesian':cartesian,'scale':scale},
-            'positions': np.array(positions),'labels':labels,'unique': unique_d}
+            'positions': np.array(positions),'unique': unique_d}
     return serializer.PoscarData(st_dic)
 
 def export_vasprun(path = None, skipk = None, elim = [], dos_only = False):
@@ -890,6 +884,6 @@ def export_locpot(locpot = None,e = True,m = False):
 
     # Read Info
     from .sio import export_poscar # Keep inside to avoid import loop
-    poscar_data = export_poscar(text_plain = '\n'.join(p.strip() for p in poscar))
+    poscar_data = export_poscar(content = '\n'.join(p.strip() for p in poscar))
     final_dict = dict(SYSTEM = poscar_data.SYSTEM, path = path, **pot_dict, poscar = poscar_data)
     return serializer.GridData(final_dict)

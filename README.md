@@ -50,7 +50,7 @@ See GIF here:
 # Live Slides in Jupyter Notebook
 Navigate to  [ipyslides](https://github.com/massgh/ipyslides) or do `pip install ipyslides` to create beautiful data driven presentation in Jupyter Notebook.
 
-```
+```python
 import os, pivotpy as pp
 with pp.set_dir('E:/Research/graphene_example/ISPIN_1/bands'):
     vr = pp.Vasprun(elim=[-5,5])
@@ -83,7 +83,7 @@ for v in dir(vr):
     vr.to_pickle
     
 
-```
+```python
 import matplotlib.pyplot as plt 
 ax1,ax2 = pp.get_axes((6,3),ncols=2)
 ax1.plot(vr.data.scsteps['e_fr_energy'],lw=3, label = 'e_fr_energy',color='k')
@@ -107,7 +107,7 @@ ax2.add_legend()
 - Add anything from legend,colorbar, colorwheel. In below figure, all three are shown.
 - Use aliases such as sbands, sdos,srgb,irgb,scolor,idos for plotting. 
 
-```
+```python
 #collapse_input
 import pivotpy as pp, numpy as np
 import matplotlib.pyplot as plt 
@@ -135,7 +135,7 @@ pp._show()
 
 ## Interactive plots using plotly
 
-```
+```python
 args_dict['labels'] = ['s','p_z','p_x+p_y']
 args_dict.pop('colormap')
 fig1 = vr1.iplot_rgb_lines(**args_dict)
@@ -163,7 +163,7 @@ Markdown("[See Interactive Plot](https://massgh.github.io/InteractiveHTMLs/iGrap
 ## Interpolation 
 Amost every bandstructure and DOS plot function has an argument `interp_nk` which is a dictionary with keys `n` (Number of additional points between adjacent points) and `k` (order of interpolation 0-3). `n > k` must hold.
 
-```
+```python
 #collapse_input
 import pivotpy as pp, matplotlib.pyplot as plt
 plt.style.use('ggplot')
@@ -187,27 +187,18 @@ check out the class `pivotpy.LOCPOT` to visulize local potential/charge and magn
 ## Running powershell commands from python.
 Some tasks are very tideious in python while just a click way in powershell. See below, and try to list processes in python yourself to see the difference!
 
-```
+```python
 pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
 ```
 
-    [32;1m NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI P[0m
-    [32;1m                                                   r[0m
-    [32;1m                                                   o[0m
-    [32;1m                                                   c[0m
-    [32;1m                                                   e[0m
-    [32;1m                                                   s[0m
-    [32;1m                                                   s[0m
-    [32;1m                                                   N[0m
-    [32;1m                                                   a[0m
-    [32;1m                                                   m[0m
-    [32;1m                                                   e[0m
-    [32;1m ------    -----      -----     ------      --  -- -[0m
-    22     7.03       2.44       0.97   24936   3 A
-    6     1.57       2.40       0.00    6900   0 A
-    19     7.38      11.46       0.00    2976   0 A
-    37    42.10      39.00      93.03   13596   3 A
-    8     1.88       7.53       0.05   23296   3 A
+    [32;1m NPM(K)    PM(M)      WS(M) CPU(s[0m
+    [32;1m                                )[0m
+    [32;1m ------    -----      ----- -----[0m
+    21     6.75      13.05  0.39
+    6     1.35       5.11  0.00
+    19     7.89      18.45  0.00
+    29    33.34      48.36  4.02
+    9     1.65       6.13  0.00
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -238,41 +229,28 @@ c.ScriptMagics.script_paths = {
 }
 ```
 
-```
+```python
 %%ps 
 Get-ChildItem 'E:\Research\graphene_example\'
 ```
 
     
     
-        Directory: E:\Research\graphene_example
+        Directory: 
+        E:\Research\graphene_example
     
     
-    Mode                 LastWriteTime         Length Na
-                                                      me
-    ----                 -------------         ------ --
-    da----          6/9/2022  10:33 AM                IS
-                                                      PI
-                                                      N_
-                                                      1 
-    da----          5/9/2020   1:05 PM                IS
-                                                      PI
-                                                      N_
-                                                      2 
-    -a----          5/9/2020   1:01 PM          75331 OU
-                                                      TC
-                                                      AR
-    -a----          5/9/2020   1:01 PM         240755 va
-                                                      sp
-                                                      ru
-                                                      n.
-                                                      xm
-                                                      l 
+    Mode                LastWriteTime
+    ----                -------------
+    da----         6/9/2022  10:33 AM
+    da----         5/9/2020   1:05 PM
+    -a----         5/9/2020   1:01 PM
+    -a----         5/9/2020   1:01 PM
     
     
 
 
-```
+```python
 x = %ps (Get-ChildItem 'E:\Research\graphene_example\').Name
 x
 ```
