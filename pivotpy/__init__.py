@@ -35,7 +35,7 @@ Links:
 links = """[github](https://github.com/massgh/pivotpy)             
 [docs](https://massgh.github.io/pivotpy/)"""
 
-__version__ = "1.3.7"
+__version__ = "1.3.8"
 
 __all__ = []
 

@@ -181,6 +181,8 @@ class POSCAR:
         Prefrence order: data, content, path"""
         self._path = path
         self._content = content
+        self._sd = None # Selective dynamics Array will be stored here if applied.
+
         if data:
             self._data = serializer.PoscarData.validated(data)
         else:
@@ -225,7 +227,7 @@ class POSCAR:
 
     def to_clipboard(self):
         "Writes POSCAR to clipboard (as implemented by pandas library) for copy in other programs such as vim."
-        clipboard_set(self.content)
+        clipboard_set(self.content) # write to clipboard
 
     @property
     def data(self):
@@ -242,6 +244,10 @@ class POSCAR:
     @property
     def bz(self):
         return self._bz
+
+    @property
+    def sd(self):
+        return self._sd
 
     @property
     def cell(self):
@@ -335,9 +341,9 @@ class POSCAR:
         return sio.iplot_lat(self._data, sizes=sizes, colors=colors, bond_length=bond_length, tol=tol, bond_tol=bond_tol, eqv_sites=eqv_sites, translate=translate,
                              line_width=line_width, edge_color=edge_color,fill=fill, alpha=alpha, ortho3d=ortho3d, fig=fig)
 
-    @_sub_doc(sio.write_poscar,'- poscar_data')
-    def write(self, outfile=None, sd_list=None , overwrite=False):
-        return sio.write_poscar(self._data, outfile=outfile, sd_list=sd_list, overwrite=overwrite)
+    def write(self, outfile=None, overwrite=False):
+        "Write POSCAR data to file."
+        return sio.write_poscar(self._data, outfile=outfile, selective_dynamics= self._sd, overwrite=overwrite)
 
     @_sub_doc(sio.join_poscars,'- poscar1',replace={'poscar2':'other'})
     def join(self,other, direction='c', tol=0.01, system = None):
@@ -390,6 +396,49 @@ class POSCAR:
     @_sub_doc(sio.convert_poscar,'- poscar_data')
     def convert(self, atoms_mapping, basis_factor):
         return self.__class__(data = sio.convert_poscar(self._data, atoms_mapping=atoms_mapping, basis_factor=basis_factor))
+
+    def add_selective_dynamics(self, a = None, b = None, c = None, show_plot = True):
+        """Returns selective dynamics included POSCAR if input is given. By default, if a direction is not given, it turns ON with others.
+        - **Parameters**
+            - a, b, c: Arrays of shape (N,2) that contain ranges in fractional coordinates to turn selective dynamics on.
+            - show_plot: Plots the selective dynamics included sites in fractional orthogonal space to have an idea quickly.
+
+        - **Usage**
+            - `add_selective_dynamics(a = [(0,0.1),(0.9,1)])` will turn selective dynamics on for the first and last 10% of the unit cell in a-direction as T T T.
+            - `add_selective_dynamics(a = [(0,0.1),(0.9,1)], b = [(0,0.1),(0.9,1)])` will turn selective dynamics on for the first and last 10% of the unit cell in ab-plane in form of T T T, F T T and T F T whichever applies.
+
+        > Returns POSCAR with selective dynamics included. You can write it to file or send to clipboard, but any other transformation will result in loss of selective dynamics information.
+        """
+        if (a is None) and (b is None) and (c is None):
+            return print ('No selective dynamics added. Please provide any of a, b, c to fix sites.')
+
+        sd_poscar = self.__class__(data = self._data) # Create new, don't change original
+        sd_poscar._sd = sio.get_selective_dynamics(sd_poscar.data, a = a, b = b, c = c)
+
+        if show_plot:
+            import matplotlib.pyplot as plt
+            ax1,ax2,ax3 = sp.get_axes((8,3),ncols=3)
+            _sel = [i for i,_s in enumerate(sd_poscar._sd) if 'T' in _s]
+            _sel_text = [_a.split() for _a in sd_poscar._sd[_sel]]
+            _xy = [_sel[i] for i, _s in enumerate(_sel_text) if (_s[0] == 'T' and _s[1] == 'T')]
+            _yz = [_sel[i] for i, _s in enumerate(_sel_text) if (_s[1] == 'T' and _s[2] == 'T')]
+            _zx = [_sel[i] for i, _s in enumerate(_sel_text) if (_s[2] == 'T' and _s[0] == 'T')]
+
+            ax1.scatter(*sd_poscar.data.positions[_xy][:,[0,1]].T,marker='.')
+            ax2.scatter(*sd_poscar.data.positions[_xy][:,[1,2]].T,marker='.')
+            ax3.scatter(*sd_poscar.data.positions[_xy][:,[2,0]].T,marker='.')
+
+            for ax, lx,ly in zip([ax1,ax2,ax3],['a','b','c'],['b','c','a']):
+                ax.set_xlabel(lx)
+                ax.set_ylabel(ly)
+                ax.set_xlim([-0.01,1.01]) # For view in place
+                ax.set_ylim([-0.01,1.01])
+
+            ax1.get_figure().suptitle('Selective dynamics included sites in fractional coordinates')
+            plt.tight_layout()
+            plt.show() # From scripts it should pop up automatically
+
+        return sd_poscar
 
     @_sub_doc(sio.get_kmesh,'- poscar_data')
     def get_kmesh(self, *args, shift = 0, weight=None, cartesian = False, ibzkpt=None, outfile=None):
@@ -487,12 +536,14 @@ class LOCPOT:
                                     ax=ax,period=period,lr_pos=lr_pos,period_right=period_right,interface=interface,
                                     labels=labels,colors=colors,annotate=annotate)
 
-    def check_period(self,which: str, operation: str = 'mean_c',interface = 0.5,smoothness = 2,**kwargs):
+    def check_period(self,which: str, operation: str = 'mean_c',interface = 0.5,lr_pos = (0.25,0.75), smoothness = 2, figsize = (5,3),**kwargs):
         """Check periodicity using ipywidgets interactive plot.
         - which: 'e', 'm', 'm_x', 'm_y', 'm_z' etc.
         - operation: What to do, such as 'mean_c' or 'mean_a' etc.
         - interface: Interface in range [0,1] to divide left and right halves.
+        - lr_pos: Tuple of (left,right) positions in range [0,1] to get ΔV of right relative to left.
         - smoothness: int. Default is 2. Smoothing parameter for rolling mean. Larger is better.
+        - figsize: Tuple of (width,height) of figure. Since each time a figure is created, we can't reuse it, so we need to specify the size.
         kwargs are passed to the plt.Axes.set(kwargs) method to handle the plot styling.
         """
         check = ['mean_a','min_a','max_a','mean_b','min_b','max_b','mean_c','min_c','max_c']
@@ -513,20 +564,22 @@ class LOCPOT:
         import matplotlib.pyplot as plt
 
         def checker(period, period_right):
-            ax = plt.gca()
-            ax.plot(X_1,label=operation)
+            fig, ax = plt.subplots(1,1,figsize=figsize)
+            ax.plot(X_1,label=operation,lw=1)
             X_2 = self.rolling_mean(X_1,period,period_right=period_right,interface=interface, smoothness=smoothness)
-            ax.plot(X_2,label='rolling_mean')
-            ax.axhline(X_2.min(),color='k',alpha=0.5,lw=0.5,ls= '--')
-            ax.axhline(X_2.max(),color='k',alpha=0.5,lw=0.5,ls='--')
-            ax.text(0,(X_2.min() + X_2.max())/2,f'$V_{{pp}}$ : {X_2.max() - X_2.min():.6f}',backgroundcolor=[1,1,1,0.5])
+            ax.plot(X_2,label='rolling_mean',ls='dashed',lw=1)
+
+            x = [int(X_2.size*p) for p in lr_pos]
+            y = X_2[x]
+            ax.step(x,y,where = 'mid',marker='.',lw=0.7)
+            ax.text(0,y.mean(),f'$V_{{R}} - V_{{L}}$ : {y[1]-y[0]:.6f}',backgroundcolor=[1,1,1,0.5])
             plt.legend(bbox_to_anchor=(0, 1),loc='lower left',ncol=2,frameon=False)
             ax.set(**kwargs)
-            return plt.gca()
+            return ax
 
         return ipw.interactive(checker,
-                period = ipw.FloatSlider(min=_min,max=0.5,value=0.125,step=_step,readout_format='.4f'),
-                period_right=ipw.FloatSlider(min=_min,max=0.5,value=0.125,step=_step,readout_format='.4f'),
+                period = ipw.FloatSlider(min=_min,max=0.5,value=0.125,step=_step,readout_format='.4f', continuous_update=False),
+                period_right=ipw.FloatSlider(min=_min,max=0.5,value=0.125,step=_step,readout_format='.4f', continuous_update=False),
                 )
 
 
