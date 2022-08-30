@@ -821,30 +821,44 @@ def export_outcar(path=None):
     final_dict = {'ion_pot':pot_arr,'positions':pos_arr,'site_pot':pos_pot,'basis':basis[:,:3],'rec_basis':basis[:,3:],'n_kbi':n_kbi}
     return serializer.OutcarData(final_dict)
 
-def export_locpot(locpot = None,e = True,m = False):
+def export_locpot(path = None,data_set = 0):
     """
-    - Returns Data from LOCPOT and similar structure files like CHG/PARCHG etc. Loads only single set out of 2/4 magnetization data to avoid performance/memory cost while can load electrostatic and one set of magnetization together.
+    - Returns Data from LOCPOT and similar structure files like CHG/PARCHG etc. Loads only single set based on what is given in data_set argument.
     - **Parameters**
         - locpot: path/to/LOCPOT or similar stuructured file like CHG. LOCPOT is auto picked in CWD.
-        - e     : Electric potential/charge density. Default is True.
-        - m     : Magnetization density m. Default is False. If True, picks `m` for spin polarized case, and `m_x` for non-colinear case. Additionally it can take 'x','y' and 'z' in case of non-colinear calculations.
+        - data_set: 0 for electrostatic data, 1 for magnetization data if ISPIN = 2. If non-colinear calculations, 1,2,3 will pick Mx,My,Mz data sets respectively. Only one data set is loaded, so you should know what you are loading.
+    
+    - **Returns**
+        - Data: serializer.GridData object with 3D volumetric data set loaded as attribute 'values'.
+        
     - **Exceptions**
-        - Would raise index error if magnetization density set is not present in LOCPOT/CHG in case `m` is not False.
+        - Would raise index error if magnetization density set is not present in case data_set > 0.
+    
+    **Note**: Read [vaspwiki-CHGCAR](https://www.vasp.at/wiki/index.php/CHGCAR) for more info on what data sets are available corresponding to different calculations.
     """
-    path = locpot or './LOCPOT'
-    if not os.path.isfile(locpot):
+    path = path or './LOCPOT'
+    if not os.path.isfile(path):
         raise FileNotFoundError("File {!r} does not exist!".format(path))
-    if m not in [True,False,'x','y','z']:
-        raise ValueError("m expects one of [True,False,'x','y','z'], got {}".format(e))
+    
+    if data_set < 0 or data_set > 3:
+        raise ValueError("`data_set` should be 0 (for electrostatic),1 (for M or Mx),2 (for My),3 (for Mz)! Got {}".format(data_set))
+    
     # data fixing after reading islice from file.
     def fix_data(islice_gen,shape):
-        new_gen = (float(l) for line in islice_gen for l in line.split())
-        COUNT = np.prod(shape).astype(int)
-        data = np.fromiter(new_gen,dtype=float,count=COUNT) # Count is must for performance
-        # data written on LOCPOT is in shape of (NGz,NGy,NGx)
-        N_reshape = [shape[2],shape[1],shape[0]]
-        data = data.reshape(N_reshape).transpose([2,1,0])
-        return data
+        try:
+            new_gen = (float(l) for line in islice_gen for l in line.split())
+            COUNT = np.prod(shape).astype(int)
+            data = np.fromiter(new_gen,dtype=float,count=COUNT) # Count is must for performance
+            # data written on LOCPOT is in shape of (NGz,NGy,NGx)
+            N_reshape = [shape[2],shape[1],shape[0]]
+            data = data.reshape(N_reshape).transpose([2,1,0])
+            return data
+        except:
+            if data_set == 0:
+                raise ValueError("File {!r} may not be in proper format!".format(path))
+            else:
+                raise IndexError("Magnetization density may not be present in {!r}!".format(path))
+    
     # Reading File
     with open(path,'r') as f:
         lines = []
@@ -861,26 +875,23 @@ def export_locpot(locpot = None,e = True,m = False):
         nlines = np.ceil(np.prod(Nxyz)/5).astype(int)
         #islice is faster generator for reading potential
         pot_dict = {}
-        if e == True:
-            pot_dict.update({'e':fix_data(islice(f, nlines),Nxyz)})
+        if data_set == 0:
+            pot_dict.update({'values':fix_data(islice(f, nlines),Nxyz)})
             ignore_set = 0 # Pointer already ahead.
         else:
             ignore_set = nlines # Needs to move pointer to magnetization
         #reading Magnetization if True
         ignore_n = np.ceil(N/5).astype(int)+1 #Some kind of useless data
-        if m == True:
-            print("m = True would pick m_x for non-colinear case, and m for ISPIN=2.\nUse m='x' for non-colinear or keep in mind that m will refer to m_x.")
+        if data_set == 1:
+            print("Note: data_set = 1 picks Mx for non-colinear case, and M for ISPIN = 2.")
             start = ignore_n+ignore_set
-            pot_dict.update({'m': fix_data(islice(f, start,start+nlines),Nxyz)})
-        elif m == 'x':
-            start = ignore_n+ignore_set
-            pot_dict.update({'m_x': fix_data(islice(f, start,start+nlines),Nxyz)})
-        elif m == 'y':
+            pot_dict.update({'values': fix_data(islice(f, start,start+nlines),Nxyz)})
+        elif data_set == 2:
             start = 2*ignore_n+nlines+ignore_set
-            pot_dict.update({'m_y': fix_data(islice(f, start,start+nlines),Nxyz)})
-        elif m == 'z':
+            pot_dict.update({'values': fix_data(islice(f, start,start+nlines),Nxyz)})
+        elif data_set == 3:
             start = 3*ignore_n+2*nlines+ignore_set
-            pot_dict.update({'m_z': fix_data(islice(f, start,start+nlines),Nxyz)})
+            pot_dict.update({'values': fix_data(islice(f, start,start+nlines),Nxyz)})
 
     # Read Info
     from .sio import export_poscar # Keep inside to avoid import loop

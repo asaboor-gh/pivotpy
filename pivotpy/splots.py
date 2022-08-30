@@ -1572,8 +1572,8 @@ def plt2text(plt_fig=None,width=144,vscale=0.96,colorful=True,invert=False,crop=
 
 # Cell
 def plot_potential(basis = None,
-           e_or_m=None,
-           operation='mean_c',
+           values = None,
+           operation = 'mean_c',
            ax=None,
            period = None,
            period_right = None,
@@ -1587,7 +1587,7 @@ def plot_potential(basis = None,
     """
     - Returns tuple(ax,Data) where Data contains resultatnt parameters of averaged potential of LOCPOT.
     - **Parameters**
-        - e_or_m : `epxort_potential().[e,m,m_x,m_y,m_z]` is 3D grid data. As `epxort_potential` is slow, so compute it once and then plot the output data.
+        - values : `epxort_potential().values` is 3D grid data. As `epxort_potential` is slow, so compute it once and then plot the output data.
         - operation: Default is 'mean_c'. What to do with provided volumetric potential data. Anyone of these 'mean_a','min_a','max_a','mean_b','min_b','max_b','mean_c','min_c','max_c'.
         - ax: Matplotlib axes, if not given auto picks.
         - period: Periodicity of potential in fraction between 0 and 1. For example if a slab is made of 4 super cells in z-direction, period=0.25.
@@ -1604,18 +1604,18 @@ def plot_potential(basis = None,
         raise ValueError("`operation` excepts any of {}, got {}".format(check,operation))
     if ax is None:
         ax = get_axes()
-    if e_or_m is None or basis is None:
-        print('`e_or_m` or `basis` not given, trying to autopick LOCPOT...')
+    if values is None or basis is None:
+        print('`values` or `basis` not given, trying to autopick LOCPOT...')
         try:
             ep = vp.export_locpot()
             basis = ep.poscar.basis
-            e_or_m= ep.e
+            values = ep.values
         except:
-            raise Exception('Could not auto fix. Make sure `basis` and `e_or_m` are provided.')
+            raise Exception('Could not auto fix. Make sure `basis` and `v` are provided.')
     x_ind = 'abc'.index(operation.split('_')[1])
     other_inds = tuple([i for i in [0,1,2] if i != x_ind])
     _func_ = np.min if 'min' in operation else np.max if 'max' in operation else np.mean
-    pot = _func_(e_or_m, axis= other_inds)
+    pot = _func_(values, axis= other_inds)
 
     # Direction axis
     x = np.linalg.norm(basis[x_ind])*np.linspace(0,1,len(pot),endpoint = False) # VASP does not include last point, it is same as firts one

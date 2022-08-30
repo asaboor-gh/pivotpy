@@ -311,19 +311,16 @@ class GridData(Dict2Data):
     @property
     def coords(self):
         "Returns coordinates of the grid points in shape (3,Nx, Ny,Nz). (x,y,z) = i/Nx*a + j/Ny*b + k/Nz*c, where (a,b,c) is the lattice vector. and i,j,k are the grid indices. as 0-Nx-1, 0-Ny-1, 0-Nz-1."
-        for a in ['e','m','m_x','m_y','m_z']:
-            if hasattr(self,a):
-                shape = getattr(self,a).shape
-                Nx, Ny, Nz = shape
-                ix,iy,iz = np.indices(shape)
-                a1,a2,a3 = self.poscar.basis
-                return np.array([
-                    ix*a1[0]/Nx + iy*a2[0]/Ny + iz*a3[0]/Nz,
-                    ix*a1[1]/Nx + iy*a2[1]/Ny + iz*a3[1]/Nz,
-                    ix*a1[2]/Nx + iy*a2[2]/Ny + iz*a3[2]/Nz
-                ])
+        shape = self.values.shape
+        Nx, Ny, Nz = shape
+        ix,iy,iz = np.indices(shape)
+        a1,a2,a3 = self.poscar.basis
+        return np.array([
+            ix*a1[0]/Nx + iy*a2[0]/Ny + iz*a3[0]/Nz,
+            ix*a1[1]/Nx + iy*a2[1]/Ny + iz*a3[1]/Nz,
+            ix*a1[2]/Nx + iy*a2[2]/Ny + iz*a3[2]/Nz
+        ])
             
-        raise AttributeError("Coordinates not found. Please check that the grid data is present from any of ['e','m','m_x','m_y','m_z']")
 
 class OutcarData(Dict2Data):
     _req_keys = ('site_pot','ion_pot','basis')
