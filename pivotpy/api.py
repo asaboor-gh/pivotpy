@@ -234,6 +234,10 @@ class POSCAR:
         "Data object in POSCAR."
         return self._data
 
+    def copy(self):
+        "Copy POSCAR object. It avoids accidental changes to numpy arrays in original object."
+        return self.__class__(data = self._data.copy())
+
     @property
     def content(self):
         "POSCAR content."
@@ -441,8 +445,8 @@ class POSCAR:
         return sd_poscar
 
     @_sub_doc(sio.get_kmesh,'- poscar_data')
-    def get_kmesh(self, *args, shift = 0, weight=None, cartesian = False, ibzkpt=None, outfile=None):
-        return sio.get_kmesh(self.data, *args, shift = shift, weight = weight, cartesian = cartesian,ibzkpt= ibzkpt, outfile=outfile)
+    def get_kmesh(self, *args, shift = 0, weight=None, cartesian = False, ibzkpt=None, outfile=None,endpoint = True):
+        return sio.get_kmesh(self.data, *args, shift = shift, weight = weight, cartesian = cartesian,ibzkpt= ibzkpt, outfile=outfile, endpoint = endpoint)
 
     @_sub_doc(sio.get_kpath,'- rec_basis')
     def get_kpath(self,*patches, n = 5,weight= None ,ibzkpt = None,outfile=None):

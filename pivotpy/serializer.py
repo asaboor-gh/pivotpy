@@ -3,6 +3,7 @@ import json
 import pickle
 from collections import namedtuple
 from contextlib import suppress
+from copy import deepcopy
 
 import numpy as np
 
@@ -91,8 +92,13 @@ class Dict2Data:
                 result.update({k:Dict2Data.to_dict(v)})
             else:
                 result.update({k:v})
-        return result
-    def to_json(self,outfile=None,indent=1):
+        return deepcopy(result) # prevent accidental changes in numpy arrays
+    
+    def copy(self):
+        "Copy of self to avoid changes during inplace operations on numpy arrays."
+        return self.__class__(self.to_dict()) # make a copy of self through dictionary, otherwise it does not work
+    
+    def to_json(self,outfile:str = None,indent:int = 1):
         """Dumps a `Dict2Data` object (root or nested level) to json.
         - **Parameters**
             - outfile : Default is None and returns string. If given, writes to file.
@@ -100,7 +106,7 @@ class Dict2Data:
         """
         return dump(self,dump_to='json',outfile=outfile,indent=indent)
 
-    def to_pickle(self,outfile=None):
+    def to_pickle(self,outfile:str=None):
         """Dumps a `Dict2Data` or subclass object (root or nested level) to pickle.
         - **Parameters**
             - outfile : Default is None and returns string. If given, writes to file.
@@ -293,11 +299,10 @@ class PoscarData(Dict2Data):
         all_dist = all_dist[all_dist > 0] # Remove 0 distances
         return np.min(all_dist)
     
-    def write(self,sd_list = None, outfile = None, overwrite = False):
-        """Writes the poscar data to a file.
-        """
+    def write(self, outfile = None, overwrite = False):
+        "Writes the poscar data to a file."
         from .sio import write_poscar # To avoid circular import
-        return write_poscar(self,sd_list = sd_list,outfile = outfile,overwrite = overwrite)
+        return write_poscar(self,outfile = outfile,overwrite = overwrite)
         
 
 class GridData(Dict2Data):

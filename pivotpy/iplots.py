@@ -172,11 +172,12 @@ def _rgb2plotly(rgb_data=None,mode='markers',max_width=None,showlegend=False,nam
                         color='rgba(255,255,250,0)'),showlegend=showlegend,hovertext=h_text)
                         )
         if mode == 'bands':
-            for i,e,c,w,t in zip(_indices,en,colors,lws,h_text):
-                line_color = 'rgb({},{},{})'.format(*np.max(clrs[i - _indices[0]],axis=0))
+            # idx should be a separate index for picking data, not same as labeling hovertext, because bands could be picked without a range but like 1,7,9 etc as well
+            for idx,lab,e,c,w,t in zip(range(len(_indices)),_indices,en,colors,lws,h_text):
+                line_color = 'rgb({},{},{})'.format(*np.max(clrs[idx],axis=0))
                 line_width = np.max(w)/8
                 data.append(go.Scatter(x=k,y=e,mode='markers+lines',
-                            name="{}<sub>{}</sub>".format(name,str(i+1)),
+                            name="{}<sub>{}</sub>".format(name,str(lab+1)),
                             marker=dict(color=c,size=w,symbol=symbol),line_width= line_width,
                             line_color=line_color,showlegend=showlegend,hovertext=t)
                            )

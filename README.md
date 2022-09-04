@@ -193,11 +193,11 @@ pp.utils.ps2std(ps_command='(Get-Process)[0..4]')
 
     [32;1m NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName[0m
     [32;1m ------    -----      -----     ------      --  -- -----------[0m
-    22     6.91       2.84       0.25   19644   2 AcrobatNotificationClient
-    5     1.19       5.32       0.00    8800   0 AggregatorHost
-    12     3.44      11.25       0.00   11944   0 AppHelperCap
-    32    59.70      51.66       1.03   13952   2 ApplicationFrameHost
-    9     1.65       4.50       0.00    5620   0 armsvc
+    22     6.92       8.27       0.33   14100   1 AcrobatNot…
+    6     1.29       5.68       0.00    7724   0 Aggregator…
+    19     7.22      20.85       0.00    5608   0 AppHelperC…
+    26    39.25      57.59       0.48    2064   1 Applicatio…
+    9     1.67       6.88       0.00    5264   0 armsvc
     
 
 ## Advancaed: Poweshell Cell/Line Magic `%%ps/%ps`
@@ -238,12 +238,12 @@ Get-ChildItem 'E:\Research\graphene_example\'
         Directory: E:\Research\graphene_example
     
     
-    Mode                 LastWriteTime         Length Name                                                         
-    ----                 -------------         ------ ----                                                         
-    da----          6/9/2022  10:33 AM                ISPIN_1                                                      
-    da----          5/9/2020   1:05 PM                ISPIN_2                                                      
-    -a----          5/9/2020   1:01 PM          75331 OUTCAR                                                       
-    -a----          5/9/2020   1:01 PM         240755 vasprun.xml                                                  
+    Mode                 LastWriteTime         Length Name        
+    ----                 -------------         ------ ----        
+    da----          6/9/2022  10:33 AM                ISPIN_1     
+    da----          5/9/2020   1:05 PM                ISPIN_2     
+    -a----          5/9/2020   1:01 PM          75331 OUTCAR      
+    -a----          5/9/2020   1:01 PM         240755 vasprun.xml 
     
     
 

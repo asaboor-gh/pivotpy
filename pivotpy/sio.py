@@ -681,7 +681,7 @@ def _get_basis(path_pos):
     return Basis(basis,rec_basis)
 
 # Cell
-def get_kmesh(poscar_data, *args, shift = 0, weight = None, cartesian = False, ibzkpt= None, outfile=None):
+def get_kmesh(poscar_data, *args, shift = 0, weight = None, cartesian = False, ibzkpt= None, outfile=None, endpoint = True):
     """**Note**: Use `pivotpy.POSCAR.get_kmesh` to get k-mesh based on current POSCAR.
     - Generates uniform mesh of kpoints. Options are write to file, or return KPOINTS list.
     - **Parameters**
@@ -692,6 +692,7 @@ def get_kmesh(poscar_data, *args, shift = 0, weight = None, cartesian = False, i
         - cartesian: If True, generates cartesian mesh.
         - ibzkpt : Path to ibzkpt file, required for HSE calculations.
         - outfile: Path/to/file to write kpoints.
+        - endpoint: Default True, include endpoints in mesh at edges away from origin.
 
     If `outfile = None`, KPOINTS file content is printed."""
     if len(args) not in [1,3]:
@@ -725,9 +726,9 @@ def get_kmesh(poscar_data, *args, shift = 0, weight = None, cartesian = False, i
 
     (lx,ly,lz),(hx,hy,hz) = low,high
     points = []
-    for k in np.linspace(lz,hz,nz, endpoint = True):
-        for j in np.linspace(ly,hy,ny, endpoint = True):
-            for i in np.linspace(lx,hx,nx, endpoint = True):
+    for k in np.linspace(lz,hz,nz, endpoint = endpoint):
+        for j in np.linspace(ly,hy,ny, endpoint = endpoint):
+            for i in np.linspace(lx,hx,nx, endpoint = endpoint):
                 points.append([i,j,k])
 
     points = np.array(points)
@@ -1265,7 +1266,7 @@ def fix_sites(poscar_data,tol=1e-2,eqv_sites=False,translate=None):
         - eqv_sites: If True, add sites on edges and faces. If False, just fix coordinates, i.e. `pos > 1 - tol -> pos - 1`, useful for merging poscars to make slabs.
         - translate: A number(+/-) or list of three numbers to translate in a,b,c directions.
     """
-    pos = poscar_data.positions.copy()
+    pos = poscar_data.positions.copy() # We can also do poscar_data.copy().positions that copies all contents.
     labels = poscar_data.labels
     out_dict = poscar_data.to_dict() # For output
 
