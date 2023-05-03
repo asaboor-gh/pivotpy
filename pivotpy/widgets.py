@@ -300,9 +300,9 @@ class InputGui:
             'rgb' : Dropdown(options=[('Red',0),('Green',1),('Blue',2)],value=0,layout=layout)
             }
         self._texts = {
-            'orbs' : Text(layout=layout,continuous_update=False),
-            'elms' : Text(layout=layout,continuous_update=False),
-            'label': Text(layout=layout,continuous_update=False)
+            'orbs' : Text(value = '', layout=layout,continuous_update=False),
+            'elms' : Text(value = '', layout=layout,continuous_update=False),
+            'label': Text(value = '', layout=layout,continuous_update=False)
             }
         self.update_options(self.sys_info) # In start if given
 
