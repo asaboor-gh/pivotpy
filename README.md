@@ -25,6 +25,14 @@
 ## Install
 `pip install pivotpy`
 
+To install as developer and make changes (Recommended), do the following:
+```shell
+git clone https://github.com/massgh/pivotpy.git
+cd pivotpy
+pip install -r requirements.txt
+pip install -e .
+```
+
 ## How to use
 - Use commnad `pivotpy` in regular terminal to quickly launch documentation any time. 
 - See [Full Documentation](https://massgh.github.io/pivotpy/).
@@ -233,19 +241,32 @@ c.ScriptMagics.script_paths = {
 Get-ChildItem 'E:\Research\graphene_example\'
 ```
 
-    
-    
-        Directory: E:\Research\graphene_example
-    
-    
-    Mode                 LastWriteTime         Length Name        
-    ----                 -------------         ------ ----        
-    da----          6/9/2022  10:33 AM                ISPIN_1     
-    da----          5/9/2020   1:05 PM                ISPIN_2     
-    -a----          5/9/2020   1:01 PM          75331 OUTCAR      
-    -a----          5/9/2020   1:01 PM         240755 vasprun.xml 
-    
-    
+    
+
+    
+
+        Directory: E:\Research\graphene_example
+
+    
+
+    
+
+    Mode                 LastWriteTime         Length Name        
+
+    ----                 -------------         ------ ----        
+
+    da----          6/9/2022  10:33 AM                ISPIN_1     
+
+    da----          5/9/2020   1:05 PM                ISPIN_2     
+
+    -a----          5/9/2020   1:01 PM          75331 OUTCAR      
+
+    -a----          5/9/2020   1:01 PM         240755 vasprun.xml 
+
+    
+
+    
+
 
 
 ```python
