@@ -2,5 +2,5 @@ plotly==4.7.1
 ipywidgets==7.5.1
 numpy==1.19.2
 matplotlib==3.3.3
-scipy==1.2.1
+scipy==1.10.0
 pandas==1.1.2
